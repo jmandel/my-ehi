@@ -1,0 +1,105 @@
+{
+  "_meta": {
+    "slot": "htn",
+    "layer": "STRUCTURED — the hypertension-undercoding scorecard + the HTN-thread timeline for the `htn` section. Projected from dataset.json (encounters_dx.htn_coding, vitals, medications) by scripts/htn_acute.ts. Display-clean; every claim drills to an evidence.json id."
+  },
+  "coding": {
+    "onProblemList": false,
+    "encounterDxCount": 2,
+    "encounterDxDetail": "Both encounter-diagnosis rows fall on the single Aug 29, 2022 diagnosis day — the establish-care visit and its same-day lab contact. Hypertension was coded nowhere else.",
+    "declinedMed": true,
+    "declinedMedName": "lisinopril 10 mg",
+    "elevatedReadings": "7 of 9",
+    "readdressedInLaterVisits": 0,
+    "laterVisitCount": 6,
+    "windowYears": 3.3
+  },
+  "scorecard": [
+    {
+      "label": "On the structured problem list?",
+      "value": "No",
+      "tone": "bad",
+      "evidenceId": "e_problemlist_absent"
+    },
+    {
+      "label": "Encounter diagnoses carrying it",
+      "value": "2",
+      "detail": "Both encounter-diagnosis rows fall on the single Aug 29, 2022 diagnosis day — the establish-care visit and its same-day lab contact. Hypertension was coded nowhere else.",
+      "tone": "watch",
+      "evidenceId": "e_dx_2022"
+    },
+    {
+      "label": "Antihypertensive ever taken?",
+      "value": "No (declined)",
+      "tone": "bad",
+      "evidenceId": "e_lisinopril_decline"
+    },
+    {
+      "label": "Office readings at or above Stage 1",
+      "value": "7 of 9",
+      "tone": "bad",
+      "evidenceId": "e_bp_series"
+    },
+    {
+      "label": "Times re-addressed in 6 later visits",
+      "value": "0",
+      "tone": "bad",
+      "evidenceId": "e_readdressed_zero"
+    }
+  ],
+  "timeline": [
+    {
+      "date": "Aug 29, 2022",
+      "event": "Stage-1 hypertension diagnosed on a 138/76 reading; lisinopril 10 mg started and the visit billed for hypertension.",
+      "tone": "action",
+      "evidenceId": "e_dx_2022"
+    },
+    {
+      "date": "Sep 28, 2023",
+      "event": "lisinopril 10 mg discontinued for patient refusal — never reported as taken. No second antihypertensive was ever tried.",
+      "tone": "decline",
+      "evidenceId": "e_lisinopril_decline"
+    },
+    {
+      "date": "Sep 28, 2023",
+      "event": "First annual after the diagnosis: the note is silent on hypertension and states only 'discussed healthy diet and lifestyle; continue to monitor BP.'",
+      "tone": "boilerplate",
+      "evidenceId": "e_boiler_2023"
+    },
+    {
+      "date": "Nov 7, 2024",
+      "event": "Annual note: 'discussed healthy diet and lifestyle; BP and weight good' — recorded over a 128/70 reading.",
+      "tone": "boilerplate",
+      "evidenceId": "e_boiler_2024"
+    },
+    {
+      "date": "Dec 4, 2025",
+      "event": "Latest annual: 'BP and weight good' — recorded over a 132/62 Stage-1 reading. Hypertension still absent from the problem list.",
+      "tone": "boilerplate",
+      "evidenceId": "e_boiler_2025"
+    }
+  ],
+  "boilerplateVsVitals": [
+    {
+      "date": "Sep 28, 2023",
+      "noteSays": "discussed healthy diet and lifestyle; continue to monitor BP",
+      "bpRecorded": "132/64 mmHg",
+      "category": "Stage 1",
+      "evidenceId": "e_boiler_2023"
+    },
+    {
+      "date": "Nov 7, 2024",
+      "noteSays": "discussed healthy diet and lifestyle; BP and weight good",
+      "bpRecorded": "128/70 mmHg",
+      "category": "Elevated",
+      "evidenceId": "e_boiler_2024"
+    },
+    {
+      "date": "Dec 4, 2025",
+      "noteSays": "discussed healthy diet and lifestyle; BP and weight good",
+      "bpRecorded": "132/62 mmHg",
+      "category": "Stage 1",
+      "evidenceId": "e_boiler_2025"
+    }
+  ]
+}

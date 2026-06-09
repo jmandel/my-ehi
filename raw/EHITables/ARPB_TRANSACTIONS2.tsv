@@ -1,0 +1,152 @@
+TX_ID	EB_PMT_TOTAL_AMT	FIN_DIV_ID_BILL_AREA_NAME	FIN_DIV_ID	FIN_SUBDIV_ID_BILL_AREA_NAME	FIN_SUBDIV_ID	RESEARCH_STUDY_ID	RSH_MOD_TYPE_C_NAME	RSH_ORIG_ACCOUNT_ID	OUTSTANDING_FLAG_C_NAME	VST_DO_NOT_BIL_I_YN	TREATMENT_PLAN_CSN	TX_ENTERED_INSTANT_DTTM	CVG_PLAN_ON_PMT_ID	REVERSED_PMT_TX_ID	PMT_REVERSAL_TX_ID	STMT_HOLD_DT	STMT_HOLD_REASON_C_NAME	REPOST_REASON_C_NAME	SUSP_NRP_INDICATOR_YN	SUSP_NRP_INST_DTTM	SUSP_NRP_USER_ID_NAME	SUSP_NRP_USER_ID	OUTST_CLM_STAT_C_NAME	POS_TYPE_C_NAME	INACTIVE_TYPE_C_NAME	VOIDED_INS_AMT	PROV_NETWORK_STAT_C_NAME	NETWORK_LEVEL_C_NAME	REFERENCE_AMT	REFERENCE_AMT_SRC_C_NAME	SPEC_CHG_TYPE_C_NAME	ORIG_BUNDPMT_ETR_ID	ORIG_BUNDPMT_HTR_ID	CLM_RMV_RSN_C_NAME	ADJUSTMENT_CAT_C_NAME	WRITE_OFF_RSN_C_NAME	SCHED_PMT_ID	TAX_CHARGE_TX_ID	MANUAL_PRICE_OVRIDE_YN	PATIENT_ESTIMATE_ID	PATIENT_WISDOM_PROC_ID	RFL_OVRIDE_SRC_C_NAME	RFL_OVRIDE_USER_ID_NAME	RFL_OVRIDE_USER_ID	PARENT_SCHED_PMT_ID	IS_PRE_SERVICE_PMT_YN	FIRST_HTR_TX_ID	FIRST_ETR_TX_ID	POSTING_DEPARTMENT_ID	EXP_REIMB_SYS_AMT	EXP_REIMB_SRC_C_NAME	RECORD_STATUS_C_NAME	RESEARCH_ENROLL_ID	STMT_HOLD_RSN_TEXT	E_PMT_RECEIPT_MSG	PARENT_TX_ID
+129124339										N													Not Outstanding				In Network	Blue											N									129124339	1700801002		System Calculated					
+129124217										N													Not Outstanding				In Network	Blue											N									129124217	1700801005		System Calculated					
+129124216										N													Not Outstanding				In Network	Blue											N									129124216	1700801005		System Calculated					
+190635377										N													Not Outstanding				In Network	Blue											N									190635377	1700801002		System Calculated					
+213432121										N													Not Outstanding	Telehealth - Provided Other than in Patient's Home			In Network	Blue											N									213432121	1700801002		System Calculated					
+302543307										N						1/11/2023 12:00:00 AM	Transaction skip function						Not Outstanding				In Network	Blue											N									302543307	1700801002		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+302543306										N													Not Outstanding				In Network	Blue											N									302543306	1700801002		System Calculated					
+302968774										N						1/11/2023 12:00:00 AM	Transaction skip function						Not Outstanding				In Network	Blue											N									302968774	1700801005		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+302968775										N						1/11/2023 12:00:00 AM	Transaction skip function						Not Outstanding				In Network	Blue											N									302968775	1700801005		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+315026147										N													Not Outstanding		Voided	315.00	In Network	Blue											N									315026147	1700801002		System Calculated					
+317236398										N								Charge Correct					Not Outstanding				In Network	Blue											N									315026147	1700801002		System Calculated					
+328283034										N													Not Outstanding				In Network	Blue											N									328283034	1700801002		System Calculated					
+354520701										N													Not Outstanding				Out of Network												N									354520701	1700801002		System Calculated					
+355871699										N													Not Outstanding				In Network	Blue											N									355871699	1700801002		System Calculated					
+354336208										N													Not Outstanding				In Network	Blue											N									354336208	1700801005		System Calculated					
+354336209										N													Not Outstanding				In Network	Blue											N									354336209	1700801005		System Calculated					
+354336210										N													Not Outstanding				In Network	Blue											N									354336210	1700801005		System Calculated					
+354520699										N													Not Outstanding				Out of Network												N									354520699	1700801002		System Calculated					
+390367690										N													Not Outstanding				Out of Network												N									390367690	1700801007		System Calculated					
+390377294										N													Not Outstanding				In Network	Blue											N									390377294	1700801002		System Calculated					
+390377296										N						8/21/2024 12:00:00 AM	Transaction skip function						Not Outstanding				In Network	Blue											N									390377296	1700801002		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+411592829										N						3/19/2025 12:00:00 AM	Transaction skip function						Not Outstanding				In Network	Blue											N									411592829	1700801002		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+437962503										N													Not Outstanding				In Network	Blue											N									437962503	1700801002		System Calculated					
+437962507										N						5/14/2025 12:00:00 AM	Transaction skip function						Not Outstanding				In Network	Blue											N									437962507	1700801002		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+472537358										N													Not Outstanding				In Network	Blue											N									472537358	1700801002		System Calculated					
+472981065										N													Not Outstanding				In Network	Blue											N									472981065	1700801005		System Calculated					
+472981066										N													Not Outstanding				In Network	Blue											N									472981066	1700801005		System Calculated					
+472981067										N													Not Outstanding				In Network	Blue											N									472981067	1700801005		System Calculated					
+472981068										N													Not Outstanding				In Network	Blue											N									472981068	1700801005		System Calculated					
+483180063													130204										Not Outstanding												Contractual	Contractual												483180063	1700801001		System Calculated					
+483180060													130204										Not Outstanding												Contractual	Contractual												483180060	1700801001		System Calculated					
+483180056													130204										Not Outstanding												Contractual	Contractual												483180056	1700801001		System Calculated					
+483180054												2/9/2026 3:55:10 PM	130204										Not Outstanding																									483180054	1700801001		System Calculated					
+481044273													130204										Not Outstanding												Contractual	Contractual												481044273	1700801001		System Calculated					
+481044267													130204										Not Outstanding												Contractual	Contractual												481044267	1700801001		System Calculated					
+481044262													130204										Not Outstanding												Contractual	Contractual												481044262	1700801001		System Calculated					
+481044258													130204										Not Outstanding												Contractual	Contractual												481044258	1700801001		System Calculated					
+481044251													130204										Not Outstanding												Contractual	Contractual												481044251	1700801001		System Calculated					
+481044248													130204										Not Outstanding												Contractual	Contractual												481044248	1700801001		System Calculated					
+481044245													130204										Not Outstanding												Contractual	Contractual												481044245	1700801001		System Calculated					
+481044241													130204										Not Outstanding												Contractual	Contractual												481044241	1700801001		System Calculated					
+481044235													130204										Not Outstanding												Contractual	Contractual												481044235	1700801001		System Calculated					
+481044230												1/27/2026 2:30:19 PM	130204										Not Outstanding																									481044230	1700801001		System Calculated					
+475512238													130204										Not Outstanding												Contractual	Contractual												475512238	1700801001		System Calculated					
+475512234													130204										Not Outstanding												Contractual	Contractual												475512234	1700801001		System Calculated					
+475512229													130204										Not Outstanding												Contractual	Contractual												475512229	1700801001		System Calculated					
+475512224													130204										Not Outstanding												Contractual	Contractual												475512224	1700801001		System Calculated					
+475512219												12/22/2025 3:58:59 PM	130204										Not Outstanding																									475512219	1700801001		System Calculated					
+474495850													130204										Not Outstanding												Contractual	Contractual												474495850	1700801001		System Calculated					
+474495845												12/16/2025 5:28:45 PM	130204										Not Outstanding																									474495845	1700801001		System Calculated					
+471670580													130204										Not Outstanding												Contractual	Contractual												471670580	1700801001		System Calculated					
+471670575													130204										Not Outstanding												Contractual	Contractual												471670575	1700801001		System Calculated					
+471670571													130204										Not Outstanding												Contractual	Contractual												471670571	1700801001		System Calculated					
+471670566													130204										Not Outstanding												Contractual	Contractual												471670566	1700801001		System Calculated					
+471670562												12/1/2025 5:31:05 PM	130204										Not Outstanding																									471670562	1700801001		System Calculated					
+471669844													130204										Not Outstanding												Contractual	Contractual												471669844	1700801001		System Calculated					
+471669842													130204										Not Outstanding												Contractual	Contractual												471669842	1700801001		System Calculated					
+471669838													130204										Not Outstanding												Contractual	Contractual												471669838	1700801001		System Calculated					
+471669834												12/1/2025 5:30:57 PM	130204										Not Outstanding																									471669834	1700801001		System Calculated					
+470810214													130204										Not Outstanding												Contractual	Contractual												470810214	1700801001		System Calculated					
+470810209													130204										Not Outstanding												Contractual	Contractual												470810209	1700801001		System Calculated					
+470810205												11/25/2025 4:13:30 PM	130204										Not Outstanding																									470810205	1700801001		System Calculated					
+469256200												11/17/2025 4:38:29 PM	130204										Not Outstanding																									469256200	1700801001		System Calculated					
+452815176													130204										Not Outstanding												Contractual	Contractual												452815176	1700801001		System Calculated					
+452815172													130204										Not Outstanding												Contractual	Contractual												452815172	1700801001		System Calculated					
+452815168													130204										Not Outstanding												Contractual	Contractual												452815168	1700801001		System Calculated					
+452815164													130204										Not Outstanding												Contractual	Contractual												452815164	1700801001		System Calculated					
+452815160													130204										Not Outstanding												Contractual	Contractual												452815160	1700801001		System Calculated					
+452815158												8/4/2025 3:11:29 PM	130204										Not Outstanding																									452815158	1700801001		System Calculated					
+452814638													130204										Not Outstanding												Contractual	Contractual												452814638	1700801001		System Calculated					
+452814633												8/4/2025 3:11:23 PM	130204										Not Outstanding																									452814633	1700801001		System Calculated					
+443299328	292.65											5/29/2025 1:45:37 PM											Not Outstanding																							N		443299328	1700801001		System Calculated					
+441622917																							Not Outstanding												Contractual	Contractual												441622917	1700801001		System Calculated					
+440750594													130204			5/14/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												440750594	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+440750589													130204			5/14/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												440750589	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+440750585													130204			5/14/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												440750585	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+440750581													130204			5/14/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												440750581	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+440750576													130204			5/14/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												440750576	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+440750571													130204			5/14/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												440750571	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+440750565													130204			5/14/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												440750565	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+440750561												5/12/2025 3:18:22 PM	130204			5/14/2025 12:00:00 AM	Transaction skip function						Not Outstanding																									440750561	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+440750010													130204			5/14/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												440750010	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+440750006												5/12/2025 3:18:17 PM	130204			5/14/2025 12:00:00 AM	Transaction skip function						Not Outstanding																									440750006	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+440749650													130204			5/14/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												440749650	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+440749649												5/12/2025 3:18:14 PM	130204			5/14/2025 12:00:00 AM	Transaction skip function						Not Outstanding																									440749649	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+413644801													130204										Not Outstanding												Contractual	Contractual												413644801	1700801001		System Calculated					
+413644797												11/25/2024 5:15:42 PM	130204										Not Outstanding																									413644797	1700801001		System Calculated					
+356659657													130204										Not Outstanding												Contractual	Contractual												356659657	1700801001		System Calculated					
+356659652													130204										Not Outstanding												Contractual	Contractual												356659652	1700801001		System Calculated					
+356659647													130204										Not Outstanding												Contractual	Contractual												356659647	1700801001		System Calculated					
+356659643												10/18/2023 6:08:09 PM	130204										Not Outstanding																									356659643	1700801001		System Calculated					
+356659580													130204										Not Outstanding												Contractual	Contractual												356659580	1700801001		System Calculated					
+356659575													130204										Not Outstanding												Contractual	Contractual												356659575	1700801001		System Calculated					
+356659570												10/18/2023 6:08:08 PM	130204										Not Outstanding																									356659570	1700801001		System Calculated					
+321705114												1/24/2023 1:41:05 PM											Not Outstanding																							N		321705114	1700801001		System Calculated					
+319923252													130204			1/11/2023 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												319923252	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+319923250												1/10/2023 4:40:04 PM	130204			1/11/2023 12:00:00 AM	Transaction skip function						Not Outstanding																									319923250	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+319922979												1/10/2023 4:39:58 PM	130204			1/11/2023 12:00:00 AM	Transaction skip function						Not Outstanding																									319922979	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+317165897												12/20/2022 4:11:35 PM	130204			1/11/2023 12:00:00 AM	Transaction skip function						Not Outstanding																									317165897	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+314281735	7.82											12/1/2022 3:28:38 PM				1/11/2023 12:00:00 AM	Transaction skip function						Not Outstanding																							N		314281735	1700801002		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+304446684													130204										Not Outstanding												Contractual	Contractual												304446684	1700801001		System Calculated					
+304446682													130204										Not Outstanding												Contractual	Contractual												304446682	1700801001		System Calculated					
+304446678												10/4/2022 3:37:23 PM	130204										Not Outstanding																									304446678	1700801001		System Calculated					
+304446136													130204										Not Outstanding												Contractual	Contractual												304446136	1700801001		System Calculated					
+304446131													130204										Not Outstanding												Contractual	Contractual												304446131	1700801001		System Calculated					
+304446127												10/4/2022 3:37:13 PM	130204										Not Outstanding																									304446127	1700801001		System Calculated					
+192508083													130204			10/5/2022 12:00:00 AM							Not Outstanding												Contractual	Contractual												192508083	1700801001		System Calculated					
+192508079												1/27/2020 2:02:12 PM	130204			10/5/2022 12:00:00 AM							Not Outstanding																									192508079	1700801001		System Calculated					
+434551472	149.92											4/1/2025 1:32:15 PM				5/14/2025 12:00:00 AM	Transaction skip function						Not Outstanding																							N		434551472	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+432333715													130204			3/19/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												432333715	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+432333711													130204			3/19/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												432333711	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+432333706													130204			3/19/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												432333706	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+432333702													130204			3/19/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												432333702	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+432333697													130204			3/19/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												432333697	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+432333691													130204			3/19/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												432333691	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+432333688												3/17/2025 3:25:06 PM	130204			3/19/2025 12:00:00 AM	Transaction skip function						Not Outstanding																									432333688	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+432333557													130204			3/19/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												432333557	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+432333552													130204			3/19/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												432333552	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+432333548												3/17/2025 3:25:05 PM	130204			3/19/2025 12:00:00 AM	Transaction skip function						Not Outstanding																									432333548	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+432333183													130204			3/19/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												432333183	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+432333179												3/17/2025 3:25:02 PM	130204			3/19/2025 12:00:00 AM	Transaction skip function						Not Outstanding																									432333179	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+432333174													130204			3/19/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												432333174	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+432333171												3/17/2025 3:25:02 PM	130204			3/19/2025 12:00:00 AM	Transaction skip function						Not Outstanding																									432333171	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+432333107													130204			3/19/2025 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												432333107	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+432333104												3/17/2025 3:25:01 PM	130204			3/19/2025 12:00:00 AM	Transaction skip function						Not Outstanding																									432333104	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+400578124	242.40											9/3/2024 12:42:42 PM											Not Outstanding																							N		400578124	1700801001		System Calculated					
+393312406																8/21/2024 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												393312406	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+392248405													130204			7/24/2024 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												392248405	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+392248402												7/22/2024 2:45:15 PM	130204			7/24/2024 12:00:00 AM	Transaction skip function						Not Outstanding																									392248402	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+392248106													130204			7/24/2024 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												392248106	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+392248101												7/22/2024 2:45:08 PM	130204			7/24/2024 12:00:00 AM	Transaction skip function						Not Outstanding																									392248101	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+357218470													130204										Not Outstanding												Contractual	Contractual												357218470	1700801001		System Calculated					
+357218465												10/23/2023 7:54:19 PM	130204										Not Outstanding																									357218465	1700801001		System Calculated					
+336699833												5/17/2023 12:45:08 PM											Not Outstanding																							N		336699833	1700801001		System Calculated					
+330455167													130204			3/29/2023 12:00:00 AM	Transaction skip function						Not Outstanding												Contractual	Contractual												330455167	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+330455164												3/28/2023 3:22:54 PM	130204			3/29/2023 12:00:00 AM	Transaction skip function						Not Outstanding																									330455164	1700801001		System Calculated			  83550000||s result=$$skip^KPZMTSTAPL(etrId)||1		
+217014440													130204										Not Outstanding												Contractual	Contractual												217014440	1700801001		System Calculated					
+217014433												9/17/2020 1:19:50 PM	130204										Not Outstanding																									217014433	1700801001		System Calculated					
+194272840												2/10/2020 3:27:46 PM											Not Outstanding																							N		194272840	1700801001		System Calculated					
+132295844													130204										Not Outstanding												Contractual	Contractual												132295844	1700801001		System Calculated					
+132295842												9/10/2018 4:57:34 PM	130204										Not Outstanding																									132295842	1700801001		System Calculated					
+132295750													130204										Not Outstanding												Contractual	Contractual												132295750	1700801001		System Calculated					
+132295745													130204										Not Outstanding												Contractual	Contractual												132295745	1700801001		System Calculated					
+132295742												9/10/2018 4:57:31 PM	130204										Not Outstanding																									132295742	1700801001		System Calculated					
+466660183													130204										Not Outstanding												Contractual	Contractual												466660183	1700801001		System Calculated					
+466660178													130204										Not Outstanding												Contractual	Contractual												466660178	1700801001		System Calculated					
+466660174												11/3/2025 4:27:59 PM	130204										Not Outstanding																									466660174	1700801001		System Calculated					
+465488984													130204										Not Outstanding												Contractual	Contractual												465488984	1700801001		System Calculated					
+465488980													130204										Not Outstanding												Contractual	Contractual												465488980	1700801001		System Calculated					
+465488975													130204										Not Outstanding												Contractual	Contractual												465488975	1700801001		System Calculated					
+465488971												10/27/2025 5:17:46 PM	130204										Not Outstanding																									465488971	1700801001		System Calculated					

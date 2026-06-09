@@ -1,0 +1,860 @@
+{
+  "meta": {
+    "topic": "post-concussion",
+    "title": "Post-concussion syndrome — a multi-year head-injury course (2020 → 2025)",
+    "patient": "MANDEL, JOSHUA C",
+    "generatedFrom": [
+      "verified DB projection of the figures",
+      "verified analysis + verbatim note quotes"
+    ],
+    "generatedBy": "deep-dives/post-concussion/scripts/project-viewmodel.ts",
+    "db": "db/ehi.sqlite"
+  },
+  "summary": "Joshua Mandel carries a single, well-documented post-concussion syndrome that has run for more than five years and resolved on its own terms. It began with a minor head injury in July 2020 — he struck his head on a car's bike rack while closing the trunk, with no loss of consciousness — and left him with persistent, screen-triggered headaches. The acute work-up was thorough and reassuring: a brain MRI read 'Negative cerebral MRI ... no suggestion of recent or remote injury.' Imaging was normal but the symptoms were not, and that gap defines the whole arc. Occupational and vision therapy in early 2022 helped him to roughly 90–95% recovery and then plateaued; the diagnosis was formally entered to the chart at an August 2022 establish-care visit (the patient himself typed 'Post concussion syndrome' on the patient-review channel that same day). A second head injury while snorkeling in November 2022 was the trigger to start drug therapy: nortriptyline, a tricyclic used off-label for headache prophylaxis, begun at 10 mg nightly. Over the next three years it became the durable management — one continuous therapy across four orders, up-titrated 10 → 20 → 30 mg, with the notes documenting headaches better within the first week and tolerable thereafter — before being tapered off by December 2025 with the therapy marked completed. The specialist thread is the one loose end: three Neurology referrals placed in late 2022 all expired un-fulfilled, and the patient ended up seeing neurology in Massachusetts, outside this record. What the chart shows cleanly is a self-limited concussion course managed in primary care with a single well-chosen medication, a normal scan, and a real symptomatic response — with the neurology evaluation and the formal headache-frequency data living somewhere this export cannot see.",
+  "sections": [
+    {
+      "id": "injury",
+      "title": "The 2020 head injury and a normal scan",
+      "narrative": [
+        {
+          "text": "The arc begins with a minor head injury in July 2020. The patient struck his head on the bike rack attached to his car while closing the trunk, with no loss of consciousness — a mechanism the occupational-therapy note records verbatim two years later.",
+          "cites": [
+            "q_mechanism",
+            "dx_head_initial"
+          ]
+        },
+        {
+          "text": "The acute work-up was unusually thorough: four head-imaging orders were placed across two weeks in July 2020 — three brain MRIs and one head/brain CT. Two were canceled and two completed, but only the July 31 MRI reached a final radiology read.",
+          "cites": [
+            "s_imaging_burst"
+          ]
+        },
+        {
+          "text": "That read is unambiguously normal: 'Negative cerebral MRI ... there is no evidence of mass lesion, mass-effect, hemorrhage, or acute infarction ... no suggestion of recent or remote injury.' This is the central fact of the case — structural imaging is clean, so everything that follows is a clinical, symptom-defined syndrome, not a visible lesion.",
+          "cites": [
+            "q_negative_mri",
+            "s_mri_read"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "syndrome",
+      "title": "Persistent symptoms after a normal MRI",
+      "narrative": [
+        {
+          "text": "Post-concussion syndrome is precisely the diagnosis for this pattern: a normal scan with persistent symptoms. By the time the patient established care with a new primary-care physician in August 2022, the picture was a chronic one — daily left-sided and frontal headaches, worse when reading or using screens, with intermittent nausea, on a background of vision and occupational therapy that had helped but plateaued.",
+          "cites": [
+            "q_course_2022",
+            "q_chronic_2yr"
+          ]
+        },
+        {
+          "text": "The occupational-therapy course in early 2022 had quantified that plateau honestly: the patient felt he had 'recovered approximately 90–95%' but continued to have issues with vision, headaches, and nausea, and reported that his 'progress plateaued about a year ago.' Real but incomplete recovery is the through-line of the whole syndrome.",
+          "cites": [
+            "q_recovery",
+            "q_plateau"
+          ]
+        },
+        {
+          "text": "The diagnosis was formally entered to the chart at that August 29, 2022 establish-care visit and has been carried as Active ever since. Notably it is flagged as a non-chronic problem in the structured record even though the clinician's own note calls it a 'chronic problem but not better after over 2 years' — and the patient himself typed 'Post concussion syndrome' on the patient-review channel the same day, so the diagnosis is one he owns, not one imposed on him.",
+          "cites": [
+            "s_problem_record",
+            "q_chronic_2yr",
+            "s_patient_typed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "second-injury",
+      "title": "A second injury and the start of drug therapy",
+      "narrative": [
+        {
+          "text": "A second head injury in November 2022 — snorkeling in the British Virgin Islands, the patient swam into a heavy item, again with no loss of consciousness — re-aggravated the syndrome with nausea, headache, fatigue, and brain fog, and was the trigger to escalate from therapy alone to medication.",
+          "cites": [
+            "q_snorkel"
+          ]
+        },
+        {
+          "text": "At the December 1, 2022 visit the plan was made as a shared decision — 'Today Josh is prepared to give nortriptyline a trial' — and nortriptyline 10 mg at night was started, with a plan to increase to 20 mg after one to two weeks. Nortriptyline is a tricyclic antidepressant used off-label at low doses for headache and post-concussion-headache prophylaxis, not for depression here.",
+          "cites": [
+            "q_trial",
+            "q_nortrip_start",
+            "m_chain"
+          ]
+        },
+        {
+          "text": "A referral to Neurology was placed at the same visit, with two more added three weeks later. All three Neurology referrals carry the post-concussion-syndrome diagnosis — and all three later expired, auto-closed, never fulfilled inside this health system. The specialist evaluation the primary-care physician asked for did not happen here.",
+          "cites": [
+            "s_neuro_referrals"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "medication-course",
+      "title": "The nortriptyline course: dose over time and symptom response",
+      "narrative": [
+        {
+          "text": "Nortriptyline became the durable management of this syndrome. It is one continuous therapy — four orders, all sharing a single medication-chain identifier, reordered as the prescription ran out — spanning December 2022 to December 2025, about three years and roughly 1,100 days of coverage.",
+          "cites": [
+            "m_chain",
+            "m_therapy_span"
+          ]
+        },
+        {
+          "text": "The dose was titrated upward in three steps: 10 mg nightly at the start, increased to 20 mg (two capsules) by February 2023, then to 30 mg (three capsules) by December 2023, where it stayed. The reorder quantities track the escalation cleanly — 90, then 180, then 270 capsules — and the reorders came at 81-, 305-, and 402-day intervals as the larger quantities lasted longer.",
+          "cites": [
+            "m_dose_steps",
+            "m_reorder_intervals"
+          ]
+        },
+        {
+          "text": "The symptom response is documented and early. At the three-month follow-up in March 2023 the headaches were 'better compared to last November' and the improvement came 'within the first week of nortriptyline,' with no side effects — a fast, clean response that is exactly what justifies continuing and up-titrating the drug.",
+          "cites": [
+            "q_better",
+            "q_first_week"
+          ]
+        },
+        {
+          "text": "There is a naming wrinkle worth flagging: the structured medication record is nortriptyline throughout (one chain, one identifier), but the 2024 and 2025 clinic notes refer to '30 mg amitriptyline.' Both are tricyclics used the same way for headache prophylaxis; the note name simply does not match the order, and the dose (30 mg) is consistent either way.",
+          "cites": [
+            "q_30mg_amitrip",
+            "m_name_discrepancy"
+          ]
+        },
+        {
+          "text": "The arc closes cleanly in 2025. The patient tapered off the 30 mg dose, and the December 4, 2025 visit records 'Headaches are tolerable — no longer taking amitriptyline ... was taking 30 mg ... but has tapered off.' The final medication order was discontinued with the reason 'Therapy completed' — a planned wind-down, not a failure or a loss to follow-up.",
+          "cites": [
+            "q_off",
+            "q_taper",
+            "m_therapy_completed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "care-relocation",
+      "title": "Referrals, occupational therapy, and a move out of state",
+      "narrative": [
+        {
+          "text": "The two referral threads diverged sharply. The occupational-therapy referral from February 2022 was fulfilled — two in-system visits at the neuro occupational-therapy center in March 2022 — and closed 'patient discharged.' That is the therapy course that got him to the 90–95% plateau.",
+          "cites": [
+            "s_ot_fulfilled",
+            "q_recovery"
+          ]
+        },
+        {
+          "text": "The three Neurology referrals, by contrast, all expired auto-closed without an in-system visit. The reason becomes clear in the September 2023 note: 'Post concussive syndrome: seeing neurology in Massachusetts.' Neurology care was real but relocated out of state, so the specialist evaluation — and whatever testing or management it involved — lives entirely outside this export.",
+          "cites": [
+            "s_neuro_referrals",
+            "q_massachusetts"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "coding",
+      "title": "How the syndrome was coded across the record",
+      "narrative": [
+        {
+          "text": "Post-concussion syndrome is the dominant longitudinal diagnosis of this thread, coded on 11 distinct encounters across more than three years — it is the spine that ties the visits together.",
+          "cites": [
+            "s_dx_frequency",
+            "s_problem_record"
+          ]
+        },
+        {
+          "text": "Beneath it sit the earlier and adjacent head-injury codes that map the acute phase and its sequelae: 'traumatic injury of head, initial encounter' on five 2020 encounters, plus single appearances of 'post-concussion headache,' 'chronic post-traumatic headache,' and 'late effect of traumatic injury to brain.' The coding fingerprint reads exactly as the clinical story does — an acute injury in 2020 that consolidates into one chronic post-concussion diagnosis.",
+          "cites": [
+            "s_dx_frequency"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "assessment",
+      "title": "Assessment & what the record cannot answer",
+      "narrative": [
+        {
+          "text": "Read as a whole, this is a clean, self-limited post-concussion course managed almost entirely in primary care. The fundamentals are reassuring: a normal brain MRI, a clearly named diagnosis the patient shares, a single well-chosen medication with a documented early response, a sensible up-titration, and a planned taper to 'therapy completed' with headaches tolerable. Nothing here suggests a missed structural lesion or a deteriorating course.",
+          "cites": [
+            "q_negative_mri",
+            "m_therapy_completed",
+            "q_off"
+          ]
+        },
+        {
+          "text": "What a neurologist would want to do next is mostly already done or moot: the scan is normal, the trial of a first-line prophylactic worked and was completed, and the syndrome is resolving. The one genuine gap a neurologist would flag is that the formal specialist evaluation was never captured in this system — the three Neurology referrals expired and the actual neurology care happened in Massachusetts — so this record cannot speak to what that work-up found.",
+          "cites": [
+            "s_neuro_referrals",
+            "q_massachusetts"
+          ]
+        },
+        {
+          "text": "What the data cannot answer is worth stating plainly. There is no structured headache-frequency or severity score anywhere in this export — the symptom course is reconstructable only from the narrative phrases in the notes ('better within the first week,' 'tolerable,' 'tapered off'), not from a logged metric. The medication name discrepancy (nortriptyline in the orders, 'amitriptyline' in the later notes) is unresolved in the chart itself. And because neurology care moved out of state, any imaging, testing, or specialist reasoning after 2022 — and the precise reason the headaches ultimately settled — is simply not in this record to examine.",
+          "cites": [
+            "m_name_discrepancy",
+            "q_massachusetts",
+            "s_no_headache_metric"
+          ]
+        }
+      ]
+    }
+  ],
+  "evidence": {
+    "q_mechanism": {
+      "kind": "note",
+      "who": "Occupational therapy note",
+      "date": "Mar 11, 2022",
+      "quote": "He states that back in 7/2020 he had hit head on the bike rack attached to car while closing the trunk."
+    },
+    "q_negative_mri": {
+      "kind": "note",
+      "who": "David Kurtz, MD (radiology)",
+      "date": "Jul 29, 2020",
+      "quote": "The ventricular system is unremarkable and there is no evidence of positive mass lesion, positive mass-effect, hemorrhage, or acute infarction in the cerebrum. There is no suggestion of recent or remote injury. IMPRESSION: Negative cerebral MRI."
+    },
+    "q_course_2022": {
+      "kind": "note",
+      "who": "Dr. Zoe Rammelkamp",
+      "date": "Aug 29, 2022",
+      "quote": "Concussion in 2020 — no LOC at the time — slammed a trunk on his head — persistent headache on the left — then gets a frontal headache worse when reading, using his eyes, on the computer — vision therapy, occupational therapy; helpful, but plateau — sleep has been okay — does get nausea."
+    },
+    "q_chronic_2yr": {
+      "kind": "note",
+      "who": "Dr. Zoe Rammelkamp",
+      "date": "Aug 29, 2022",
+      "quote": "Post-concussion syndrome: chronic problem but not better after over 2 years."
+    },
+    "q_recovery": {
+      "kind": "note",
+      "who": "Occupational therapy note",
+      "date": "Mar 11, 2022",
+      "quote": "Since his initial injury he states that he feels he has recovered approximately 90-95% but continues to have issues with his vision, headaches, and nausea."
+    },
+    "q_plateau": {
+      "kind": "note",
+      "who": "Occupational therapy note",
+      "date": "Mar 11, 2022",
+      "quote": "Pt reports did make progress for a while following concussion but progress plateaued about a year ago."
+    },
+    "q_snorkel": {
+      "kind": "note",
+      "who": "Dr. Zoe Rammelkamp",
+      "date": "Dec 1, 2022",
+      "quote": "Headaches — repeat head injury 3 weeks ago — british virgin islands, snorkeling, swam into a heavy item — no loss of consciousness — nausea, headache, fatigue after — slept a lot — hard time getting things done in the day — worse with mental activities — headache, brain fog."
+    },
+    "q_trial": {
+      "kind": "note",
+      "who": "Dr. Zoe Rammelkamp",
+      "date": "Dec 1, 2022",
+      "quote": "Today Josh is prepared to give nortriptyline a trial."
+    },
+    "q_nortrip_start": {
+      "kind": "note",
+      "who": "Dr. Zoe Rammelkamp",
+      "date": "Dec 1, 2022",
+      "quote": "Nortriptyline 10 mg at night to start; increase to 20 mg after 1-2 weeks — he will let me know if nortriptyline causing side effects or not effective — referral to neurology also placed."
+    },
+    "q_better": {
+      "kind": "note",
+      "who": "Dr. Zoe Rammelkamp",
+      "date": "Mar 2, 2023",
+      "quote": "Headaches, post-concussive syndrome: headaches are better compared to last November, but still not great."
+    },
+    "q_first_week": {
+      "kind": "note",
+      "who": "Dr. Zoe Rammelkamp",
+      "date": "Mar 2, 2023",
+      "quote": "Better within the first week of nortriptyline. No side effects from nortriptyline."
+    },
+    "q_massachusetts": {
+      "kind": "note",
+      "who": "Dr. Zoe Rammelkamp",
+      "date": "Sep 28, 2023",
+      "quote": "Post concussive syndrome: seeing neurology in Massachusetts."
+    },
+    "q_30mg_amitrip": {
+      "kind": "note",
+      "who": "Clinic note",
+      "date": "Nov 7, 2024",
+      "quote": "Taking 30 mg amitriptyline daily."
+    },
+    "q_off": {
+      "kind": "note",
+      "who": "Clinic note",
+      "date": "Dec 4, 2025",
+      "quote": "Headaches are tolerable — no longer taking amitriptyline."
+    },
+    "q_taper": {
+      "kind": "note",
+      "who": "Clinic note",
+      "date": "Dec 4, 2025",
+      "quote": "Was taking 30 mg amitriptyline at night, but has tapered off."
+    },
+    "s_imaging_burst": {
+      "kind": "fact",
+      "date": "Jul 14 – Jul 31, 2020",
+      "text": "Four head-imaging orders were placed in July 2020: three brain MRIs without contrast (Jul 14, 21, 31) and one head/brain CT (Jul 15). Two were canceled and two completed; only the Jul 31 MRI reached a final radiology read."
+    },
+    "s_mri_read": {
+      "kind": "fact",
+      "date": "Jul 29–31, 2020",
+      "text": "The completed Jul 31, 2020 brain MRI (order with a final radiology status) carries the radiology impression 'Negative cerebral MRI.' The read reconciles by content with the faxed Midwest Open MRI report (David Kurtz, MD, Jul 29, 2020)."
+    },
+    "s_problem_record": {
+      "kind": "fact",
+      "date": "Onset Sep 1, 2020 · entered Aug 29, 2022",
+      "text": "Post-concussion syndrome is carried as a single Active problem. Its onset (noted) date is back-dated to Sep 1, 2020, but it was formally entered to the chart on Aug 29, 2022 by Dr. Zoe Rammelkamp. It is flagged non-chronic in the structured field despite the clinical course being chronic."
+    },
+    "s_patient_typed": {
+      "kind": "fact",
+      "date": "Aug 29, 2022",
+      "text": "On the patient-review channel at the Aug 29, 2022 visit, the patient himself entered the free-text problem 'Post concussion syndrome' — the same day the diagnosis was added to the chart, and later visits confirm the patient reviewing the same problem-list entry."
+    },
+    "s_neuro_referrals": {
+      "kind": "fact",
+      "date": "Dec 1 – Dec 22, 2022",
+      "text": "Three Neurology referrals were placed (one on Dec 1, two on Dec 22, 2022), all carrying the post-concussion-syndrome diagnosis. Every one closed 'Expired / auto-closed' without an in-system neurology visit — the specialist evaluation was never fulfilled in this health system."
+    },
+    "s_ot_fulfilled": {
+      "kind": "fact",
+      "date": "Feb 9 – Mar 22, 2022",
+      "text": "The Occupational Therapy referral (placed Feb 9, 2022, diagnosis 'late effect of traumatic injury to brain') was fulfilled by two in-system visits at the neuro occupational-therapy center on Mar 11 and Mar 22, 2022, then closed 'patient discharged.'"
+    },
+    "s_dx_frequency": {
+      "kind": "fact",
+      "date": "Jul 2020 – Dec 2025",
+      "text": "Across the record, post-concussion syndrome is coded on 11 distinct encounters. The adjacent head-injury codes are 'traumatic injury of head, initial encounter' on 5 encounters, and single appearances of 'post-concussion headache,' 'chronic post-traumatic headache, not intractable,' and 'late effect of traumatic injury to brain.'"
+    },
+    "s_no_headache_metric": {
+      "kind": "fact",
+      "date": "Whole record",
+      "text": "No structured headache-frequency, severity, or disability score (e.g., a logged pain scale or HIT-6) appears anywhere in this export for this condition. The symptom course is reconstructable only from narrative phrases in the clinic notes."
+    },
+    "m_chain": {
+      "kind": "fact",
+      "date": "Dec 1, 2022 – Dec 4, 2025",
+      "text": "Nortriptyline (Pamelor) was ordered four times — Dec 1, 2022; Feb 20, 2023; Dec 22, 2023; Jan 27, 2025 — all linked as one continuous medication chain (single chain identifier), all for post-concussion syndrome."
+    },
+    "m_therapy_span": {
+      "kind": "fact",
+      "date": "Dec 1, 2022 – Dec 4, 2025",
+      "text": "The nortriptyline therapy spans Dec 1, 2022 through its final end date of Dec 4, 2025 — about 1,099 days (roughly three years) of continuous coverage across the four orders."
+    },
+    "m_dose_steps": {
+      "kind": "fact",
+      "date": "Dec 2022 – Dec 2023",
+      "text": "The dose was up-titrated in three steps tracked by the sig and the reorder quantity: 10 mg nightly (90 capsules) from Dec 2022, increased to 20 mg / 2 capsules (180 capsules) by Feb 2023, then 30 mg / 3 capsules (270 capsules) by Dec 2023, where it was maintained."
+    },
+    "m_reorder_intervals": {
+      "kind": "fact",
+      "date": "Dec 2022 – Jan 2025",
+      "text": "The three reorders came at 81-, 305-, and 402-day intervals — the gaps lengthening as the quantity dispensed grew from 90 to 180 to 270 capsules, consistent with steady once-nightly use."
+    },
+    "m_name_discrepancy": {
+      "kind": "fact",
+      "date": "2024 – 2025",
+      "text": "Every structured medication order in this chain is nortriptyline (one chain, one identifier). The Nov 2024 and Dec 2025 clinic notes instead say 'amitriptyline.' Both are tricyclics used identically for headache prophylaxis; the note name does not match the order, and the dose (30 mg) is consistent either way."
+    },
+    "m_therapy_completed": {
+      "kind": "fact",
+      "date": "Jan 27 – Dec 4, 2025",
+      "text": "The final nortriptyline order (Jan 27, 2025, 30 mg) was discontinued on Dec 4, 2025 with the reason 'Therapy completed' — a planned wind-down after the documented taper, not a refusal or a loss to follow-up."
+    },
+    "dx_head_initial": {
+      "kind": "fact",
+      "date": "Jul 2020",
+      "text": "The 2020 acute encounters were coded 'traumatic injury of head, initial encounter' — the standard acute head-injury code that precedes the post-concussion-syndrome diagnosis."
+    }
+  },
+  "arc": [
+    {
+      "dateIso": "2020-07-14",
+      "date": "Jul 2020",
+      "title": "Index head injury",
+      "detail": "Struck head on a car bike rack while closing the trunk, no loss of consciousness. Acute internal-medicine work-up; four head-imaging orders placed over two weeks.",
+      "kind": "injury",
+      "cites": [
+        "q_mechanism",
+        "s_imaging_burst",
+        "dx_head_initial"
+      ]
+    },
+    {
+      "dateIso": "2020-07-29",
+      "date": "Jul 29, 2020",
+      "title": "Brain MRI — normal",
+      "detail": "Brain MRI without contrast read 'Negative cerebral MRI ... no suggestion of recent or remote injury' (David Kurtz, MD).",
+      "kind": "imaging",
+      "cites": [
+        "q_negative_mri",
+        "s_mri_read"
+      ]
+    },
+    {
+      "dateIso": "2022-02-09",
+      "date": "Feb – Mar 2022",
+      "title": "Occupational & vision therapy",
+      "detail": "OT referral placed Feb 9, 2022; two in-system OT visits in March. Recovery reported at ~90–95% but plateaued.",
+      "kind": "therapy",
+      "cites": [
+        "s_ot_fulfilled",
+        "q_recovery",
+        "q_plateau"
+      ]
+    },
+    {
+      "dateIso": "2020-09-01",
+      "date": "Sep 2020 (back-dated) · entered Aug 2022",
+      "title": "Post-concussion syndrome diagnosed",
+      "detail": "Problem onset back-dated to Sep 1, 2020; formally entered to the chart Aug 29, 2022 at an establish-care visit. The patient himself typed the diagnosis that day.",
+      "kind": "diagnosis",
+      "cites": [
+        "s_problem_record",
+        "q_chronic_2yr",
+        "s_patient_typed"
+      ]
+    },
+    {
+      "dateIso": "2022-11-01",
+      "date": "Nov 2022",
+      "title": "Second head injury (snorkeling)",
+      "detail": "Swam into a heavy item while snorkeling in the British Virgin Islands; no loss of consciousness. Re-aggravated headaches, nausea, fatigue, brain fog.",
+      "kind": "injury",
+      "cites": [
+        "q_snorkel"
+      ]
+    },
+    {
+      "dateIso": "2022-12-01",
+      "date": "Dec 1, 2022",
+      "title": "Nortriptyline started · Neurology referred",
+      "detail": "Nortriptyline 10 mg nightly begun as a shared decision; first of three Neurology referrals placed (all later expired un-fulfilled).",
+      "kind": "medication",
+      "cites": [
+        "q_trial",
+        "q_nortrip_start",
+        "s_neuro_referrals"
+      ]
+    },
+    {
+      "dateIso": "2023-03-02",
+      "date": "Mar 2, 2023",
+      "title": "Early response documented",
+      "detail": "Headaches better than last November, improvement 'within the first week of nortriptyline,' no side effects.",
+      "kind": "response",
+      "cites": [
+        "q_better",
+        "q_first_week"
+      ]
+    },
+    {
+      "dateIso": "2023-09-28",
+      "date": "Sep 28, 2023",
+      "title": "Neurology care relocated to Massachusetts",
+      "detail": "The note records 'seeing neurology in Massachusetts' — the in-system referrals lapse; specialist care moves out of state.",
+      "kind": "care",
+      "cites": [
+        "q_massachusetts",
+        "s_neuro_referrals"
+      ]
+    },
+    {
+      "dateIso": "2023-12-22",
+      "date": "2023 – 2024",
+      "title": "Maintained at 30 mg",
+      "detail": "Dose up-titrated to 30 mg nightly and reordered; notes record '30 mg' (called amitriptyline in the note, nortriptyline in the order).",
+      "kind": "medication",
+      "cites": [
+        "m_dose_steps",
+        "q_30mg_amitrip",
+        "m_name_discrepancy"
+      ]
+    },
+    {
+      "dateIso": "2025-12-04",
+      "date": "Dec 4, 2025",
+      "title": "Tapered off — therapy completed",
+      "detail": "Headaches tolerable, tapered off the 30 mg dose; the final order discontinued as 'Therapy completed.'",
+      "kind": "resolution",
+      "cites": [
+        "q_off",
+        "q_taper",
+        "m_therapy_completed"
+      ]
+    }
+  ],
+  "problem": {
+    "diagnosis": "Post-concussion syndrome",
+    "status": "Active",
+    "chronic": false,
+    "onsetNoted": "Sep 1, 2020",
+    "onsetNotedIso": "2020-09-01",
+    "addedToChart": "Aug 29, 2022",
+    "addedToChartIso": "2022-08-29",
+    "resolved": null,
+    "encounterCount": 11,
+    "enteredBy": "Dr. Zoe Rammelkamp",
+    "patientEnteredSameDay": true,
+    "src": {
+      "problemListId": "90574164",
+      "dxId": "260690"
+    }
+  },
+  "imaging": {
+    "orders": [
+      {
+        "study": "Brain MRI without contrast",
+        "orderedOn": "Jul 14, 2020",
+        "orderedOnIso": "2020-07-14",
+        "status": "Canceled",
+        "finalRead": false,
+        "hasNarrative": false,
+        "src": {
+          "orderProcId": "439060609",
+          "csn": "829213099"
+        }
+      },
+      {
+        "study": "Head/brain CT with & without contrast",
+        "orderedOn": "Jul 15, 2020",
+        "orderedOnIso": "2020-07-15",
+        "status": "Canceled",
+        "finalRead": false,
+        "hasNarrative": false,
+        "src": {
+          "orderProcId": "439060610",
+          "csn": "829393933"
+        }
+      },
+      {
+        "study": "Brain MRI without contrast",
+        "orderedOn": "Jul 21, 2020",
+        "orderedOnIso": "2020-07-21",
+        "status": "Completed",
+        "finalRead": false,
+        "hasNarrative": false,
+        "src": {
+          "orderProcId": "439060612",
+          "csn": "829995922"
+        }
+      },
+      {
+        "study": "Brain MRI without contrast",
+        "orderedOn": "Jul 31, 2020",
+        "orderedOnIso": "2020-07-31",
+        "status": "Completed",
+        "finalRead": true,
+        "hasNarrative": true,
+        "src": {
+          "orderProcId": "439060613",
+          "csn": "832464108"
+        }
+      }
+    ],
+    "read": {
+      "impression": "Negative cerebral MRI.",
+      "performedOn": "Jul 29, 2020",
+      "performedOnIso": "2020-07-29",
+      "facility": "Midwest Open MRI",
+      "radiologist": "David Kurtz, MD",
+      "reportText": "MRI OF THE BRAIN WITHOUT CONTRAST:\nHISTORY:\n37 yr old, 165lb. male who presents with minor head trauma and normal mental status.  No previous brain surgery.\nTECHNIQUE:\nMRI of the brain performed using DWI/ADC mapping, T1 SE sagittal, T2 FSE axial, FLAIR axial, T1 SE axial, T2* GE axial and FLAIR coronal sequences.\nFINDINGS:\nThe ventricular system is unremarkable and there is no evidence of positive mass lesion, positive mass-effect, hemorrhage, or acute infarction in the cerebrum.  There is no suggestion of recent or remote injury.\nIMPRESSION:\nNegative cerebral MRI.\nElectronically Signed:  David Kurtz, M.D.",
+      "src": {
+        "orderProcId": "439060613"
+      }
+    }
+  },
+  "medCourse": {
+    "drug": "nortriptyline",
+    "brand": "Pamelor",
+    "drugClass": "Tricyclic antidepressant (TCA), used off-label for headache prophylaxis",
+    "start": "Dec 1, 2022",
+    "startIso": "2022-12-01",
+    "end": "Dec 4, 2025",
+    "endIso": "2025-12-04",
+    "spanDays": 1099,
+    "spanYears": 3,
+    "orderCount": 4,
+    "doseRange": "10 → 20 → 30 mg, then tapered off",
+    "finalOutcome": "Therapy completed — tapered off with headaches tolerable",
+    "oneContinuousTherapy": true,
+    "mdlId": "73847702",
+    "nameDiscrepancyNote": "The medication record is nortriptyline throughout — one continuous chain under a single identifier. Later clinic notes call it 'amitriptyline'; both are tricyclics used the same way for headache, and the note name simply does not match the order.",
+    "orders": [
+      {
+        "seq": 1,
+        "drug": "nortriptyline",
+        "dose": "10 mg nightly",
+        "doseMg": 10,
+        "capsules": 1,
+        "quantity": "90 capsule",
+        "refills": 1,
+        "orderedOn": "Dec 1, 2022",
+        "orderedOnIso": "2022-12-01",
+        "endedOn": "Feb 20, 2023",
+        "endedOnIso": "2023-02-20",
+        "indication": "Post-concussion syndrome",
+        "sig": "Take 1 (one) capsule by mouth nightly. Start with 10 mg at night; can increase to 20 mg after 1-2 weeks if no side effects",
+        "changeNote": "Start 10 mg; may increase to 20 mg after 1–2 weeks",
+        "discontinueReason": null,
+        "src": {
+          "orderMedId": "772179266",
+          "csn": "974614965",
+          "mdlId": "73847702",
+          "reorderOf": null
+        }
+      },
+      {
+        "seq": 2,
+        "drug": "nortriptyline",
+        "dose": "20 mg nightly",
+        "doseMg": 20,
+        "capsules": 2,
+        "quantity": "180 capsule",
+        "refills": 3,
+        "orderedOn": "Feb 20, 2023",
+        "orderedOnIso": "2023-02-20",
+        "endedOn": "Dec 22, 2023",
+        "endedOnIso": "2023-12-22",
+        "indication": "Post-concussion syndrome",
+        "sig": "Take 1 capsule by mouth every night. Start with 1 capsule at night; can. Increase to 2 capsules after 1-2 weeks if no side effects",
+        "changeNote": "Up-titrated to 2 capsules (20 mg)",
+        "discontinueReason": "Reordered (superseded by next order)",
+        "src": {
+          "orderMedId": "772179269",
+          "csn": "988126821",
+          "mdlId": "73847702",
+          "reorderOf": "772179266"
+        }
+      },
+      {
+        "seq": 3,
+        "drug": "nortriptyline",
+        "dose": "30 mg nightly",
+        "doseMg": 30,
+        "capsules": 3,
+        "quantity": "270 capsule",
+        "refills": 3,
+        "orderedOn": "Dec 22, 2023",
+        "orderedOnIso": "2023-12-22",
+        "endedOn": "Jan 27, 2025",
+        "endedOnIso": "2025-01-27",
+        "indication": "Post-concussion syndrome",
+        "sig": "Take 3 (three) capsules by mouth nightly.",
+        "changeNote": "Up-titrated to 3 capsules (30 mg)",
+        "discontinueReason": "Reordered (superseded by next order)",
+        "src": {
+          "orderMedId": "945468373",
+          "csn": "1043034397",
+          "mdlId": "73847702",
+          "reorderOf": "772179269"
+        }
+      },
+      {
+        "seq": 4,
+        "drug": "nortriptyline",
+        "dose": "30 mg nightly",
+        "doseMg": 30,
+        "capsules": 3,
+        "quantity": "270 capsule",
+        "refills": 3,
+        "orderedOn": "Jan 27, 2025",
+        "orderedOnIso": "2025-01-27",
+        "endedOn": "Dec 4, 2025",
+        "endedOnIso": "2025-12-04",
+        "indication": "Post-concussion syndrome",
+        "sig": "Take 3 (three) capsules (30 mg total) by mouth nightly.",
+        "changeNote": "Maintained at 30 mg, then tapered off by Dec 2025",
+        "discontinueReason": "Therapy completed",
+        "src": {
+          "orderMedId": "1034471696",
+          "csn": "1113285509",
+          "mdlId": "73847702",
+          "reorderOf": "945468373"
+        }
+      }
+    ],
+    "doseSegments": [
+      {
+        "doseMg": 10,
+        "dose": "10 mg nightly",
+        "fromIso": "2022-12-01",
+        "from": "Dec 1, 2022",
+        "toIso": "2023-02-20",
+        "to": "Feb 20, 2023"
+      },
+      {
+        "doseMg": 20,
+        "dose": "20 mg nightly",
+        "fromIso": "2023-02-20",
+        "from": "Feb 20, 2023",
+        "toIso": "2023-12-22",
+        "to": "Dec 22, 2023"
+      },
+      {
+        "doseMg": 30,
+        "dose": "30 mg nightly",
+        "fromIso": "2023-12-22",
+        "from": "Dec 22, 2023",
+        "toIso": "2025-01-27",
+        "to": "Jan 27, 2025"
+      },
+      {
+        "doseMg": 30,
+        "dose": "30 mg nightly",
+        "fromIso": "2025-01-27",
+        "from": "Jan 27, 2025",
+        "toIso": "2025-12-04",
+        "to": "Dec 4, 2025"
+      },
+      {
+        "doseMg": 0,
+        "dose": "Off (tapered)",
+        "fromIso": "2025-12-04",
+        "from": "Dec 4, 2025",
+        "toIso": "2025-12-04",
+        "to": "Dec 4, 2025"
+      }
+    ],
+    "reorderIntervals": [
+      {
+        "fromDate": "Dec 1, 2022",
+        "toDate": "Feb 20, 2023",
+        "intervalDays": 81,
+        "newQuantity": "180 capsule"
+      },
+      {
+        "fromDate": "Feb 20, 2023",
+        "toDate": "Dec 22, 2023",
+        "intervalDays": 305,
+        "newQuantity": "270 capsule"
+      },
+      {
+        "fromDate": "Dec 22, 2023",
+        "toDate": "Jan 27, 2025",
+        "intervalDays": 402,
+        "newQuantity": "270 capsule"
+      }
+    ]
+  },
+  "encounterDx": [
+    {
+      "diagnosis": "Post concussion syndrome",
+      "encounters": 11,
+      "src": {
+        "dxId": "260690"
+      }
+    },
+    {
+      "diagnosis": "Traumatic injury of head, initial encounter",
+      "encounters": 5,
+      "src": {
+        "dxId": "1177374"
+      }
+    },
+    {
+      "diagnosis": "Post-concussion headache",
+      "encounters": 1,
+      "src": {
+        "dxId": "442362"
+      }
+    },
+    {
+      "diagnosis": "Chronic post-traumatic headache, not intractable",
+      "encounters": 1,
+      "src": {
+        "dxId": "342609"
+      }
+    },
+    {
+      "diagnosis": "Late effect of traumatic injury to brain",
+      "encounters": 1,
+      "src": {
+        "dxId": "284018"
+      }
+    }
+  ],
+  "referrals": {
+    "items": [
+      {
+        "referredTo": "Occupational Therapy",
+        "status": "Closed",
+        "outcome": "Fulfilled — patient discharged",
+        "placedOn": "Feb 9, 2022",
+        "placedOnIso": "2022-02-09",
+        "expiresOn": "Apr 20, 2022",
+        "referredBy": "Benjamin Gillespie",
+        "diagnosis": "Late effect of traumatic injury to brain",
+        "src": {
+          "referralId": "13661714",
+          "csn": "921952141"
+        }
+      },
+      {
+        "referredTo": "Neurology",
+        "status": "Closed",
+        "outcome": "Expired / auto-closed (never fulfilled in-system)",
+        "placedOn": "Dec 1, 2022",
+        "placedOnIso": "2022-12-01",
+        "expiresOn": "Jun 3, 2024",
+        "referredBy": "Dr. Zoe Rammelkamp",
+        "diagnosis": "Post concussion syndrome",
+        "src": {
+          "referralId": "15963353",
+          "csn": "974614965"
+        }
+      },
+      {
+        "referredTo": "Neurology",
+        "status": "Closed",
+        "outcome": "Expired / auto-closed (never fulfilled in-system)",
+        "placedOn": "Dec 22, 2022",
+        "placedOnIso": "2022-12-22",
+        "expiresOn": "Jun 24, 2024",
+        "referredBy": "Dr. Zoe Rammelkamp",
+        "diagnosis": "Post concussion syndrome",
+        "src": {
+          "referralId": "16132995",
+          "csn": "977858467"
+        }
+      },
+      {
+        "referredTo": "Neurology",
+        "status": "Closed",
+        "outcome": "Expired / auto-closed (never fulfilled in-system)",
+        "placedOn": "Dec 22, 2022",
+        "placedOnIso": "2022-12-22",
+        "expiresOn": "Jun 24, 2024",
+        "referredBy": "Dr. Zoe Rammelkamp",
+        "diagnosis": "Post concussion syndrome",
+        "src": {
+          "referralId": "16132994",
+          "csn": "977858467"
+        }
+      }
+    ],
+    "otVisits": [
+      {
+        "date": "Mar 11, 2022",
+        "dateIso": "2022-03-11",
+        "department": "Occupational Therapy — Neuro Center",
+        "src": {
+          "csn": "922942674"
+        }
+      },
+      {
+        "date": "Mar 22, 2022",
+        "dateIso": "2022-03-22",
+        "department": "Occupational Therapy — Neuro Center",
+        "src": {
+          "csn": "922943112"
+        }
+      }
+    ],
+    "neurologyFulfilledInSystem": false,
+    "otFulfilledInSystem": true
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "_meta": {
+    "slot": "correspondence",
+    "built_by": "project.ts"
+  },
+  "events": [
+    {
+      "date": "Oct 5, 2022",
+      "dateIso": "2022-10-05",
+      "label": "Account referred to financial services",
+      "patientBalance": 7.82,
+      "insuranceBalance": 0
+    },
+    {
+      "date": "Oct 6, 2022",
+      "dateIso": "2022-10-06",
+      "label": "Patient statement generated",
+      "patientBalance": 7.82,
+      "insuranceBalance": 0
+    },
+    {
+      "date": "Oct 6, 2022",
+      "dateIso": "2022-10-06",
+      "label": "Coinsurance balance flagged",
+      "patientBalance": 7.82,
+      "insuranceBalance": 0
+    },
+    {
+      "date": "Oct 6, 2022",
+      "dateIso": "2022-10-06",
+      "label": "Small-balance letter sent",
+      "patientBalance": 7.82,
+      "insuranceBalance": 0
+    },
+    {
+      "date": "Jan 6, 2025",
+      "dateIso": "2025-01-06",
+      "label": "‘No insurance on file’ letter sent",
+      "patientBalance": 0,
+      "insuranceBalance": 237
+    }
+  ],
+  "note": "The human-facing money trail is sparse: a $7.82 coinsurance balance in October 2022 triggered a small-balance letter, and in January 2025 a 'no insurance on file' letter went out against a $237 balance with no coverage listed — the only billing friction the patient would have seen."
+}

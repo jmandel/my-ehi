@@ -1,0 +1,199 @@
+/* Prevention & self-tracking deep dive — clinician-grade reading surface.
+   One type scale, one spacing rhythm, color used to mean something.
+   Lane palette: influenza = blue, COVID-19 = teal-green, travel = amber,
+   self-tracking (CGM) = violet, screening = slate. */
+:root {
+  --ink: #1a1d21;
+  --muted: #5b6168;
+  --dim: #8a9099;
+  --rule: #e3e6ea;
+  --rule-hard: #cfd4da;
+  --bg: #eef0f3;
+  --paper: #ffffff;
+  --accent: #1d4ed8;
+  --bad: #b42318;
+  --warn: #b8860b;
+  --good: #1a7f43;
+
+  --flu: #1d4ed8;        /* influenza */
+  --covid: #0e7490;      /* COVID-19 */
+  --travel: #b45309;     /* travel cluster */
+  --self: #7c3aed;       /* self-tracking / CGM */
+  --screen: #475569;     /* screening */
+  --maxw: 1080px;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 15.5px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.page { max-width: var(--maxw); margin: 0 auto; background: var(--paper); box-shadow: 0 1px 6px rgba(0,0,0,.08); }
+h4.subhead { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 26px 0 9px; font-weight: 700; }
+
+/* ---------- header ---------- */
+.page-head { padding: 42px 48px 26px; border-bottom: 3px solid var(--ink); }
+.ph-eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: 12px; font-weight: 700; color: var(--self); }
+.page-head h1 { font-size: 32px; margin: 6px 0 4px; letter-spacing: -.02em; }
+.ph-demo { color: var(--muted); font-size: 15px; margin-bottom: 18px; }
+.ph-headline { font-size: 16.5px; line-height: 1.62; margin: 0 0 22px; max-width: 80ch; color: #23272c; }
+
+/* program board */
+.prog-board { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.prog-table { width: 100%; border-collapse: collapse; }
+.prog-row td { padding: 9px 12px; border-bottom: 1px solid var(--rule); vertical-align: baseline; }
+.prog-row { border-left: 4px solid var(--rule-hard); }
+.prog-row .pr-program { width: 200px; white-space: nowrap; }
+.prog-row .pr-program a { font-weight: 700; color: var(--ink); text-decoration: none; font-size: 14.5px; display: inline-flex; align-items: center; gap: 8px; }
+.prog-row .pr-program a:hover { text-decoration: underline; }
+.pr-dot { width: 11px; height: 11px; border-radius: 3px; flex: none; display: inline-block; }
+.pr-line { font-size: 13.5px; color: #2b2f34; line-height: 1.5; }
+.pr-count { font-variant-numeric: tabular-nums; font-weight: 700; }
+.prog-row:hover td { background: #f8f9fb; }
+
+/* ---------- sections ---------- */
+.section { padding: 32px 48px; border-bottom: 1px solid var(--rule); }
+.section h2 { font-size: 21px; margin: 0 0 14px; letter-spacing: -.01em; display: flex; align-items: center; gap: 12px; }
+.sec-n { display: inline-flex; align-items: center; justify-content: center; min-width: 27px; height: 27px; padding: 0 7px;
+  background: var(--ink); color: #fff; border-radius: 6px; font-size: 13px; font-weight: 700; flex: none; }
+
+/* narrative prose */
+.prose p { font-size: 15.5px; line-height: 1.66; margin: 0 0 14px; max-width: 80ch; color: #25292e; }
+.prose p:last-child { margin-bottom: 0; }
+
+.fig-note { color: var(--muted); font-size: 13.5px; line-height: 1.58; margin: 12px 0 4px; max-width: 84ch; }
+.fig-note b { color: var(--ink); }
+.tiny { font-size: 11px; color: var(--dim); line-height: 1.5; margin: 8px 0 0; max-width: 84ch; }
+
+.open-flag { font-size: 13.5px; color: var(--muted); background: #fffaf0; border: 1px solid #f0e2c4; border-radius: 8px; padding: 11px 14px; margin-top: 14px; line-height: 1.55; }
+.open-flag-tag { display: inline-block; font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; font-weight: 700; color: var(--warn); margin-right: 8px; }
+
+/* ---------- cite marker + drawer ---------- */
+.cite { display: inline-flex; align-items: center; vertical-align: super; font-size: 11px; line-height: 1; margin-left: 3px;
+  border: none; background: #efe9fb; color: var(--self); cursor: pointer; border-radius: 4px; padding: 2px 3px; font-weight: 700; }
+.cite:hover { background: var(--self); color: #fff; }
+.cite-n { font-size: 9px; margin-left: 1px; }
+.drawer-scrim { position: fixed; inset: 0; background: rgba(20,25,30,.34); z-index: 40; }
+.drawer { position: fixed; top: 0; right: 0; height: 100vh; width: min(640px, 94vw); background: #fff; z-index: 41;
+  box-shadow: -4px 0 24px rgba(0,0,0,.2); display: flex; flex-direction: column; }
+.drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 2px solid var(--ink); }
+.drawer-title { font-size: 16px; font-weight: 700; }
+.drawer-close { border: none; background: none; font-size: 26px; line-height: 1; cursor: pointer; color: var(--muted); }
+.drawer-close:hover { color: var(--ink); }
+.drawer-body { overflow: auto; padding: 18px 20px 60px; }
+.drawer-foot { font-size: 11.5px; color: var(--dim); line-height: 1.55; margin-top: 22px; border-top: 1px solid var(--rule); padding-top: 12px; }
+.src-block { margin-bottom: 18px; }
+.src-head { font-size: 12.5px; color: var(--muted); margin-bottom: 7px; display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+.src-tag { display: inline-block; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; color: #fff; background: var(--muted); border-radius: 4px; padding: 2px 7px; font-weight: 700; }
+.src-tag.note { background: var(--covid); }
+.src-tag.message { background: var(--self); }
+.src-tag.fact { background: var(--screen); }
+.src-quote { margin: 0; padding: 13px 15px; background: #f7f9fc; border-left: 3px solid var(--self); font-size: 14.5px; line-height: 1.6; }
+.src-statement { margin: 0; padding: 13px 15px; background: #f5f6f8; border-left: 3px solid var(--rule-hard); border-radius: 0 6px 6px 0; font-size: 14px; line-height: 1.6; color: #2b2f34; }
+
+/* ---------- generic data grid ---------- */
+table.grid { border-collapse: collapse; width: 100%; font-size: 13.5px; margin: 6px 0; }
+.grid th { text-align: left; padding: 7px 10px; border-bottom: 2px solid var(--rule-hard); color: var(--muted); font-weight: 600; font-size: 12.5px; white-space: nowrap; }
+.grid td { padding: 7px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.grid tr:hover td { background: #f8f9fb; }
+.grid th.num, .grid td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.grid .dim { color: var(--dim); }
+.grid .nowrap { white-space: nowrap; }
+.grid.mini td { padding: 4px 8px; font-size: 12.5px; }
+.quote-cell { font-style: italic; color: #3a3f45; }
+
+.flag-badge { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 1px 6px; border-radius: 4px; margin-left: 6px; background: #eaf6ee; color: var(--good); }
+.chart { width: 100%; height: auto; display: block; }
+
+/* ---------- centerpiece: prevention engagement timeline ---------- */
+.engage-wrap { margin: 6px 0 2px; }
+.engage-svg { width: 100%; max-width: 980px; height: auto; display: block; background: #fff; border: 1px solid var(--rule); border-radius: 10px; padding: 6px; }
+.engage-legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 12px 0 4px; padding: 10px 14px; background: #fafbfc; border: 1px solid var(--rule); border-radius: 8px; font-size: 12.5px; color: var(--muted); }
+.engage-legend .elg { display: inline-flex; align-items: center; gap: 6px; }
+.elg-dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+.elg-ring { width: 12px; height: 12px; border-radius: 50%; display: inline-block; border: 2px solid var(--self); background: #fff; box-sizing: border-box; }
+.elg-band { width: 16px; height: 11px; border-radius: 3px; display: inline-block; }
+.elg-title { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; font-weight: 700; color: var(--dim); margin-right: 2px; }
+
+/* ---------- flu-season coverage strip ---------- */
+.flu-strip { display: grid; grid-template-columns: repeat(9, 1fr); gap: 7px; margin: 8px 0 2px; }
+.flu-cell { border: 1px solid var(--rule); border-radius: 8px; padding: 9px 4px 8px; text-align: center; background: #fcfcfd; }
+.flu-cell.on { border-color: #bcd0f5; background: #f3f7fe; }
+.flu-cell.off { border-color: #f0d9b8; background: #fdf6ec; }
+.flu-year { font-size: 12px; font-weight: 700; color: var(--ink); }
+.flu-mark { font-size: 19px; font-weight: 800; line-height: 1.15; }
+.flu-cell.on .flu-mark { color: var(--flu); }
+.flu-cell.off .flu-mark { color: var(--warn); }
+.flu-date { font-size: 10.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ---------- COVID dose ladder ---------- */
+.covid-ladder { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin: 8px 0 2px; }
+.covid-dose { border: 1px solid var(--rule); border-radius: 9px; padding: 10px 8px; background: #fcfcfd; display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center; position: relative; }
+.covid-num { width: 28px; height: 28px; border-radius: 50%; color: #fff; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+.covid-date { font-size: 11.5px; font-weight: 700; color: var(--ink); }
+.covid-brand { font-size: 11px; color: var(--muted); }
+.covid-self { display: block; margin-top: 4px; font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--self); background: #efe9fb; border-radius: 4px; padding: 1px 5px; }
+
+/* ---------- travel recommendation → action ---------- */
+.travel-map { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 8px 0; }
+.travel-trip { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: baseline; padding: 11px 14px; background: #fdf6ec; border: 1px solid #f0d9b8; border-radius: 9px; font-size: 13.5px; }
+.travel-trip b { color: var(--travel); }
+.travel-trip .tt-dim { color: var(--muted); font-size: 12.5px; }
+.travel-recs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.travel-rec { border: 1px solid var(--rule); border-left-width: 4px; border-radius: 7px; padding: 9px 12px; background: #fcfcfd; }
+.travel-rec.given { border-left-color: var(--good); }
+.travel-rec.advised { border-left-color: var(--warn); }
+.tr-vax { font-weight: 700; font-size: 14px; color: var(--ink); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.tr-status { font-size: 10px; text-transform: uppercase; letter-spacing: .03em; font-weight: 700; padding: 1px 7px; border-radius: 4px; white-space: nowrap; }
+.tr-status.given { background: #eaf6ee; color: var(--good); }
+.tr-status.advised { background: #fbf3dc; color: #946b08; }
+.tr-sub { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+/* ---------- PHQ-2 negative-screen plot ---------- */
+.phq2-rows { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 2px; }
+.phq2-row { display: grid; grid-template-columns: 92px 1fr 70px; align-items: center; gap: 10px; font-size: 12.5px; }
+.phq2-date { color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+.phq2-track { position: relative; height: 16px; background: #eef1f5; border-radius: 4px; }
+.phq2-band-neg { position: absolute; top: 0; left: 0; height: 16px; background: #eaf6ee; border-radius: 4px 0 0 4px; }
+.phq2-thresh { position: absolute; top: -3px; height: 22px; border-left: 2px dashed var(--bad); }
+.phq2-fill { position: absolute; top: 0; height: 16px; background: var(--good); border-radius: 4px; opacity: .85; }
+.phq2-fill.warm { background: var(--warn); }
+.phq2-score { font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.phq2-score .neg { font-size: 10.5px; font-weight: 600; color: var(--good); margin-left: 5px; }
+
+/* ---------- A1c / glucose gap ---------- */
+.metab-row { display: grid; grid-template-columns: 1.25fr 1fr; gap: 22px; align-items: start; }
+.metab-side { display: flex; flex-direction: column; gap: 12px; }
+.metab-fact { border: 1px solid var(--rule); border-radius: 8px; padding: 12px 14px; background: #fcfcfd; }
+.metab-fact-label { font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--dim); font-weight: 700; }
+.metab-fact-val { font-size: 18px; font-weight: 700; margin: 3px 0 5px; }
+.metab-fact-note { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+.gap-card { border: 1px dashed var(--self); background: #faf7ff; border-radius: 8px; padding: 12px 14px; }
+.gap-card .gc-tag { display: inline-block; font-size: 10px; text-transform: uppercase; letter-spacing: .04em; font-weight: 700; color: var(--self); margin-bottom: 5px; }
+.gap-card .gc-note { font-size: 12.5px; color: #46405a; line-height: 1.5; }
+
+/* ---------- CGM orders ---------- */
+.cgm-orders { display: flex; flex-direction: column; gap: 8px; margin: 8px 0 2px; }
+.cgm-order { display: grid; grid-template-columns: 116px 1fr; gap: 14px; padding: 11px 14px; border: 1px solid var(--rule); border-left: 4px solid var(--self); border-radius: 8px; background: #fcfcfd; }
+.cgm-date { font-weight: 700; font-size: 13px; color: var(--self); }
+.cgm-item { font-weight: 700; font-size: 14px; color: var(--ink); }
+.cgm-detail { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+.cgm-sig { font-style: italic; }
+
+/* ---------- screening dashboard ---------- */
+.hm-pill { display: inline-block; font-size: 11.5px; font-weight: 700; padding: 2px 9px; border-radius: 5px; background: #eaf6ee; color: var(--good); }
+.hm-pill.due { background: #fbf3dc; color: #946b08; }
+
+/* ---------- assessment callouts ---------- */
+.assess-cross { background: #f7f9fc; border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 8px; padding: 13px 16px; margin: 14px 0 0; font-size: 14px; line-height: 1.6; color: #2b2f34; }
+.assess-cross b { color: var(--accent); }
+
+/* ---------- footer ---------- */
+.page-foot { padding: 26px 48px 60px; font-size: 12.5px; color: var(--dim); line-height: 1.6; }
+
+@media (max-width: 900px) {
+  .metab-row { grid-template-columns: 1fr; }
+  .covid-ladder { grid-template-columns: repeat(4, 1fr); }
+  .flu-strip { grid-template-columns: repeat(5, 1fr); }
+  .travel-recs { grid-template-columns: 1fr; }
+}

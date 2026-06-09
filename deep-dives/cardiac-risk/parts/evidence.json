@@ -1,0 +1,256 @@
+{
+  "_meta": {
+    "layer": "EVIDENCE MAP — the clean cite drawer for the cardiac-risk deep dive. Every entry is either a verbatim NOTE quote (kind 'note', with who+date) or a readable STATEMENT of a structured fact (kind 'fact', text+date). Nothing raw: no locator ids, no column names, no midnight-timestamp artifacts, no brand parentheticals. sections.json cites these ids; the app shows ONLY what is here.",
+    "patient": "MANDEL, JOSHUA C — 43M, primary prevention",
+    "note_provenance": "Quote text was captured from the visit notes during the synthesis pass (analysis.json notes_read); the visit-note bodies were not retained as plain text in this export, so these verbatim quotes are the curated record of them. Radiology reads (e_cxr_read, e_cta_read) were re-verified verbatim against ORDER_NARRATIVE in the live database."
+  },
+
+  "e_dx_2022": {
+    "kind": "note",
+    "who": "Dr. Zoe Rammelkamp",
+    "date": "Aug 29, 2022",
+    "quote": "HTN. BP of 138/76 is consistent with Stage I HTN. Patient is interested in medication. He has tried dietary modification and feels like it hasn't been successful. Labs: BMP ordered for baseline lytes and renal function. Start lisinopril 10 mg daily."
+  },
+  "e_dx_billed": {
+    "kind": "note",
+    "who": "Dr. Zoe Rammelkamp",
+    "date": "Aug 29, 2022",
+    "quote": "99213 for HTN."
+  },
+  "e_offer_existed": {
+    "kind": "note",
+    "who": "Dr. Zoe Rammelkamp",
+    "date": "Aug 29, 2022",
+    "quote": "Discussed medication options including amitriptyline and BP medication."
+  },
+  "e_problemlist_absent": {
+    "kind": "fact",
+    "date": "Through Dec 4, 2025",
+    "text": "Hypertension never reached the structured problem list. The problem list holds only GERD, post-concussion syndrome, resolved neck pain, and two allergy diagnoses. The 8/29/2022 hypertension encounter diagnosis was never linked to a problem-list entry, so it surfaces nowhere a problem-list-driven view, registry, reminder, or risk calculator would read it."
+  },
+  "e_lisinopril_decline": {
+    "kind": "fact",
+    "date": "Started Aug 29, 2022 · discontinued Sep 28, 2023",
+    "text": "Lisinopril 10 mg daily — the only antihypertensive ever prescribed, for primary hypertension — was discontinued on Sep 28, 2023 for 'patient refusal,' and its taking history shows it was never reported as taken. No second antihypertensive was ever ordered."
+  },
+  "e_boiler_2023": {
+    "kind": "note",
+    "who": "Dr. Zoe Rammelkamp",
+    "date": "Sep 28, 2023",
+    "quote": "Chronic stable conditions: 1. Post concussive syndrome. Discussed healthy diet and lifestyle; continue to monitor BP."
+  },
+  "e_boiler_2024": {
+    "kind": "note",
+    "who": "Dr. Zoe Rammelkamp",
+    "date": "Nov 7, 2024",
+    "quote": "Discussed healthy diet and lifestyle; BP and weight good."
+  },
+  "e_boiler_2025": {
+    "kind": "note",
+    "who": "Dr. Zoe Rammelkamp",
+    "date": "Dec 4, 2025",
+    "quote": "Discussed healthy diet and lifestyle; BP and weight good."
+  },
+  "e_readdressed_zero": {
+    "kind": "fact",
+    "date": "Aug 29, 2022 → Dec 4, 2025",
+    "text": "Across the six primary-care visits after the Aug 29, 2022 diagnosis — Dec 1 2022, Mar 2 2023, Sep 28 2023, Jul 2 2024, Nov 7 2024, Dec 4 2025 — hypertension appears in the assessment and plan at zero of them, including all three visits after the Sep 28, 2023 medication refusal."
+  },
+
+  "e_bp_series": {
+    "kind": "fact",
+    "date": "Aug 9, 2018 → Dec 4, 2025",
+    "text": "Nine office blood-pressure readings: 122/70 (2018), 136/83 (2020), 138/76 (Aug 2022), 142/74 (Dec 2022), 134/80 (Mar 2023), 132/64 (Sep 2023), 127/81 (Jul 2024), 128/70 (Nov 2024), 132/62 (Dec 2025). Mean systolic 132 (range 122–142). Seven of nine sit at or above the Stage-1 threshold (≥130 systolic or ≥80 diastolic); none is truly normal (<120/80)."
+  },
+  "e_bp_flagged": {
+    "kind": "fact",
+    "date": "Dec 1, 2022",
+    "text": "The 142/74 reading taken at the Dec 1, 2022 concussion-referral visit (right arm, sitting) is the single office reading Epic auto-flagged abnormal — it is the only Stage-2 reading in the record."
+  },
+  "e_home_report": {
+    "kind": "note",
+    "who": "Dr. Zoe Rammelkamp",
+    "date": "Aug 29, 2022",
+    "quote": "Occasionally checks at home. Blood pressure typically in the upper 130s for the past 10 years."
+  },
+  "e_office_home_concordant": {
+    "kind": "fact",
+    "date": "Aug 9, 2018 → Dec 4, 2025",
+    "text": "The office mean systolic of 132 is concordant with — if anything slightly below — the patient's own home report of 'upper 130s for the past 10 years.' Two independent sources (clinic cuff and patient self-monitoring) agree to within a few mmHg, which is the out-of-office corroboration guidelines ask for before treating. This is sustained hypertension, not white-coat lability."
+  },
+
+  "e_chol": {
+    "kind": "fact",
+    "date": "Aug 9, 2018 → Dec 4, 2025",
+    "text": "Total cholesterol 159 (2018, fasting) → 156 (2023) → 188 mg/dL (2025)."
+  },
+  "e_ldl": {
+    "kind": "fact",
+    "date": "Aug 9, 2018 → Dec 4, 2025",
+    "text": "LDL (calculated) 89 → 94 → 92 mg/dL — essentially flat across all three panels; it is not the driver of the change."
+  },
+  "e_hdl": {
+    "kind": "fact",
+    "date": "Aug 9, 2018 → Dec 4, 2025",
+    "text": "HDL 52 (2018) → 44 (2023) → 40 mg/dL (2025, now flagged Low). HDL is measured directly and does not depend on fasting, so this decline is real regardless of the non-fasting caveat — and it is the main driver of the rising risk estimate."
+  },
+  "e_trig": {
+    "kind": "fact",
+    "date": "Aug 9, 2018 → Dec 4, 2025",
+    "text": "Triglycerides 88 (2018, fasting) → 92 (2023) → 282 mg/dL (2025, flagged High). The 2025 panel was drawn non-fasting, which inflates triglycerides and the calculated VLDL (56, flagged High) and ratio, so the true fasting triglyceride is likely lower."
+  },
+  "e_ratio": {
+    "kind": "fact",
+    "date": "Aug 9, 2018 → Dec 4, 2025",
+    "text": "Cholesterol-to-HDL ratio 3.1 → 3.5 → 4.7 — a steadily worsening atherogenic ratio, driven by the falling HDL."
+  },
+  "e_fasting_2018": {
+    "kind": "fact",
+    "date": "Aug 9, 2018",
+    "text": "The 2018 lipid panel carries the lab comment 'patient fasting' (triglyceride 88) — the one clearly fasting panel in the record and the cleanest baseline."
+  },
+  "e_nonfasting_2025": {
+    "kind": "fact",
+    "date": "Dec 4, 2025",
+    "text": "The 2025 lipid panel carries the lab comment 'patient was not fasting.' This inflates the triglyceride and the calculated VLDL and ratio; the directly-measured HDL of 40 is unaffected. A fasting redraw is needed to act on the triglyceride but cannot rescue the HDL-driven risk picture."
+  },
+
+  "e_ascvd_computed": {
+    "kind": "fact",
+    "date": "Computed from the 2018, 2023 and 2025 panels",
+    "text": "No global ASCVD or PREVENT risk was ever computed anywhere in the record. Computed here from the Pooled Cohort Equations (White, non-Hispanic male, untreated, non-smoker, non-diabetic, systolic 132): 10-year ASCVD 1.06% on the 2018 fasting panel → 1.28% (2023) → 2.04% on the 2025 panel — nearly doubled, driven mostly by the HDL fall from 52 to 40. Both figures sit below the 5% borderline and 7.5% intermediate statin-discussion thresholds, which is exactly why the omission felt defensible. The point is the trajectory and the conversation it should trigger, not the small percentage."
+  },
+  "e_ascvd_inputs": {
+    "kind": "fact",
+    "date": "Assembled from the export",
+    "text": "Every Pooled-Cohort input is recoverable from this export: age 43, male, race White and ethnicity Not Hispanic or Latino (both populated in the structured tables — a first pass wrongly believed race was missing), total cholesterol and HDL from each panel, systolic 132 (office mean, corroborated by home report), untreated (lisinopril declined and never taken), never-smoker at all eight social-history snapshots, and non-diabetic (A1c 5.4–5.5%)."
+  },
+  "e_prevent_crosscheck": {
+    "kind": "fact",
+    "date": "Cross-check",
+    "text": "The AHA PREVENT 2023 base model — which requires no race input — gives a concordant 10-year ASCVD of roughly 1.6% (2018) to 2.4% (2025), independently confirming the White-coefficient Pooled-Cohort read and that the discarded African-American-coefficient figures were an artifact of the false 'race unknown' assumption."
+  },
+  "e_sbp_sensitivity": {
+    "kind": "fact",
+    "date": "Sensitivity on the 2025 panel",
+    "text": "Because the blood pressure is office-only, a systolic sensitivity on the 2025 panel: 1.78% at systolic 122, 2.04% at 132, 2.32% at 142 — the office-only uncertainty does not change the order of magnitude."
+  },
+  "e_fasting_redraw": {
+    "kind": "fact",
+    "date": "Fasting-redraw scenario",
+    "text": "Holding the directly-measured HDL of 40 fixed and varying total cholesterol across the plausible fasting range, the 10-year ASCVD stays in a tight 1.5–2.0% band (188→2.04%, 180→1.88%, 170→1.70%, 160→1.52%). Even if a fasting redraw reverted total cholesterol all the way to the 2018 value of 159, he lands near 1.52% — still well above the 1.06% he sat at in 2018 when HDL was 52. The atherogenic shift survives the fasting caveat."
+  },
+  "e_no_lipid_therapy": {
+    "kind": "fact",
+    "date": "Through Dec 4, 2025",
+    "text": "No lipid-lowering or antiplatelet therapy was ever ordered — no statin, fibrate, ezetimibe, PCSK9 inhibitor, or aspirin appears anywhere in the medication history. The atherogenic shift accrued with no pharmacologic counter-pressure and, unlike the blood pressure, was never even proposed."
+  },
+
+  "e_family_mother_htn": {
+    "kind": "fact",
+    "date": "Family history",
+    "text": "Mother — hypertension (first-degree)."
+  },
+  "e_family_father_hld": {
+    "kind": "fact",
+    "date": "Family history",
+    "text": "Father — hyperlipidemia (first-degree)."
+  },
+  "e_family_brother": {
+    "kind": "fact",
+    "date": "Family history",
+    "text": "Brother — hypertension and hyperlipidemia (first-degree); he carries both conditions the patient is drifting toward."
+  },
+  "e_family_maternal_stroke": {
+    "kind": "fact",
+    "date": "Family history",
+    "text": "Both maternal grandparents — stroke (deceased)."
+  },
+  "e_family_paternal_mi": {
+    "kind": "fact",
+    "date": "Family history",
+    "text": "Both paternal grandparents — heart attack (deceased)."
+  },
+  "e_family_count": {
+    "kind": "fact",
+    "date": "Family history",
+    "text": "Eight of the twelve recorded family-history facts are cardiovascular: hypertension in two first-degree relatives, hyperlipidemia in two first-degree relatives, stroke in both maternal grandparents, and heart attack in both paternal grandparents — heavily cardiovascular and bilateral."
+  },
+  "e_family_onset_absent": {
+    "kind": "fact",
+    "date": "Family history",
+    "text": "Whether the grandparents' heart attacks and strokes were premature (the ASCVD-relevant cut: under 55 in men, under 65 in women) cannot be answered from this export: the age of onset is blank for every family-history entry, and the 'Age of Onset' column is printed blank in the family-history block of every annual note (2022, 2023, 2025). The strongest form of the family-history risk enhancer must be asked, not mined."
+  },
+
+  "e_cxr_read": {
+    "kind": "note",
+    "who": "Dr. Charles Stepherson (University of Wisconsin – Madison)",
+    "date": "May 14, 2024",
+    "quote": "INDICATION: Chest pain since yesterday after consuming THC, no prior comparison studies. FINDINGS: The cardiac silhouette and pulmonary vasculature are within normal limits. The lungs are clear bilaterally without evidence for pleural effusion, pneumothorax, or focal infiltrate."
+  },
+  "e_troponin_neg": {
+    "kind": "fact",
+    "date": "May 14, 2024",
+    "text": "At the May 14, 2024 chest-pain emergency visit (outside facility), troponin resulted negative and the chest x-ray read normal; a comprehensive metabolic panel and CBC were also drawn. The discrete lab values did not survive the import — only the normal/abnormal flags and the imaging reads remain."
+  },
+  "e_cta_read": {
+    "kind": "note",
+    "who": "University of Wisconsin – Madison radiology",
+    "date": "Jul 30, 2024",
+    "quote": "History: assess for vascular dissection left neck — vertebral artery dissection suspected. Aortic Arch: No significant atherosclerotic disease. Right Carotid: No significant atherosclerotic disease, no ulcerations. With NASCET-style measurement there is less than 50% stenosis of the internal carotid artery bilaterally. No evidence of vertebral dissection."
+  },
+  "e_dissection_workup": {
+    "kind": "fact",
+    "date": "Jul 30, 2024",
+    "text": "A suspected left vertebral-artery dissection on Jul 30, 2024 (outside facility) was worked up with a CT angiogram of the neck that read clean — no atherosclerosis, less than 50% internal-carotid stenosis bilaterally, no dissection — together with intravenous fluids. At age 41–42 this is direct evidence of no established atherosclerotic disease."
+  },
+  "e_acute_unreconciled": {
+    "kind": "fact",
+    "date": "2024",
+    "text": "Both 2024 emergency work-ups arrived only as imported external orders with the findings buried in the radiology narrative; neither carries a clinic note, and the Jul 2, 2024 primary-care visit — six weeks after the chest pain — addresses only cervicalgia, post-concussion syndrome, and headache, never mentioning the chest pain or the dissection scare."
+  },
+  "e_pcp_silent_acute": {
+    "kind": "note",
+    "who": "Dr. Everton",
+    "date": "Jul 2, 2024",
+    "quote": "Assessment/Plan: Cervicalgia. Post concussion syndrome. Chronic post-traumatic headache."
+  },
+
+  "e_weight": {
+    "kind": "fact",
+    "date": "Aug 9, 2018 → Dec 4, 2025",
+    "text": "Weight rose from 174 lb (2018) to 187 lb (2025), about +13 lb, moving BMI from roughly 24 into the 25–26 overweight range. The steady gain is the plausible common cause behind the simultaneous blood-pressure elevation, HDL decline, and triglyceride rise — a clustering toward metabolic syndrome."
+  },
+  "e_a1c": {
+    "kind": "fact",
+    "date": "2023 → 2025",
+    "text": "Hemoglobin A1c 5.4% (2023) and 5.5% (2025) — both normal. He is neither diabetic nor prediabetic, so dysglycemia is not a current driver."
+  },
+  "e_cgm": {
+    "kind": "note",
+    "who": "Dr. Zoe Rammelkamp",
+    "date": "Dec 4, 2025",
+    "quote": "Continuous Glucose Sensor (FreeStyle Libre 3 Sensor) — Patient not taking: Reported on 12/4/2025."
+  },
+  "e_cgm_engagement": {
+    "kind": "fact",
+    "date": "Mar 2024 → Dec 2025",
+    "text": "The patient self-funded a FreeStyle Libre 3 continuous glucose monitor (ordered Mar 12, 2024) despite never meeting diabetes criteria — real engagement with his own metabolic health that the visits could have harnessed. By Dec 4, 2025 it was marked 'not taking,' and no glucose data from it reached the structured record."
+  },
+
+  "e_renal_clean": {
+    "kind": "fact",
+    "date": "Aug 29, 2022 → Dec 4, 2025",
+    "text": "End-organ and electrolyte safety labs are reassuring: eGFR >90 at both 2022 and 2025, creatinine 0.94 → 0.98 mg/dL, potassium 5.0 → 4.7 mmol/L, glucose 90–97 mg/dL. There is no renal or electrolyte contraindication to an ACE inhibitor, ARB, or thiazide, and the hypertension has not yet produced detectable kidney injury — nothing clinical is blocking treatment except inertia."
+  },
+  "e_no_drugs_overall": {
+    "kind": "fact",
+    "date": "Through Dec 4, 2025",
+    "text": "The entire medication history contains no statin, fibrate, ezetimibe, PCSK9 inhibitor, aspirin, anticoagulant, or any antihypertensive other than the single declined lisinopril. Cardiovascular risk is being managed reading-by-reading and lab-by-lab rather than as an integrated estimate."
+  },
+  "e_acute_vs_chronic": {
+    "kind": "fact",
+    "date": "2024 vs. Aug 2022 → Dec 2025",
+    "text": "In 2024 the acute apparatus fired correctly and fast — a same-day negative troponin and normal chest x-ray for the chest pain, a clean neck CT angiogram and intravenous fluids for the dissection scare. Over the same period the chronic, asymptomatic, decades-relevant risk was re-addressed at zero of the six primary-care visits that followed the 2022 hypertension diagnosis, five of which carried an at-or-above-Stage-1 reading. Reactive apparatus intact; proactive apparatus absent."
+  }
+}

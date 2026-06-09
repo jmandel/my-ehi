@@ -1,0 +1,45 @@
+{
+  "_meta": {
+    "layer": "EVIDENCE (ascvd inputs) — per-input statements for the ASCVD slot that are NOT already in evidence.json. Merged into the cite drawer at assemble time. Each is a readable STATEMENT (kind 'fact'); nothing raw."
+  },
+  "e_input_age": {
+    "kind": "fact",
+    "date": "At the Dec 4, 2025 visit",
+    "text": "Age 43 at the latest contact (date of birth Oct 26, 1982), the age the headline risk is taken at. The trajectory holds age fixed at 43 and varies only the lipids from each panel, so the three points isolate the effect of the worsening lipids rather than of aging. The Pooled Cohort Equations are validated for ages 40–79, so 43 is in range."
+  },
+  "e_input_sex": {
+    "kind": "fact",
+    "date": "Demographics",
+    "text": "Male — the sex the Pooled Cohort Equations are stratified on, recorded in the patient demographics."
+  },
+  "e_input_race": {
+    "kind": "fact",
+    "date": "Demographics",
+    "text": "Race recorded as White, which selects the White/Other coefficient set of the Pooled Cohort Equations. This input is present in the structured demographics — a first pass wrongly believed it was missing and presented a wide race-driven spread; the confirmed race removes that spread entirely."
+  },
+  "e_input_ethnicity": {
+    "kind": "fact",
+    "date": "Demographics",
+    "text": "Ethnicity recorded as Not Hispanic or Latino. The Pooled Cohort Equations take race, not ethnicity, but both are populated in the export."
+  },
+  "e_input_treated": {
+    "kind": "fact",
+    "date": "Started Aug 29, 2022 · discontinued Sep 28, 2023",
+    "text": "Not on blood-pressure treatment. The only antihypertensive ever prescribed — lisinopril 10 mg — was declined and never reported as taken, then discontinued for patient refusal, so the untreated-systolic coefficient applies."
+  },
+  "e_input_smoker": {
+    "kind": "fact",
+    "date": "Across all social-history snapshots",
+    "text": "Never-smoker — tobacco use is recorded as 'Never' at every social-history snapshot in the record, so the smoking term is zero."
+  },
+  "e_input_diabetes": {
+    "kind": "fact",
+    "date": "2023 → 2025",
+    "text": "Non-diabetic — Hemoglobin A1c 5.4% and 5.5%, both normal, so the diabetes term is zero. This is a primary-prevention patient with no established atherosclerotic disease."
+  },
+  "e_input_egfr": {
+    "kind": "fact",
+    "date": "Aug 29, 2022 and Dec 4, 2025",
+    "text": "Estimated GFR resulted as '>90' at both draws with no discrete value, so the PREVENT cross-check uses an assumed 95. The Pooled Cohort Equations do not take eGFR; at this level the assumption moves the PREVENT figure only trivially."
+  }
+}

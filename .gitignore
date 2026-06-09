@@ -1,0 +1,22 @@
+# Never commit the unredacted export, the secrets list, or the loaded DB — full PHI.
+raw.unredacted/
+.redaction-terms.json
+redact/
+db/
+# NOTE: raw/ is the REDACTED, verified-clean output of import-ehi (05-verify: 0 residual) — it IS committable.
+# The unredacted source + secrets above stay ignored.
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+# Build outputs (regenerable via `bun build index.html --outdir dist`) and deps
+node_modules/
+deep-dives/*/dist/
+dist/
+site/
+# Throwaway verification screenshots — write these to /tmp, never the dive folder (they are not deliverables)
+deep-dives/*/*.png
+deep-dives/*/*.jpg
+deep-dives/*/*.jpeg
+
+# Pre-redaction process exhaust — captured raw PHI (SSNs, etc.); never commit as-is.
+artifacts/

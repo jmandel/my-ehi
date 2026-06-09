@@ -1,0 +1,559 @@
+{
+  "meta": {
+    "title": "Export shape and quality oddities",
+    "subtitle": "Concrete places where the Epic EHI export shape misleads a reader, drops an expected child payload, or disagrees with its own schema documentation.",
+    "scope": "Nine export-shape findings from SQLite catalog checks, live table probes, and raw note/media payload checks."
+  },
+  "summary": "The problems here are not judgments about whether the patient had enough clinical data. They are export-shape problems: final result headers without analyte rows, document pointers without document metadata or files, linkage columns that look joinable but are blank or use a different key domain, schema pages that document columns the TSV does not ship, and populated supplement tables whose payload fields are empty.",
+  "sections": [
+    {
+      "id": "payload",
+      "title": "Payload gaps",
+      "narrative": [
+        {
+          "text": "Some parent rows clearly say that a result, note, document, or medication-support object exists, but the expected child payload is absent or only partially present. These are not subtle interpretation problems: the raw checks show finalized lab headers with zero ORDER_RESULTS rows, document pointers that do not resolve to DOC_INFORMATION, and medication dispense/auth tables where every payload column checked is blank.",
+          "cites": [
+            "e_final_labs_zero_results",
+            "e_doc_pointer_gap",
+            "e_med_shells"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "joins",
+      "title": "Join and key traps",
+      "narrative": [
+        {
+          "text": "Several columns invite the wrong join. NOTE_ENC_INFO.PAT_ENC_CSN_ID exists but is blank on every row; note contact serials are not encounter CSNs; medication child tables use ORDER_ID to mean ORDER_MED.ORDER_MED_ID; and an image-availability table is mostly populated by medication orders rather than procedure/image orders.",
+          "cites": [
+            "e_note_csn_blank",
+            "e_order_med_key_alias",
+            "e_image_avail_med_ids"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "schema",
+      "title": "Schema/documentation mismatches",
+      "narrative": [
+        {
+          "text": "The schema HTML is useful but not authoritative. Across populated tables, 381 live columns are undocumented and 395 documented columns are absent from the TSVs. The dominant pattern is that the schema promises inline display-name companions such as _PROV_NAME, _DX_NAME, and _EXTERNAL_NAME, while the export ships shorter ID columns and expects lookup through master tables.",
+          "cites": [
+            "e_schema_drift",
+            "e_display_name_companions"
+          ]
+        }
+      ]
+    }
+  ],
+  "stats": [
+    {
+      "label": "Populated tables",
+      "value": "590",
+      "note": "Only 163 have a direct PAT_ID or PAT_ENC_CSN_ID column.",
+      "lane": "clinical"
+    },
+    {
+      "label": "Final labs with no analytes",
+      "value": "5",
+      "note": "Final-result lab headers whose ORDER_RESULTS child count is zero.",
+      "lane": "mechanics"
+    },
+    {
+      "label": "Pointer docs missing metadata",
+      "value": "36",
+      "note": "DOC_INFO_ID pointers that do not resolve to DOC_INFORMATION.",
+      "lane": "mechanics"
+    },
+    {
+      "label": "Schema column disagreements",
+      "value": "776",
+      "note": "381 live-undocumented plus 395 documented-but-absent columns.",
+      "lane": "boundary"
+    }
+  ],
+  "lanes": [
+    {
+      "id": "mechanics",
+      "title": "Payload/detail gaps",
+      "thesis": "A parent/index/header row survives, but the child rows, file payload, or detailed fields needed to inspect it are absent or shell-like.",
+      "count": 5
+    },
+    {
+      "id": "clinical",
+      "title": "Join/key traps",
+      "thesis": "The column name looks joinable to a familiar parent, but the values belong to a different key domain or the field is blank.",
+      "count": 3
+    },
+    {
+      "id": "boundary",
+      "title": "Schema/doc mismatch",
+      "thesis": "The schema HTML and live TSV disagree about which columns exist and where display names live.",
+      "count": 1
+    }
+  ],
+  "oddities": [
+    {
+      "id": "final-lab-headers-zero-results",
+      "lane": "mechanics",
+      "title": "Final-result lab headers exist with zero analyte rows",
+      "stumper": "ORDER_PROC says several lab orders are completed and final, with result timestamps, but ORDER_RESULTS has no component rows for those orders.",
+      "likelyCause": "Five final-result lab orders have result_rows = 0: the May 2024 CMP/CBC/troponin and the July 2024 BMP/CBC.",
+      "whyItMatters": "A result header normally leads to component detail in ORDER_RESULTS. Here the export can prove that a final lab existed, but cannot show the analyte values.",
+      "readerMove": "Treat these as imported or stripped result headers. Do not infer normal component values from the missing child table; retrieve the source report if analyte detail matters.",
+      "rawChecks": [
+        {
+          "title": "ORDER_PROC headers compared with ORDER_RESULTS children",
+          "rows": [
+            "ORDER_PROC_ID  DESCRIPTION                       LAB_STATUS_C_NAME  RESULT_TIME             result_rows",
+            "1025926284     CBC WITH DIFFERENTIAL             Final result       5/14/2024 1:55 PM     0",
+            "1025926285     TROPONIN                            Final result       5/14/2024 2:26 PM     0",
+            "1025926283     COMPREHENSIVE METABOLIC PANEL       Final result       5/14/2024 7:04 PM     0",
+            "1034471694     CBC WITH DIFFERENTIAL             Final result       7/30/2024 1:29 PM     0",
+            "1034471693     BASIC METABOLIC PANEL             Final result       7/30/2024 1:50 PM     0"
+          ]
+        },
+        {
+          "title": "Contrast: similar final labs that do have child rows",
+          "rows": [
+            "ORDER_PROC_ID  DESCRIPTION            RESULT_TIME              result_rows",
+            "772179262      BASIC METABOLIC PANEL  8/29/2022 3:41 PM      12",
+            "1165205280     BASIC METABOLIC PANEL  12/4/2025 4:47 PM      12",
+            "1165205279     LIPID PANEL            12/4/2025 4:47 PM      6"
+          ]
+        }
+      ],
+      "confidence": "high",
+      "evidenceIds": [
+        "e_final_labs_zero_results"
+      ],
+      "tags": [
+        "ORDER_PROC",
+        "ORDER_RESULTS",
+        "missing child rows"
+      ]
+    },
+    {
+      "id": "document-pointers-without-payload",
+      "lane": "mechanics",
+      "title": "Document pointer rows outnumber exported document metadata and files",
+      "stumper": "PATIENT_DOCS and PAT_ENC_DOCS point to 53 distinct DOC_INFO_ID values, but only 17 pointer rows resolve to DOC_INFORMATION; 36 do not.",
+      "likelyCause": "The document index survived more completely than the exported document master/payload set. Even among DOC_INFORMATION.SCAN_FILE values, four named or numeric payload references were absent from raw.unredacted/Media.",
+      "whyItMatters": "A document pointer is not proof that the document body or metadata was exported. A query that starts from pointer tables will overstate document availability.",
+      "readerMove": "For exported document bodies, start from DOC_INFORMATION plus SCAN_FILE, then check the media directory. Treat unresolved pointer rows as index evidence only.",
+      "rawChecks": [
+        {
+          "title": "Pointer tables joined to DOC_INFORMATION",
+          "rows": [
+            "check_name                                pointer_rows  matched_doc_rows  missing_doc_rows",
+            "document pointers resolving to metadata   53            17                36",
+            "",
+            "distinct pointer DOC_INFO_IDs: 53",
+            "DOC_INFORMATION rows:       22",
+            "DOC_INFORMATION with file:  14"
+          ]
+        },
+        {
+          "title": "SCAN_FILE values absent from Media/",
+          "rows": [
+            "251561956",
+            "254112907",
+            "258017835",
+            "IX-prd-3342771001.PDF"
+          ]
+        }
+      ],
+      "confidence": "high",
+      "evidenceIds": [
+        "e_doc_pointer_gap",
+        "e_media_gap"
+      ],
+      "tags": [
+        "DOC_INFORMATION",
+        "PATIENT_DOCS",
+        "Media"
+      ]
+    },
+    {
+      "id": "order-documents-under-keyed",
+      "lane": "clinical",
+      "title": "ORDER_DOCUMENTS says orders have documents but carries no document ID",
+      "stumper": "ORDER_DOCUMENTS has rows for three orders, but its live columns are only ORDER_ID, CONTACT_DATE_REAL, LINE, and CONTACT_DATE; there is no DOC_INFO_ID, DCS ID, or scan/file key on the row.",
+      "likelyCause": "For two orders, DOC_LINKED_ORDERS supplies a document bridge. For the MRI order, ORDER_DOCUMENTS has a row but no visible linked document record.",
+      "whyItMatters": "The table name and schema description suggest an order-to-document bridge. The live TSV is under-keyed, so the expected join cannot be written from ORDER_DOCUMENTS alone.",
+      "readerMove": "Use DOC_LINKED_ORDERS when a document ID is required. Treat lone ORDER_DOCUMENTS rows as weak evidence that a document relationship existed.",
+      "rawChecks": [
+        {
+          "title": "Live ORDER_DOCUMENTS columns and bridge coverage",
+          "rows": [
+            "ORDER_DOCUMENTS columns: ORDER_ID, CONTACT_DATE_REAL, LINE, CONTACT_DATE",
+            "",
+            "ORDER_ID    ORDER_PROC description              DOC_LINKED_ORDERS matches",
+            "1025926282  XR CHEST 2 VIEWS                    2",
+            "1034471692  CT ANGIOGRAPHY NECK W WO CONTRAST   1",
+            "439060613   MRI BRAIN WO CONTRAST               0"
+          ]
+        }
+      ],
+      "confidence": "high",
+      "evidenceIds": [
+        "e_order_documents_underkeyed"
+      ],
+      "tags": [
+        "ORDER_DOCUMENTS",
+        "DOC_LINKED_ORDERS",
+        "under-keyed"
+      ]
+    },
+    {
+      "id": "image-availability-medication-orders",
+      "lane": "clinical",
+      "title": "ORDER_IMAGE_AVAIL_INFO is mostly populated with medication order IDs",
+      "stumper": "ORDER_IMAGE_AVAIL_INFO.ORDER_ID sounds like it should point to image/procedure orders, but 10 of 11 rows join ORDER_MED and only one joins ORDER_PROC.",
+      "likelyCause": "The table uses a generic order-ID namespace in this export; most rows are medication orders marked image-available, not imaging orders with attached images.",
+      "whyItMatters": "Joining this table to ORDER_PROC drops almost all rows. Joining it as if every row is imaging metadata misclassifies medication orders as image-bearing procedures.",
+      "readerMove": "Resolve ORDER_ID against both order domains before interpreting the row. Do not use ORDER_IMAGE_AVAIL_INFO as a stand-alone imaging index.",
+      "rawChecks": [
+        {
+          "title": "ORDER_IMAGE_AVAIL_INFO join targets",
+          "rows": [
+            "rows  joins_ORDER_PROC  joins_ORDER_MED",
+            "11    1                 10",
+            "",
+            "ORDER_ID    IMG_AVAIL_YN  ORDER_PROC description              ORDER_MED display",
+            "772179261   Y                                             lisinopril tablet",
+            "1025926288  Y                                             cyclobenzaprine tablet",
+            "1025926289  Y             XR CERVICAL SPINE 3 VIEWS OR LESS",
+            "1034471697  Y                                             nirmatrelvir & ritonavir"
+          ]
+        }
+      ],
+      "confidence": "high",
+      "evidenceIds": [
+        "e_image_avail_med_ids"
+      ],
+      "tags": [
+        "ORDER_IMAGE_AVAIL_INFO",
+        "ORDER_MED",
+        "ORDER_PROC"
+      ]
+    },
+    {
+      "id": "note-csn-column-all-blank",
+      "lane": "clinical",
+      "title": "The obvious note encounter CSN column is present but all blank",
+      "stumper": "NOTE_ENC_INFO.PAT_ENC_CSN_ID exists and looks like the encounter join key, but every row is blank. HNO_INFO.PAT_ENC_CSN_ID is populated for only 77 of 188 notes.",
+      "likelyCause": "NOTE_ENC_INFO is a note-contact table. Its CONTACT_SERIAL_NUM/note CSN values are not patient encounter CSNs, and the encounter link lives only on HNO_INFO when present.",
+      "whyItMatters": "The column name makes an encounter join look available in NOTE_ENC_INFO, but the exported field carries no values. Using it as the note-to-encounter bridge returns zero rows; using HNO_INFO as an inner join drops 111 notes with no encounter CSN.",
+      "readerMove": "Do not use NOTE_ENC_INFO.PAT_ENC_CSN_ID as the encounter bridge in this export. Use HNO_INFO.PAT_ENC_CSN_ID only where populated, and preserve notes without an encounter CSN instead of dropping them in an inner join.",
+      "rawChecks": [
+        {
+          "title": "NOTE_ENC_INFO vs HNO_INFO encounter linkage",
+          "rows": [
+            "table_name     rows  blank_PAT_ENC_CSN_ID  joins_PAT_ENC",
+            "NOTE_ENC_INFO  194   194                   0",
+            "HNO_INFO       188   111                   77",
+            "",
+            "NOTE_ENC_INFO sample: NOTE_ID, PAT_ENC_CSN_ID, CONTACT_SERIAL_NUM",
+            "1473625808, blank, 1335234994",
+            "4024447284, blank, 3919579711"
+          ]
+        }
+      ],
+      "confidence": "high",
+      "evidenceIds": [
+        "e_note_csn_blank"
+      ],
+      "tags": [
+        "NOTE_ENC_INFO",
+        "HNO_INFO",
+        "Rich Text"
+      ]
+    },
+    {
+      "id": "schema-display-name-columns-absent",
+      "lane": "boundary",
+      "title": "The schema promises inline display-name companions the TSV does not ship",
+      "stumper": "The schema documents columns like PROC_ID_PROC_NAME, PAYOR_ID_PAYOR_NAME, and PCP_PROV_ID_PROV_NAME, but the live TSV often contains only the shorter ID column.",
+      "likelyCause": "The live export uses ID columns plus populated master lookup tables rather than materializing every documented display-name companion inline.",
+      "whyItMatters": "Queries copied from the schema HTML fail or silently omit labels. The data is often recoverable, but the lookup is in a different place than the schema page implies.",
+      "readerMove": "Use PRAGMA table_info as the column authority. Then join to master tables such as CLARITY_SER, CLARITY_DEP, CLARITY_EDG, and CLARITY_EAP for labels.",
+      "rawChecks": [
+        {
+          "title": "Global schema drift on populated tables",
+          "rows": [
+            "metric                    value",
+            "live_cols                 9697",
+            "schema_doc_cols           9711",
+            "live_not_documented       381",
+            "documented_not_live       395"
+          ]
+        },
+        {
+          "title": "Concrete missing documented companions",
+          "rows": [
+            "ARPB_TRANSACTIONS: PROC_ID live; PROC_ID_PROC_NAME documented but absent",
+            "ORDER_MED:        MEDICATION_ID live; MEDICATION_ID_MEDICATION_NAME documented but absent",
+            "PAT_ENC:          PCP_PROV_ID live; PCP_PROV_ID_PROV_NAME documented but absent",
+            "DOC_INFORMATION:  DOC_SER_ID live; DOC_SER_ID_PROV_NAME documented but absent",
+            "",
+            "Lookup tables populated: CLARITY_SER 36, CLARITY_DEP 16, CLARITY_EDG 44, CLARITY_EAP 64"
+          ]
+        }
+      ],
+      "confidence": "high",
+      "evidenceIds": [
+        "e_schema_drift",
+        "e_display_name_companions"
+      ],
+      "tags": [
+        "schema HTML",
+        "PRAGMA",
+        "lookup tables"
+      ]
+    },
+    {
+      "id": "supplement-key-aliases",
+      "lane": "clinical",
+      "title": "Supplement tables use equivalent keys under different column names",
+      "stumper": "PAT_ENC_3 lacks the expected PAT_ENC_CSN_ID column and uses PAT_ENC_CSN; medication supplements mix ORDER_MED_ID and ORDER_ID for the same base medication order key.",
+      "likelyCause": "Epic supplement tables are not guaranteed to carry the base table's exact key column name, even when every row maps one-to-one to the base table.",
+      "whyItMatters": "A family-wide join template misses whole supplements when it assumes identical key names across PAT_ENC_* or ORDER_MED_* tables.",
+      "readerMove": "Inventory each supplement table's live columns before joining. Treat ORDER_ID in medication child tables as ORDER_MED.ORDER_MED_ID, not ORDER_PROC.ORDER_PROC_ID.",
+      "rawChecks": [
+        {
+          "title": "PAT_ENC and ORDER_MED supplement key checks",
+          "rows": [
+            "check_name                                      has_expected_column  supplement_rows  joins_with_actual_column",
+            "PAT_ENC_3 expected PAT_ENC_CSN_ID               0                    169              169",
+            "ORDER_MED_2 expected ORDER_MED_ID               0                    20               20",
+            "",
+            "ORDER_MED_2 by ORDER_ID=ORDER_MED_ID: 20/20 matched",
+            "ORDER_MED_SIG by ORDER_ID=ORDER_MED_ID: 20/20 matched"
+          ]
+        }
+      ],
+      "confidence": "high",
+      "evidenceIds": [
+        "e_order_med_key_alias",
+        "e_pat_enc_key_alias"
+      ],
+      "tags": [
+        "supplements",
+        "ORDER_MED",
+        "PAT_ENC"
+      ]
+    },
+    {
+      "id": "result-value-sentinels-and-pointers",
+      "lane": "mechanics",
+      "title": "Result value fields require sentinel and comment-table handling",
+      "stumper": "ORDER_RESULTS.ORD_NUM_VALUE contains 9999999 for textual results, and documented value/RTF pointer fields are blank on every result row.",
+      "likelyCause": "Qualitative values are stored in ORD_VALUE while the numeric field uses a sentinel; multiline comments use ORDER_RES_COMMENT instead of the value/RTF pointer columns.",
+      "whyItMatters": "A numeric aggregation over ORD_NUM_VALUE is wrong, and a parser that follows only the documented value pointer fields misses comments.",
+      "readerMove": "Filter 9999999 before numeric work; prefer ORD_VALUE/VALUE_NORMALIZED for qualitative rows; join ORDER_RES_COMMENT for line comments.",
+      "rawChecks": [
+        {
+          "title": "ORDER_RESULTS sentinel and pointer fields",
+          "rows": [
+            "rows  ORD_NUM_VALUE=9999999  RESULT_VAL_START_LN nonblank  RTF_VAL_START_LINE nonblank  RESULT_CMT_START_LN nonblank",
+            "47    5                      0                             0                            9",
+            "",
+            "COMPONENT_ID_NAME          ORD_VALUE                         ORD_NUM_VALUE",
+            "EGFR NON-AFR/AMER         >90                               9999999",
+            "HEPATITIS C AB            NONREACTIVE                       9999999",
+            "H PYLORI ANTIGEN STOOL    NEGATIVE FOR H PYLORI STOOL...    9999999"
+          ]
+        },
+        {
+          "title": "Flag defaults are split across blank, Y, and literal (NONE)",
+          "rows": [
+            "RESULT_IN_RANGE_YN  RESULT_FLAG_C_NAME  rows",
+            "Y                                     34",
+            "                                      7",
+            "                    High              4",
+            "                    (NONE)            1",
+            "                    Low               1"
+          ]
+        }
+      ],
+      "confidence": "high",
+      "evidenceIds": [
+        "e_result_sentinel"
+      ],
+      "tags": [
+        "ORDER_RESULTS",
+        "sentinel",
+        "comments"
+      ]
+    },
+    {
+      "id": "order-narrative-layout-rows",
+      "lane": "mechanics",
+      "title": "ORDER_NARRATIVE row count is mostly report layout, not text",
+      "stumper": "ORDER_NARRATIVE has 465 rows across six orders, but 417 rows are blank; some reports preserve line numbers up to 160 with only a handful of text rows.",
+      "likelyCause": "The table preserves fixed report line positions or pagination. Imaging narratives are narrative-only, while most lab results are in ORDER_RESULTS; the two tables are largely disjoint.",
+      "whyItMatters": "Counting rows overstates narrative content. Conversely, requiring ORDER_RESULTS for every order would miss imaging reports that live only as narrative.",
+      "readerMove": "Reassemble by ORDER_PROC_ID and numeric LINE, keeping blank rows only if layout matters. Do not use ORDER_NARRATIVE row count as a proxy for clinical text volume.",
+      "rawChecks": [
+        {
+          "title": "ORDER_NARRATIVE text density",
+          "rows": [
+            "table_name       rows  blank_rows  text_rows  orders",
+            "ORDER_NARRATIVE  465   417         48         6",
+            "",
+            "ORDER_PROC_ID  rows  blank_rows  text_rows  max_LINE",
+            "1034471692     160   149         11         160",
+            "772179259      120   111         9          120",
+            "1025926289     96    90          6          96"
+          ]
+        },
+        {
+          "title": "Narrative and result tables are mostly separate",
+          "rows": [
+            "ORDER_NARRATIVE orders: 6",
+            "ORDER_RESULTS orders:   10",
+            "overlap:                1 order",
+            "examples narrative-only: XR chest, CT angiography neck, XR ankle",
+            "examples results-only:   lipid panel, BMP, hepatitis C antibody"
+          ]
+        }
+      ],
+      "confidence": "high",
+      "evidenceIds": [
+        "e_order_narrative_layout"
+      ],
+      "tags": [
+        "ORDER_NARRATIVE",
+        "line table",
+        "layout"
+      ]
+    },
+    {
+      "id": "med-dispense-auth-shells",
+      "lane": "mechanics",
+      "title": "Medication dispense and authorization supplements are populated shells",
+      "stumper": "ORDER_DISP_INFO and ORDER_AUTH_INFO have rows, but the checked dispense/auth payload columns are blank on every row.",
+      "likelyCause": "The export includes supplement table rows keyed to medication orders without exporting the corresponding dispense fill, authorization, denial, or patient-pay detail.",
+      "whyItMatters": "Row presence does not mean the export contains pharmacy-fill or prior-authorization facts. A naive count makes medication support data look present when it is not.",
+      "readerMove": "Use these supplements only after checking payload columns. For fills/auths in this export, treat the populated rows as shells unless another table supplies the detail.",
+      "rawChecks": [
+        {
+          "title": "Medication supplement payload blanks",
+          "rows": [
+            "ORDER_DISP_INFO rows: 20",
+            "FILL_SERVICE_DATE nonblank: 0",
+            "FILL_NUMBER nonblank:       0",
+            "FILL_SUPPLY_DAYS nonblank:  0",
+            "FILL_DISP_QTY nonblank:     0",
+            "FILL_STATUS_C_NAME:         0",
+            "PAT_PAY_AMOUNT:             0",
+            "",
+            "ORDER_AUTH_INFO rows:       62",
+            "MED_AUTH_RESULT_C_NAME:     0",
+            "MED_AUTH_NUM:               0",
+            "AUTH_DENY_RSN_ID:           0",
+            "AUTH_START_UTC_DTTM:        0",
+            "AUTH_LIMIT:                 0"
+          ]
+        }
+      ],
+      "confidence": "high",
+      "evidenceIds": [
+        "e_med_shells"
+      ],
+      "tags": [
+        "ORDER_DISP_INFO",
+        "ORDER_AUTH_INFO",
+        "blank payload"
+      ]
+    }
+  ],
+  "rulebook": [
+    {
+      "title": "Start with live columns",
+      "text": "Read PRAGMA table_info before using a schema-page column name. In this export, hundreds of documented columns are absent."
+    },
+    {
+      "title": "Separate header from payload",
+      "text": "A final order, document pointer, or supplement row can exist without exported analytes, document metadata, media files, or fill/auth details."
+    },
+    {
+      "title": "Resolve key domains",
+      "text": "Generic names like ORDER_ID, CONTACT_SERIAL_NUM, and DOC_HNO_ID do not always point to the parent their name suggests."
+    },
+    {
+      "title": "Check line tables by content",
+      "text": "Line-numbered tables may preserve layout or comments; count nonblank text and cast LINE numerically before interpretation."
+    }
+  ],
+  "evidence": {
+    "e_final_labs_zero_results": {
+      "kind": "fact",
+      "who": "SQLite ORDER_PROC/ORDER_RESULTS probe",
+      "text": "Five lab orders have completed/final result headers and result timestamps but zero ORDER_RESULTS rows: CMP/CBC/troponin on May 14, 2024, and BMP/CBC on July 30, 2024."
+    },
+    "e_doc_pointer_gap": {
+      "kind": "fact",
+      "who": "SQLite PATIENT_DOCS/PAT_ENC_DOCS/DOC_INFORMATION probe",
+      "text": "The pointer tables contain 53 pointer rows; only 17 resolve to DOC_INFORMATION and 36 do not."
+    },
+    "e_media_gap": {
+      "kind": "fact",
+      "who": "DOC_INFORMATION.SCAN_FILE versus raw.unredacted/Media",
+      "text": "Four DOC_INFORMATION.SCAN_FILE values are absent from the Media directory: three numeric values and one IX-prd PDF filename."
+    },
+    "e_order_documents_underkeyed": {
+      "kind": "fact",
+      "who": "SQLite ORDER_DOCUMENTS/DOC_LINKED_ORDERS probe",
+      "text": "ORDER_DOCUMENTS has only ORDER_ID, CONTACT_DATE_REAL, LINE, and CONTACT_DATE. One ORDER_DOCUMENTS order has no DOC_LINKED_ORDERS bridge."
+    },
+    "e_image_avail_med_ids": {
+      "kind": "fact",
+      "who": "SQLite ORDER_IMAGE_AVAIL_INFO join probe",
+      "text": "ORDER_IMAGE_AVAIL_INFO contains 11 rows; 10 join ORDER_MED and only one joins ORDER_PROC."
+    },
+    "e_note_csn_blank": {
+      "kind": "fact",
+      "who": "SQLite NOTE_ENC_INFO/HNO_INFO/PAT_ENC probe",
+      "text": "NOTE_ENC_INFO.PAT_ENC_CSN_ID is blank on all 194 rows. HNO_INFO.PAT_ENC_CSN_ID is blank on 111 of 188 rows and joins PAT_ENC on the remaining 77."
+    },
+    "e_schema_drift": {
+      "kind": "fact",
+      "who": "SQLite _schema_column versus PRAGMA table_info",
+      "text": "Across 590 populated non-internal tables, live SQLite has 9697 columns and the schema documents 9711 columns; 381 live columns are undocumented and 395 documented columns are absent."
+    },
+    "e_display_name_companions": {
+      "kind": "fact",
+      "who": "Schema/live column comparison",
+      "text": "Examples include live ARPB_TRANSACTIONS.PROC_ID while the schema documents PROC_ID_PROC_NAME, live ORDER_MED.MEDICATION_ID while the schema documents MEDICATION_ID_MEDICATION_NAME, and live PAT_ENC.PCP_PROV_ID while the schema documents PCP_PROV_ID_PROV_NAME."
+    },
+    "e_order_med_key_alias": {
+      "kind": "fact",
+      "who": "SQLite ORDER_MED supplement probe",
+      "text": "ORDER_MED_2 lacks ORDER_MED_ID, but its ORDER_ID matches ORDER_MED.ORDER_MED_ID for all 20 rows; ORDER_MED_SIG has the same ORDER_ID-to-ORDER_MED_ID behavior."
+    },
+    "e_pat_enc_key_alias": {
+      "kind": "fact",
+      "who": "SQLite PAT_ENC_3 supplement probe",
+      "text": "PAT_ENC_3 lacks PAT_ENC_CSN_ID and uses PAT_ENC_CSN; all 169 rows join PAT_ENC.PAT_ENC_CSN_ID through that actual column."
+    },
+    "e_result_sentinel": {
+      "kind": "fact",
+      "who": "SQLite ORDER_RESULTS probe",
+      "text": "ORDER_RESULTS has 47 rows; 5 use ORD_NUM_VALUE='9999999' while the actual qualitative result is in ORD_VALUE. Value/RTF pointer columns are blank on all rows; comment pointers are present on 9 rows."
+    },
+    "e_order_narrative_layout": {
+      "kind": "fact",
+      "who": "SQLite ORDER_NARRATIVE probe",
+      "text": "ORDER_NARRATIVE has 465 rows across 6 orders, with 417 blank rows and 48 text rows. ORDER_NARRATIVE and ORDER_RESULTS overlap on only one order."
+    },
+    "e_med_shells": {
+      "kind": "fact",
+      "who": "SQLite ORDER_DISP_INFO/ORDER_AUTH_INFO probe",
+      "text": "ORDER_DISP_INFO has 20 rows with checked fill payload fields blank on all rows. ORDER_AUTH_INFO has 62 rows with checked authorization payload fields blank on all rows."
+    }
+  }
+}

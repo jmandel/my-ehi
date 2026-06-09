@@ -1,0 +1,2174 @@
+{
+  "meta": {
+    "title": "Operational details in an Epic EHI export",
+    "subtitle": "The scheduling, rooming-adjacent, and workflow exhaust most clinical exports leave behind.",
+    "counts": {
+      "appointment_skeleton_rows": 74,
+      "real_appointments": 23,
+      "completed_appointments": 19,
+      "echeckin_step_rows": 144,
+      "audit_rows": 6519,
+      "audit_items": 25,
+      "adt_events": 4,
+      "ed_event_lines": 21,
+      "room_assignments_present": 0,
+      "order_rows": 42,
+      "note_file_rows": 80,
+      "note_file_after_hours": 7,
+      "clinic_vital_delta_median_min": 6
+    }
+  },
+  "summary": [
+    "This export does not expose a clean exam-room timer for ordinary office visits. It does expose the visit choreography: scheduled slots, check-in/check-out actors, first vitals timestamps, AVS print times, eCheck-in steps, questionnaire attempts, order timing, and audit events.",
+    "The strongest finding is the audit/workflow layer. There are thousands of timestamped record-change events and multiple patient-facing workflow ledgers, which is far beyond a normal clinical summary export."
+  ],
+  "statusCounts": [
+    {
+      "status": "Completed",
+      "n": 19,
+      "checkin": 19,
+      "checkout": 10,
+      "echeckin": 16,
+      "avs": 5
+    },
+    {
+      "status": "Canceled",
+      "n": 3,
+      "checkin": 0,
+      "checkout": 0,
+      "echeckin": 2,
+      "avs": 0
+    },
+    {
+      "status": "Scheduled",
+      "n": 1,
+      "checkin": 0,
+      "checkout": 0,
+      "echeckin": 1,
+      "avs": 0
+    }
+  ],
+  "surfaceRows": [
+    {
+      "label": "Appointment slot",
+      "raw": "PAT_ENC_APPT.PROV_START_TIME",
+      "rows": 23,
+      "present": 23,
+      "interpretation": "Booked wall-clock appointment time. This is often absent from standard clinical exports."
+    },
+    {
+      "label": "Check-in actor",
+      "raw": "PAT_ENC.CHECKIN_USER_ID_NAME",
+      "rows": 23,
+      "present": 19,
+      "interpretation": "The staff or MyChart account that checked the appointment in."
+    },
+    {
+      "label": "Check-out actor",
+      "raw": "PAT_ENC_3.CHKOUT_USER_ID_NAME",
+      "rows": 23,
+      "present": 10,
+      "interpretation": "Checkout exists mostly for office visits; labs/radiology often have no checkout row."
+    },
+    {
+      "label": "eCheck-in workflow",
+      "raw": "PAT_ENC_4 + ECHKIN_STEP_INFO",
+      "rows": 23,
+      "present": 19,
+      "interpretation": "Rollup status plus per-step rows for insurance, questionnaires, travel history, payments, and more."
+    },
+    {
+      "label": "Flowsheet timing",
+      "raw": "IP_FLWSHT_MEAS.RECORDED_TIME",
+      "rows": 23,
+      "present": 12,
+      "interpretation": "A timestamped proxy for rooming/vitals when vitals or screening rows were charted."
+    },
+    {
+      "label": "Room or bed assignment",
+      "raw": "CLARITY_ADT.ROOM_ID / PAT_ENC_HSP.ROOM_ID",
+      "rows": 6,
+      "present": 0,
+      "interpretation": "The columns exist, but this outpatient-heavy specimen does not carry room/bed values."
+    },
+    {
+      "label": "ADT in/out events",
+      "raw": "CLARITY_ADT",
+      "rows": 4,
+      "present": 4,
+      "interpretation": "Four events reconstruct two outpatient therapy-series contacts: in events by a user, discharge events by a batch job."
+    },
+    {
+      "label": "Video visit sidecar",
+      "raw": "PATIENT_ENC_VIDEO_VISIT",
+      "rows": 169,
+      "present": 1,
+      "interpretation": "The table is populated as a 1:1 sidecar, but video-visit values are empty here."
+    }
+  ],
+  "appointmentRows": [
+    {
+      "csn": "720803470",
+      "date": "Aug 9, 2018",
+      "date_iso": "2018-08-09",
+      "date_real": 64869,
+      "slot": "9:30 AM",
+      "status": "Completed",
+      "kind": "clinic",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "provider": "DHILLON, PUNEET S",
+      "checkin_user": "SUTTER, JULIE M",
+      "checkout_user": "MANIX, PATRICIA A",
+      "echeckin_status": null,
+      "avs_time": "10:16 AM",
+      "first_flowsheet_time": "9:48 AM",
+      "last_flowsheet_time": "9:50 AM",
+      "first_core_vital_time": "9:50 AM",
+      "first_core_vital_label": "BMI (Calculated): 24",
+      "first_core_delta_min": 20,
+      "flow_measure_count": 41,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "20 min after slot"
+    },
+    {
+      "csn": "724628999",
+      "date": "Aug 9, 2018",
+      "date_iso": "2018-08-09",
+      "date_real": 64869.03,
+      "slot": "10:20 AM",
+      "status": "Completed",
+      "kind": "lab",
+      "department": "MAC APL LABORATORY",
+      "provider": "MAC LAB APL",
+      "checkin_user": "MANIX, PATRICIA A",
+      "checkout_user": null,
+      "echeckin_status": null,
+      "avs_time": null,
+      "first_flowsheet_time": null,
+      "last_flowsheet_time": null,
+      "first_core_vital_time": null,
+      "first_core_vital_label": null,
+      "first_core_delta_min": null,
+      "flow_measure_count": 0,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "No rooming/vitals timing proxy in the exported rows."
+    },
+    {
+      "csn": "725327197",
+      "date": "Aug 18, 2018",
+      "date_iso": "2018-08-18",
+      "date_real": 64878,
+      "slot": "9:30 AM",
+      "status": "Completed",
+      "kind": "lab",
+      "department": "MAC APL LABORATORY",
+      "provider": "MAC LAB APL",
+      "checkin_user": "FIELD, LISA K",
+      "checkout_user": null,
+      "echeckin_status": null,
+      "avs_time": null,
+      "first_flowsheet_time": null,
+      "last_flowsheet_time": null,
+      "first_core_vital_time": null,
+      "first_core_vital_label": null,
+      "first_core_delta_min": null,
+      "flow_measure_count": 0,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "No rooming/vitals timing proxy in the exported rows."
+    },
+    {
+      "csn": "799951565",
+      "date": "Jan 9, 2020",
+      "date_iso": "2020-01-09",
+      "date_real": 65387,
+      "slot": "12:45 PM",
+      "status": "Completed",
+      "kind": "clinic",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "provider": "DHILLON, PUNEET S",
+      "checkin_user": "BURNS, MALAYSIA",
+      "checkout_user": "MANIX, PATRICIA A",
+      "echeckin_status": "Not Yet Available",
+      "avs_time": "12:56 PM",
+      "first_flowsheet_time": "12:29 PM",
+      "last_flowsheet_time": "12:29 PM",
+      "first_core_vital_time": "12:29 PM",
+      "first_core_vital_label": "Weight: 2931.2 ounces",
+      "first_core_delta_min": -16,
+      "flow_measure_count": 13,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "16 min before slot"
+    },
+    {
+      "csn": "829213099",
+      "date": "Jul 14, 2020",
+      "date_iso": "2020-07-14",
+      "date_real": 65574,
+      "slot": "2:30 PM",
+      "status": "Completed",
+      "kind": "clinic",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "provider": "PICONE, MARY A",
+      "checkin_user": "PICONE, MARY A",
+      "checkout_user": null,
+      "echeckin_status": "Completed",
+      "avs_time": null,
+      "first_flowsheet_time": null,
+      "last_flowsheet_time": null,
+      "first_core_vital_time": null,
+      "first_core_vital_label": null,
+      "first_core_delta_min": null,
+      "flow_measure_count": 0,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "No rooming/vitals timing proxy in the exported rows."
+    },
+    {
+      "csn": "829212157",
+      "date": "Jul 15, 2020",
+      "date_iso": "2020-07-15",
+      "date_real": 65575,
+      "slot": "2:00 PM",
+      "status": "Canceled",
+      "kind": "canceled",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "provider": "PICONE, MARY A",
+      "checkin_user": null,
+      "checkout_user": null,
+      "echeckin_status": null,
+      "avs_time": null,
+      "first_flowsheet_time": null,
+      "last_flowsheet_time": null,
+      "first_core_vital_time": null,
+      "first_core_vital_label": null,
+      "first_core_delta_min": null,
+      "flow_measure_count": 0,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "No rooming/vitals timing proxy in the exported rows."
+    },
+    {
+      "csn": "922942674",
+      "date": "Mar 11, 2022",
+      "date_iso": "2022-03-11",
+      "date_real": 66179,
+      "slot": "2:50 PM",
+      "status": "Completed",
+      "kind": "therapy",
+      "department": "MHM OT NEURO CENTRAL",
+      "provider": "GILMOUR, AARON K",
+      "checkin_user": "FALDUTO, KAITLYN L",
+      "checkout_user": null,
+      "echeckin_status": "Not Started",
+      "avs_time": null,
+      "first_flowsheet_time": "2:55 AM",
+      "last_flowsheet_time": "2:55 AM",
+      "first_core_vital_time": null,
+      "first_core_vital_label": null,
+      "first_core_delta_min": null,
+      "flow_measure_count": 1,
+      "hsp_class": "Therapies Series",
+      "effective_start": "2:41 PM",
+      "note": "No rooming/vitals timing proxy in the exported rows."
+    },
+    {
+      "csn": "922943112",
+      "date": "Mar 22, 2022",
+      "date_iso": "2022-03-22",
+      "date_real": 66190,
+      "slot": "5:00 PM",
+      "status": "Completed",
+      "kind": "therapy",
+      "department": "MHM OT NEURO CENTRAL",
+      "provider": "GILMOUR, AARON K",
+      "checkin_user": "FALDUTO, KAITLYN L",
+      "checkout_user": null,
+      "echeckin_status": "Not Started",
+      "avs_time": null,
+      "first_flowsheet_time": "3:26 AM",
+      "last_flowsheet_time": "3:26 AM",
+      "first_core_vital_time": null,
+      "first_core_vital_label": null,
+      "first_core_delta_min": null,
+      "flow_measure_count": 1,
+      "hsp_class": "Therapies Series",
+      "effective_start": "4:42 PM",
+      "note": "No rooming/vitals timing proxy in the exported rows."
+    },
+    {
+      "csn": "948002801",
+      "date": "Aug 11, 2022",
+      "date_iso": "2022-08-11",
+      "date_real": 66332,
+      "slot": "11:45 AM",
+      "status": "Canceled",
+      "kind": "canceled",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "provider": "RAMMELKAMP, ZOE L",
+      "checkin_user": null,
+      "checkout_user": null,
+      "echeckin_status": "Not Started",
+      "avs_time": null,
+      "first_flowsheet_time": null,
+      "last_flowsheet_time": null,
+      "first_core_vital_time": null,
+      "first_core_vital_label": null,
+      "first_core_delta_min": null,
+      "flow_measure_count": 0,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "No rooming/vitals timing proxy in the exported rows."
+    },
+    {
+      "csn": "948004323",
+      "date": "Aug 29, 2022",
+      "date_iso": "2022-08-29",
+      "date_real": 66350,
+      "slot": "1:30 PM",
+      "status": "Completed",
+      "kind": "clinic",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "provider": "RAMMELKAMP, ZOE L",
+      "checkin_user": "LEWIS, ANTONIA R",
+      "checkout_user": "MANIX, PATRICIA A",
+      "echeckin_status": "Completed",
+      "avs_time": "2:32 PM",
+      "first_flowsheet_time": "1:32 PM",
+      "last_flowsheet_time": "1:34 PM",
+      "first_core_vital_time": "1:34 PM",
+      "first_core_vital_label": "BP: 138/76",
+      "first_core_delta_min": 4,
+      "flow_measure_count": 37,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "4 min after slot"
+    },
+    {
+      "csn": "958147754",
+      "date": "Aug 29, 2022",
+      "date_iso": "2022-08-29",
+      "date_real": 66350.02,
+      "slot": "3:50 PM",
+      "status": "Completed",
+      "kind": "lab",
+      "department": "MAC APL LABORATORY",
+      "provider": "MAC LAB APL",
+      "checkin_user": "MANIX, PATRICIA A",
+      "checkout_user": null,
+      "echeckin_status": "Not Started",
+      "avs_time": null,
+      "first_flowsheet_time": null,
+      "last_flowsheet_time": null,
+      "first_core_vital_time": null,
+      "first_core_vital_label": null,
+      "first_core_delta_min": null,
+      "flow_measure_count": 0,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "No rooming/vitals timing proxy in the exported rows."
+    },
+    {
+      "csn": "958148226",
+      "date": "Oct 11, 2022",
+      "date_iso": "2022-10-11",
+      "date_real": 66393,
+      "slot": "3:30 PM",
+      "status": "Canceled",
+      "kind": "canceled",
+      "department": "MAC APL LABORATORY",
+      "provider": "MAC LAB APL",
+      "checkin_user": null,
+      "checkout_user": null,
+      "echeckin_status": "Not Started",
+      "avs_time": null,
+      "first_flowsheet_time": null,
+      "last_flowsheet_time": null,
+      "first_core_vital_time": null,
+      "first_core_vital_label": null,
+      "first_core_delta_min": null,
+      "flow_measure_count": 0,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "No rooming/vitals timing proxy in the exported rows."
+    },
+    {
+      "csn": "974614965",
+      "date": "Dec 1, 2022",
+      "date_iso": "2022-12-01",
+      "date_real": 66444,
+      "slot": "9:30 AM",
+      "status": "Completed",
+      "kind": "clinic",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "provider": "RAMMELKAMP, ZOE L",
+      "checkin_user": "MAGGIT, MARIYAH N",
+      "checkout_user": "MANIX, PATRICIA A",
+      "echeckin_status": "Completed",
+      "avs_time": "10:18 AM",
+      "first_flowsheet_time": "9:36 AM",
+      "last_flowsheet_time": "9:36 AM",
+      "first_core_vital_time": "9:36 AM",
+      "first_core_vital_label": "Weight: 2892.8 ounces",
+      "first_core_delta_min": 6,
+      "flow_measure_count": 12,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "6 min after slot"
+    },
+    {
+      "csn": "958148810",
+      "date": "Mar 2, 2023",
+      "date_iso": "2023-03-02",
+      "date_real": 66535,
+      "slot": "2:45 PM",
+      "status": "Completed",
+      "kind": "clinic",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "provider": "RAMMELKAMP, ZOE L",
+      "checkin_user": "SUTTER, JULIE M",
+      "checkout_user": "MANIX, PATRICIA A",
+      "echeckin_status": "Completed",
+      "avs_time": null,
+      "first_flowsheet_time": "3:56 PM",
+      "last_flowsheet_time": "2:44 PM",
+      "first_core_vital_time": "2:44 PM",
+      "first_core_vital_label": "Weight: 2908.8 ounces",
+      "first_core_delta_min": -1,
+      "flow_measure_count": 16,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "1 min before slot"
+    },
+    {
+      "csn": "991225117",
+      "date": "Sep 28, 2023",
+      "date_iso": "2023-09-28",
+      "date_real": 66745,
+      "slot": "9:30 AM",
+      "status": "Completed",
+      "kind": "clinic",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "provider": "RAMMELKAMP, ZOE L",
+      "checkin_user": "SUTTER, JULIE M",
+      "checkout_user": "MANIX, PATRICIA A",
+      "echeckin_status": "In Progress",
+      "avs_time": "10:12 AM",
+      "first_flowsheet_time": "9:39 AM",
+      "last_flowsheet_time": "9:41 AM",
+      "first_core_vital_time": "9:41 AM",
+      "first_core_vital_label": "BMI (Calculated): 25",
+      "first_core_delta_min": 11,
+      "flow_measure_count": 39,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "11 min after slot"
+    },
+    {
+      "csn": "1028743701",
+      "date": "Sep 28, 2023",
+      "date_iso": "2023-09-28",
+      "date_real": 66745.02,
+      "slot": "11:00 AM",
+      "status": "Completed",
+      "kind": "lab",
+      "department": "MAC APL LABORATORY",
+      "provider": "MAC LAB APL",
+      "checkin_user": "MANIX, PATRICIA A",
+      "checkout_user": null,
+      "echeckin_status": "Not Started",
+      "avs_time": null,
+      "first_flowsheet_time": null,
+      "last_flowsheet_time": null,
+      "first_core_vital_time": null,
+      "first_core_vital_label": null,
+      "first_core_delta_min": null,
+      "flow_measure_count": 0,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "No rooming/vitals timing proxy in the exported rows."
+    },
+    {
+      "csn": "1076261941",
+      "date": "Jul 2, 2024",
+      "date_iso": "2024-07-02",
+      "date_real": 67023,
+      "slot": "9:45 AM",
+      "status": "Completed",
+      "kind": "clinic",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "provider": "EVERTON, JENNIFER L",
+      "checkin_user": "PITZER, KARI A",
+      "checkout_user": "MANIX, PATRICIA A",
+      "echeckin_status": "Completed",
+      "avs_time": null,
+      "first_flowsheet_time": "10:56 PM",
+      "last_flowsheet_time": "9:51 AM",
+      "first_core_vital_time": "9:51 AM",
+      "first_core_vital_label": "Weight: 2843.2 ounces",
+      "first_core_delta_min": 6,
+      "flow_measure_count": 15,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "6 min after slot"
+    },
+    {
+      "csn": "1076676013",
+      "date": "Jul 2, 2024",
+      "date_iso": "2024-07-02",
+      "date_real": 67023.03,
+      "slot": "10:30 AM",
+      "status": "Completed",
+      "kind": "radiology",
+      "department": "MAC APL RADIOLOGY",
+      "provider": "KOMMER, LESLIE R",
+      "checkin_user": "MANIX, PATRICIA A",
+      "checkout_user": null,
+      "echeckin_status": "Not Started",
+      "avs_time": null,
+      "first_flowsheet_time": null,
+      "last_flowsheet_time": null,
+      "first_core_vital_time": null,
+      "first_core_vital_label": null,
+      "first_core_delta_min": null,
+      "flow_measure_count": 0,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "No rooming/vitals timing proxy in the exported rows."
+    },
+    {
+      "csn": "1028744231",
+      "date": "Nov 7, 2024",
+      "date_iso": "2024-11-07",
+      "date_real": 67151,
+      "slot": "8:30 AM",
+      "status": "Completed",
+      "kind": "clinic",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "provider": "RAMMELKAMP, ZOE L",
+      "checkin_user": "JONES, LATONYA M",
+      "checkout_user": "MANIX, PATRICIA A",
+      "echeckin_status": "Completed",
+      "avs_time": null,
+      "first_flowsheet_time": "8:25 AM",
+      "last_flowsheet_time": "8:27 AM",
+      "first_core_vital_time": "8:27 AM",
+      "first_core_vital_label": "SpO2: 100 %",
+      "first_core_delta_min": -3,
+      "flow_measure_count": 39,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "3 min before slot"
+    },
+    {
+      "csn": "1127808563",
+      "date": "Apr 23, 2025",
+      "date_iso": "2025-04-23",
+      "date_real": 67318,
+      "slot": "1:00 PM",
+      "status": "Completed",
+      "kind": "clinic",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "provider": "RAMMELKAMP, ZOE L",
+      "checkin_user": "MYCHART, GENERIC",
+      "checkout_user": "MYCHART, GENERIC",
+      "echeckin_status": "Completed",
+      "avs_time": null,
+      "first_flowsheet_time": "10:32 AM",
+      "last_flowsheet_time": "10:32 AM",
+      "first_core_vital_time": null,
+      "first_core_vital_label": null,
+      "first_core_delta_min": null,
+      "flow_measure_count": 4,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "No rooming/vitals timing proxy in the exported rows."
+    },
+    {
+      "csn": "1098684634",
+      "date": "Dec 4, 2025",
+      "date_iso": "2025-12-04",
+      "date_real": 67543,
+      "slot": "3:00 PM",
+      "status": "Completed",
+      "kind": "clinic",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "provider": "RAMMELKAMP, ZOE L",
+      "checkin_user": "HOTH, NATHAN S",
+      "checkout_user": "MANIX, PATRICIA A",
+      "echeckin_status": "Completed",
+      "avs_time": null,
+      "first_flowsheet_time": "3:06 PM",
+      "last_flowsheet_time": "3:34 PM",
+      "first_core_vital_time": "3:07 PM",
+      "first_core_vital_label": "SpO2: 98 %",
+      "first_core_delta_min": 7,
+      "flow_measure_count": 47,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "7 min after slot"
+    },
+    {
+      "csn": "1169847546",
+      "date": "Dec 4, 2025",
+      "date_iso": "2025-12-04",
+      "date_real": 67543.02,
+      "slot": "4:00 PM",
+      "status": "Completed",
+      "kind": "lab",
+      "department": "MAC APL LABORATORY",
+      "provider": "MAC LAB APL",
+      "checkin_user": "MANIX, PATRICIA A",
+      "checkout_user": null,
+      "echeckin_status": "Not Started",
+      "avs_time": null,
+      "first_flowsheet_time": null,
+      "last_flowsheet_time": null,
+      "first_core_vital_time": null,
+      "first_core_vital_label": null,
+      "first_core_delta_min": null,
+      "flow_measure_count": 0,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "No rooming/vitals timing proxy in the exported rows."
+    },
+    {
+      "csn": "1183640405",
+      "date": "Jun 16, 2027",
+      "date_iso": "2027-06-16",
+      "date_real": 68102,
+      "slot": "2:30 PM",
+      "status": "Scheduled",
+      "kind": "future",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "provider": "FOTHERGILL, AMY",
+      "checkin_user": null,
+      "checkout_user": null,
+      "echeckin_status": "Not Yet Available",
+      "avs_time": null,
+      "first_flowsheet_time": null,
+      "last_flowsheet_time": null,
+      "first_core_vital_time": null,
+      "first_core_vital_label": null,
+      "first_core_delta_min": null,
+      "flow_measure_count": 0,
+      "hsp_class": null,
+      "effective_start": "12:00 AM",
+      "note": "No rooming/vitals timing proxy in the exported rows."
+    }
+  ],
+  "auditMonths": [
+    {
+      "month": "2025-06",
+      "label": "Jun 25",
+      "patient_record": 305,
+      "hospital_account": 0,
+      "total": 305
+    },
+    {
+      "month": "2025-07",
+      "label": "Jul 25",
+      "patient_record": 1232,
+      "hospital_account": 0,
+      "total": 1232
+    },
+    {
+      "month": "2025-08",
+      "label": "Aug 25",
+      "patient_record": 305,
+      "hospital_account": 0,
+      "total": 305
+    },
+    {
+      "month": "2025-09",
+      "label": "Sep 25",
+      "patient_record": 305,
+      "hospital_account": 0,
+      "total": 305
+    },
+    {
+      "month": "2025-10",
+      "label": "Oct 25",
+      "patient_record": 305,
+      "hospital_account": 0,
+      "total": 305
+    },
+    {
+      "month": "2025-11",
+      "label": "Nov 25",
+      "patient_record": 305,
+      "hospital_account": 0,
+      "total": 305
+    },
+    {
+      "month": "2025-12",
+      "label": "Dec 25",
+      "patient_record": 1868,
+      "hospital_account": 25,
+      "total": 1893
+    },
+    {
+      "month": "2026-01",
+      "label": "Jan 26",
+      "patient_record": 615,
+      "hospital_account": 0,
+      "total": 615
+    },
+    {
+      "month": "2026-02",
+      "label": "Feb 26",
+      "patient_record": 932,
+      "hospital_account": 17,
+      "total": 949
+    },
+    {
+      "month": "2026-03",
+      "label": "Mar 26",
+      "patient_record": 305,
+      "hospital_account": 0,
+      "total": 305
+    }
+  ],
+  "auditItemRows": [
+    {
+      "source": "Patient record",
+      "item": "CONTACT SERIAL NUMBER",
+      "n": 6405,
+      "users": 7,
+      "encounters": 21
+    },
+    {
+      "source": "Patient record",
+      "item": "APPT DEPARTMENT",
+      "n": 40,
+      "users": 6,
+      "encounters": 10
+    },
+    {
+      "source": "Hospital account",
+      "item": "HOSP ACCT CVG LIST",
+      "n": 12,
+      "users": 2,
+      "encounters": null
+    },
+    {
+      "source": "Patient record",
+      "item": "APPT STATUS",
+      "n": 6,
+      "users": 4,
+      "encounters": 3
+    },
+    {
+      "source": "Patient record",
+      "item": "COPAY - SCREEN DISPLAY",
+      "n": 5,
+      "users": 4,
+      "encounters": 3
+    },
+    {
+      "source": "Patient record",
+      "item": "MEDS - REQUEST PHARMACY",
+      "n": 5,
+      "users": 4,
+      "encounters": 5
+    },
+    {
+      "source": "Patient record",
+      "item": "HOSPITAL - ADMISSION TYPE",
+      "n": 4,
+      "users": 2,
+      "encounters": 2
+    },
+    {
+      "source": "Hospital account",
+      "item": "DISCHARGE DEPARTMENT",
+      "n": 4,
+      "users": 2,
+      "encounters": null
+    },
+    {
+      "source": "Hospital account",
+      "item": "DISCHARGE LOCATION",
+      "n": 4,
+      "users": 2,
+      "encounters": null
+    },
+    {
+      "source": "Hospital account",
+      "item": "PATIENT CONFIRMED SELF-PAY?",
+      "n": 4,
+      "users": 2,
+      "encounters": null
+    },
+    {
+      "source": "Patient record",
+      "item": "MEDS LAST REVIEW INSTANT",
+      "n": 3,
+      "users": 2,
+      "encounters": 0
+    },
+    {
+      "source": "Patient record",
+      "item": "MEDS LAST REVIEW USER",
+      "n": 2,
+      "users": 2,
+      "encounters": 0
+    },
+    {
+      "source": "Patient record",
+      "item": "PB REG VISIT COVERAGE",
+      "n": 2,
+      "users": 2,
+      "encounters": 2
+    },
+    {
+      "source": "Patient record",
+      "item": "PB REG VISIT GUARANTOR ACCOUNT",
+      "n": 2,
+      "users": 2,
+      "encounters": 2
+    },
+    {
+      "source": "Patient record",
+      "item": "POINT OF ORIGIN",
+      "n": 2,
+      "users": 2,
+      "encounters": 2
+    },
+    {
+      "source": "Hospital account",
+      "item": "ACCOUNT CLASS",
+      "n": 2,
+      "users": 2,
+      "encounters": null
+    },
+    {
+      "source": "Hospital account",
+      "item": "ADMIT DATE",
+      "n": 2,
+      "users": 1,
+      "encounters": null
+    },
+    {
+      "source": "Hospital account",
+      "item": "ADMIT TIME",
+      "n": 2,
+      "users": 1,
+      "encounters": null
+    },
+    {
+      "source": "Hospital account",
+      "item": "BILLING STATUS",
+      "n": 2,
+      "users": 2,
+      "encounters": null
+    },
+    {
+      "source": "Hospital account",
+      "item": "DISCHARGE DATE",
+      "n": 2,
+      "users": 1,
+      "encounters": null
+    },
+    {
+      "source": "Hospital account",
+      "item": "DISCHARGE TIME",
+      "n": 2,
+      "users": 1,
+      "encounters": null
+    },
+    {
+      "source": "Hospital account",
+      "item": "GUARANTOR ACCOUNT ID",
+      "n": 2,
+      "users": 2,
+      "encounters": null
+    },
+    {
+      "source": "Hospital account",
+      "item": "HOSPITAL ACCOUNT NAME",
+      "n": 2,
+      "users": 2,
+      "encounters": null
+    },
+    {
+      "source": "Hospital account",
+      "item": "PATIENT CONFIRMED DO NOT BILL INSURANCE?",
+      "n": 2,
+      "users": 2,
+      "encounters": null
+    },
+    {
+      "source": "Patient record",
+      "item": "REFERRING PHYSICIAN",
+      "n": 1,
+      "users": 1,
+      "encounters": 1
+    }
+  ],
+  "previsitTiles": [
+    {
+      "label": "eCheck-in step rows",
+      "value": 144,
+      "detail": "19 appointments with eCheck-in rollups"
+    },
+    {
+      "label": "MyChart questionnaires",
+      "value": 20,
+      "detail": "4 form names, statuses include completed/assigned/started"
+    },
+    {
+      "label": "Kiosk questionnaires",
+      "value": 20,
+      "detail": "4 form names mirrored in kiosk linkage"
+    },
+    {
+      "label": "Questionnaire seconds",
+      "value": 10,
+      "detail": "4-72 sec range; 25.4 sec average"
+    },
+    {
+      "label": "Patient review signals",
+      "value": 5,
+      "detail": "169 review sidecar rows, mostly blank in this specimen"
+    },
+    {
+      "label": "Appointment letter recipients",
+      "value": 40,
+      "detail": "20 marked should-attend"
+    },
+    {
+      "label": "Payment workflow rows",
+      "value": 2,
+      "detail": "Professional transactions: 1/151; Hospital transactions: 1/10"
+    }
+  ],
+  "questionnaireRows": [
+    {
+      "form": "UPH MUP TRAVEL SCREENING",
+      "status": "Completed",
+      "n": 5
+    },
+    {
+      "form": "UPH ACCIDENT RELATED/DATE OF ONSET QUESTIONNAIRE",
+      "status": "Completed",
+      "n": 4
+    },
+    {
+      "form": "UPH AMB PHQ2",
+      "status": "Completed",
+      "n": 3
+    },
+    {
+      "form": "TRAVEL SCREENING",
+      "status": "Completed",
+      "n": 2
+    },
+    {
+      "form": "UPH ACCIDENT RELATED/DATE OF ONSET QUESTIONNAIRE",
+      "status": "Assigned",
+      "n": 2
+    },
+    {
+      "form": "UPH ACCIDENT RELATED/DATE OF ONSET QUESTIONNAIRE",
+      "status": "Started at home",
+      "n": 2
+    },
+    {
+      "form": "UPH AMB PHQ2",
+      "status": "Assigned",
+      "n": 1
+    },
+    {
+      "form": "UPH MUP TRAVEL SCREENING",
+      "status": "Assigned",
+      "n": 1
+    }
+  ],
+  "kioskRows": [
+    {
+      "form": "UPH ACCIDENT RELATED/DATE OF ONSET QUESTIONNAIRE",
+      "n": 8
+    },
+    {
+      "form": "UPH MUP TRAVEL SCREENING",
+      "n": 6
+    },
+    {
+      "form": "UPH AMB PHQ2",
+      "n": 4
+    },
+    {
+      "form": "TRAVEL SCREENING",
+      "n": 2
+    }
+  ],
+  "orderTimingRows": [
+    {
+      "type": "Lab",
+      "display": "Hemoglobin A1c",
+      "status": "Completed",
+      "date": "Dec 4, 2025",
+      "order": "3:54 PM",
+      "offsets": {
+        "proc_begin": null,
+        "proc_start": 0,
+        "proc_end": 485,
+        "result": 39,
+        "charge": null
+      },
+      "useful": true
+    },
+    {
+      "type": "Lab",
+      "display": "Basic metabolic panel",
+      "status": "Completed",
+      "date": "Dec 4, 2025",
+      "order": "3:54 PM",
+      "offsets": {
+        "proc_begin": null,
+        "proc_start": 0,
+        "proc_end": 485,
+        "result": 53,
+        "charge": null
+      },
+      "useful": true
+    },
+    {
+      "type": "Lab",
+      "display": "Lipid panel",
+      "status": "Completed",
+      "date": "Dec 4, 2025",
+      "order": "3:54 PM",
+      "offsets": {
+        "proc_begin": null,
+        "proc_start": 0,
+        "proc_end": 485,
+        "result": 53,
+        "charge": null
+      },
+      "useful": true
+    },
+    {
+      "type": "Imaging",
+      "display": "XR Ankle Min 3 Views",
+      "status": "Completed",
+      "date": "Feb 8, 2019",
+      "order": "8:05 PM",
+      "offsets": {
+        "proc_begin": -4,
+        "proc_start": null,
+        "proc_end": null,
+        "result": 11,
+        "charge": null
+      },
+      "useful": true
+    },
+    {
+      "type": "Lab",
+      "display": "CBC WITH DIFFERENTIAL",
+      "status": "Completed",
+      "date": "May 14, 2024",
+      "order": "1:50 PM",
+      "offsets": {
+        "proc_begin": null,
+        "proc_start": null,
+        "proc_end": null,
+        "result": 5,
+        "charge": null
+      },
+      "useful": true
+    },
+    {
+      "type": "Lab",
+      "display": "TROPONIN",
+      "status": "Completed",
+      "date": "May 14, 2024",
+      "order": "1:50 PM",
+      "offsets": {
+        "proc_begin": null,
+        "proc_start": null,
+        "proc_end": null,
+        "result": 36,
+        "charge": null
+      },
+      "useful": true
+    },
+    {
+      "type": "Imaging",
+      "display": "XR Chest 2 Views",
+      "status": "Completed",
+      "date": "May 14, 2024",
+      "order": "2:18 PM",
+      "offsets": {
+        "proc_begin": -6,
+        "proc_start": null,
+        "proc_end": null,
+        "result": 5,
+        "charge": null
+      },
+      "useful": true
+    },
+    {
+      "type": "Imaging",
+      "display": "XR Cervical Spine 3 Views or Less",
+      "status": "Completed",
+      "date": "Jul 2, 2024",
+      "order": "10:16 AM",
+      "offsets": {
+        "proc_begin": 1,
+        "proc_start": 0,
+        "proc_end": 823,
+        "result": 19,
+        "charge": 148
+      },
+      "useful": true
+    },
+    {
+      "type": "Lab",
+      "display": "CBC WITH DIFFERENTIAL",
+      "status": "Completed",
+      "date": "Jul 30, 2024",
+      "order": "1:23 PM",
+      "offsets": {
+        "proc_begin": null,
+        "proc_start": null,
+        "proc_end": null,
+        "result": 6,
+        "charge": null
+      },
+      "useful": true
+    },
+    {
+      "type": "Lab",
+      "display": "BASIC METABOLIC PANEL",
+      "status": "Completed",
+      "date": "Jul 30, 2024",
+      "order": "1:23 PM",
+      "offsets": {
+        "proc_begin": null,
+        "proc_start": null,
+        "proc_end": null,
+        "result": 27,
+        "charge": null
+      },
+      "useful": true
+    },
+    {
+      "type": "Imaging",
+      "display": "CT Angiography Neck w wo Contrast",
+      "status": "Completed",
+      "date": "Jul 30, 2024",
+      "order": "2:40 PM",
+      "offsets": {
+        "proc_begin": -9,
+        "proc_start": null,
+        "proc_end": null,
+        "result": 24,
+        "charge": null
+      },
+      "useful": true
+    },
+    {
+      "type": "Imaging",
+      "display": "MRI Brain wo Contrast",
+      "status": "Completed",
+      "date": "Jul 31, 2020",
+      "order": "9:16 AM",
+      "offsets": {
+        "proc_begin": null,
+        "proc_start": 0,
+        "proc_end": 883,
+        "result": -2742,
+        "charge": null
+      },
+      "useful": true
+    },
+    {
+      "type": "Microbiology",
+      "display": "H. pylori antigen, stool",
+      "status": "Completed",
+      "date": "Aug 18, 2018",
+      "order": "9:30 AM",
+      "offsets": {
+        "proc_begin": null,
+        "proc_start": 0,
+        "proc_end": 869,
+        "result": 295,
+        "charge": null
+      },
+      "useful": true
+    },
+    {
+      "type": "Lab",
+      "display": "Basic metabolic panel",
+      "status": "Completed",
+      "date": "Aug 29, 2022",
+      "order": "2:32 PM",
+      "offsets": {
+        "proc_begin": null,
+        "proc_start": 0,
+        "proc_end": 567,
+        "result": 69,
+        "charge": null
+      },
+      "useful": true
+    },
+    {
+      "type": "Lab",
+      "display": "Lipid panel",
+      "status": "Completed",
+      "date": "Aug 9, 2018",
+      "order": "10:16 AM",
+      "offsets": {
+        "proc_begin": null,
+        "proc_start": 0,
+        "proc_end": 823,
+        "result": 103,
+        "charge": null
+      },
+      "useful": true
+    },
+    {
+      "type": "Lab",
+      "display": "Hemoglobin A1c",
+      "status": "Completed",
+      "date": "Sep 28, 2023",
+      "order": "10:10 AM",
+      "offsets": {
+        "proc_begin": null,
+        "proc_start": 0,
+        "proc_end": 829,
+        "result": 37,
+        "charge": null
+      },
+      "useful": true
+    },
+    {
+      "type": "Lab",
+      "display": "Lipid panel",
+      "status": "Completed",
+      "date": "Sep 28, 2023",
+      "order": "10:10 AM",
+      "offsets": {
+        "proc_begin": null,
+        "proc_start": 0,
+        "proc_end": 829,
+        "result": 68,
+        "charge": null
+      },
+      "useful": true
+    },
+    {
+      "type": "Lab",
+      "display": "Hepatitis C antibody",
+      "status": "Completed",
+      "date": "Sep 28, 2023",
+      "order": "10:10 AM",
+      "offsets": {
+        "proc_begin": null,
+        "proc_start": 0,
+        "proc_end": 829,
+        "result": 359,
+        "charge": null
+      },
+      "useful": true
+    }
+  ],
+  "orderTimingSummary": [
+    {
+      "type": "Lab",
+      "status": "Completed",
+      "n": 22,
+      "order_time": 22,
+      "procedure_times": 16,
+      "result_time": 14,
+      "creators": 7
+    },
+    {
+      "type": "Imaging",
+      "status": "Completed",
+      "n": 7,
+      "order_time": 7,
+      "procedure_times": 7,
+      "result_time": 5,
+      "creators": 5
+    },
+    {
+      "type": "Outpatient Referral",
+      "status": "Sent",
+      "n": 7,
+      "order_time": 7,
+      "procedure_times": 7,
+      "result_time": 0,
+      "creators": 5
+    },
+    {
+      "type": "Imaging",
+      "status": "Canceled",
+      "n": 2,
+      "order_time": 2,
+      "procedure_times": 2,
+      "result_time": 0,
+      "creators": 1
+    },
+    {
+      "type": "Microbiology",
+      "status": "Completed",
+      "n": 2,
+      "order_time": 2,
+      "procedure_times": 2,
+      "result_time": 1,
+      "creators": 2
+    },
+    {
+      "type": "Immunization/Injection",
+      "status": "Completed",
+      "n": 1,
+      "order_time": 1,
+      "procedure_times": 1,
+      "result_time": 0,
+      "creators": 1
+    },
+    {
+      "type": "Lab",
+      "status": "Canceled",
+      "n": 1,
+      "order_time": 1,
+      "procedure_times": 1,
+      "result_time": 0,
+      "creators": 1
+    }
+  ],
+  "noteTimingSummary": {
+    "clinical_notes": 82,
+    "entry_local_rows": 82,
+    "filed_local_rows": 80,
+    "update_author_local_rows": 82,
+    "created_after_hours": 0,
+    "entry_after_hours": 7,
+    "filed_after_hours": 7,
+    "update_after_hours": 7,
+    "filed_weekend": 0
+  },
+  "noteHourRows": [
+    {
+      "hour": 0,
+      "label": "0:00",
+      "entry": 0,
+      "filed": 0,
+      "updated": 0
+    },
+    {
+      "hour": 1,
+      "label": "1:00",
+      "entry": 0,
+      "filed": 0,
+      "updated": 0
+    },
+    {
+      "hour": 2,
+      "label": "2:00",
+      "entry": 0,
+      "filed": 0,
+      "updated": 0
+    },
+    {
+      "hour": 3,
+      "label": "3:00",
+      "entry": 0,
+      "filed": 0,
+      "updated": 0
+    },
+    {
+      "hour": 4,
+      "label": "4:00",
+      "entry": 0,
+      "filed": 0,
+      "updated": 0
+    },
+    {
+      "hour": 5,
+      "label": "5:00",
+      "entry": 0,
+      "filed": 0,
+      "updated": 0
+    },
+    {
+      "hour": 6,
+      "label": "6:00",
+      "entry": 0,
+      "filed": 0,
+      "updated": 0
+    },
+    {
+      "hour": 7,
+      "label": "7:00",
+      "entry": 1,
+      "filed": 1,
+      "updated": 1
+    },
+    {
+      "hour": 8,
+      "label": "8:00",
+      "entry": 11,
+      "filed": 11,
+      "updated": 11
+    },
+    {
+      "hour": 9,
+      "label": "9:00",
+      "entry": 3,
+      "filed": 3,
+      "updated": 3
+    },
+    {
+      "hour": 10,
+      "label": "10:00",
+      "entry": 11,
+      "filed": 11,
+      "updated": 11
+    },
+    {
+      "hour": 11,
+      "label": "11:00",
+      "entry": 6,
+      "filed": 6,
+      "updated": 6
+    },
+    {
+      "hour": 12,
+      "label": "12:00",
+      "entry": 7,
+      "filed": 7,
+      "updated": 7
+    },
+    {
+      "hour": 13,
+      "label": "13:00",
+      "entry": 5,
+      "filed": 5,
+      "updated": 5
+    },
+    {
+      "hour": 14,
+      "label": "14:00",
+      "entry": 9,
+      "filed": 9,
+      "updated": 9
+    },
+    {
+      "hour": 15,
+      "label": "15:00",
+      "entry": 12,
+      "filed": 10,
+      "updated": 12
+    },
+    {
+      "hour": 16,
+      "label": "16:00",
+      "entry": 7,
+      "filed": 7,
+      "updated": 7
+    },
+    {
+      "hour": 17,
+      "label": "17:00",
+      "entry": 3,
+      "filed": 3,
+      "updated": 3
+    },
+    {
+      "hour": 18,
+      "label": "18:00",
+      "entry": 1,
+      "filed": 1,
+      "updated": 1
+    },
+    {
+      "hour": 19,
+      "label": "19:00",
+      "entry": 0,
+      "filed": 0,
+      "updated": 0
+    },
+    {
+      "hour": 20,
+      "label": "20:00",
+      "entry": 2,
+      "filed": 2,
+      "updated": 2
+    },
+    {
+      "hour": 21,
+      "label": "21:00",
+      "entry": 2,
+      "filed": 2,
+      "updated": 2
+    },
+    {
+      "hour": 22,
+      "label": "22:00",
+      "entry": 0,
+      "filed": 0,
+      "updated": 0
+    },
+    {
+      "hour": 23,
+      "label": "23:00",
+      "entry": 2,
+      "filed": 2,
+      "updated": 2
+    }
+  ],
+  "noteTypeRows": [
+    {
+      "type": "Telephone Encounter",
+      "status": "Signed",
+      "n": 45,
+      "filed": 45,
+      "after_hours_filed": 0,
+      "weekend_filed": 0
+    },
+    {
+      "type": "Progress Note",
+      "status": "Signed",
+      "n": 25,
+      "filed": 25,
+      "after_hours_filed": 6,
+      "weekend_filed": 0
+    },
+    {
+      "type": "Patient Instructions",
+      "status": "Signed",
+      "n": 3,
+      "filed": 3,
+      "after_hours_filed": 0,
+      "weekend_filed": 0
+    },
+    {
+      "type": "Problem Overview",
+      "status": "Signed",
+      "n": 2,
+      "filed": 0,
+      "after_hours_filed": 0,
+      "weekend_filed": 0
+    },
+    {
+      "type": "Patient Instructions",
+      "status": "Addendum",
+      "n": 2,
+      "filed": 2,
+      "after_hours_filed": 0,
+      "weekend_filed": 0
+    },
+    {
+      "type": "Telephone Encounter",
+      "status": "Addendum",
+      "n": 1,
+      "filed": 1,
+      "after_hours_filed": 0,
+      "weekend_filed": 0
+    },
+    {
+      "type": "Miscellaneous",
+      "status": "Signed",
+      "n": 1,
+      "filed": 1,
+      "after_hours_filed": 0,
+      "weekend_filed": 0
+    },
+    {
+      "type": "Progress Notes",
+      "status": "Addendum",
+      "n": 1,
+      "filed": 1,
+      "after_hours_filed": 0,
+      "weekend_filed": 0
+    }
+  ],
+  "noteSlotContext": {
+    "after_hours_filed": 7,
+    "same_day": 7,
+    "morning_slot": 2,
+    "afternoon_slot": 4,
+    "late_slot": 1,
+    "no_slot": 0
+  },
+  "noteAfterHoursRows": [
+    {
+      "type": "Progress Note",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "slot": "9:30 AM",
+      "file": "8:06 PM",
+      "slot_bucket": "Morning slot",
+      "minutes_after_slot": 636,
+      "same_day": true,
+      "file_hour": 20
+    },
+    {
+      "type": "Progress Note",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "slot": "3:00 PM",
+      "file": "9:47 PM",
+      "slot_bucket": "Afternoon slot",
+      "minutes_after_slot": 407,
+      "same_day": true,
+      "file_hour": 21
+    },
+    {
+      "type": "Progress Notes",
+      "department": "MHM OT NEURO CENTRAL",
+      "slot": "5:00 PM",
+      "file": "6:13 PM",
+      "slot_bucket": "Late slot",
+      "minutes_after_slot": 73,
+      "same_day": true,
+      "file_hour": 18
+    },
+    {
+      "type": "Progress Note",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "slot": "1:30 PM",
+      "file": "11:58 PM",
+      "slot_bucket": "Afternoon slot",
+      "minutes_after_slot": 628,
+      "same_day": true,
+      "file_hour": 23
+    },
+    {
+      "type": "Progress Note",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "slot": "9:30 AM",
+      "file": "8:06 PM",
+      "slot_bucket": "Morning slot",
+      "minutes_after_slot": 636,
+      "same_day": true,
+      "file_hour": 20
+    },
+    {
+      "type": "Progress Note",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "slot": "1:30 PM",
+      "file": "11:58 PM",
+      "slot_bucket": "Afternoon slot",
+      "minutes_after_slot": 628,
+      "same_day": true,
+      "file_hour": 23
+    },
+    {
+      "type": "Progress Note",
+      "department": "MAC APL INTERNAL MEDICINE",
+      "slot": "3:00 PM",
+      "file": "9:47 PM",
+      "slot_bucket": "Afternoon slot",
+      "minutes_after_slot": 407,
+      "same_day": true,
+      "file_hour": 21
+    }
+  ],
+  "negativeFindings": [
+    {
+      "label": "Office room-in / room-out",
+      "present": 0,
+      "total": 11,
+      "note": "No ordinary exam-room stopwatch pair found."
+    },
+    {
+      "label": "Hospital ED arrival / triage / departure",
+      "present": 0,
+      "total": 6,
+      "note": "Hospital rows have admission/discharge, but not ED flow timing here."
+    },
+    {
+      "label": "Room or bed values",
+      "present": 0,
+      "total": 6,
+      "note": "Room/bed schema hooks are present; values are blank in this specimen."
+    },
+    {
+      "label": "OR/procedure presence billing times",
+      "present": 0,
+      "total": 6,
+      "note": "The columns exist but are not populated."
+    }
+  ],
+  "echeckinSummary": [
+    {
+      "status": "Not Started",
+      "appts": 8,
+      "step_rows": 39
+    },
+    {
+      "status": "Completed",
+      "appts": 8,
+      "step_rows": 91
+    },
+    {
+      "status": "Not Yet Available",
+      "appts": 2,
+      "step_rows": 0
+    },
+    {
+      "status": "In Progress",
+      "appts": 1,
+      "step_rows": 14
+    }
+  ],
+  "echeckinSteps": [
+    {
+      "step": "Allergies",
+      "completed": 9,
+      "not_started": 3,
+      "filtered_or_not_offered": 0,
+      "not_needed": 1,
+      "total": 13
+    },
+    {
+      "step": "ESign Documents",
+      "completed": 2,
+      "not_started": 0,
+      "filtered_or_not_offered": 11,
+      "not_needed": 0,
+      "total": 13
+    },
+    {
+      "step": "Guarantor",
+      "completed": 9,
+      "not_started": 2,
+      "filtered_or_not_offered": 2,
+      "not_needed": 0,
+      "total": 13
+    },
+    {
+      "step": "Health Issues",
+      "completed": 9,
+      "not_started": 3,
+      "filtered_or_not_offered": 0,
+      "not_needed": 1,
+      "total": 13
+    },
+    {
+      "step": "Insurance",
+      "completed": 7,
+      "not_started": 3,
+      "filtered_or_not_offered": 1,
+      "not_needed": 2,
+      "total": 13
+    },
+    {
+      "step": "Questionnaires",
+      "completed": 7,
+      "not_started": 2,
+      "filtered_or_not_offered": 0,
+      "not_needed": 4,
+      "total": 13
+    },
+    {
+      "step": "Travel History",
+      "completed": 7,
+      "not_started": 1,
+      "filtered_or_not_offered": 5,
+      "not_needed": 0,
+      "total": 13
+    },
+    {
+      "step": "Payments",
+      "completed": 0,
+      "not_started": 1,
+      "filtered_or_not_offered": 0,
+      "not_needed": 11,
+      "total": 12
+    },
+    {
+      "step": "Personal Information",
+      "completed": 7,
+      "not_started": 3,
+      "filtered_or_not_offered": 0,
+      "not_needed": 1,
+      "total": 11
+    },
+    {
+      "step": "Patient Contacts",
+      "completed": 2,
+      "not_started": 0,
+      "filtered_or_not_offered": 0,
+      "not_needed": 6,
+      "total": 8
+    },
+    {
+      "step": "Barcode",
+      "completed": 0,
+      "not_started": 0,
+      "filtered_or_not_offered": 6,
+      "not_needed": 0,
+      "total": 6
+    },
+    {
+      "step": "Hardware Test",
+      "completed": 1,
+      "not_started": 0,
+      "filtered_or_not_offered": 0,
+      "not_needed": 5,
+      "total": 6
+    },
+    {
+      "step": "Patient Location",
+      "completed": 0,
+      "not_started": 0,
+      "filtered_or_not_offered": 0,
+      "not_needed": 3,
+      "total": 3
+    },
+    {
+      "step": "Primary Care Provider",
+      "completed": 0,
+      "not_started": 0,
+      "filtered_or_not_offered": 1,
+      "not_needed": 1,
+      "total": 2
+    },
+    {
+      "step": "Visit Notifications",
+      "completed": 0,
+      "not_started": 0,
+      "filtered_or_not_offered": 2,
+      "not_needed": 0,
+      "total": 2
+    },
+    {
+      "step": "Financial Assistance Screening",
+      "completed": 0,
+      "not_started": 0,
+      "filtered_or_not_offered": 1,
+      "not_needed": 0,
+      "total": 1
+    },
+    {
+      "step": "Medications",
+      "completed": 1,
+      "not_started": 0,
+      "filtered_or_not_offered": 0,
+      "not_needed": 0,
+      "total": 1
+    },
+    {
+      "step": "Pharmacies",
+      "completed": 1,
+      "not_started": 0,
+      "filtered_or_not_offered": 0,
+      "not_needed": 0,
+      "total": 1
+    }
+  ],
+  "adtRows": [
+    {
+      "csn": "922942674",
+      "event": "Discharge",
+      "patient_class": "Therapies Series",
+      "department": "MHM OT NEURO CENTRAL",
+      "effective": "Mar 11, 2022 11:59 PM",
+      "recorded": "Mar 12, 2022 2:55 AM",
+      "user": "PRELUDE, BATCH JOB"
+    },
+    {
+      "csn": "922942674",
+      "event": "Hospital Outpatient",
+      "patient_class": "Therapies Series",
+      "department": "MHM OT NEURO CENTRAL",
+      "effective": "Mar 11, 2022 2:41 PM",
+      "recorded": "Mar 11, 2022 2:41 PM",
+      "user": "FALDUTO, KAITLYN L"
+    },
+    {
+      "csn": "922943112",
+      "event": "Discharge",
+      "patient_class": "Therapies Series",
+      "department": "MHM OT NEURO CENTRAL",
+      "effective": "Mar 22, 2022 11:59 PM",
+      "recorded": "Mar 23, 2022 3:26 AM",
+      "user": "PRELUDE, BATCH JOB"
+    },
+    {
+      "csn": "922943112",
+      "event": "Hospital Outpatient",
+      "patient_class": "Therapies Series",
+      "department": "MHM OT NEURO CENTRAL",
+      "effective": "Mar 22, 2022 4:42 PM",
+      "recorded": "Mar 22, 2022 4:42 PM",
+      "user": "FALDUTO, KAITLYN L"
+    }
+  ],
+  "adtEpisodes": [
+    {
+      "csn": "922942674",
+      "date": "Mar 11, 2022",
+      "department": "MHM OT NEURO CENTRAL",
+      "patient_class": "Therapies Series",
+      "in_effective": "2:41 PM",
+      "out_effective": "11:59 PM",
+      "discharge_recorded": "Mar 12, 2022 2:55 AM",
+      "administrative_duration_min": 558,
+      "discharge_user": "PRELUDE, BATCH JOB"
+    },
+    {
+      "csn": "922943112",
+      "date": "Mar 22, 2022",
+      "department": "MHM OT NEURO CENTRAL",
+      "patient_class": "Therapies Series",
+      "in_effective": "4:42 PM",
+      "out_effective": "11:59 PM",
+      "discharge_recorded": "Mar 23, 2022 3:26 AM",
+      "administrative_duration_min": 437,
+      "discharge_user": "PRELUDE, BATCH JOB"
+    }
+  ],
+  "edEventGroups": [
+    {
+      "event_id": "504707210",
+      "lines": 5,
+      "first": "Nov 7, 2024 8:25 AM",
+      "last": "Nov 7, 2024 8:49 AM",
+      "users": [
+        "RAMMELKAMP",
+        " ZOE L",
+        "SMITH",
+        " MARY B"
+      ]
+    },
+    {
+      "event_id": "352755687",
+      "lines": 1,
+      "first": "Dec 1, 2022 9:35 AM",
+      "last": "Dec 1, 2022 9:35 AM",
+      "users": [
+        "SMITH",
+        " MARY B"
+      ]
+    },
+    {
+      "event_id": "599581064",
+      "lines": 5,
+      "first": "Dec 4, 2025 3:04 PM",
+      "last": "Dec 4, 2025 3:06 PM",
+      "users": [
+        "SMITH",
+        " MARY B"
+      ]
+    },
+    {
+      "event_id": "370504442",
+      "lines": 1,
+      "first": "Feb 20, 2023 1:27 PM",
+      "last": "Feb 20, 2023 1:27 PM",
+      "users": [
+        "RAMMELKAMP",
+        " ZOE L"
+      ]
+    },
+    {
+      "event_id": "372380056",
+      "lines": 2,
+      "first": "Mar 2, 2023 2:43 PM",
+      "last": "Mar 2, 2023 2:43 PM",
+      "users": [
+        "SMITH",
+        " MARY B"
+      ]
+    },
+    {
+      "event_id": "463182484",
+      "lines": 1,
+      "first": "May 7, 2024 4:16 PM",
+      "last": "May 7, 2024 4:16 PM",
+      "users": [
+        "SMITH",
+        " MARY B"
+      ]
+    },
+    {
+      "event_id": "475237418",
+      "lines": 2,
+      "first": "Jul 2, 2024 9:51 AM",
+      "last": "Jul 2, 2024 9:51 AM",
+      "users": [
+        "TAFT",
+        " ASHLEY M"
+      ]
+    },
+    {
+      "event_id": "481715332",
+      "lines": 1,
+      "first": "Jul 30, 2024 3:33 PM",
+      "last": "Jul 30, 2024 3:33 PM",
+      "users": [
+        "EPIC",
+        " USER"
+      ]
+    },
+    {
+      "event_id": "481715334",
+      "lines": 1,
+      "first": "Jul 30, 2024 3:33 PM",
+      "last": "Jul 30, 2024 3:33 PM",
+      "users": [
+        "EPIC",
+        " USER"
+      ]
+    },
+    {
+      "event_id": "417417152",
+      "lines": 2,
+      "first": "Sep 28, 2023 9:38 AM",
+      "last": "Sep 28, 2023 9:38 AM",
+      "users": [
+        "SMITH",
+        " MARY B"
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "id": "not-a-room-timer",
+      "title": "Not a room timer, but close enough to see workflow",
+      "narrative": [
+        {
+          "text": "The ordinary office-visit rows do not contain a clean 'roomed at' and 'left exam room at' pair. Instead, the strongest rooming proxy is the first same-visit flowsheet timestamp, usually vitals or screening, compared with the scheduled slot time.",
+          "cites": [
+            "e_slot_vitals_proxy"
+          ]
+        },
+        {
+          "text": "For clinic visits with such a proxy, the first core vital can land before the slot, at the slot, or later; that variability is itself useful because it shows why an EHI export should be read as operational evidence, not a stopwatch.",
+          "cites": [
+            "e_no_exam_room_timer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "audit",
+      "title": "The record has an audit trail",
+      "narrative": [
+        {
+          "text": "The largest operational layer is not a visit table at all. Patient-record and hospital-account audit views expose timestamped changes, changed-item labels, and users. This dive uses counts and item categories, not raw old/new values.",
+          "cites": [
+            "e_audit_trail"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "front-desk",
+      "title": "The front desk is in the record",
+      "narrative": [
+        {
+          "text": "A standard clinical export would usually say the visit happened. This EHI export says when it was scheduled, whether it was completed or canceled, who checked it in, whether it was checked out, and whether an AVS was printed.",
+          "cites": [
+            "e_appt_status_counts"
+          ]
+        },
+        {
+          "text": "The appointment skeleton also has false positives: many encounters have appointment sidecar rows, but the real scheduled appointments are the rows with status and slot time.",
+          "cites": [
+            "e_skeleton_filter"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "echeckin",
+      "title": "Patient work before the visit is structured",
+      "narrative": [
+        {
+          "text": "The eCheck-in and questionnaire layer breaks patient-facing previsit work into step rows, form assignments, attempt statuses, and even seconds spent in questionnaire workflow. It is not a note; it is a workflow ledger.",
+          "cites": [
+            "e_echeckin_steps",
+            "e_questionnaire_workflow"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "orders",
+      "title": "Orders have operational timestamps too",
+      "narrative": [
+        {
+          "text": "Orders carry more than clinical intent. Labs and imaging include order time, procedure begin/start/end fields, result time, and occasionally charge-drop time. The sidecar table named for first/last scheduling exists here, but its timestamps are blank.",
+          "cites": [
+            "e_order_timing"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "notes",
+      "title": "Note work has a clock",
+      "narrative": [
+        {
+          "text": "The note lifecycle tables expose local entry, file, and update-by-author times. In this specimen, true local filing is mostly business-hours work, with a smaller after-hours tail and no weekend filing signal.",
+          "cites": [
+            "e_note_timing"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adt",
+      "title": "ADT machinery appears even in outpatient therapy",
+      "narrative": [
+        {
+          "text": "The ADT event trail is present for two therapy-series contacts. It records an outpatient in event by a named user and a discharge event filed later by a Prelude batch job. That is operationally rich, but not the same thing as time spent with a clinician.",
+          "cites": [
+            "e_adt_therapy"
+          ]
+        }
+      ]
+    }
+  ],
+  "evidence": {
+    "e_slot_vitals_proxy": {
+      "kind": "fact",
+      "text": "Real scheduled appointments are identified by PAT_ENC.APPT_STATUS_C_NAME / PAT_ENC_APPT.PROV_START_TIME. Flowsheet RECORDED_TIME gives a rooming-adjacent proxy on 12 of 23 status-bearing appointments."
+    },
+    "e_no_exam_room_timer": {
+      "kind": "fact",
+      "text": "A schema search found room/arrival/departure columns in CLARITY_ADT and PAT_ENC_HSP, but ordinary internal-medicine appointments in this specimen have no exported room-in/room-out timestamp pair."
+    },
+    "e_appt_status_counts": {
+      "kind": "fact",
+      "text": "Status-bearing appointments total 23: 19 Completed, 3 Canceled, 1 Scheduled. Completed appointments all have check-in users; checkout appears on 10 rows."
+    },
+    "e_skeleton_filter": {
+      "kind": "fact",
+      "text": "PAT_ENC_APPT has 74 rows, but only 23 carry appointment status and 23 carry slot time. Use status or slot time to identify real scheduled appointments."
+    },
+    "e_echeckin_steps": {
+      "kind": "fact",
+      "text": "ECHKIN_STEP_INFO contains 144 step rows across appointment eCheck-in workflows, with rollup statuses in PAT_ENC_4.ECHKIN_STATUS_C_NAME."
+    },
+    "e_questionnaire_workflow": {
+      "kind": "fact",
+      "text": "Questionnaire-related tables add 20 MyChart appointment questionnaire rows, 20 kiosk questionnaire rows, and 10 CL_QANSWER rows with workflow duration values ranging from 4 to 72 seconds."
+    },
+    "e_audit_trail": {
+      "kind": "fact",
+      "text": "V_EHI_REG_ITEM_AUDIT_EPT has 6477 patient-record audit rows across 12 changed-item labels. V_EHI_REG_ITEM_AUDIT_HAR adds 42 hospital-account audit rows across 13 labels."
+    },
+    "e_order_timing": {
+      "kind": "fact",
+      "text": "ORDER_PROC has 42 orders; all have ORDER_TIME, 36 have procedure timing fields, and 20 have RESULT_TIME. CL_ORD_FST_LST_SCH has 62 rows but no populated first/last scheduled timestamps."
+    },
+    "e_note_timing": {
+      "kind": "fact",
+      "text": "Clinical note lifecycle rows include 82 local entry instants, 80 local note-file instants, and 82 local update-by-author instants. Local note-file times show 7 after-hours rows and 0 weekend rows. All 7 after-hours filed notes with slots were same-day: 2 from morning slots, 4 from afternoon slots, and 1 from late-day slots."
+    },
+    "e_adt_therapy": {
+      "kind": "fact",
+      "text": "CLARITY_ADT has four events for two MHM OT Neuro Central therapy-series contacts: Hospital Outpatient in-events by a named user and Discharge out-events filed by PRELUDE, BATCH JOB. PAT_ENC_HSP has 2 therapy-series rows with admission/discharge times but no ED arrival, triage, ED departure, room, or bed values."
+    }
+  }
+}

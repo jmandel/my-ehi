@@ -1,0 +1,21 @@
+ORDER_ID	ORIG_RX_DOSAGE	ORIG_RX_QUANTITY	ORIG_RX_REFILLS	ORIG_RX_DIRECTIONS	ORIG_RX_PRE_PROV_ID	ORIG_RX_COMMENTS	PRESCRIP_EXP_DATE	ORD_AUC	ORD_SEL_TARGETAUC_C_NAME	ORIG_RX_PHRM_ID_PHARMACY_NAME	ORIG_RX_PHRM_ID	ORD_PHASE_OF_CARE_C_NAME	ORIGINAL_MED_ID	INTERACT_COMMENT	COPY_POINTER_ID	CONDITION_FLAG	PRINT_LOCAL_COPY_YN	ORX_ID_ORDER_LOOKUP_NAME	ORX_ID	SELECTED_FOR_OPC_YN	MEDS_RESYME_REASO_C_NAME	MEDS_DC_REASON_C_NAME	IP_INCLUDE_NOW_C_NAME	IP_INCL_NOW_SCH_C_NAME	LAST_SCHED_DATE	MEDS_ACTION_VERB_C_NAME	MED_SOURCE_C_NAME	CRCL_FORMULA_ID_LPP_NAME	CRCL_FORMULA_ID	AFTER_ORDER_ID	BEFORE_ORDER_ID	DIET_COMMENTS	END_DT_BEF_FILL_DT	PREV_POC_C_NAME	ORDER_TIME	IS_HELD_ORDER_C_NAME	TXT_ORDPROV_NAME	TXT_ORDPROV_DEA	TXT_ORDPROV_NPI	TXT_ORDPROV_PHONE	TXT_ORDPROV_FAX	TXT_ORDPROV_STREET	TXT_ORDPROV_CITY	TXT_ORDPROV_STATE_C_NAME	TXT_ORDPROV_ZIP	RX_SERIAL_NUMBER	NOCHRG_EXT_RSLT_YN	EPRES_DEST_C_NAME	CTRL_MED_YN	SRC_RX_MED_ID	SRC_RX_QUANTITY	SRC_RX_DIS_DISP_QTY	SRC_RX_DISP_UNIT_C_NAME	SRC_RX_REFILLS	SRC_RX_DIRECTIONS	SRC_RX_START_DATE	SRC_RX_END_DATE	SRC_RX_DAW_YN	SRC_RX_PRES_PROV_ID	SRC_RX_COMMENTS	SRC_RX_DESC	SRC_RX_WRITTEN_DATE	WT_MAX_DOSE	WT_MAX_DOSE_UNIT_C_NAME	MAX_DOSE_SOURCE_C_NAME	PAT_SIG_REPLY_C_NAME	SIG_REVIEW_USER_ID_NAME	SIG_REVIEW_USER_ID	SIG_REVIEW_INS_DTTM	DOSE_RND_ACK_RSN_C_NAME
+945468376		2 Unspecified	0	APPLY ONE SENSOR EVERY 2 WEEKS	144590		5/7/2025 12:00:00 AM			COSTCO PHARMACY # 1020 - MIDDLETON, WI - 2150 DEMING WAY	64981						N																		5/7/2024 4:16:00 PM													Outgoing Interface		163506	2 Unspecified	2.0000	Unspecified	1	APPLY ONE SENSOR EVERY 2 WEEKS	3/12/2024 12:00:00 AM		N	144590		FreeStyle Libre 3 Sensor Miscellaneous	3/12/2024 12:00:00 AM								
+772179266							12/1/2023 12:00:00 AM										N																		12/1/2022 10:15:00 AM													Outgoing Interface																						
+945468375							3/12/2025 12:00:00 AM										N																		3/12/2024 8:23:00 AM													Outgoing Interface																						
+945468374							3/12/2025 12:00:00 AM										N																		3/12/2024 8:23:00 AM													Outgoing Interface																						
+772179261							8/29/2023 12:00:00 AM										N																		8/29/2022 2:23:00 PM													Outgoing Interface																						
+945468373							12/21/2024 12:00:00 AM										N																		12/22/2023 3:48:00 PM													Outgoing Interface																		Use discrete sig	SMITH, MARY B	MBS403	12/22/2023 3:11:00 PM	
+772179269		90 capsule		TAKE 1 CAPSULE BY MOUTH EVERY NIGHT. START WITH 1 CAPSULE AT NIGHT; CAN. INCREASE TO 2 CAPSULES AFTER 1-2 WEEKS IF NO SIDE EFFECTS	144590		2/20/2024 12:00:00 AM			WALGREENS DRUG STORE #06130 - MADISON, WI - 3700 UNIVERSITY AVE AT NEC OF MIDVALE & UNIVERSITY	64308						N																		2/20/2023 1:27:00 PM													Outgoing Interface																						
+1165183057																	N																		12/4/2025 3:04:00 PM																																			
+1165183056																	N																		12/4/2025 3:04:00 PM																																			
+1025926288							7/2/2025 12:00:00 AM										N																		7/2/2024 10:15:00 AM													Outgoing Interface																						
+1034471687													27838				N																		7/30/2024 3:33:00 PM																																			
+1025926292													27838				N																		7/30/2024 3:33:00 PM																																			
+1025926291													27838				N																		7/30/2024 3:33:00 PM																																			
+1025926290													27838				N																		7/30/2024 3:33:00 PM																																			
+1034471691													27838				N																		7/30/2024 3:33:00 PM																																			
+1034471690													27838				N																		7/30/2024 3:33:00 PM																																			
+1034471689													27838				N																		7/30/2024 3:33:00 PM																																			
+1034471688													27838				N																		7/30/2024 3:33:00 PM																																			
+1034471697							4/23/2026 12:00:00 AM										N																		4/23/2025 1:15:00 PM													Outgoing Interface																						
+1034471696							1/27/2026 12:00:00 AM										N																		1/27/2025 12:58:00 PM													Outgoing Interface																						

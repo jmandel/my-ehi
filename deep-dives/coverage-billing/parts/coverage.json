@@ -1,0 +1,21 @@
+{
+  "_meta": {
+    "slot": "coverage",
+    "built_by": "project.ts"
+  },
+  "payer": "Blue Cross of Wisconsin",
+  "plan": "BCBS WI PPO / Federal",
+  "planType": "PPO (indemnity)",
+  "group": "Microsoft",
+  "subscriber": "Self",
+  "secondaryPayer": "None — single payer across the whole record",
+  "costSharing": {
+    "officeCopay": "$0",
+    "inNetworkCoinsurance": "10%",
+    "outNetworkCoinsurance": "30%",
+    "note": "$0 office copay with 10% in-network coinsurance across service types (primary care, specialty, therapy, hospital). That 10% in-network share is exactly what shows up as the patient's small balances downstream."
+  },
+  "src": {
+    "coverageId": "5934765"
+  }
+}

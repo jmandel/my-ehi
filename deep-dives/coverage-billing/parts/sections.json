@@ -1,0 +1,128 @@
+{
+  "_meta": {
+    "slot": "sections",
+    "built_by": "hand-abstraction",
+    "note": "Rich narrative spine: a real summary + multi-paragraph sections + an explicit assessment. Reuses the verified findings and verbatim quotes from the billing synthesis pass; every claim cites an evidenceId in evidence.json. Neutral clinical/financial section titles."
+  },
+  "summary": "This is a clean, well-behaved billing history with one instructive denial at its center. A single insurer — Blue Cross of Wisconsin, a Microsoft-group PPO with the patient as self-subscriber — covers the entire record, with no secondary payer and a simple cost-sharing rule the whole ledger obeys: $0 office copay and 10% in-network coinsurance. Over eight years (2018–2025) the clinic billed $4,821 in professional charges; one $315 charge is a voided duplicate, so the real billed work is $4,506. Of that, the patient's own share was just $631.87 — about 14% — while Blue Cross paid $1,530.44 and a further $2,343.69 simply evaporated as contractual write-off, the gap between sticker price and the plan's allowed amount that the patient never owes. Twenty-two claim submissions cover twenty-one invoices: seventeen paid and closed, three rejected, one voided. The rejected and voided claims were never paid; each was quietly re-submitted under a new claim number, and every penny reconciles. The centerpiece is one of those: a December 1, 2022 office visit (CPT 99214, $315) that Blue Cross denied for 'missing information,' which the clinic then walked through a textbook void → reverse → repost → rebill correction — fixing the diagnosis coding from a single vague code to a specific concussion diagnosis with an external-cause code — after which the corrected claim paid normally. Separately, one real hospital-billing episode (a March 2022 occupational-therapy series, $1,638.82) was the patient's most expensive single event: insurance paid nothing, the entire $554.27 allowed amount landed on the deductible, and $1,084.55 was written off. The machinery worked; the patient's exposure was small; the only friction visible to him was a $7.82 small-balance letter and a stray 'no insurance on file' notice.",
+  "sections": [
+    {
+      "id": "machine",
+      "title": "How a visit becomes money",
+      "narrative": [
+        {
+          "text": "Every line in this record runs through the same four-step machine. A clinic visit or lab generates a charge at the provider's sticker price. That charge is bundled into a claim and sent to the insurer. The insurer adjudicates it against the plan's fee schedule and returns a remittance (an EOB) that splits the charge into three destinations: an amount it pays the provider, an amount it assigns to the patient (deductible and coinsurance), and a contractual write-off — the gap between the sticker price and the plan's allowed amount, which the provider agrees to erase and the patient never owes. The patient's share is then billed to the patient; everything else closes out.",
+          "cites": ["e_machine_overview"]
+        },
+        {
+          "text": "One insurer drives the whole record. Blue Cross of Wisconsin (a BCBS WI PPO under the Microsoft employer group, with the patient as the self-subscriber) is the only payer across eight years; there is no secondary insurance. The plan's cost-sharing is simple and consistent: $0 office copay and 10% coinsurance in network. That 10% is exactly what shows up downstream as the patient's small balances — the plan's rules are visible in the math of every claim.",
+          "cites": ["e_coverage", "e_cost_sharing"]
+        },
+        {
+          "text": "Money flows through two billing systems that must be kept separate. Professional billing (the clinic and lab charges) carries the bulk of the record — 29 charges, $4,821 — while hospital billing carries exactly one real episode (an occupational-therapy series). Mixing the two double-counts; this analysis anchors the headline totals on the professional side and treats the one hospital episode on its own.",
+          "cites": ["e_pb_hb_split"]
+        }
+      ]
+    },
+    {
+      "id": "totals",
+      "title": "Where the money went",
+      "narrative": [
+        {
+          "text": "On the professional side, the clinic billed $4,821 across 29 charges. One of those — a $315 office visit — is a voided duplicate from the denial saga below, so the real billed work is $4,506. That $4,506 splits cleanly three ways, and the three pieces add back to it to the penny: $2,343.69 was contractual write-off, $1,530.44 was paid by Blue Cross, and just $631.87 was the patient's responsibility.",
+          "cites": ["e_billed_net", "e_moneyflow_split"]
+        },
+        {
+          "text": "The single largest destination of the sticker price is not payment at all — it is the write-off. More than half of what was charged simply vanished as the contractual adjustment, almost entirely under reason code 45, 'charges exceed the fee schedule or maximum allowable.' This is the structural reality of insured care: the list price is largely fictional, and the allowed amount is what actually governs. The patient's true exposure over eight years of professional care was about 14% of the billed work — and most of that was deductible and 10% coinsurance, exactly as the plan promised.",
+          "cites": ["e_carc_45", "e_patient_share"]
+        },
+        {
+          "text": "A note on reconciliation, because the raw ledger can mislead. Epic's internal transaction-match log shows a larger 'payment' figure ($2,162.31) and an apparent patient share of zero — an artifact of how it records gross postings before the deductible is shifted onto the patient, and of payments whose matching charges fall outside the export's window. The honest, claim-level figure is the per-claim remittance used here, where insurance-paid, write-off, and patient-owed sum exactly to the net billed.",
+          "cites": ["e_reconcile_artifact"]
+        }
+      ]
+    },
+    {
+      "id": "claims",
+      "title": "The claims, one by one",
+      "narrative": [
+        {
+          "text": "There are 22 claim submissions covering 21 invoices: 17 closed and paid, 3 rejected, 1 voided, and 1 interim-accepted. Every claim went to Blue Cross as the primary (and only) payer. The closed claims are unremarkable — a preventive visit, an office visit, a lab panel — each marked down to the allowed amount, mostly paid, with a small deductible or coinsurance left to the patient.",
+          "cites": ["e_claim_counts"]
+        },
+        {
+          "text": "The four that did not pay on the first try are the interesting ones, and they share a pattern: a rejection or denial, followed by a quiet resubmission of the same charges under a new claim number. The August 2018 preventive visit and its lab were each rejected, then rebilled and paid. The April 2025 telehealth visit was rejected, then rebilled and paid. And the December 2022 office visit was denied, voided, and rebuilt — the saga that follows. In every case the underlying service was legitimate and eventually paid; the rejections were administrative, not substantive.",
+          "cites": ["e_rebill_pattern"]
+        }
+      ]
+    },
+    {
+      "id": "denial",
+      "title": "Anatomy of a denial — the $315 office visit",
+      "narrative": [
+        {
+          "text": "On December 1, 2022 the patient was seen for an office visit coded 99214 (an established-patient visit of moderate complexity), billed at $315. The visit itself was real and routine — the progress note records a 40-year-old man with a history of GERD and post-concussion syndrome who came to clinic to discuss post-concussion syndrome after a repeat head injury three weeks earlier, and the encounter generated a neurology referral.",
+          "cites": ["e_saga_visit"]
+        },
+        {
+          "text": "The first claim came back denied. Blue Cross returned reason code 16 — 'claim lacks information needed for adjudication' — and paid nothing; the denial image even posted twice. This is not a clinical denial (the plan was not saying the visit was unnecessary); it is a coding/specificity problem, the insurer saying the claim as submitted did not carry enough diagnostic detail to be processed.",
+          "cites": ["e_saga_denied"]
+        },
+        {
+          "text": "The clinic's correction is a clean, auditable state machine. On December 20, 2022 a billing specialist voided the original charge as a 'Correction' and reposted a brand-new charge in its place, with the new charge pointing back at the old one so the trail is preserved. On the same claim identifier the remittance posted a 'reversal of previous payment' of −$315, unwinding the denied claim. The new charge was then resubmitted (accepted, then closed) carrying the free-text note 'CORRECTED CLAIM' — the only such note in the entire export.",
+          "cites": ["e_saga_void", "e_saga_reversal", "e_saga_corrected"]
+        },
+        {
+          "text": "What actually fixed the denial was the diagnosis. The denied charge carried a single, vague code — 'postconcussional syndrome.' The corrected charge carried a specific concussion diagnosis ('concussion without loss of consciousness, initial encounter') plus an external-cause code ('struck by other objects, initial encounter') and 'nausea.' That added specificity is precisely the 'missing information' the reason-16 denial was pointing at, and with it the claim adjudicated normally on the second pass.",
+          "cites": ["e_saga_dx_fix"]
+        },
+        {
+          "text": "The rebill paid. Of the $315 charge, Blue Cross allowed $198.91, wrote off $116.09 as above the allowed amount, assigned $19.89 to the patient's coinsurance, and paid the provider $179.02 — verifiable both in the EOB and by walking the corrected charge back through the remittance. The net cost of the denial to the patient was nothing extra: the same $19.89 coinsurance it would have owed on a clean first pass. The cost was administrative — three claim submissions and a manual correction to recover one $315 visit.",
+          "cites": ["e_saga_paid"]
+        }
+      ]
+    },
+    {
+      "id": "hb",
+      "title": "The hospital-billing episode — occupational therapy",
+      "narrative": [
+        {
+          "text": "Set apart from the clinic ledger is the patient's single most expensive event: a March 2022 occupational-therapy series billed through hospital billing as a 'Therapies Series' account. Three charges — an OT evaluation and two sessions of self-care training — totaled $1,638.82. It is easy to mistake this for a radiology or imaging account; it is not. The other three hospital-account shells in the export are empty, with no transactions at all — an Epic artifact, not real care.",
+          "cites": ["e_hb_episode"]
+        },
+        {
+          "text": "The remittance on this episode is the cleanest illustration of the deductible in the whole record. Blue Cross wrote off $1,084.55 (the amount above the allowed fee plus a bundled service) and applied the entire remaining $554.27 — the full allowed amount — to the patient's deductible. Because the deductible had not yet been met, insurance paid $0 and the patient owed the whole $554.27. The account closed at a zero balance in May 2022. This one episode accounts for the bulk of the patient's lifetime out-of-pocket across both billing systems.",
+          "cites": ["e_hb_split"]
+        }
+      ]
+    },
+    {
+      "id": "friction",
+      "title": "What the patient actually saw",
+      "narrative": [
+        {
+          "text": "For all the machinery behind it, the patient-facing money trail is sparse. In October 2022 a $7.82 in-network coinsurance balance was enough to generate a 'small-balance letter' and briefly route the account to a billing work-queue. In January 2025 a 'need insurance information — no insurance listed' letter went out against a $237 balance with no coverage on file — a momentary gap in how the coverage was attached, not a real loss of insurance. That is the entire visible friction over eight years.",
+          "cites": ["e_correspondence"]
+        }
+      ]
+    },
+    {
+      "id": "assessment",
+      "title": "Assessment",
+      "narrative": [
+        {
+          "text": "From a billing-analyst's chair, this is a healthy account. One payer, no coordination-of-benefits tangle, a consistent cost-sharing rule, every claim reconciled, and a zero balance. The patient's total exposure was modest and entirely explained by plan design — a small deductible and 10% coinsurance — with the single largest out-of-pocket being the $554.27 occupational-therapy deductible. Nothing here suggests over-billing, surprise balances, or aggressive collections.",
+          "cites": ["e_moneyflow_split", "e_hb_split"]
+        },
+        {
+          "text": "The denial saga is the one place worth a second look, and the lesson is procedural, not financial. The December 2022 visit was denied purely for diagnostic specificity, and the clinic's void-reverse-rebill correction recovered it in full — exactly the workflow a billing office should run. The cost of the denial was three claim submissions and staff time to recover one $315 visit; the patient paid nothing extra. If there is a takeaway it is that a single under-coded diagnosis can stall an otherwise clean claim, and that the correction machinery, when it works, is invisible to the patient.",
+          "cites": ["e_saga_dx_fix", "e_saga_paid"]
+        },
+        {
+          "text": "What this export cannot answer should be stated plainly. The professional ledger is anchored on the per-claim remittance because Epic's transaction-match log overstates 'payment' and zeroes the patient share — so any figure read straight off the raw ledger net (the famous −$10,205) is an artifact of charges and payments falling on opposite sides of the export's window, not a real balance. The export also does not carry the patient's actual statements or what was ultimately collected from him, only what the plan assigned; whether the $631.87 professional share and the $554.27 OT deductible were paid by check, card, or an HSA is not visible. And the eligibility grid shows the plan's coinsurance rule but not the deductible or out-of-pocket maximum, so the year-to-year deductible math (why one claim hits the deductible and another only coinsurance) can be inferred but not fully reconstructed.",
+          "cites": ["e_reconcile_artifact", "e_cost_sharing", "e_patient_share"]
+        }
+      ]
+    }
+  ]
+}

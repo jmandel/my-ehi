@@ -1,0 +1,51 @@
+{
+  "_meta": {
+    "slot": "carc",
+    "built_by": "project.ts"
+  },
+  "scope": "Professional billing (clinic & lab), 2018–2025 — each claim's final adjudication, net of the denial/rebill churn",
+  "writeoff": {
+    "label": "Contractual write-off",
+    "total": 2343.69,
+    "rows": [
+      {
+        "code": "45",
+        "plain": "Above the plan's allowed amount",
+        "sub": "the gap between sticker price and the fee schedule",
+        "amount": 2247.69,
+        "nLines": 26
+      },
+      {
+        "code": "97",
+        "plain": "Bundled into another service's payment",
+        "amount": 48,
+        "nLines": 1
+      },
+      {
+        "code": "234",
+        "plain": "Not paid separately",
+        "amount": 48,
+        "nLines": 1
+      }
+    ]
+  },
+  "patient": {
+    "label": "Patient responsibility",
+    "total": 631.87,
+    "rows": [
+      {
+        "code": "1",
+        "plain": "Deductible",
+        "amount": 604.16,
+        "nLines": 5
+      },
+      {
+        "code": "2",
+        "plain": "Coinsurance",
+        "amount": 27.71,
+        "nLines": 4
+      }
+    ]
+  },
+  "basis": "Read off each claim's final remittance only — the Processed-as-Primary images, deduped to one per invoice, with the denied and reversed cycles dropped and the hospital-billing OT episode kept separate. The two groups sum to the $2,343.69 write-off and $631.87 patient share in the flow above, to the penny."
+}

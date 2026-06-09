@@ -1,0 +1,456 @@
+{
+  "_meta": {
+    "slot": "claims",
+    "built_by": "project.ts",
+    "n": 22
+  },
+  "rows": [
+    {
+      "claimNo": "L1002792520",
+      "date": "Aug 9, 2018",
+      "dateIso": "2018-08-09",
+      "service": "Preventive (annual) visit",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 1,
+      "billed": 335,
+      "insurancePaid": null,
+      "writeoff": null,
+      "patientOwed": null,
+      "status": "Rejected (never paid)",
+      "statusKey": "rejected",
+      "resubmittedFrom": null,
+      "isDenialSaga": false,
+      "src": {
+        "invId": "24584313",
+        "icn": null
+      }
+    },
+    {
+      "claimNo": "L1002792530",
+      "date": "Aug 9, 2018",
+      "dateIso": "2018-08-09",
+      "service": "Lipid panel + blood draw",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 2,
+      "billed": 151,
+      "insurancePaid": null,
+      "writeoff": null,
+      "patientOwed": null,
+      "status": "Rejected (never paid)",
+      "statusKey": "rejected",
+      "resubmittedFrom": null,
+      "isDenialSaga": false,
+      "src": {
+        "invId": "24584314",
+        "icn": null
+      }
+    },
+    {
+      "claimNo": "L1002834030",
+      "date": "Aug 9, 2018",
+      "dateIso": "2018-08-09",
+      "service": "Preventive (annual) visit",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 1,
+      "billed": 335,
+      "insurancePaid": 230.73,
+      "writeoff": 104.27,
+      "patientOwed": 0,
+      "status": "Paid & closed",
+      "statusKey": "closed",
+      "resubmittedFrom": "L1002792520",
+      "isDenialSaga": false,
+      "src": {
+        "invId": "24873734",
+        "icn": "2018241CN0502"
+      }
+    },
+    {
+      "claimNo": "L1002834040",
+      "date": "Aug 9, 2018",
+      "dateIso": "2018-08-09",
+      "service": "Lipid panel + blood draw",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 2,
+      "billed": 151,
+      "insurancePaid": 23.52,
+      "writeoff": 127.48,
+      "patientOwed": 0,
+      "status": "Paid & closed",
+      "statusKey": "closed",
+      "resubmittedFrom": "L1002792530",
+      "isDenialSaga": false,
+      "src": {
+        "invId": "24873736",
+        "icn": "2018241CN0503"
+      }
+    },
+    {
+      "claimNo": "L1004236460",
+      "date": "Jan 9, 2020",
+      "dateIso": "2020-01-09",
+      "service": "Office visit (established)",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 1,
+      "billed": 165,
+      "insurancePaid": 0,
+      "writeoff": 31.71,
+      "patientOwed": 133.29,
+      "status": "Paid & closed",
+      "statusKey": "closed",
+      "resubmittedFrom": null,
+      "isDenialSaga": false,
+      "src": {
+        "invId": "35267927",
+        "icn": "2020010DE9628"
+      }
+    },
+    {
+      "claimNo": "L1004718920",
+      "date": "Jul 14, 2020",
+      "dateIso": "2020-07-14",
+      "service": "Office visit (established)",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 1,
+      "billed": 170,
+      "insurancePaid": 113.3,
+      "writeoff": 56.7,
+      "patientOwed": 0,
+      "status": "Paid & closed",
+      "statusKey": "closed",
+      "resubmittedFrom": null,
+      "isDenialSaga": false,
+      "src": {
+        "invId": "39392511",
+        "icn": "2020228BN6036"
+      }
+    },
+    {
+      "claimNo": "L1006928390",
+      "date": "Aug 29, 2022",
+      "dateIso": "2022-08-29",
+      "service": "Preventive + office visit",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 2,
+      "billed": 516,
+      "insurancePaid": 272.89,
+      "writeoff": 236.12,
+      "patientOwed": 6.99,
+      "status": "Paid & closed",
+      "statusKey": "closed",
+      "resubmittedFrom": null,
+      "isDenialSaga": false,
+      "src": {
+        "invId": "56467923",
+        "icn": "2022264BT5584"
+      }
+    },
+    {
+      "claimNo": "L1006942840",
+      "date": "Aug 29, 2022",
+      "dateIso": "2022-08-29",
+      "service": "Metabolic panel + blood draw",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 2,
+      "billed": 173,
+      "insurancePaid": 7.57,
+      "writeoff": 164.6,
+      "patientOwed": 0.83,
+      "status": "Paid & closed",
+      "statusKey": "closed",
+      "resubmittedFrom": null,
+      "isDenialSaga": false,
+      "src": {
+        "invId": "56523114",
+        "icn": "2022266BM7967"
+      }
+    },
+    {
+      "claimNo": "L1007201490",
+      "date": "Dec 1, 2022",
+      "dateIso": "2022-12-01",
+      "service": "Office visit (established)",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 1,
+      "billed": 315,
+      "insurancePaid": 0,
+      "writeoff": 0,
+      "patientOwed": 0,
+      "status": "Voided (denied, then corrected)",
+      "statusKey": "voided",
+      "resubmittedFrom": null,
+      "isDenialSaga": true,
+      "src": {
+        "invId": "58319567",
+        "icn": "2022341BT5497"
+      }
+    },
+    {
+      "claimNo": "L1007233830",
+      "date": "Dec 1, 2022",
+      "dateIso": "2022-12-01",
+      "service": "Office visit (established)",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 1,
+      "billed": 315,
+      "insurancePaid": null,
+      "writeoff": null,
+      "patientOwed": null,
+      "status": "Accepted (interim)",
+      "statusKey": "accepted",
+      "resubmittedFrom": "L1007201490",
+      "isDenialSaga": true,
+      "src": {
+        "invId": "58660400",
+        "icn": null
+      }
+    },
+    {
+      "claimNo": "L1007233831",
+      "date": "Dec 1, 2022",
+      "dateIso": "2022-12-01",
+      "service": "Office visit (established)",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 1,
+      "billed": 315,
+      "insurancePaid": 179.02,
+      "writeoff": 116.09,
+      "patientOwed": 19.89,
+      "status": "Paid & closed",
+      "statusKey": "closed",
+      "resubmittedFrom": "L1007201490",
+      "isDenialSaga": true,
+      "src": {
+        "invId": "58660400",
+        "icn": "2022341BT5497"
+      }
+    },
+    {
+      "claimNo": "L1007449820",
+      "date": "Mar 2, 2023",
+      "dateIso": "2023-03-02",
+      "service": "Office visit (established)",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 1,
+      "billed": 226,
+      "insurancePaid": 0,
+      "writeoff": 86.03,
+      "patientOwed": 139.97,
+      "status": "Paid & closed",
+      "statusKey": "closed",
+      "resubmittedFrom": null,
+      "isDenialSaga": false,
+      "src": {
+        "invId": "60492688",
+        "icn": "2023072DV0514"
+      }
+    },
+    {
+      "claimNo": "L1007985430",
+      "date": "Sep 28, 2023",
+      "dateIso": "2023-09-28",
+      "service": "Lipid panel + A1c + blood draw",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 3,
+      "billed": 203,
+      "insurancePaid": 19.25,
+      "writeoff": 183.75,
+      "patientOwed": 0,
+      "status": "Paid & closed",
+      "statusKey": "closed",
+      "resubmittedFrom": null,
+      "isDenialSaga": false,
+      "src": {
+        "invId": "65200403",
+        "icn": "2023277DI2086"
+      }
+    },
+    {
+      "claimNo": "L1007990080",
+      "date": "Sep 28, 2023",
+      "dateIso": "2023-09-28",
+      "service": "Flu vaccine + administration",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 2,
+      "billed": 114,
+      "insurancePaid": 38.85,
+      "writeoff": 75.15,
+      "patientOwed": 0,
+      "status": "Paid & closed",
+      "statusKey": "closed",
+      "resubmittedFrom": null,
+      "isDenialSaga": false,
+      "src": {
+        "invId": "65226259",
+        "icn": "2023278BR8828"
+      }
+    },
+    {
+      "claimNo": "L1008016200",
+      "date": "Sep 28, 2023",
+      "dateIso": "2023-09-28",
+      "service": "Preventive (annual) visit",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 1,
+      "billed": 330,
+      "insurancePaid": 223.42,
+      "writeoff": 106.58,
+      "patientOwed": 0,
+      "status": "Paid & closed",
+      "statusKey": "closed",
+      "resubmittedFrom": null,
+      "isDenialSaga": false,
+      "src": {
+        "invId": "65425314",
+        "icn": "2023286CD3233"
+      }
+    },
+    {
+      "claimNo": "L1008789160",
+      "date": "Jul 2, 2024",
+      "dateIso": "2024-07-02",
+      "service": "Office visit + add-on",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 2,
+      "billed": 383,
+      "insurancePaid": 0,
+      "writeoff": 178.85,
+      "patientOwed": 204.15,
+      "status": "Paid & closed",
+      "statusKey": "closed",
+      "resubmittedFrom": null,
+      "isDenialSaga": false,
+      "src": {
+        "invId": "71682363",
+        "icn": "2024191CL6984"
+      }
+    },
+    {
+      "claimNo": "L1008789170",
+      "date": "Jul 2, 2024",
+      "dateIso": "2024-07-02",
+      "service": "Neck X-ray",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 1,
+      "billed": 129,
+      "insurancePaid": 0,
+      "writeoff": 90.75,
+      "patientOwed": 38.25,
+      "status": "Paid & closed",
+      "statusKey": "closed",
+      "resubmittedFrom": null,
+      "isDenialSaga": false,
+      "src": {
+        "invId": "71682364",
+        "icn": "2024191CL7455"
+      }
+    },
+    {
+      "claimNo": "L1009194250",
+      "date": "Nov 7, 2024",
+      "dateIso": "2024-11-07",
+      "service": "Preventive (annual) visit",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 1,
+      "billed": 358,
+      "insurancePaid": 198.19,
+      "writeoff": 159.81,
+      "patientOwed": 0,
+      "status": "Paid & closed",
+      "statusKey": "closed",
+      "resubmittedFrom": null,
+      "isDenialSaga": false,
+      "src": {
+        "invId": "74663281",
+        "icn": "2024318BL0495"
+      }
+    },
+    {
+      "claimNo": "L1009720060",
+      "date": "Apr 23, 2025",
+      "dateIso": "2025-04-23",
+      "service": "Telehealth video visit + add-on",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 2,
+      "billed": 225,
+      "insurancePaid": null,
+      "writeoff": null,
+      "patientOwed": null,
+      "status": "Rejected (never paid)",
+      "statusKey": "rejected",
+      "resubmittedFrom": null,
+      "isDenialSaga": false,
+      "src": {
+        "invId": "78432812",
+        "icn": null
+      }
+    },
+    {
+      "claimNo": "L1009735840",
+      "date": "Apr 23, 2025",
+      "dateIso": "2025-04-23",
+      "service": "Telehealth video visit + add-on",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 2,
+      "billed": 225,
+      "insurancePaid": 0,
+      "writeoff": 136.5,
+      "patientOwed": 88.5,
+      "status": "Paid & closed",
+      "statusKey": "closed",
+      "resubmittedFrom": "L1009720060",
+      "isDenialSaga": false,
+      "src": {
+        "invId": "78539370",
+        "icn": "2025119BP9768"
+      }
+    },
+    {
+      "claimNo": "L1010454700",
+      "date": "Dec 4, 2025",
+      "dateIso": "2025-12-04",
+      "service": "Preventive (annual) visit",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 1,
+      "billed": 358,
+      "insurancePaid": 198.19,
+      "writeoff": 159.81,
+      "patientOwed": 0,
+      "status": "Paid & closed",
+      "statusKey": "closed",
+      "resubmittedFrom": null,
+      "isDenialSaga": false,
+      "src": {
+        "invId": "83775214",
+        "icn": "2025339CJ8368"
+      }
+    },
+    {
+      "claimNo": "L1010466900",
+      "date": "Dec 4, 2025",
+      "dateIso": "2025-12-04",
+      "service": "Metabolic + A1c + lipid + blood draw",
+      "payer": "Blue Cross of Wisconsin",
+      "nCharges": 4,
+      "billed": 355,
+      "insurancePaid": 25.51,
+      "writeoff": 329.49,
+      "patientOwed": 0,
+      "status": "Paid & closed",
+      "statusKey": "closed",
+      "resubmittedFrom": null,
+      "isDenialSaga": false,
+      "src": {
+        "invId": "83859340",
+        "icn": "2025343CQ3952"
+      }
+    }
+  ],
+  "totals": {
+    "nClaims": 22,
+    "nPaid": 17,
+    "nRejected": 3,
+    "nVoided": 1,
+    "nAccepted": 1
+  }
+}

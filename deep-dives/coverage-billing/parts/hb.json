@@ -1,0 +1,47 @@
+{
+  "_meta": {
+    "slot": "hb",
+    "built_by": "project.ts"
+  },
+  "label": "Occupational-therapy series (Hospital Billing)",
+  "accountClass": "Therapies Series",
+  "payer": "Blue Cross of Wisconsin",
+  "status": "Closed — $0 balance",
+  "zeroBalanceDate": "May 11, 2022",
+  "charges": [
+    {
+      "date": "Mar 11, 2022",
+      "dateIso": "2022-03-11",
+      "service": "OT — self-care training",
+      "amount": 216.27,
+      "src": {
+        "txId": "670514271"
+      }
+    },
+    {
+      "date": "Mar 11, 2022",
+      "dateIso": "2022-03-11",
+      "service": "OT — evaluation",
+      "amount": 557.47,
+      "src": {
+        "txId": "670514272"
+      }
+    },
+    {
+      "date": "Mar 22, 2022",
+      "dateIso": "2022-03-22",
+      "service": "OT — self-care training",
+      "amount": 865.08,
+      "src": {
+        "txId": "672984063"
+      }
+    }
+  ],
+  "billed": 1638.82,
+  "writeoff": 1084.55,
+  "patientDeductible": 554.27,
+  "insurancePaid": 0,
+  "note": "The single real Hospital-Billing episode: three occupational-therapy charges in March 2022 totaling $1,638.82. Blue Cross wrote off $1,084.55 (above the allowed amount + bundled) and applied the entire $554.27 allowed amount to the patient's deductible — so insurance paid $0 and the patient's true out-of-pocket here was $554.27. The account closed at $0 on May 11, 2022.",
+  "emptyShells": 3,
+  "emptyShellsNote": "Three other hospital-account shells exist with no transactions at all — a common Epic artifact, not real episodes of care."
+}

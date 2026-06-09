@@ -1,0 +1,176 @@
+{
+  "_meta": {
+    "layer": "VIEW-MODEL SLOT 'ascvd' — the 10-year ASCVD risk the chart never computed, recomputed from the substrate (dataset.json lipid panels + BP readings + live-DB demographics) by deep-dives/cardiac-risk/scripts/ascvd.ts. low/high bound the arc gauge; trajectory[] is the per-panel movement; inputs[] each drill to an evidenceId; caveats[] are the bounded uncertainties. Every value is display-clean.",
+    "computed_by": "deep-dives/cardiac-risk/scripts/ascvd.ts",
+    "recomputes": "Pooled Cohort Equations (White male) re-derived from the published 2013 coefficient table; reproduces analysis.json's 1.06% / 1.28% / 2.04% to two decimals."
+  },
+  "low": "1.06%",
+  "high": "2.04%",
+  "low_pct": 1.06,
+  "high_pct": 2.04,
+  "unit": "10-year ASCVD risk",
+  "basis": "Pooled Cohort Equations (ACC/AHA, 2013) — White, non-Hispanic male, untreated, non-smoker, non-diabetic, systolic 132 — re-derived from the published coefficient table and reproducing the figures below to two decimals. Cross-checked against the AHA PREVENT 2023 base model, which requires no race input and gives a concordant estimate.",
+  "threshold_note": "Both figures sit below the 5% borderline and 7.5% intermediate statin-discussion thresholds, so a guideline-literal reading says no statin is indicated today — which is exactly why the omission has felt defensible. The point is the trajectory: the estimate has nearly doubled on still-modest inputs, driven mostly by the falling HDL, and the conversation that movement should trigger has never been framed.",
+  "bands": [
+    {
+      "label": "Low",
+      "range": "Below 5%",
+      "from": 0,
+      "to": 5
+    },
+    {
+      "label": "Borderline",
+      "range": "5% to 7.5%",
+      "from": 5,
+      "to": 7.5
+    },
+    {
+      "label": "Intermediate / high",
+      "range": "7.5% and above",
+      "from": 7.5,
+      "to": 10
+    }
+  ],
+  "inputs": [
+    {
+      "label": "Age",
+      "value": "43 years",
+      "evidenceId": "e_input_age"
+    },
+    {
+      "label": "Sex",
+      "value": "Male",
+      "evidenceId": "e_input_sex"
+    },
+    {
+      "label": "Race",
+      "value": "White (White/Other coefficients)",
+      "evidenceId": "e_input_race"
+    },
+    {
+      "label": "Ethnicity",
+      "value": "Not Hispanic or Latino",
+      "evidenceId": "e_input_ethnicity"
+    },
+    {
+      "label": "Total cholesterol",
+      "value": "159 → 156 → 188 mg/dL",
+      "evidenceId": "e_chol"
+    },
+    {
+      "label": "HDL cholesterol",
+      "value": "52 → 44 → 40 mg/dL (the driver)",
+      "evidenceId": "e_hdl"
+    },
+    {
+      "label": "Systolic BP",
+      "value": "132 mmHg",
+      "evidenceId": "e_bp_series"
+    },
+    {
+      "label": "On BP treatment",
+      "value": "No — lisinopril declined, never taken",
+      "evidenceId": "e_input_treated"
+    },
+    {
+      "label": "Smoker",
+      "value": "No (never)",
+      "evidenceId": "e_input_smoker"
+    },
+    {
+      "label": "Diabetes",
+      "value": "No (A1c 5.4, 5.5%)",
+      "evidenceId": "e_input_diabetes"
+    },
+    {
+      "label": "Estimated GFR",
+      "value": "Over 90 (assumed 95 for PREVENT)",
+      "evidenceId": "e_input_egfr"
+    }
+  ],
+  "trajectory": [
+    {
+      "date": "Aug 9, 2018",
+      "pct": 1.06,
+      "panel": "Total cholesterol 159, HDL 52 (fasting)",
+      "evidenceId": "e_ascvd_computed"
+    },
+    {
+      "date": "Sep 28, 2023",
+      "pct": 1.28,
+      "panel": "Total cholesterol 156, HDL 44 (non-fasting)",
+      "evidenceId": "e_ascvd_computed"
+    },
+    {
+      "date": "Dec 4, 2025",
+      "pct": 2.04,
+      "panel": "Total cholesterol 188, HDL 40 (non-fasting)",
+      "evidenceId": "e_ascvd_computed"
+    }
+  ],
+  "sensitivities": {
+    "systolic": {
+      "title": "Systolic BP is office-only",
+      "note": "Across his observed office range the estimate moves only within a narrow band — the office-only uncertainty does not change the order of magnitude.",
+      "panel": "On the Dec 4, 2025 panel",
+      "points": [
+        {
+          "label": "Systolic 122",
+          "pct": 1.78
+        },
+        {
+          "label": "Systolic 132",
+          "pct": 2.04
+        },
+        {
+          "label": "Systolic 142",
+          "pct": 2.32
+        }
+      ],
+      "evidenceId": "e_sbp_sensitivity"
+    },
+    "fasting_redraw": {
+      "title": "A fasting redraw cannot rescue the picture",
+      "note": "Holding the directly-measured HDL of 40 fixed and varying total cholesterol across the plausible fasting range, the estimate stays in a tight band — even reverting total cholesterol all the way to the 2018 value leaves him well above the 1.06% he sat at when HDL was 52. The driver is the HDL fall, which is fasting-independent.",
+      "panel": "On the Dec 4, 2025 panel, HDL 40 fixed",
+      "points": [
+        {
+          "label": "Total cholesterol 188 (as drawn)",
+          "pct": 2.04
+        },
+        {
+          "label": "Total cholesterol 180",
+          "pct": 1.88
+        },
+        {
+          "label": "Total cholesterol 170",
+          "pct": 1.7
+        },
+        {
+          "label": "Total cholesterol 160",
+          "pct": 1.52
+        },
+        {
+          "label": "Total cholesterol 159 (2018 fasting value)",
+          "pct": 1.5
+        }
+      ],
+      "evidenceId": "e_fasting_redraw"
+    }
+  },
+  "cross_check": {
+    "model": "AHA PREVENT 2023 base model",
+    "value": "Roughly 1.6% (2018) to 2.4% (2025) 10-year ASCVD",
+    "note": "Concordant with the Pooled Cohort estimate and requiring no race input, which independently confirms the White-coefficient read and that the discarded African-American-coefficient figures were an artifact of a false 'race unknown' assumption.",
+    "evidenceId": "e_prevent_crosscheck"
+  },
+  "caveats": [
+    "Race is confirmed (White), so there is no wide race-driven spread; the discarded African-American-coefficient figures of 3.6–4.1% do not apply and were an artifact of a false 'race unknown' assumption.",
+    "Blood pressure is office-only (nine encounters; no logged home or ambulatory readings). It is corroborated by the patient's own home report of 'upper 130s,' so it is not over-read, but formal out-of-office confirmation is still absent.",
+    "The latest (2025) lipid panel was non-fasting, which can inflate total cholesterol — so the 2.04% figure is, if anything, slightly high. But HDL 40 is measured directly and is fasting-independent, so a fasting redraw still lands him near 1.5–2.0%; the atherogenic shift is real regardless.",
+    "Estimated GFR resulted as 'over 90' with no discrete value, so the PREVENT cross-check uses an assumed 95; the true value moves PREVENT only trivially at this level.",
+    "The Pooled Cohort Equations are validated for ages 40–79; 43 is in range. The trajectory holds age fixed at 43 and varies only the lipids from each panel, so the three points isolate the effect of the worsening lipids rather than of aging.",
+    "LDL is not an explicit Pooled-Cohort input. LDL has stayed near-stable (89 → 94 → 92) and does not drive the change — the HDL does."
+  ],
+  "interpretation": "This is the number the chart should have produced and never did. It reframes the case correctly: a 43-year-old whose 10-year estimate has nearly doubled on worsening-but-still-modest inputs, who carries guideline risk-enhancers the equations under-weight, is the textbook candidate for a risk-enhancer-informed discussion and lifestyle intervention now — while the 30-year and lifetime horizon is what matters. The value of the number is the trajectory and the conversation it should trigger, not the small percentage."
+}

@@ -1,0 +1,113 @@
+{
+  "_meta": {
+    "slot": "denial",
+    "built_by": "project.ts"
+  },
+  "title": "The denial saga — one $315 office visit, denied and rebuilt",
+  "visitDate": "Dec 1, 2022",
+  "visitDateIso": "2022-12-01",
+  "cpt": "99214 — established office visit, moderate complexity",
+  "service": "Office visit for post-concussion syndrome",
+  "billed": 315,
+  "finalPaid": 179.02,
+  "finalPatientCoinsurance": 19.89,
+  "finalWriteoff": 116.09,
+  "sharedClaimId": "2022341BT5497",
+  "dxBefore": "Postconcussional syndrome (single, unspecified diagnosis)",
+  "dxAfter": "Concussion without loss of consciousness (initial encounter) + external-cause code + nausea — a more specific, complete diagnosis set",
+  "steps": [
+    {
+      "n": 1,
+      "key": "submitted",
+      "label": "Claim submitted",
+      "date": "Dec 7, 2022",
+      "detail": "The visit is billed to Blue Cross as claim L1007201490 — a $315 charge for a moderate-complexity office visit (CPT 99214).",
+      "money": {
+        "billed": 315
+      },
+      "tone": "neutral",
+      "evidenceId": "e_saga_visit"
+    },
+    {
+      "n": 2,
+      "key": "denied",
+      "label": "Denied",
+      "date": "Dec 2022",
+      "detail": "Blue Cross denies the claim with reason code 16 — 'claim lacks information needed to adjudicate.' Nothing is paid; the denial image posts twice.",
+      "carc": {
+        "code": "16",
+        "plain": "Claim lacks information needed to adjudicate"
+      },
+      "money": {
+        "billed": 315,
+        "paid": 0
+      },
+      "tone": "bad",
+      "evidenceId": "e_saga_denied"
+    },
+    {
+      "n": 3,
+      "key": "voided",
+      "label": "Charge voided (correction)",
+      "date": "Dec 20, 2022",
+      "detail": "A billing specialist voids the original charge as a 'Correction' and reposts a brand-new charge in its place — the new charge points back at the old one, preserving the audit trail.",
+      "money": {
+        "voided": 315
+      },
+      "tone": "action",
+      "evidenceId": "e_saga_void"
+    },
+    {
+      "n": 4,
+      "key": "reversed",
+      "label": "Payment reversed",
+      "date": "Dec 2022",
+      "detail": "On the same claim ID, the remittance posts a 'reversal of previous payment' of −$315, unwinding the denied claim so it can be re-adjudicated cleanly.",
+      "money": {
+        "reversed": -315
+      },
+      "tone": "action",
+      "evidenceId": "e_saga_reversal"
+    },
+    {
+      "n": 5,
+      "key": "rebilled",
+      "label": "Rebilled — corrected claim",
+      "date": "Dec 20–21, 2022",
+      "detail": "The new charge is resubmitted as L1007233830 (accepted) then L1007233831 (closed), tagged with the free-text note 'CORRECTED CLAIM.' The diagnosis is upgraded from a single unspecified code to a specific concussion diagnosis with an external-cause code — fixing exactly the 'missing information' the denial flagged.",
+      "money": {
+        "billed": 315
+      },
+      "tone": "action",
+      "evidenceId": "e_saga_corrected"
+    },
+    {
+      "n": 6,
+      "key": "paid",
+      "label": "Paid",
+      "date": "Dec 21, 2022",
+      "detail": "The corrected claim adjudicates normally: of the $315, Blue Cross allows $198.91, writes off $116.09 (above the allowed amount), assigns $19.89 to the patient's coinsurance, and pays the provider $179.02.",
+      "carc": [
+        {
+          "code": "45",
+          "plain": "Above the plan's allowed amount (sticker-price markdown)",
+          "amount": 116.09
+        },
+        {
+          "code": "2",
+          "plain": "Patient coinsurance",
+          "amount": 19.89
+        }
+      ],
+      "money": {
+        "billed": 315,
+        "allowed": 198.91,
+        "writeoff": 116.09,
+        "coinsurance": 19.89,
+        "paid": 179.02
+      },
+      "tone": "good",
+      "evidenceId": "e_saga_paid"
+    }
+  ]
+}

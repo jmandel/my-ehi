@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EHI export lab — Josh Mandel's health record</title>
+<style>
+  :root { --ink:#1a1d21; --muted:#5b6168; --rule:#e6e8eb; --accent:#1d4ed8; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#f6f7f9; color:var(--ink);
+    font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  .wrap { max-width:820px; margin:0 auto; background:#fff; padding:56px 40px 80px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+  h1 { font-size:32px; letter-spacing:-.02em; margin:0 0 6px; }
+  .sub { color:var(--muted); margin:0 0 8px; }
+  .note { color:var(--muted); font-size:14px; border-left:3px solid var(--rule); padding-left:12px; margin:18px 0 32px; }
+  a.card { display:block; text-decoration:none; color:inherit; border:1px solid var(--rule); border-radius:12px;
+    padding:18px 20px; margin:14px 0; transition:border-color .15s, transform .15s; }
+  a.card:hover { border-color:var(--accent); transform:translateY(-1px); }
+  .card h2 { margin:0 0 4px; font-size:20px; color:var(--accent); }
+  .card .kicker { text-transform:uppercase; letter-spacing:.07em; font-size:11px; font-weight:700; color:var(--muted); }
+  .card p { margin:6px 0 0; color:var(--ink); font-size:15px; }
+  footer { color:var(--muted); font-size:13px; margin-top:36px; border-top:1px solid var(--rule); padding-top:14px; }
+  code { background:#f1f3f5; padding:1px 5px; border-radius:4px; font-size:13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>EHI export lab</h1>
+  <p class="sub">An agent harness plus insight-driven readings of one real Epic EHI export — Joshua C. Mandel's record.</p>
+  <p class="note">Each is a standalone static app built <strong>view-first</strong>: a single clean view
+  model (structured data <em>and</em> the assessment narrative) powers a bespoke clinical tool. The spine is
+  the reasoning; every claim drills to a clean source quote. The agent harness is different: it exposes the
+  redacted SQLite export, note files, skills, JavaScript execution, and plotting libraries for live
+  exploration. Serve over HTTP (open each card); if a page is unbuilt, run
+  <code>bun build index.html --outdir dist</code> in its folder.</p>
+
+  <a class="card" href="agent-harness/dist/index.html">
+    <div class="kicker">Agent workspace</div>
+    <h2>Browser agent harness</h2>
+    <p>A browser-only OpenRouter agent loop with an unsandboxed JavaScript tool, SQLite WASM over the
+    redacted EHI database, a bundled filesystem view of skills and raw note/schema files, D3/Vega-Lite
+    plotting helpers, persistent agent state, and a writable DOM stage.</p>
+  </a>
+
+  <a class="card" href="cardiac-risk/dist/index.html">
+    <div class="kicker">Cardiovascular</div>
+    <h2>Cardiovascular risk</h2>
+    <p>Stage-1 blood pressure diagnosed once and dropped, a worsening lipid trajectory, a heavy family
+    history, and a computed 10-year ASCVD risk the chart never produced — with a graphical pedigree and a
+    risk gauge.</p>
+  </a>
+  <a class="card" href="post-concussion/dist/index.html">
+    <div class="kicker">Neurology</div>
+    <h2>Post-concussion arc</h2>
+    <p>A multi-year head-injury course on one timeline: two injuries, a normal MRI against a persistent
+    syndrome, the nortriptyline dose thread and its documented symptom response, and the eventual taper.</p>
+  </a>
+  <a class="card" href="coverage-billing/dist/index.html">
+    <div class="kicker">Coverage &amp; billing</div>
+    <h2>Coverage &amp; billing</h2>
+    <p>How a clinic visit becomes money — billed vs. written off vs. paid vs. owed — and a denied claim
+    reconstructed as a state machine, from denial through void, reversal, and a paid rebill.</p>
+  </a>
+  <a class="card" href="allergy-atopy/dist/index.html">
+    <div class="kicker">Allergy &amp; immunology</div>
+    <h2>Allergy &amp; atopy</h2>
+    <p>An evolving atopic profile and what component-resolved IgE testing revealed — an oral-allergy-syndrome
+    cross-reactivity pattern a plain allergy list could never show.</p>
+  </a>
+  <a class="card" href="prevention-self-tracking/dist/index.html">
+    <div class="kicker">Prevention</div>
+    <h2>Prevention &amp; self-tracking</h2>
+    <p>Eight years of a prevention-minded patient: the immunization program, a pre-travel vaccine cluster,
+    screening, and a continuous glucose monitor worn despite a normal A1c.</p>
+  </a>
+  <a class="card" href="people-record-touches/dist/index.html">
+    <div class="kicker">People &amp; operations</div>
+    <h2>Who touched the record?</h2>
+    <p>The provider-site people and system actors attached to the record: clinicians, staff, coders,
+    referral workers, medical assistants, billing users, MyChart accounts, batch jobs, and external-data
+    placeholders rolled up by task, department, and role.</p>
+  </a>
+  <a class="card" href="operational-details/dist/index.html">
+    <div class="kicker">Operations</div>
+    <h2>Operational details</h2>
+    <p>The visit choreography most clinical exports leave behind: slot time, check-in and checkout actors,
+    eCheck-in steps, flowsheet timing as a rooming proxy, AVS print signals, ADT events, and the room/bed
+    fields that exist but are empty in this outpatient-heavy record.</p>
+  </a>
+  <a class="card" href="data-oddities/dist/index.html">
+    <div class="kicker">Record quality</div>
+    <h2>Data oddities</h2>
+    <p>A cause-separated reading of inconsistencies, quirks, and stumpers in the export: which are Epic
+    modeling mechanics, which are data-quality issues, and which are clinical or documentation phenomena.</p>
+  </a>
+
+  <footer>Generated from the patient's own record. Direct identifiers (SSN, address, email, phone, MRN) are
+  redacted; clinical content, dates, and provider names are shown. See the repository README for how these
+  were built.</footer>
+</div>
+</body>
+</html>

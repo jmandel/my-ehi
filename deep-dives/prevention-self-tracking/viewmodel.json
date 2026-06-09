@@ -1,0 +1,700 @@
+{
+  "summary": "Across eight years (2017–2025) Joshua Mandel reads as a deliberately prevention-minded patient, and the record documents it densely: 18 distinct vaccine doses, recurring negative screening, and an out-of-pocket glucose self-experiment driven by curiosity rather than disease. The spine is an annual influenza shot in 8 of 9 seasons and a fully maintained seven-dose COVID-19 program — much of which he self-documented into his own chart and, in April 2021, actively lobbied the practice to get early by citing his own risk factors. A discrete February-2019 travel cluster (Tdap, Typhoid, Hepatitis A in one day) traces cleanly to a pharmacist-led travel consult before a trip to India, the shots matching the firm recommendations exactly. Depression screening is negative at all seven visits and his HbA1c sits normal (5.4% then 5.5%). The most telling thread is what he did despite that normal A1c: a non-diabetic man asked his PCP for a FreeStyle Libre continuous glucose monitor to learn how his body responds to food, paid for it himself, reported back that he had 'learned a lot and also lost 5lb,' and even explored sharing his data publicly. The honest limit of this record is that none of those CGM traces are in the export — only two point glucose labs survive — so the engaged behavior is fully visible while the data it generated is not.",
+  "sections": [
+    {
+      "id": "immunizations",
+      "title": "Immunization program",
+      "narrative": [
+        {
+          "text": "Over eight years the patient accrued 18 distinct vaccine doses — a continuous, well-maintained prevention record rather than a scatter of one-off visits. Two routine threads dominate: an annual influenza shot and a fully built-out COVID-19 series.",
+          "cites": [
+            "e_imm_count"
+          ]
+        },
+        {
+          "text": "Influenza is the metronome. A flu dose is recorded in 8 of the 9 seasons from 2017 to 2025; the single calendar-year gap is 2020, the first pandemic winter, when a dose was most likely given outside this health system rather than skipped. Read as a behavior, this is a patient who reliably shows up for the seasonal shot.",
+          "cites": [
+            "e_flu_program"
+          ]
+        },
+        {
+          "text": "The COVID-19 program is complete and current: a Moderna primary plus booster across 2021, a Pfizer bivalent in September 2022, a Moderna update in 2023, and Pfizer doses in 2024 and 2025 — seven administrations in all, with the chart's forecast engine already projecting the next influenza and COVID boosters into August 2026.",
+          "cites": [
+            "e_covid_series",
+            "e_forecast"
+          ]
+        },
+        {
+          "text": "Two details mark him as an unusually engaged health consumer rather than a passive recipient. Four of the COVID doses are flagged 'MyChart Entered' — he reported them into his own chart. And the engagement predates the shots: in April 2021, after the practice told him it was 'not scheduling random COVID injections,' he wrote back that 'between overweight and prehypertension I'm hoping I'll qualify for vaccine ASAP,' using his own risk factors to argue for earlier eligibility.",
+          "cites": [
+            "e_self_reported",
+            "e_practice_reply",
+            "e_advocacy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "travel",
+      "title": "Travel immunization cluster (February 2019)",
+      "narrative": [
+        {
+          "text": "A tight three-shot cluster sits inside the timeline: Tdap, Typhoid (Typhim Vi), and Hepatitis A, all administered on February 5, 2019. It is not random — it is a textbook pre-travel work-up, and the chart shows the reasoning behind it.",
+          "cites": [
+            "e_travel_doses"
+          ]
+        },
+        {
+          "text": "Four days earlier, a travel consult captured the trip: Bangalore and Hyderabad, India, February 23 to March 3, 2019. A PCMH pharmacist, Jennifer George, reviewed CDC guidance and recommended Hepatitis A and Typhoid immunization, considered yellow fever (conditional on layovers), and advised malaria prophylaxis and traveler's-diarrhea treatment, urging a travel-clinic visit before departure. A physician signed off — 'Agree with RPh triage.'",
+          "cites": [
+            "e_travel_destination",
+            "e_travel_rph",
+            "e_travel_signoff"
+          ]
+        },
+        {
+          "text": "The administered shots match the pharmacist's two firm vaccine recommendations exactly — Hepatitis A and Typhoid — with a Tdap added for routine adult coverage. The cluster is a clean example of a recommendation translated into action within days.",
+          "cites": [
+            "e_travel_doses",
+            "e_travel_rph"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "screening",
+      "title": "Screening: depression and diabetes",
+      "narrative": [
+        {
+          "text": "Routine screening is present, recurring, and uniformly reassuring. Depression screening (PHQ-2) was charted at seven visits from August 2022 through December 2025, and every screen is negative — six totaled 0, and the single non-zero (a 1 on the 'feeling down' item in July 2024) sits well below the positive threshold of 3.",
+          "cites": [
+            "e_phq2"
+          ]
+        },
+        {
+          "text": "Diabetes screening is normal and tracked over time: HbA1c was 5.4% in September 2023 (explicitly ordered to screen for diabetes) and 5.5% in December 2025 (under preventive care) — both comfortably inside the 4.0–6.0% reference range and squarely non-diabetic. The health-maintenance engine carries the broader preventive panel — diabetes, cholesterol, hepatitis C, and the annual wellness visit — as satisfied and not-due, last completed in December 2025.",
+          "cites": [
+            "e_a1c",
+            "e_screening_dash"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cgm",
+      "title": "Self-tracking: a CGM despite a normal A1c",
+      "narrative": [
+        {
+          "text": "The defining thread of this record is what the patient did against those normal A1c results. In March 2024 — A1c 5.4%, no diabetes, no prediabetes — he messaged his PCP asking for a continuous glucose monitor: 'I'm very interested in learning more about how my body responds to different foods and how that affects my blood sugar levels … could you possibly write me a prescription for the Abbott FreeStyle Libre 3?' This is prevention as curiosity, not as disease management.",
+          "cites": [
+            "e_cgm_request"
+          ]
+        },
+        {
+          "text": "His physician wrote it the same week — a FreeStyle Libre 3 sensor and reader on March 12, 2024 — and a phone note records the financial reality plainly: 'He knows he will pay out of pocket.' A non-diabetic CGM is not a covered benefit, so this was a self-funded experiment from the start.",
+          "cites": [
+            "e_cgm_orders",
+            "e_cgm_outofpocket"
+          ]
+        },
+        {
+          "text": "It became an ongoing n-of-1 study. In May 2024 he requested a refill, reporting 'This has been super helpful and I've learned a lot and also lost 5lb,' and noting he was even exploring making his CGM data publicly available as part of a data-sharing project. The refill (four sensors, four refills) extended the monitoring across several more months — a deliberate, multi-month self-experiment layered on top of an otherwise unremarkable metabolic work-up.",
+          "cites": [
+            "e_cgm_followup",
+            "e_cgm_orders"
+          ]
+        },
+        {
+          "text": "The honest limit: none of the glucose data this generated is in the export. A FreeStyle Libre stores its readings in the Abbott app, not the EHR, and the only glucose values in this record are two single point labs (97 mg/dL in 2022, 90 mg/dL in 2025). So the export documents the behavior — the request, the orders, the self-reported result and weight loss — but not a single one of the day-by-day glucose curves the patient was actually studying.",
+          "cites": [
+            "e_no_glucose_series"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "assessment",
+      "title": "Assessment",
+      "narrative": [
+        {
+          "text": "Taken together, the record is a coherent portrait of proactive, self-directed prevention. The vaccine history is essentially complete for an adult of his age and life pattern — reliable annual influenza, a fully maintained COVID-19 series, and appropriate travel coverage ahead of an international trip — and his screening (depression, diabetes, the routine preventive panel) is current and reassuring. There is nothing here a clinician would flag as a gap in primary prevention; if anything, his engagement runs ahead of what the system asks of him.",
+          "cites": [
+            "e_imm_count",
+            "e_flu_program",
+            "e_a1c",
+            "e_screening_dash"
+          ]
+        },
+        {
+          "text": "What an expert would actually take from this case is the behavior, not the numbers: a patient who self-documents vaccines, lobbies for early eligibility using his own risk factors, and self-funds a continuous glucose monitor to understand his own physiology. That same posture appears, more pointedly, in this patient's cardiovascular record, where his Stage-1 blood pressure and falling HDL drift untreated — the prevention machinery he engages with so willingly for vaccines and screening never closed the loop on his modifiable cardiac risk. The contrast is the most useful thing this view surfaces: high prevention engagement does not guarantee that every preventable risk gets acted on.",
+          "cites": [
+            "e_advocacy",
+            "e_cgm_request"
+          ]
+        },
+        {
+          "text": "What the data cannot answer: the CGM experiment's actual results. The export proves he wore the sensor and reports he 'learned a lot' and lost five pounds, but the glucose traces themselves — the food-response curves that were the entire point — live in the Abbott app and never entered the EHR. Whether his post-prandial excursions were notable, and what dietary changes the device drove, is simply not recoverable from this record. The same is true of the 2020 influenza gap and any outside-system care: absence here means 'not captured by this export,' not 'did not happen.'",
+          "cites": [
+            "e_no_glucose_series",
+            "e_flu_program"
+          ]
+        }
+      ]
+    }
+  ],
+  "evidence": {
+    "e_imm_count": {
+      "kind": "fact",
+      "date": "2017–2025",
+      "text": "18 distinct vaccine doses are recorded across eight years (first Oct 25, 2017; last Oct 29, 2025), spanning routine influenza, a full COVID-19 program, and a 2019 travel cluster."
+    },
+    "e_flu_program": {
+      "kind": "fact",
+      "date": "2017–2025",
+      "text": "An annual influenza dose is recorded in 8 of the 9 seasons from 2017 to 2025. The only calendar-year gap is 2020 — no influenza dose was captured that pandemic year, most plausibly because it was received outside this health system."
+    },
+    "e_covid_series": {
+      "kind": "fact",
+      "date": "2021–2025",
+      "text": "Seven COVID-19 administrations: a Moderna primary plus booster in 2021 (Apr 18, May 16, Dec 3), a Pfizer bivalent on Sep 25, 2022, a Moderna update on Oct 11, 2023, then Pfizer doses on Sep 7, 2024 and Oct 29, 2025."
+    },
+    "e_self_reported": {
+      "kind": "fact",
+      "date": "2021–2022",
+      "text": "Four COVID doses (the three 2021 Moderna shots and the 2022 bivalent) carry an 'MyChart Entered' external-administration flag — the patient documented them into his own chart rather than receiving them in this clinic."
+    },
+    "e_practice_reply": {
+      "kind": "message",
+      "who": "Patricia Manix, practice staff",
+      "date": "Apr 5, 2021",
+      "quote": "We are not scheduling random COVID injections. The schedulers are following a list of those available and will be calling patient's as their name comes up."
+    },
+    "e_advocacy": {
+      "kind": "message",
+      "who": "Patient (to the practice)",
+      "date": "Apr 14, 2021",
+      "quote": "between overweight and prehypertension I'm hoping I'll qualify for vaccine ASAP"
+    },
+    "e_travel_doses": {
+      "kind": "fact",
+      "date": "Feb 5, 2019",
+      "text": "Tdap, Typhoid (Typhim Vi), and Hepatitis A were all administered on Feb 5, 2019 — a discrete three-shot cluster four days after a travel consult and ahead of a planned trip to India."
+    },
+    "e_travel_destination": {
+      "kind": "note",
+      "who": "Triage RN intake (travel consult)",
+      "date": "Feb 1, 2019",
+      "quote": "Where (Include all Countries and Cities the patient is visiting): Bangalore and Hyderabad, India. Dates of Travel: 2/23–3/3/19."
+    },
+    "e_travel_rph": {
+      "kind": "note",
+      "who": "Jennifer George, PharmD",
+      "date": "Feb 1, 2019",
+      "quote": "Per CDC recommendations for travel to Bangalore and Hyderabad, India, would advise: Immunizations: Hepatitis A, Typhoid; consider yellow fever vaccine; Malaria prophylaxis: yes; Traveler's diarrhea treatment: yes."
+    },
+    "e_travel_signoff": {
+      "kind": "note",
+      "who": "Dr. Kathryn Cahill",
+      "date": "Feb 11, 2019",
+      "quote": "Agree with RPh triage."
+    },
+    "e_phq2": {
+      "kind": "fact",
+      "date": "Aug 2022 – Dec 2025",
+      "text": "Depression screening (PHQ-2) was charted at seven visits from Aug 29, 2022 to Dec 4, 2025; every screen is negative. Six totaled 0; one (Jul 1, 2024) scored 1 on the 'feeling down' item — well below the positive threshold of 3."
+    },
+    "e_a1c": {
+      "kind": "fact",
+      "date": "2023 & 2025",
+      "text": "HbA1c was 5.4% on Sep 28, 2023 (ordered for 'Screening for diabetes mellitus') and 5.5% on Dec 4, 2025 (ordered as 'Preventative health care') — both comfortably inside the 4.0–6.0% reference range and squarely non-diabetic."
+    },
+    "e_screening_dash": {
+      "kind": "fact",
+      "date": "through Dec 4, 2025",
+      "text": "The health-maintenance engine carries Diabetes, Cholesterol, Hepatitis C, and Annual Wellness screening as satisfied / not-due, last completed Dec 4, 2025 — the routine preventive panel is current."
+    },
+    "e_cgm_request": {
+      "kind": "message",
+      "who": "Patient (to Dr. Rammelkamp)",
+      "date": "Mar 9, 2024",
+      "quote": "I'm very interested in learning more about how my body responds to different foods and how that affects my blood sugar levels — and to this end I'd like to try a continuous glucose monitor. Since the new OTC Dexcom Stelo won't be available for a few months, could you possibly write me a prescription for the Abbott FreeStyle Libre 3?"
+    },
+    "e_cgm_outofpocket": {
+      "kind": "note",
+      "who": "Dr. Zoe Rammelkamp",
+      "date": "Mar 12, 2024",
+      "quote": "He knows he will pay out of pocket."
+    },
+    "e_cgm_orders": {
+      "kind": "fact",
+      "date": "Mar–May 2024",
+      "text": "Three FreeStyle Libre 3 orders under PCP Zoe Rammelkamp: a sensor + reader on Mar 12, 2024, then a sensor refill (4 sensors, 4 refills) on May 7, 2024 — all status 'Sent'."
+    },
+    "e_cgm_followup": {
+      "kind": "message",
+      "who": "Patient (renewal request)",
+      "date": "May 7, 2024",
+      "quote": "This has been super helpful and I'd love a refill Rx. I've learned a lot and also lost 5lb. I've also explored making my data publicly available … as part of a project working on CGM data sharing :-)"
+    },
+    "e_no_glucose_series": {
+      "kind": "fact",
+      "date": "—",
+      "text": "No continuous-glucose data is present in the export. The only glucose values in the record are two single fasting/point lab draws (97 mg/dL in Aug 2022, 90 mg/dL in Dec 2025); the day-by-day CGM traces the patient generated live on his phone app were never imported into the EHR, so the self-experiment's actual readings cannot be examined here."
+    },
+    "e_forecast": {
+      "kind": "fact",
+      "date": "forecast",
+      "text": "The immunization forecast engine projects prevention forward: next influenza due Aug 1, 2026 and next COVID-19 due Aug 22, 2026."
+    }
+  },
+  "immunizations": [
+    {
+      "date": "Oct 25, 2017",
+      "date_iso": "2017-10-25",
+      "vaccine": "Influenza (Flucelvax)",
+      "lane": "Influenza"
+    },
+    {
+      "date": "Oct 8, 2018",
+      "date_iso": "2018-10-08",
+      "vaccine": "Influenza (quadrivalent)",
+      "lane": "Influenza"
+    },
+    {
+      "date": "Feb 5, 2019",
+      "date_iso": "2019-02-05",
+      "vaccine": "Tdap",
+      "lane": "Travel cluster"
+    },
+    {
+      "date": "Feb 5, 2019",
+      "date_iso": "2019-02-05",
+      "vaccine": "Typhoid (Typhim VI)",
+      "lane": "Travel cluster"
+    },
+    {
+      "date": "Feb 5, 2019",
+      "date_iso": "2019-02-05",
+      "vaccine": "Hepatitis A",
+      "lane": "Travel cluster"
+    },
+    {
+      "date": "Nov 13, 2019",
+      "date_iso": "2019-11-13",
+      "vaccine": "Influenza (Flucelvax)",
+      "lane": "Influenza"
+    },
+    {
+      "date": "Apr 18, 2021",
+      "date_iso": "2021-04-18",
+      "vaccine": "COVID-19 (Moderna)",
+      "lane": "COVID-19"
+    },
+    {
+      "date": "May 16, 2021",
+      "date_iso": "2021-05-16",
+      "vaccine": "COVID-19 (Moderna)",
+      "lane": "COVID-19"
+    },
+    {
+      "date": "Oct 24, 2021",
+      "date_iso": "2021-10-24",
+      "vaccine": "Influenza (quadrivalent)",
+      "lane": "Influenza"
+    },
+    {
+      "date": "Dec 3, 2021",
+      "date_iso": "2021-12-03",
+      "vaccine": "COVID-19 (Moderna)",
+      "lane": "COVID-19"
+    },
+    {
+      "date": "Sep 25, 2022",
+      "date_iso": "2022-09-25",
+      "vaccine": "COVID-19 (Pfizer bivalent)",
+      "lane": "COVID-19"
+    },
+    {
+      "date": "Oct 26, 2022",
+      "date_iso": "2022-10-26",
+      "vaccine": "Influenza (quadrivalent)",
+      "lane": "Influenza"
+    },
+    {
+      "date": "Sep 28, 2023",
+      "date_iso": "2023-09-28",
+      "vaccine": "Influenza (quadrivalent)",
+      "lane": "Influenza"
+    },
+    {
+      "date": "Oct 11, 2023",
+      "date_iso": "2023-10-11",
+      "vaccine": "COVID-19 (Moderna)",
+      "lane": "COVID-19"
+    },
+    {
+      "date": "Sep 7, 2024",
+      "date_iso": "2024-09-07",
+      "vaccine": "Influenza (Flucelvax)",
+      "lane": "Influenza"
+    },
+    {
+      "date": "Sep 7, 2024",
+      "date_iso": "2024-09-07",
+      "vaccine": "COVID-19 (Pfizer Comirnaty)",
+      "lane": "COVID-19"
+    },
+    {
+      "date": "Oct 29, 2025",
+      "date_iso": "2025-10-29",
+      "vaccine": "COVID-19 (Pfizer Comirnaty)",
+      "lane": "COVID-19"
+    },
+    {
+      "date": "Oct 29, 2025",
+      "date_iso": "2025-10-29",
+      "vaccine": "Influenza (Flucelvax)",
+      "lane": "Influenza"
+    }
+  ],
+  "lanes": [
+    {
+      "name": "Influenza",
+      "count": 8
+    },
+    {
+      "name": "COVID-19",
+      "count": 7
+    },
+    {
+      "name": "Travel cluster",
+      "count": 3
+    }
+  ],
+  "influenzaProgram": {
+    "seasonsCovered": 8,
+    "seasonStart": 2017,
+    "seasonEnd": 2025,
+    "yearsCovered": [
+      2017,
+      2018,
+      2019,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "gapYears": [
+      2020
+    ],
+    "doses": [
+      {
+        "date": "Oct 25, 2017",
+        "date_iso": "2017-10-25"
+      },
+      {
+        "date": "Oct 8, 2018",
+        "date_iso": "2018-10-08"
+      },
+      {
+        "date": "Nov 13, 2019",
+        "date_iso": "2019-11-13"
+      },
+      {
+        "date": "Oct 24, 2021",
+        "date_iso": "2021-10-24"
+      },
+      {
+        "date": "Oct 26, 2022",
+        "date_iso": "2022-10-26"
+      },
+      {
+        "date": "Sep 28, 2023",
+        "date_iso": "2023-09-28"
+      },
+      {
+        "date": "Sep 7, 2024",
+        "date_iso": "2024-09-07"
+      },
+      {
+        "date": "Oct 29, 2025",
+        "date_iso": "2025-10-29"
+      }
+    ],
+    "note": "Annual influenza in 8 of 9 seasons; only calendar gap is 2020 (no flu dose recorded that pandemic year — likely received outside this system)."
+  },
+  "covidSeries": {
+    "doseCount": 7,
+    "doses": [
+      {
+        "doseNumber": 1,
+        "date": "Apr 18, 2021",
+        "date_iso": "2021-04-18",
+        "vaccine": "COVID-19 (Moderna)",
+        "product": "Moderna"
+      },
+      {
+        "doseNumber": 2,
+        "date": "May 16, 2021",
+        "date_iso": "2021-05-16",
+        "vaccine": "COVID-19 (Moderna)",
+        "product": "Moderna"
+      },
+      {
+        "doseNumber": 3,
+        "date": "Dec 3, 2021",
+        "date_iso": "2021-12-03",
+        "vaccine": "COVID-19 (Moderna)",
+        "product": "Moderna"
+      },
+      {
+        "doseNumber": 4,
+        "date": "Sep 25, 2022",
+        "date_iso": "2022-09-25",
+        "vaccine": "COVID-19 (Pfizer bivalent)",
+        "product": "Pfizer bivalent"
+      },
+      {
+        "doseNumber": 5,
+        "date": "Oct 11, 2023",
+        "date_iso": "2023-10-11",
+        "vaccine": "COVID-19 (Moderna)",
+        "product": "Moderna"
+      },
+      {
+        "doseNumber": 6,
+        "date": "Sep 7, 2024",
+        "date_iso": "2024-09-07",
+        "vaccine": "COVID-19 (Pfizer Comirnaty)",
+        "product": "Pfizer Comirnaty"
+      },
+      {
+        "doseNumber": 7,
+        "date": "Oct 29, 2025",
+        "date_iso": "2025-10-29",
+        "vaccine": "COVID-19 (Pfizer Comirnaty)",
+        "product": "Pfizer Comirnaty"
+      }
+    ]
+  },
+  "travelCluster": {
+    "date": "Feb 5, 2019",
+    "date_iso": "2019-02-05",
+    "consultDate": "Feb 1, 2019",
+    "consultDate_iso": "2019-02-01",
+    "destination": "Bangalore and Hyderabad, India",
+    "travelDates": "Feb 23 – Mar 3, 2019",
+    "doses": [
+      {
+        "vaccine": "Tdap",
+        "product": null
+      },
+      {
+        "vaccine": "Typhoid (Typhim VI)",
+        "product": "Typhim VI"
+      },
+      {
+        "vaccine": "Hepatitis A",
+        "product": null
+      }
+    ],
+    "pharmacistRecommended": [
+      "Hepatitis A",
+      "Typhoid"
+    ],
+    "alsoAdvised": [
+      "Yellow fever vaccine (considered, conditional on layovers)",
+      "Malaria prophylaxis",
+      "Traveler's diarrhea treatment"
+    ]
+  },
+  "selfReported": {
+    "count": 4,
+    "doses": [
+      {
+        "date": "Apr 18, 2021",
+        "date_iso": "2021-04-18",
+        "vaccine": "COVID-19 (Moderna)"
+      },
+      {
+        "date": "May 16, 2021",
+        "date_iso": "2021-05-16",
+        "vaccine": "COVID-19 (Moderna)"
+      },
+      {
+        "date": "Dec 3, 2021",
+        "date_iso": "2021-12-03",
+        "vaccine": "COVID-19 (Moderna)"
+      },
+      {
+        "date": "Sep 25, 2022",
+        "date_iso": "2022-09-25",
+        "vaccine": "COVID-19 (Pfizer bivalent)"
+      }
+    ],
+    "note": "Four COVID doses (three 2021 Moderna + the 2022 bivalent) are flagged 'MyChart Entered' — patient self-reported into the chart rather than received in-clinic."
+  },
+  "forecast": [
+    {
+      "vaccine": "Influenza",
+      "dueDate": "Aug 1, 2026",
+      "dueDate_iso": "2026-08-01"
+    },
+    {
+      "vaccine": "COVID-19",
+      "dueDate": "Aug 22, 2026",
+      "dueDate_iso": "2026-08-22"
+    }
+  ],
+  "a1c": [
+    {
+      "date": "Sep 28, 2023",
+      "date_iso": "2023-09-28",
+      "value": 5.4,
+      "unit": "%",
+      "refLow": 4,
+      "refHigh": 6,
+      "flag": "normal"
+    },
+    {
+      "date": "Dec 4, 2025",
+      "date_iso": "2025-12-04",
+      "value": 5.5,
+      "unit": "%",
+      "refLow": 4,
+      "refHigh": 6,
+      "flag": "normal"
+    }
+  ],
+  "cgmOrders": [
+    {
+      "date": "Mar 12, 2024",
+      "date_iso": "2024-03-12",
+      "item": "FreeStyle Libre 3 sensor",
+      "status": "Sent",
+      "quantity": "2 each",
+      "refills": "0",
+      "sig": "Apply every two weeks",
+      "orderingProvider": "Dr. Zoe Rammelkamp"
+    },
+    {
+      "date": "Mar 12, 2024",
+      "date_iso": "2024-03-12",
+      "item": "FreeStyle Libre 3 reader",
+      "status": "Sent",
+      "quantity": "2 each",
+      "refills": "0",
+      "sig": "For use as indicated every 14 days",
+      "orderingProvider": "Dr. Zoe Rammelkamp"
+    },
+    {
+      "date": "May 7, 2024",
+      "date_iso": "2024-05-07",
+      "item": "FreeStyle Libre 3 sensor",
+      "status": "Sent",
+      "quantity": "4 each",
+      "refills": "4",
+      "sig": "Apply one sensor every 2 weeks",
+      "orderingProvider": "Dr. Zoe Rammelkamp"
+    }
+  ],
+  "screening": {
+    "phq2": {
+      "series": [
+        {
+          "date": "Aug 29, 2022",
+          "date_iso": "2022-08-29",
+          "itemInterest": 0,
+          "itemDown": 0,
+          "total": 0,
+          "positive": false
+        },
+        {
+          "date": "Feb 27, 2023",
+          "date_iso": "2023-02-27",
+          "itemInterest": 0,
+          "itemDown": 0,
+          "total": 0,
+          "positive": false
+        },
+        {
+          "date": "Sep 28, 2023",
+          "date_iso": "2023-09-28",
+          "itemInterest": 0,
+          "itemDown": 0,
+          "total": 0,
+          "positive": false
+        },
+        {
+          "date": "Jul 1, 2024",
+          "date_iso": "2024-07-01",
+          "itemInterest": 0,
+          "itemDown": 1,
+          "total": 1,
+          "positive": false
+        },
+        {
+          "date": "Nov 7, 2024",
+          "date_iso": "2024-11-07",
+          "itemInterest": 0,
+          "itemDown": 0,
+          "total": 0,
+          "positive": false
+        },
+        {
+          "date": "Apr 23, 2025",
+          "date_iso": "2025-04-23",
+          "itemInterest": 0,
+          "itemDown": 0,
+          "total": 0,
+          "positive": false
+        },
+        {
+          "date": "Dec 4, 2025",
+          "date_iso": "2025-12-04",
+          "itemInterest": 0,
+          "itemDown": 0,
+          "total": 0,
+          "positive": false
+        }
+      ],
+      "positiveThreshold": 3,
+      "note": "PHQ-2 charted at 7 visits Aug 2022 – Dec 2025; every screen negative (max total 1, on Jul 1, 2024)."
+    },
+    "topics": [
+      {
+        "topic": "Diabetes screening",
+        "status": "Not Due",
+        "nextDue": "Dec 4, 2026",
+        "nextDue_iso": "2026-12-04",
+        "lastCompleted": "Dec 4, 2025",
+        "lastCompleted_iso": "2025-12-04"
+      },
+      {
+        "topic": "Annual Wellness Visit",
+        "status": "Not Due",
+        "nextDue": "Dec 4, 2026",
+        "nextDue_iso": "2026-12-04",
+        "lastCompleted": "Dec 4, 2025",
+        "lastCompleted_iso": "2025-12-04"
+      },
+      {
+        "topic": "Cholesterol screening",
+        "status": "Not Due",
+        "nextDue": "Dec 4, 2030",
+        "nextDue_iso": "2030-12-04",
+        "lastCompleted": "Dec 4, 2025",
+        "lastCompleted_iso": "2025-12-04"
+      },
+      {
+        "topic": "Hepatitis C screening",
+        "status": "Completed",
+        "nextDue": "",
+        "nextDue_iso": null,
+        "lastCompleted": "Sep 28, 2023",
+        "lastCompleted_iso": "2023-09-28"
+      }
+    ]
+  }
+}

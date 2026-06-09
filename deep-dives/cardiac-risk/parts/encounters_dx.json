@@ -1,0 +1,1191 @@
+{
+  "rows": [
+    {
+      "enc_csn": "720803470",
+      "date": "8/9/2018 12:00:00 AM",
+      "date_real": 64869,
+      "dept": "MAC APL INTERNAL MEDICINE",
+      "provider": "DHILLON, PUNEET S",
+      "reason": "ESTABLISH CARE; ANNUAL EXAM",
+      "primary_dx": {
+        "dx_id": "444804",
+        "dx_name": "Encounter to establish care"
+      },
+      "dx_list": [
+        {
+          "dx_id": "444804",
+          "dx_name": "Encounter to establish care",
+          "primary_yn": "Y",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": false
+        },
+        {
+          "dx_id": "1181154",
+          "dx_name": "Gastroesophageal reflux disease, esophagitis presence not specified",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": "30694847",
+          "is_cardiovascular": false
+        },
+        {
+          "dx_id": "94362",
+          "dx_name": "Dyspepsia",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": false
+        }
+      ],
+      "cv_touches": [
+        "lipid_order",
+        "bp_recorded"
+      ],
+      "bp_readings": [
+        {
+          "fsd_id": "52919609",
+          "recorded": "8/9/2018 9:50:00 AM",
+          "systolic": 122,
+          "diastolic": 70,
+          "raw": "122/70",
+          "src": "V_EHI_FLO_MEAS_VALUE:FSD_ID=52919609,VALUE_TYPE_C_NAME=Blood Pressure | IP_FLWSHT_REC:FSD_ID=52919609->INPATIENT_DATA_ID->PAT_ENC.PAT_ENC_CSN_ID=720803470"
+        }
+      ],
+      "lipid_orders": [
+        {
+          "order_proc_id": "439060604",
+          "description": "LIPID PANEL",
+          "order_time": "8/9/2018 10:13:00 AM",
+          "src": "ORDER_PROC:ORDER_PROC_ID=439060604"
+        }
+      ],
+      "cardiac_med": null,
+      "src": "PAT_ENC:PAT_ENC_CSN_ID=720803470"
+    },
+    {
+      "enc_csn": "724628999",
+      "date": "8/9/2018 12:00:00 AM",
+      "date_real": 64869.03,
+      "dept": "MAC APL LABORATORY",
+      "provider": "MAC LAB APL",
+      "reason": null,
+      "primary_dx": null,
+      "dx_list": [
+        {
+          "dx_id": "444804",
+          "dx_name": "Encounter to establish care",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": false
+        }
+      ],
+      "cv_touches": [
+        "lipid_order"
+      ],
+      "bp_readings": [],
+      "lipid_orders": [
+        {
+          "order_proc_id": "439060606",
+          "description": "LIPID PANEL",
+          "order_time": "8/9/2018 10:16:00 AM",
+          "src": "ORDER_PROC:ORDER_PROC_ID=439060606"
+        }
+      ],
+      "cardiac_med": null,
+      "src": "PAT_ENC:PAT_ENC_CSN_ID=724628999"
+    },
+    {
+      "enc_csn": "799951565",
+      "date": "1/9/2020 12:00:00 AM",
+      "date_real": 65387,
+      "dept": "MAC APL INTERNAL MEDICINE",
+      "provider": "DHILLON, PUNEET S",
+      "reason": "SKIN CHECK; HEARTBURN",
+      "primary_dx": {
+        "dx_id": "1181154",
+        "dx_name": "Gastroesophageal reflux disease, esophagitis presence not specified"
+      },
+      "dx_list": [
+        {
+          "dx_id": "1181154",
+          "dx_name": "Gastroesophageal reflux disease, esophagitis presence not specified",
+          "primary_yn": "Y",
+          "chronic_yn": "N",
+          "linked_problem_id": "30694847",
+          "is_cardiovascular": false
+        },
+        {
+          "dx_id": "1236545",
+          "dx_name": "Lipoma of head",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": false
+        },
+        {
+          "dx_id": "212474",
+          "dx_name": "Nevus",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": false
+        }
+      ],
+      "cv_touches": [
+        "bp_recorded"
+      ],
+      "bp_readings": [
+        {
+          "fsd_id": "68875117",
+          "recorded": "1/9/2020 12:29:00 PM",
+          "systolic": 136,
+          "diastolic": 83,
+          "raw": "136/83",
+          "src": "V_EHI_FLO_MEAS_VALUE:FSD_ID=68875117,VALUE_TYPE_C_NAME=Blood Pressure | IP_FLWSHT_REC:FSD_ID=68875117->INPATIENT_DATA_ID->PAT_ENC.PAT_ENC_CSN_ID=799951565"
+        }
+      ],
+      "lipid_orders": [],
+      "cardiac_med": null,
+      "src": "PAT_ENC:PAT_ENC_CSN_ID=799951565"
+    },
+    {
+      "enc_csn": "948004323",
+      "date": "8/29/2022 12:00:00 AM",
+      "date_real": 66350,
+      "dept": "MAC APL INTERNAL MEDICINE",
+      "provider": "RAMMELKAMP, ZOE L",
+      "reason": "ESTABLISH CARE; ANNUAL EXAM",
+      "primary_dx": {
+        "dx_id": "192858",
+        "dx_name": "Preventative health care"
+      },
+      "dx_list": [
+        {
+          "dx_id": "192858",
+          "dx_name": "Preventative health care",
+          "primary_yn": "Y",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": false
+        },
+        {
+          "dx_id": "108212",
+          "dx_name": "Primary hypertension",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": true
+        },
+        {
+          "dx_id": "260690",
+          "dx_name": "Post concussion syndrome",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": "90574164",
+          "is_cardiovascular": false
+        }
+      ],
+      "cv_touches": [
+        "htn_dx",
+        "cardiac_med_order",
+        "bp_recorded"
+      ],
+      "bp_readings": [
+        {
+          "fsd_id": "113578617",
+          "recorded": "8/29/2022 1:34:00 PM",
+          "systolic": 138,
+          "diastolic": 76,
+          "raw": "138/76",
+          "src": "V_EHI_FLO_MEAS_VALUE:FSD_ID=113578617,VALUE_TYPE_C_NAME=Blood Pressure | IP_FLWSHT_REC:FSD_ID=113578617->INPATIENT_DATA_ID->PAT_ENC.PAT_ENC_CSN_ID=948004323"
+        }
+      ],
+      "lipid_orders": [],
+      "cardiac_med": {
+        "order_med_id": "772179261",
+        "description": "LISINOPRIL 10 MG PO TABS",
+        "order_status": "Sent",
+        "ordering_provider": "RAMMELKAMP, ZOE L",
+        "ordering_date": "8/29/2022 12:00:00 AM",
+        "order_inst": "8/29/2022 2:23:00 PM",
+        "start_date": "8/29/2022 12:00:00 AM",
+        "end_date": "9/28/2023 12:00:00 AM",
+        "last_dose": "Not Taking",
+        "discontinue_reason": "* Patient refusal (sends cancel message to pharmacy)",
+        "discontinue_time": "9/28/2023 2:38:00 PM",
+        "discontinue_user": "SMITH, MARY B",
+        "src": "ORDER_MED:ORDER_MED_ID=772179261"
+      },
+      "src": "PAT_ENC:PAT_ENC_CSN_ID=948004323"
+    },
+    {
+      "enc_csn": "958147754",
+      "date": "8/29/2022 12:00:00 AM",
+      "date_real": 66350.02,
+      "dept": "MAC APL LABORATORY",
+      "provider": "MAC LAB APL",
+      "reason": null,
+      "primary_dx": null,
+      "dx_list": [
+        {
+          "dx_id": "108212",
+          "dx_name": "Primary hypertension",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": true
+        }
+      ],
+      "cv_touches": [
+        "htn_dx"
+      ],
+      "bp_readings": [],
+      "lipid_orders": [],
+      "cardiac_med": null,
+      "src": "PAT_ENC:PAT_ENC_CSN_ID=958147754"
+    },
+    {
+      "enc_csn": "974614965",
+      "date": "12/1/2022 12:00:00 AM",
+      "date_real": 66444,
+      "dept": "MAC APL INTERNAL MEDICINE",
+      "provider": "RAMMELKAMP, ZOE L",
+      "reason": "REFERRAL",
+      "primary_dx": {
+        "dx_id": "260690",
+        "dx_name": "Post concussion syndrome"
+      },
+      "dx_list": [
+        {
+          "dx_id": "260690",
+          "dx_name": "Post concussion syndrome",
+          "primary_yn": "Y",
+          "chronic_yn": "N",
+          "linked_problem_id": "90574164",
+          "is_cardiovascular": false
+        }
+      ],
+      "cv_touches": [
+        "bp_recorded"
+      ],
+      "bp_readings": [
+        {
+          "fsd_id": "118745686",
+          "recorded": "12/1/2022 9:36:00 AM",
+          "systolic": 142,
+          "diastolic": 74,
+          "raw": "142/74",
+          "src": "V_EHI_FLO_MEAS_VALUE:FSD_ID=118745686,VALUE_TYPE_C_NAME=Blood Pressure | IP_FLWSHT_REC:FSD_ID=118745686->INPATIENT_DATA_ID->PAT_ENC.PAT_ENC_CSN_ID=974614965"
+        }
+      ],
+      "lipid_orders": [],
+      "cardiac_med": null,
+      "src": "PAT_ENC:PAT_ENC_CSN_ID=974614965"
+    },
+    {
+      "enc_csn": "958148810",
+      "date": "3/2/2023 12:00:00 AM",
+      "date_real": 66535,
+      "dept": "MAC APL INTERNAL MEDICINE",
+      "provider": "RAMMELKAMP, ZOE L",
+      "reason": "FOLLOW-UP",
+      "primary_dx": {
+        "dx_id": "260690",
+        "dx_name": "Post concussion syndrome"
+      },
+      "dx_list": [
+        {
+          "dx_id": "260690",
+          "dx_name": "Post concussion syndrome",
+          "primary_yn": "Y",
+          "chronic_yn": "N",
+          "linked_problem_id": "90574164",
+          "is_cardiovascular": false
+        }
+      ],
+      "cv_touches": [
+        "bp_recorded"
+      ],
+      "bp_readings": [
+        {
+          "fsd_id": "123579193",
+          "recorded": "3/2/2023 2:44:00 PM",
+          "systolic": 134,
+          "diastolic": 80,
+          "raw": "134/80",
+          "src": "V_EHI_FLO_MEAS_VALUE:FSD_ID=123579193,VALUE_TYPE_C_NAME=Blood Pressure | IP_FLWSHT_REC:FSD_ID=123579193->INPATIENT_DATA_ID->PAT_ENC.PAT_ENC_CSN_ID=958148810"
+        }
+      ],
+      "lipid_orders": [],
+      "cardiac_med": null,
+      "src": "PAT_ENC:PAT_ENC_CSN_ID=958148810"
+    },
+    {
+      "enc_csn": "991225117",
+      "date": "9/28/2023 12:00:00 AM",
+      "date_real": 66745,
+      "dept": "MAC APL INTERNAL MEDICINE",
+      "provider": "RAMMELKAMP, ZOE L",
+      "reason": "ANNUAL EXAM",
+      "primary_dx": {
+        "dx_id": "192858",
+        "dx_name": "Preventative health care"
+      },
+      "dx_list": [
+        {
+          "dx_id": "192858",
+          "dx_name": "Preventative health care",
+          "primary_yn": "Y",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": false
+        },
+        {
+          "dx_id": "187132",
+          "dx_name": "Screening for hyperlipidemia",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": true
+        },
+        {
+          "dx_id": "15362",
+          "dx_name": "Screening for diabetes mellitus",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": true
+        },
+        {
+          "dx_id": "260690",
+          "dx_name": "Post concussion syndrome",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": "90574164",
+          "is_cardiovascular": false
+        }
+      ],
+      "cv_touches": [
+        "lipid_screen_dx",
+        "diabetes_screen_dx",
+        "lipid_order",
+        "bp_recorded"
+      ],
+      "bp_readings": [
+        {
+          "fsd_id": "135409106",
+          "recorded": "9/28/2023 9:41:00 AM",
+          "systolic": 132,
+          "diastolic": 64,
+          "raw": "132/64",
+          "src": "V_EHI_FLO_MEAS_VALUE:FSD_ID=135409106,VALUE_TYPE_C_NAME=Blood Pressure | IP_FLWSHT_REC:FSD_ID=135409106->INPATIENT_DATA_ID->PAT_ENC.PAT_ENC_CSN_ID=991225117"
+        }
+      ],
+      "lipid_orders": [
+        {
+          "order_proc_id": "945468368",
+          "description": "LIPID PANEL",
+          "order_time": "9/28/2023 10:02:00 AM",
+          "src": "ORDER_PROC:ORDER_PROC_ID=945468368"
+        }
+      ],
+      "cardiac_med": null,
+      "src": "PAT_ENC:PAT_ENC_CSN_ID=991225117"
+    },
+    {
+      "enc_csn": "1028743701",
+      "date": "9/28/2023 12:00:00 AM",
+      "date_real": 66745.02,
+      "dept": "MAC APL LABORATORY",
+      "provider": "MAC LAB APL",
+      "reason": null,
+      "primary_dx": null,
+      "dx_list": [
+        {
+          "dx_id": "15362",
+          "dx_name": "Screening for diabetes mellitus",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": true
+        },
+        {
+          "dx_id": "187132",
+          "dx_name": "Screening for hyperlipidemia",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": true
+        },
+        {
+          "dx_id": "192858",
+          "dx_name": "Preventative health care",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": false
+        }
+      ],
+      "cv_touches": [
+        "lipid_screen_dx",
+        "diabetes_screen_dx",
+        "lipid_order"
+      ],
+      "bp_readings": [],
+      "lipid_orders": [
+        {
+          "order_proc_id": "945468371",
+          "description": "LIPID PANEL",
+          "order_time": "9/28/2023 10:10:00 AM",
+          "src": "ORDER_PROC:ORDER_PROC_ID=945468371"
+        }
+      ],
+      "cardiac_med": null,
+      "src": "PAT_ENC:PAT_ENC_CSN_ID=1028743701"
+    },
+    {
+      "enc_csn": "1076261941",
+      "date": "7/2/2024 12:00:00 AM",
+      "date_real": 67023,
+      "dept": "MAC APL INTERNAL MEDICINE",
+      "provider": "EVERTON, JENNIFER L",
+      "reason": "CONCUSSION",
+      "primary_dx": {
+        "dx_id": "8804",
+        "dx_name": "Cervicalgia"
+      },
+      "dx_list": [
+        {
+          "dx_id": "8804",
+          "dx_name": "Cervicalgia",
+          "primary_yn": "Y",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": false
+        },
+        {
+          "dx_id": "260690",
+          "dx_name": "Post concussion syndrome",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": "90574164",
+          "is_cardiovascular": false
+        },
+        {
+          "dx_id": "342609",
+          "dx_name": "Chronic post-traumatic headache, not intractable",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": false
+        }
+      ],
+      "cv_touches": [
+        "bp_recorded"
+      ],
+      "bp_readings": [
+        {
+          "fsd_id": "151478676",
+          "recorded": "7/2/2024 9:51:00 AM",
+          "systolic": 127,
+          "diastolic": 81,
+          "raw": "127/81",
+          "src": "V_EHI_FLO_MEAS_VALUE:FSD_ID=151478676,VALUE_TYPE_C_NAME=Blood Pressure | IP_FLWSHT_REC:FSD_ID=151478676->INPATIENT_DATA_ID->PAT_ENC.PAT_ENC_CSN_ID=1076261941"
+        }
+      ],
+      "lipid_orders": [],
+      "cardiac_med": null,
+      "src": "PAT_ENC:PAT_ENC_CSN_ID=1076261941"
+    },
+    {
+      "enc_csn": "1028744231",
+      "date": "11/7/2024 12:00:00 AM",
+      "date_real": 67151,
+      "dept": "MAC APL INTERNAL MEDICINE",
+      "provider": "RAMMELKAMP, ZOE L",
+      "reason": "ANNUAL EXAM",
+      "primary_dx": {
+        "dx_id": "260690",
+        "dx_name": "Post concussion syndrome"
+      },
+      "dx_list": [
+        {
+          "dx_id": "260690",
+          "dx_name": "Post concussion syndrome",
+          "primary_yn": "Y",
+          "chronic_yn": "N",
+          "linked_problem_id": "90574164",
+          "is_cardiovascular": false
+        },
+        {
+          "dx_id": "1620157",
+          "dx_name": "Gastroesophageal reflux disease, unspecified whether esophagitis present",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": "30694847",
+          "is_cardiovascular": false
+        },
+        {
+          "dx_id": "192858",
+          "dx_name": "Preventative health care",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": false
+        }
+      ],
+      "cv_touches": [
+        "bp_recorded"
+      ],
+      "bp_readings": [
+        {
+          "fsd_id": "158940288",
+          "recorded": "11/7/2024 8:27:00 AM",
+          "systolic": 128,
+          "diastolic": 70,
+          "raw": "128/70",
+          "src": "V_EHI_FLO_MEAS_VALUE:FSD_ID=158940288,VALUE_TYPE_C_NAME=Blood Pressure | IP_FLWSHT_REC:FSD_ID=158940288->INPATIENT_DATA_ID->PAT_ENC.PAT_ENC_CSN_ID=1028744231"
+        }
+      ],
+      "lipid_orders": [],
+      "cardiac_med": null,
+      "src": "PAT_ENC:PAT_ENC_CSN_ID=1028744231"
+    },
+    {
+      "enc_csn": "1098684634",
+      "date": "12/4/2025 12:00:00 AM",
+      "date_real": 67543,
+      "dept": "MAC APL INTERNAL MEDICINE",
+      "provider": "RAMMELKAMP, ZOE L",
+      "reason": "ANNUAL EXAM",
+      "primary_dx": {
+        "dx_id": "192858",
+        "dx_name": "Preventative health care"
+      },
+      "dx_list": [
+        {
+          "dx_id": "192858",
+          "dx_name": "Preventative health care",
+          "primary_yn": "Y",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": false
+        },
+        {
+          "dx_id": "260690",
+          "dx_name": "Post concussion syndrome",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": "90574164",
+          "is_cardiovascular": false
+        },
+        {
+          "dx_id": "1620157",
+          "dx_name": "Gastroesophageal reflux disease, unspecified whether esophagitis present",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": "30694847",
+          "is_cardiovascular": false
+        },
+        {
+          "dx_id": "15362",
+          "dx_name": "Screening for diabetes mellitus",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": true
+        },
+        {
+          "dx_id": "187132",
+          "dx_name": "Screening for hyperlipidemia",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": true
+        }
+      ],
+      "cv_touches": [
+        "lipid_screen_dx",
+        "diabetes_screen_dx",
+        "lipid_order",
+        "bp_recorded"
+      ],
+      "bp_readings": [
+        {
+          "fsd_id": "181864978",
+          "recorded": "12/4/2025 3:07:00 PM",
+          "systolic": 132,
+          "diastolic": 62,
+          "raw": "132/62",
+          "src": "V_EHI_FLO_MEAS_VALUE:FSD_ID=181864978,VALUE_TYPE_C_NAME=Blood Pressure | IP_FLWSHT_REC:FSD_ID=181864978->INPATIENT_DATA_ID->PAT_ENC.PAT_ENC_CSN_ID=1098684634"
+        }
+      ],
+      "lipid_orders": [
+        {
+          "order_proc_id": "1165201772",
+          "description": "LIPID PANEL",
+          "order_time": "12/4/2025 3:44:00 PM",
+          "src": "ORDER_PROC:ORDER_PROC_ID=1165201772"
+        }
+      ],
+      "cardiac_med": null,
+      "src": "PAT_ENC:PAT_ENC_CSN_ID=1098684634"
+    },
+    {
+      "enc_csn": "1169847546",
+      "date": "12/4/2025 12:00:00 AM",
+      "date_real": 67543.02,
+      "dept": "MAC APL LABORATORY",
+      "provider": "MAC LAB APL",
+      "reason": null,
+      "primary_dx": null,
+      "dx_list": [
+        {
+          "dx_id": "192858",
+          "dx_name": "Preventative health care",
+          "primary_yn": "N",
+          "chronic_yn": "N",
+          "linked_problem_id": null,
+          "is_cardiovascular": false
+        }
+      ],
+      "cv_touches": [
+        "lipid_order"
+      ],
+      "bp_readings": [],
+      "lipid_orders": [
+        {
+          "order_proc_id": "1165205279",
+          "description": "LIPID PANEL",
+          "order_time": "12/4/2025 3:54:00 PM",
+          "src": "ORDER_PROC:ORDER_PROC_ID=1165205279"
+        }
+      ],
+      "cardiac_med": null,
+      "src": "PAT_ENC:PAT_ENC_CSN_ID=1169847546"
+    }
+  ],
+  "dx_rows": [
+    {
+      "dx_id": "444804",
+      "dx_name": "Encounter to establish care",
+      "primary_yn": "Y",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": false,
+      "enc_csn": "720803470",
+      "date": "8/9/2018 12:00:00 AM",
+      "date_real": 64869,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=720803470,LINE=1"
+    },
+    {
+      "dx_id": "1181154",
+      "dx_name": "Gastroesophageal reflux disease, esophagitis presence not specified",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": "30694847",
+      "is_cardiovascular": false,
+      "enc_csn": "720803470",
+      "date": "8/9/2018 12:00:00 AM",
+      "date_real": 64869,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=720803470,LINE=2"
+    },
+    {
+      "dx_id": "94362",
+      "dx_name": "Dyspepsia",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": false,
+      "enc_csn": "720803470",
+      "date": "8/9/2018 12:00:00 AM",
+      "date_real": 64869,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=720803470,LINE=3"
+    },
+    {
+      "dx_id": "444804",
+      "dx_name": "Encounter to establish care",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": false,
+      "enc_csn": "724628999",
+      "date": "8/9/2018 12:00:00 AM",
+      "date_real": 64869.03,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=724628999,LINE=1"
+    },
+    {
+      "dx_id": "1181154",
+      "dx_name": "Gastroesophageal reflux disease, esophagitis presence not specified",
+      "primary_yn": "Y",
+      "chronic_yn": "N",
+      "linked_problem_id": "30694847",
+      "is_cardiovascular": false,
+      "enc_csn": "799951565",
+      "date": "1/9/2020 12:00:00 AM",
+      "date_real": 65387,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=799951565,LINE=1"
+    },
+    {
+      "dx_id": "1236545",
+      "dx_name": "Lipoma of head",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": false,
+      "enc_csn": "799951565",
+      "date": "1/9/2020 12:00:00 AM",
+      "date_real": 65387,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=799951565,LINE=2"
+    },
+    {
+      "dx_id": "212474",
+      "dx_name": "Nevus",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": false,
+      "enc_csn": "799951565",
+      "date": "1/9/2020 12:00:00 AM",
+      "date_real": 65387,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=799951565,LINE=3"
+    },
+    {
+      "dx_id": "192858",
+      "dx_name": "Preventative health care",
+      "primary_yn": "Y",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": false,
+      "enc_csn": "948004323",
+      "date": "8/29/2022 12:00:00 AM",
+      "date_real": 66350,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=948004323,LINE=2"
+    },
+    {
+      "dx_id": "108212",
+      "dx_name": "Primary hypertension",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": true,
+      "enc_csn": "948004323",
+      "date": "8/29/2022 12:00:00 AM",
+      "date_real": 66350,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=948004323,LINE=1"
+    },
+    {
+      "dx_id": "260690",
+      "dx_name": "Post concussion syndrome",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": "90574164",
+      "is_cardiovascular": false,
+      "enc_csn": "948004323",
+      "date": "8/29/2022 12:00:00 AM",
+      "date_real": 66350,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=948004323,LINE=3"
+    },
+    {
+      "dx_id": "108212",
+      "dx_name": "Primary hypertension",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": true,
+      "enc_csn": "958147754",
+      "date": "8/29/2022 12:00:00 AM",
+      "date_real": 66350.02,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=958147754,LINE=1"
+    },
+    {
+      "dx_id": "260690",
+      "dx_name": "Post concussion syndrome",
+      "primary_yn": "Y",
+      "chronic_yn": "N",
+      "linked_problem_id": "90574164",
+      "is_cardiovascular": false,
+      "enc_csn": "974614965",
+      "date": "12/1/2022 12:00:00 AM",
+      "date_real": 66444,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=974614965,LINE=1"
+    },
+    {
+      "dx_id": "260690",
+      "dx_name": "Post concussion syndrome",
+      "primary_yn": "Y",
+      "chronic_yn": "N",
+      "linked_problem_id": "90574164",
+      "is_cardiovascular": false,
+      "enc_csn": "958148810",
+      "date": "3/2/2023 12:00:00 AM",
+      "date_real": 66535,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=958148810,LINE=1"
+    },
+    {
+      "dx_id": "192858",
+      "dx_name": "Preventative health care",
+      "primary_yn": "Y",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": false,
+      "enc_csn": "991225117",
+      "date": "9/28/2023 12:00:00 AM",
+      "date_real": 66745,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=991225117,LINE=3"
+    },
+    {
+      "dx_id": "187132",
+      "dx_name": "Screening for hyperlipidemia",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": true,
+      "enc_csn": "991225117",
+      "date": "9/28/2023 12:00:00 AM",
+      "date_real": 66745,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=991225117,LINE=1"
+    },
+    {
+      "dx_id": "15362",
+      "dx_name": "Screening for diabetes mellitus",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": true,
+      "enc_csn": "991225117",
+      "date": "9/28/2023 12:00:00 AM",
+      "date_real": 66745,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=991225117,LINE=2"
+    },
+    {
+      "dx_id": "260690",
+      "dx_name": "Post concussion syndrome",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": "90574164",
+      "is_cardiovascular": false,
+      "enc_csn": "991225117",
+      "date": "9/28/2023 12:00:00 AM",
+      "date_real": 66745,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=991225117,LINE=4"
+    },
+    {
+      "dx_id": "15362",
+      "dx_name": "Screening for diabetes mellitus",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": true,
+      "enc_csn": "1028743701",
+      "date": "9/28/2023 12:00:00 AM",
+      "date_real": 66745.02,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=1028743701,LINE=1"
+    },
+    {
+      "dx_id": "187132",
+      "dx_name": "Screening for hyperlipidemia",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": true,
+      "enc_csn": "1028743701",
+      "date": "9/28/2023 12:00:00 AM",
+      "date_real": 66745.02,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=1028743701,LINE=2"
+    },
+    {
+      "dx_id": "192858",
+      "dx_name": "Preventative health care",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": false,
+      "enc_csn": "1028743701",
+      "date": "9/28/2023 12:00:00 AM",
+      "date_real": 66745.02,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=1028743701,LINE=3"
+    },
+    {
+      "dx_id": "8804",
+      "dx_name": "Cervicalgia",
+      "primary_yn": "Y",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": false,
+      "enc_csn": "1076261941",
+      "date": "7/2/2024 12:00:00 AM",
+      "date_real": 67023,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=1076261941,LINE=1"
+    },
+    {
+      "dx_id": "260690",
+      "dx_name": "Post concussion syndrome",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": "90574164",
+      "is_cardiovascular": false,
+      "enc_csn": "1076261941",
+      "date": "7/2/2024 12:00:00 AM",
+      "date_real": 67023,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=1076261941,LINE=2"
+    },
+    {
+      "dx_id": "342609",
+      "dx_name": "Chronic post-traumatic headache, not intractable",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": false,
+      "enc_csn": "1076261941",
+      "date": "7/2/2024 12:00:00 AM",
+      "date_real": 67023,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=1076261941,LINE=3"
+    },
+    {
+      "dx_id": "260690",
+      "dx_name": "Post concussion syndrome",
+      "primary_yn": "Y",
+      "chronic_yn": "N",
+      "linked_problem_id": "90574164",
+      "is_cardiovascular": false,
+      "enc_csn": "1028744231",
+      "date": "11/7/2024 12:00:00 AM",
+      "date_real": 67151,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=1028744231,LINE=1"
+    },
+    {
+      "dx_id": "1620157",
+      "dx_name": "Gastroesophageal reflux disease, unspecified whether esophagitis present",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": "30694847",
+      "is_cardiovascular": false,
+      "enc_csn": "1028744231",
+      "date": "11/7/2024 12:00:00 AM",
+      "date_real": 67151,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=1028744231,LINE=2"
+    },
+    {
+      "dx_id": "192858",
+      "dx_name": "Preventative health care",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": false,
+      "enc_csn": "1028744231",
+      "date": "11/7/2024 12:00:00 AM",
+      "date_real": 67151,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=1028744231,LINE=3"
+    },
+    {
+      "dx_id": "192858",
+      "dx_name": "Preventative health care",
+      "primary_yn": "Y",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": false,
+      "enc_csn": "1098684634",
+      "date": "12/4/2025 12:00:00 AM",
+      "date_real": 67543,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=1098684634,LINE=1"
+    },
+    {
+      "dx_id": "260690",
+      "dx_name": "Post concussion syndrome",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": "90574164",
+      "is_cardiovascular": false,
+      "enc_csn": "1098684634",
+      "date": "12/4/2025 12:00:00 AM",
+      "date_real": 67543,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=1098684634,LINE=2"
+    },
+    {
+      "dx_id": "1620157",
+      "dx_name": "Gastroesophageal reflux disease, unspecified whether esophagitis present",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": "30694847",
+      "is_cardiovascular": false,
+      "enc_csn": "1098684634",
+      "date": "12/4/2025 12:00:00 AM",
+      "date_real": 67543,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=1098684634,LINE=3"
+    },
+    {
+      "dx_id": "15362",
+      "dx_name": "Screening for diabetes mellitus",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": true,
+      "enc_csn": "1098684634",
+      "date": "12/4/2025 12:00:00 AM",
+      "date_real": 67543,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=1098684634,LINE=4"
+    },
+    {
+      "dx_id": "187132",
+      "dx_name": "Screening for hyperlipidemia",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": true,
+      "enc_csn": "1098684634",
+      "date": "12/4/2025 12:00:00 AM",
+      "date_real": 67543,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=1098684634,LINE=5"
+    },
+    {
+      "dx_id": "192858",
+      "dx_name": "Preventative health care",
+      "primary_yn": "N",
+      "chronic_yn": "N",
+      "linked_problem_id": null,
+      "is_cardiovascular": false,
+      "enc_csn": "1169847546",
+      "date": "12/4/2025 12:00:00 AM",
+      "date_real": 67543.02,
+      "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=1169847546,LINE=1"
+    }
+  ],
+  "htn_coding": {
+    "question": "Is hypertension captured as a coded PROBLEM_LIST entry, or only implied by readings / the (declined) antihypertensive and a one-time encounter diagnosis?",
+    "on_problem_list": false,
+    "on_problem_list_detail": {
+      "current_problem_rows": [],
+      "history_problem_rows": [],
+      "note": "PROBLEM_LIST ships resolved/deleted problems too (general-patterns §18); PROBLEM_LIST_HX would catch a problem deleted before export. Both are empty for hypertension DX_IDs (108212, 463437).",
+      "src": "PROBLEM_LIST:DX_ID IN (108212|463437) -> 0 rows; PROBLEM_LIST_HX:HX_PROBLEM_ID IN (108212|463437) -> 0 rows"
+    },
+    "coded_as_encounter_dx": true,
+    "encounter_dx_rows": [
+      {
+        "enc_csn": "948004323",
+        "date": "8/29/2022 12:00:00 AM",
+        "dx_id": "108212",
+        "dx_name": "Primary hypertension",
+        "primary_yn": "N",
+        "linked_problem_id": null,
+        "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=948004323,LINE=1"
+      },
+      {
+        "enc_csn": "958147754",
+        "date": "8/29/2022 12:00:00 AM",
+        "dx_id": "108212",
+        "dx_name": "Primary hypertension",
+        "primary_yn": "N",
+        "linked_problem_id": null,
+        "src": "PAT_ENC_DX:PAT_ENC_CSN_ID=958147754,LINE=1"
+      }
+    ],
+    "encounter_dx_links_to_problem": false,
+    "antihypertensive_ordered": {
+      "order_med_id": "772179261",
+      "description": "LISINOPRIL 10 MG PO TABS",
+      "status": "Sent",
+      "discontinue_reason": "* Patient refusal (sends cancel message to pharmacy)",
+      "discontinue_time": "9/28/2023 2:38:00 PM",
+      "src": "ORDER_MED:ORDER_MED_ID=772179261"
+    },
+    "elevated_bp_readings": [
+      {
+        "enc_csn": "799951565",
+        "recorded": "1/9/2020 12:29:00 PM",
+        "systolic": 136,
+        "diastolic": 83,
+        "raw": "136/83",
+        "src": "V_EHI_FLO_MEAS_VALUE:FSD_ID=68875117,VALUE_TYPE_C_NAME=Blood Pressure"
+      },
+      {
+        "enc_csn": "1076261941",
+        "recorded": "7/2/2024 9:51:00 AM",
+        "systolic": 127,
+        "diastolic": 81,
+        "raw": "127/81",
+        "src": "V_EHI_FLO_MEAS_VALUE:FSD_ID=151478676,VALUE_TYPE_C_NAME=Blood Pressure"
+      },
+      {
+        "enc_csn": "974614965",
+        "recorded": "12/1/2022 9:36:00 AM",
+        "systolic": 142,
+        "diastolic": 74,
+        "raw": "142/74",
+        "src": "V_EHI_FLO_MEAS_VALUE:FSD_ID=118745686,VALUE_TYPE_C_NAME=Blood Pressure"
+      },
+      {
+        "enc_csn": "948004323",
+        "recorded": "8/29/2022 1:34:00 PM",
+        "systolic": 138,
+        "diastolic": 76,
+        "raw": "138/76",
+        "src": "V_EHI_FLO_MEAS_VALUE:FSD_ID=113578617,VALUE_TYPE_C_NAME=Blood Pressure"
+      },
+      {
+        "enc_csn": "1098684634",
+        "recorded": "12/4/2025 3:07:00 PM",
+        "systolic": 132,
+        "diastolic": 62,
+        "raw": "132/62",
+        "src": "V_EHI_FLO_MEAS_VALUE:FSD_ID=181864978,VALUE_TYPE_C_NAME=Blood Pressure"
+      },
+      {
+        "enc_csn": "958148810",
+        "recorded": "3/2/2023 2:44:00 PM",
+        "systolic": 134,
+        "diastolic": 80,
+        "raw": "134/80",
+        "src": "V_EHI_FLO_MEAS_VALUE:FSD_ID=123579193,VALUE_TYPE_C_NAME=Blood Pressure"
+      },
+      {
+        "enc_csn": "991225117",
+        "recorded": "9/28/2023 9:41:00 AM",
+        "systolic": 132,
+        "diastolic": 64,
+        "raw": "132/64",
+        "src": "V_EHI_FLO_MEAS_VALUE:FSD_ID=135409106,VALUE_TYPE_C_NAME=Blood Pressure"
+      }
+    ],
+    "total_bp_readings": 9,
+    "flag": "HYPERTENSION_UNDERCODED",
+    "determination": "UNDERCODED: Hypertension was coded as an encounter diagnosis ('Primary hypertension', DX_ID 108212) on the 8/29/2022 establish-care visit (CSN 948004323) and its lab contact (958147754), and an antihypertensive (lisinopril 10 mg) was prescribed and sent that same day — yet hypertension was NEVER added to the coded PROBLEM_LIST (0 rows in PROBLEM_LIST and PROBLEM_LIST_HX for HTN DX_IDs), and neither encounter-dx row carries a DX_LINK_PROB_ID. The condition exists in the chart only as (a) a one-day encounter diagnosis, (b) a declined medication later discontinued for 'Patient refusal', and (c) recurring elevated readings. It is therefore present-but-undercoded: visible in readings/orders/visit-dx but absent from the structured problem list, so it will not surface in problem-list-driven views, quality measures, or risk calculators."
+  },
+  "meta": {
+    "entity": "encounters_dx",
+    "topic": "cardiac-risk",
+    "patient": "MANDEL, JOSHUA C (DOB 1982-10-26, male)",
+    "generated": "2026-06-08",
+    "description": "Every encounter where a cardiovascular topic arose (HTN/lipid/diabetes-screen dx, lipid panel order, the antihypertensive order, or a recorded blood pressure), with the FULL encounter-diagnosis list for each, plus a structured 'is hypertension undercoded?' determination.",
+    "scope_rule": "Encounter in scope if it has a CV encounter dx (HTN 108212/463437, lipid screen 513616/187132, diabetes screen 513611/15362) OR a LIPID PANEL order OR the lisinopril order (ORDER_MED 772179261) OR a recorded BP (IP_FLWSHT_MEAS BP -> PAT_ENC via INPATIENT_DATA_ID).",
+    "counts": {
+      "encounters": 13,
+      "dx_rows": 32,
+      "cv_dx_rows": 8,
+      "bp_readings": 9,
+      "elevated_bp_readings": 7,
+      "lipid_orders": 6
+    },
+    "column_glossary": {
+      "enc_csn": "PAT_ENC.PAT_ENC_CSN_ID — encounter contact serial number (the hub key)",
+      "date": "PAT_ENC.CONTACT_DATE (display; sorts lexically, do not order on it)",
+      "date_real": "CAST(PAT_ENC.PAT_ENC_DATE_REAL AS REAL) — true sortable date (days since 1840-12-31; .NN fraction sequences same-day contacts)",
+      "dept": "CLARITY_DEP.DEPARTMENT_NAME via PAT_ENC.DEPARTMENT_ID",
+      "provider": "CLARITY_SER.PROV_NAME via PAT_ENC.VISIT_PROV_ID",
+      "reason": "CL_RSN_FOR_VISIT.REASON_VISIT_NAME via PAT_ENC_RSN_VISIT (joined; may be NULL)",
+      "primary_dx": "the PAT_ENC_DX row with PRIMARY_DX_YN='Y'",
+      "dx_list": "ALL PAT_ENC_DX rows for the encounter (full diagnosis picture, not curated to CV)",
+      "cv_touches": "why this encounter is in scope: htn_dx | lipid_screen_dx | diabetes_screen_dx | lipid_order | cardiac_med_order | bp_recorded",
+      "dx.linked_problem_id": "PAT_ENC_DX.DX_LINK_PROB_ID — back-link to PROBLEM_LIST (the ONLY valid problem bridge; null=not linked)",
+      "dx.is_cardiovascular": "DX_ID in the cardiovascular set"
+    },
+    "gotchas": [
+      "Everything is TEXT in the export; date_real is CAST AS REAL before sorting (general-patterns §17).",
+      "BP value lives ONLY in V_EHI_FLO_MEAS_VALUE.MEAS_VALUE_EXTERNAL, packed 'sys/dia', VALUE_TYPE_C_NAME='Blood Pressure'; tied to encounter via IP_FLWSHT_REC.INPATIENT_DATA_ID = PAT_ENC.INPATIENT_DATA_ID.",
+      "Encounter dx links to a problem ONLY via DX_LINK_PROB_ID, never by DX_ID; CLARITY_EDG carries no ICD-10 code in this export.",
+      "CV_DX includes diabetes-screening DX_IDs because the screen is ordered/coded together with the lipid screen as one cardiometabolic-risk panel here; flagged separately in cv_touches so the analysis can split them."
+    ]
+  }
+}

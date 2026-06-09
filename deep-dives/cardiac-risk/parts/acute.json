@@ -1,0 +1,63 @@
+[
+  {
+    "date": "May 14, 2024",
+    "label": "Chest-pain ED work-up",
+    "setting": "Outside emergency department (University of Wisconsin – Madison)",
+    "result": "Troponin negative; normal chest x-ray",
+    "studies": [
+      {
+        "study": "X-ray Chest 2 Views",
+        "result": "read normal"
+      },
+      {
+        "study": "Comprehensive Metabolic Panel",
+        "result": "flagged abnormal; no discrete component values in export"
+      },
+      {
+        "study": "CBC with Differential",
+        "result": "resulted; no discrete component values in export"
+      },
+      {
+        "study": "Troponin",
+        "result": "negative; no discrete component values in export"
+      }
+    ],
+    "unreconciled": true,
+    "unreconciledNote": "Arrived only as imported external orders; no clinic note. The Jul 2, 2024 primary-care visit, six weeks later, never mentions the chest pain.",
+    "reassurance": "A negative troponin argues against acute myocardial injury — reassuring data the chronic risk conversation should use.",
+    "evidenceId": "e_troponin_neg",
+    "readEvidenceId": "e_cxr_read",
+    "unreconciledEvidenceId": "e_acute_unreconciled",
+    "pcpSilentEvidenceId": "e_pcp_silent_acute"
+  },
+  {
+    "date": "Jul 30, 2024",
+    "label": "Suspected vertebral-artery dissection work-up",
+    "setting": "Outside facility (University of Wisconsin – Madison)",
+    "result": "Neck CT angiogram clean — no atherosclerosis, <50% carotid stenosis bilaterally, no dissection",
+    "studies": [
+      {
+        "study": "CT Angiography Neck with/without Contrast",
+        "result": "read normal"
+      },
+      {
+        "study": "Basic Metabolic Panel",
+        "result": "negative; no discrete component values in export"
+      },
+      {
+        "study": "CBC with Differential",
+        "result": "resulted; no discrete component values in export"
+      },
+      {
+        "study": "Sodium chloride 0.9% IV fluids",
+        "result": "administered"
+      }
+    ],
+    "unreconciled": true,
+    "unreconciledNote": "Arrived only as imported external orders with the findings buried in the radiology narrative; no clinic note reconciles it into the primary-care record.",
+    "reassurance": "A clean neck CT angiogram at age 41–42 is direct evidence against established atherosclerotic disease — a reassuring baseline the chart never folds back in.",
+    "evidenceId": "e_dissection_workup",
+    "readEvidenceId": "e_cta_read",
+    "unreconciledEvidenceId": "e_acute_unreconciled"
+  }
+]

@@ -1,0 +1,43 @@
+{
+  "_meta": {
+    "slot": "moneyflow",
+    "built_by": "project.ts"
+  },
+  "scope": "Professional billing (clinic & lab), 2018–2025",
+  "billedGross": 4821,
+  "voidedDuplicate": 315,
+  "billedNet": 4506,
+  "segments": [
+    {
+      "key": "writeoff",
+      "label": "Contractual write-off",
+      "sub": "The provider erases the gap between sticker price and the plan's allowed amount — the patient never owes it.",
+      "amount": 2343.69,
+      "evidenceId": "e_moneyflow_split"
+    },
+    {
+      "key": "insurance",
+      "label": "Insurance paid",
+      "sub": "What Blue Cross actually sent the provider.",
+      "amount": 1530.44,
+      "evidenceId": "e_moneyflow_split"
+    },
+    {
+      "key": "patient",
+      "label": "Patient owed",
+      "sub": "Deductible plus 10% in-network coinsurance — the patient's real out-of-pocket.",
+      "amount": 631.87,
+      "evidenceId": "e_patient_share"
+    }
+  ],
+  "patientShareNote": "Of $4,506 in real professional charges over eight years, the patient's own share was $631.87 — about 14% — the small deductible-and-coinsurance amounts the plan assigns. More than half the sticker price ($2343.69) simply vanished as contractual write-off the patient never sees.",
+  "reconciliation": {
+    "billedNet": 4506,
+    "insurancePaid": 1530.44,
+    "contractualWriteoff": 2343.69,
+    "patientOwed": 631.87,
+    "checksum": 4506,
+    "note": "Insurance-paid + contractual write-off + patient-owed = net billed, to the penny.",
+    "aggregationNote": "Anchored on the per-claim remittance (the closed claims that actually adjudicated). Epic's transaction-match log shows a larger 'payment' figure ($2,162.31) because it records gross postings before the deductible is shifted to the patient; that log is not the insurer's net-paid and is not used here."
+  }
+}

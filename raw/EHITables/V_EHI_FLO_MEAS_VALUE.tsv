@@ -1,0 +1,306 @@
+FSD_ID	LINE	MEAS_VALUE_EXTERNAL	UNITS	VALUE_TYPE_C_NAME	FLO_MEAS_ID_DISP_NAME	FLO_MEAS_ID
+113578617	18	2.01	sq meters	Numeric Type	BSA (Calculated - sq m)	301060
+118745686	2	142/74		Blood Pressure	BP	5
+181864978	16	702		Numeric Type	Expected Distance	9429
+135409106	8	132/64		Blood Pressure	BP	5
+123579193	5	134/80		Blood Pressure	BP	5
+151478676	5	127/81		Blood Pressure	BP	5
+181864978	23	25.7		Numeric Type	BMI (Calculated)	301070
+135409106	27	428.28	mL	Numeric Type	Low Range Vt 6cc/kg FEMALE	7074313
+158940288	27	428.28	mL	Numeric Type	Low Range Vt 6cc/kg FEMALE	7074313
+113578617	15	2.017		Numeric Type	BSA Haycock	13705
+135409106	36	24.98		Numeric Type	BMI	210000000020
+52919609	20	70.8	kg	Numeric Type	IBW/kg (Calculated) FEMALE	7074312
+181864978	33	611.6	mL	Numeric Type	Adult Moderate Range Vt 8cc/kg 	3040102604
+181864978	26	611.6	mL	Numeric Type	Adult Moderate Range Vt 8cc/kg MA	7074310
+113578617	29	597.84	mL	Numeric Type	Adult Moderate Range Vt 8cc/kg 	3040102604
+113578617	22	597.84	mL	Numeric Type	Adult Moderate Range Vt 8cc/kg MA	7074310
+68875117	5	73		Numeric Type	Pulse	8
+52919609	7	71.000	inches	Patient Height	Height	11
+181864978	39	25.8		Numeric Type	BMI Frailty	210100200230
+181864978	38	25.8		Numeric Type	BMI	210000000020
+113578617	9	72		Numeric Type	Pulse	8
+113578617	28	448.38	mL	Numeric Type	Low Range Vt 6cc/kg 	3040102603
+113578617	21	448.38	mL	Numeric Type	Low Range Vt 6cc/kg MALE	7074309
+135409106	28	571.04	mL	Numeric Type	Adult Moderate Range vt 8cc/kg FEMALE	7074314
+158940288	28	571.04	mL	Numeric Type	Adult Moderate Range vt 8cc/kg FEMALE	7074314
+52919609	1	never		Custom List	Have you ever been in a relationship where you've been hurt, threatened, or abused?	8693
+123579193	9	11.55		Numeric Type	mg per minute	14440
+113578617	25	421.38	mL	Numeric Type	Low Range Vt 6cc/kg FEMALE	7074313
+52919609	34	24.3		Numeric Type	BMI Frailty	210100200230
+52919609	15	24.3		Numeric Type	BMI (Calculated)	301070
+113578617	17	11.32		Numeric Type	mg per minute	14440
+135409106	24	607.04	mL	Numeric Type	Adult Moderate Range Vt 8cc/kg MA	7074310
+158940288	31	607.04	mL	Numeric Type	Adult Moderate Range Vt 8cc/kg 	3040102604
+158940288	24	607.04	mL	Numeric Type	Adult Moderate Range Vt 8cc/kg MA	7074310
+135409106	31	607.04	mL	Numeric Type	Adult Moderate Range Vt 8cc/kg 	3040102604
+68875117	7	83	KG	Numeric Type	Difference in Last Recorded Weight (kg)	6427
+113578617	10	138/76		Blood Pressure	BP	5
+123578078	4	No		Custom List	Have you traveled internationally or domestically in the last month?	762
+123578078	2	No		Custom List	Have you had a COVID-19 viral test in the last 10 days?	756
+105315712	2	No		Custom List	Have you had a COVID-19 viral test in the last 10 days?	756
+168649999	1	No		Custom List	Have you traveled internationally in the last month?	760
+158909642	1	No		Custom List	Have you traveled internationally in the last month?	760
+151444858	1	No		Custom List	Have you traveled internationally in the last month?	760
+118744115	2	No		Custom List	Have you had a COVID-19 viral test in the last 10 days?	756
+181787609	1	No		Custom List	Have you traveled internationally in the last month?	760
+103663529	4	No		Custom List	Have you traveled internationally or domestically in the last month?	762
+103663529	2	No		Custom List	Have you had a COVID-19 viral test in the last 14 days?	754
+52919609	2	no		Custom List	Do you have concerns for anyone's safety at home?	8696
+113529828	1	No		Custom List	Have you traveled internationally or domestically in the last month?	762
+104803209	2	No		Custom List	Have you had a COVID-19 viral test in the last 10 days?	756
+135345593	1	No		Custom List	Have you traveled internationally in the last month?	760
+75673202	1	No		Custom List	Have you traveled internationally in the last month?	760
+75673202	3	No / Unsure		Custom List	In the last month, have you been in contact with someone who was confirmed or suspected to have Coronavirus / COVID-19?	753
+123578078	1	No / Unsure		Custom List	In the last 10 days, have you been in contact with someone who was confirmed or suspected to have Coronavirus/COVID-19?	755
+105315712	1	No / Unsure		Custom List	In the last 10 days, have you been in contact with someone who was confirmed or suspected to have Coronavirus/COVID-19?	755
+158940288	37	25.3		Numeric Type	BMI Frailty	210100200230
+158940288	21	25.3		Numeric Type	BMI (Calculated)	301070
+118745686	8	68.9		Numeric Type	Adenosine total mg	14439
+118744115	1	No / Unsure		Custom List	In the last 10 days, have you been in contact with someone who was confirmed or suspected to have Coronavirus/COVID-19?	755
+103663529	1	No / Unsure		Custom List	In the last month, have you been in contact with someone who was confirmed or suspected to have Coronavirus / COVID-19?	753
+113529828	3	No / Unsure		Custom List	In the last 10 days, have you been in contact with someone who was confirmed or suspected to have Coronavirus/COVID-19?	755
+104803209	1	No / Unsure		Custom List	In the last 10 days, have you been in contact with someone who was confirmed or suspected to have Coronavirus/COVID-19?	755
+135345593	3	No / Unsure		Custom List	Have you been in contact with someone who was sick?	751
+181864978	24	76.45	kg	Numeric Type	IBW/kg (Calculated) Male	7074308
+52919609	26	451.8	mL	Numeric Type	Low Range Vt 6cc/kg 	3040102603
+52919609	17	451.8	mL	Numeric Type	Low Range Vt 6cc/kg MALE	7074309
+181864978	31	76.45		Numeric Type	IBW/kg (Calculated) 	3040102602
+135409106	12	Reg		Custom List	BP Cuff Size	210000000014
+123579193	4	Reg		Custom List	BP Cuff Size	210000000014
+158940288	11	Reg		Custom List	BP Cuff Size	210000000014
+68875117	1	Reg		Custom List	BP Cuff Size	210000000014
+118745686	5	Reg		Custom List	BP Cuff Size	210000000014
+113578617	4	Reg		Custom List	BP Cuff Size	210000000014
+181864978	11	Reg		Custom List	BP Cuff Size	210000000014
+135409106	19	11.43		Numeric Type	mg per minute	14440
+52919609	37	Reg		Custom List	BP Cuff Size	210000000014
+151478676	4	Reg		Custom List	BP Cuff Size	210000000014
+52919609	11	36		Numeric Type	Age	7226
+158940288	22	75.88	kg	Numeric Type	IBW/kg (Calculated) Male	7074308
+135409106	26	71.38	kg	Numeric Type	IBW/kg (Calculated) FEMALE	7074312
+158940288	26	71.38	kg	Numeric Type	IBW/kg (Calculated) FEMALE	7074312
+135409106	29	75.88		Numeric Type	IBW/kg (Calculated) 	3040102602
+135409106	22	75.88	kg	Numeric Type	IBW/kg (Calculated) Male	7074308
+158940288	29	75.88		Numeric Type	IBW/kg (Calculated) 	3040102602
+52919609	40	78		Numeric Type	Pulse	8
+181864978	1	PHQ-2 Brief Screen		Custom List	Depression Screening Adult	28385
+135409106	1	PHQ-2 Brief Screen		Custom List	Depression Screening Adult	28385
+158940288	1	PHQ-2 Brief Screen		Custom List	Depression Screening Adult	28385
+135409106	7	71.25	inches	Patient Height	Height	11
+158940288	7	71.25	inches	Patient Height	Height	11
+158940288	20	2.04	sq meters	Numeric Type	BSA (Calculated - sq m)	301060
+52919609	27	602.4	mL	Numeric Type	Adult Moderate Range Vt 8cc/kg 	3040102604
+52919609	18	602.4	mL	Numeric Type	Adult Moderate Range Vt 8cc/kg MA	7074310
+68875117	4	2931.2	ounces	Patient Weight	Weight	14
+135409106	17	2.033		Numeric Type	BSA Haycock	13705
+151444865	3	1		Numeric Type	PHQ-2 Total Score	16752
+151444865	2	1		Custom List	2. Feeling down, depressed, or hopeless	2100100051
+118744115	3	Severe headache		Custom List	Do you have any of the following new or worsening symptoms?	752
+113578617	8	2852.8	ounces	Patient Weight	Weight	14
+181864978	47	1		Numeric Type	Skip to questions 9-10?	1570400758
+181864978	45	1		Numeric Type	Alcohol Use Concern Calculation	1570000122
+151444865	4	1		String Type	PHQ-2 Total Score	28282
+52919609	22	566.4	mL	Numeric Type	Adult Moderate Range vt 8cc/kg FEMALE	7074314
+181864978	29	431.7	mL	Numeric Type	Low Range Vt 6cc/kg FEMALE	7074313
+135409106	20	2.03	sq meters	Numeric Type	BSA (Calculated - sq m)	301060
+123579193	1	2908.8	ounces	Patient Weight	Weight	14
+113578617	7	70.75	inches	Patient Height	Height	11
+118745686	9	11.48		Numeric Type	mg per minute	14440
+118744115	7	Nov 11 2022 12:00AM		Date	End Date	713
+135409106	23	455.28	mL	Numeric Type	Low Range Vt 6cc/kg MALE	7074309
+158940288	30	455.28	mL	Numeric Type	Low Range Vt 6cc/kg 	3040102603
+158940288	23	455.28	mL	Numeric Type	Low Range Vt 6cc/kg MALE	7074309
+113578617	37	17.3		Numeric Type	Female Grasp Threshold	210100200236
+181864978	41	17.3		Numeric Type	Female Grasp Threshold	210100200236
+52919609	36	17.3		Numeric Type	Female Grasp Threshold	210100200236
+135409106	30	455.28	mL	Numeric Type	Low Range Vt 6cc/kg 	3040102603
+135409106	39	17.3		Numeric Type	Female Grasp Threshold	210100200236
+158940288	39	17.3		Numeric Type	Female Grasp Threshold	210100200236
+52919609	21	424.8	mL	Numeric Type	Low Range Vt 6cc/kg FEMALE	7074313
+68875117	6	136/83		Blood Pressure	BP	5
+113578617	27	74.73		Numeric Type	IBW/kg (Calculated) 	3040102602
+113578617	20	74.73	kg	Numeric Type	IBW/kg (Calculated) Male	7074308
+181864978	14	26		Numeric Type	BMI (Calculated)	5445
+123579193	6	60		Numeric Type	Pulse	8
+113529828	4	Yes - Negative result		Custom List	Have you had a COVID-19 viral test in the last 10 days?	756
+158940288	19	11.6		Numeric Type	mg per minute	14440
+181864978	12	98	%	Numeric Type	SpO2	10
+181864978	32	458.7	mL	Numeric Type	Low Range Vt 6cc/kg 	3040102603
+181864978	25	458.7	mL	Numeric Type	Low Range Vt 6cc/kg MALE	7074309
+113578617	24	70.23	kg	Numeric Type	IBW/kg (Calculated) FEMALE	7074312
+118744115	6	Nov  4 2022 12:00AM		Date	Start Date	712
+52919609	33	24.32		Numeric Type	BMI	210000000020
+123579193	8	69.28		Numeric Type	Adenosine total mg	14439
+181864978	22	2.07	sq meters	Numeric Type	BSA (Calculated - sq m)	301060
+118745686	3	RUE		Custom List	BP Location	210000000012
+113578617	6	RUE		Custom List	BP Location	210000000012
+181864978	30	575.6	mL	Numeric Type	Adult Moderate Range vt 8cc/kg FEMALE	7074314
+158940288	8	128/70		Blood Pressure	BP	5
+52919609	32	78926	Grams	Numeric Type	Difference in Last Recorded Weight (grams)	3051000315
+52919609	41	122/70		Blood Pressure	BP	5
+118745686	7	40		Numeric Type	Age	7226
+113578617	12	40		Numeric Type	Age	7226
+123579193	7	40		Numeric Type	Age	7226
+181864978	18	2.079		Numeric Type	BSA Haycock	13705
+113578617	30	747.3	mL	Numeric Type	Adult High Range Vt 10cc/kg 	3040102605
+113578617	23	747.3	mL	Numeric Type	Adult High Range Vt 10cc/kg MALE	7074311
+135409106	21	24.9		Numeric Type	BMI (Calculated)	301070
+158940288	3	0		Custom List	2. Feeling down, depressed, or hopeless	2100100051
+158940288	2	0		Custom List	1. Little interest or pleasure in doing things	2100100050
+151444865	1	0		Custom List	1. Little interest or pleasure in doing things	2100100050
+113578617	2	0		Custom List	2. Feeling down, depressed, or hopeless	2100100051
+113578617	1	0		Custom List	1. Little interest or pleasure in doing things	2100100050
+181864978	46	0		Numeric Type	AUDIT-C Score	1570400748
+181864978	37	0	kg	Numeric Type	Weight Change Since Admission (kg)	3042003923
+181864978	36	0	Grams	Numeric Type	7-Day Average weight gain	3042002514
+181864978	35	0	%	Numeric Type	Percent Weight Change Since Admission	3041300005
+181864978	21	0		Numeric Type	% Weight change since last visit (%)	32701
+181864978	20	0		Numeric Type	Weight change since last visit	32687
+181864978	17	0		Numeric Type	BMI >35 = "1" . BMI  <=35 = "0"	10245
+181864978	5	0		String Type	PHQ-2 Total Score	28282
+181864978	4	0		Numeric Type	PHQ-2 Total Score	16752
+181864978	3	0		Custom List	2. Feeling down, depressed, or hopeless	2100100051
+181864978	2	0		Custom List	1. Little interest or pleasure in doing things	2100100050
+68875117	12	0	kg	Numeric Type	Weight Change Since Admission (kg)	3042003923
+68875117	11	0	Grams	Numeric Type	7-Day Average weight gain	3042002514
+68875117	10	0	%	Numeric Type	Percent Weight Change Since Admission	3041300005
+68875117	9	0		Numeric Type	Percent Weight Change Since Birth	3040100525
+123358331	4	0		String Type	PHQ-2 Total Score	28282
+123358331	3	0		Numeric Type	PHQ-2 Total Score	16752
+123358331	2	0		Custom List	2. Feeling down, depressed, or hopeless	2100100051
+123358331	1	0		Custom List	1. Little interest or pleasure in doing things	2100100050
+104824110	1	0		Numeric Type	LACE Score at Discharge	160230813
+113578617	33	0	kg	Numeric Type	Weight Change Since Admission (kg)	3042003923
+113578617	32	0	Grams	Numeric Type	7-Day Average weight gain	3042002514
+113578617	31	0	%	Numeric Type	Percent Weight Change Since Admission	3041300005
+113578617	14	0		Numeric Type	BMI >35 = "1" . BMI  <=35 = "0"	10245
+113578617	3	0		Numeric Type	PHQ-2 Total Score	16752
+168650022	4	0		String Type	PHQ-2 Total Score	28282
+168650022	3	0		Numeric Type	PHQ-2 Total Score	16752
+168650022	2	0		Custom List	2. Feeling down, depressed, or hopeless	2100100051
+168650022	1	0		Custom List	1. Little interest or pleasure in doing things	2100100050
+118745686	12	0	kg	Numeric Type	Weight Change Since Admission (kg)	3042003923
+118745686	11	0	Grams	Numeric Type	7-Day Average weight gain	3042002514
+118745686	10	0	%	Numeric Type	Percent Weight Change Since Admission	3041300005
+52919609	31	0	kg	Numeric Type	Weight Change Since Admission (kg)	3042003923
+52919609	30	0	Grams	Numeric Type	7-Day Average weight gain	3042002514
+52919609	29	0	%	Numeric Type	Percent Weight Change Since Admission	3041300005
+52919609	24	0		Numeric Type	Weight Change (%)	3040100886
+52919609	23	0		Numeric Type	Percent Weight Change Since Birth	3040100525
+52919609	13	0		Numeric Type	BMI >35 = "1" . BMI  <=35 = "0"	10245
+52919609	6	0		Numeric Type	PHQ-2 Total Score  (RETIRED)	7914
+52919609	5	0		Numeric Type	PHQ-2 Total Score (RETIRED) 	5856
+52919609	4	0		Custom List	Have you felt down, depressed or hopeless over the past 2 weeks? (RETIRED)	4673
+52919609	3	0		Custom List	Have you felt little interest or pleasure in doing things over the past 2 weeks?  (RETIRED)	4671
+151478676	11	0	kg	Numeric Type	Weight Change Since Admission (kg)	3042003923
+151478676	10	0	Grams	Numeric Type	7-Day Average weight gain	3042002514
+151478676	9	0	%	Numeric Type	Percent Weight Change Since Admission	3041300005
+135409106	35	0	kg	Numeric Type	Weight Change Since Admission (kg)	3042003923
+135409106	34	0	Grams	Numeric Type	7-Day Average weight gain	3042002514
+135409106	33	0	%	Numeric Type	Percent Weight Change Since Admission	3041300005
+135409106	16	0		Numeric Type	BMI >35 = "1" . BMI  <=35 = "0"	10245
+135409106	5	0		String Type	PHQ-2 Total Score	28282
+135409106	4	0		Numeric Type	PHQ-2 Total Score	16752
+135409106	3	0		Custom List	2. Feeling down, depressed, or hopeless	2100100051
+135409106	2	0		Custom List	1. Little interest or pleasure in doing things	2100100050
+105333020	1	0		Numeric Type	LACE Score at Discharge	160230813
+123579193	12	0	kg	Numeric Type	Weight Change Since Admission (kg)	3042003923
+123579193	11	0	Grams	Numeric Type	7-Day Average weight gain	3042002514
+123579193	10	0	%	Numeric Type	Percent Weight Change Since Admission	3041300005
+158940288	35	0	kg	Numeric Type	Weight Change Since Admission (kg)	3042003923
+158940288	34	0	Grams	Numeric Type	7-Day Average weight gain	3042002514
+158940288	33	0	%	Numeric Type	Percent Weight Change Since Admission	3041300005
+158940288	17	0		Numeric Type	BMI >35 = "1" . BMI  <=35 = "0"	10245
+158940288	5	0		String Type	PHQ-2 Total Score	28282
+158940288	4	0		Numeric Type	PHQ-2 Total Score	16752
+135409106	14	41		Numeric Type	Age	7226
+135409106	10	LUE		Custom List	BP Location	210000000012
+123579193	2	LUE		Custom List	BP Location	210000000012
+158940288	9	LUE		Custom List	BP Location	210000000012
+68875117	3	LUE		Custom List	BP Location	210000000012
+181864978	9	LUE		Custom List	BP Location	210000000012
+52919609	39	LUE		Custom List	BP Location	210000000012
+151478676	2	LUE		Custom List	BP Location	210000000012
+113578617	13	711		Numeric Type	Expected Distance	9429
+181864978	15	43		Numeric Type	Age	7226
+181864978	42	NEVER		Category Type	Q1: How often do you have a drink containing alcohol?	1572879836
+181864978	43	PATIENT DOES NOT DRINK		Category Type	Q2: How many drinks containing alcohol do you have on a typical day when you are drinking?	1572879837
+181864978	44	NEVER		Category Type	Q3: How often do you have six or more drinks on one occasion?	1572879838
+181864978	34	764.5	mL	Numeric Type	Adult High Range Vt 10cc/kg 	3040102605
+181864978	27	764.5	mL	Numeric Type	Adult High Range Vt 10cc/kg MALE	7074311
+168649999	2	Chills;Cough;Fever;Runny nose;Sore throat		Custom List	Do you have any of the following new or worsening symptoms?	752
+118745686	6	88		Numeric Type	Pulse	8
+52919609	14	1.99	sq meters	Numeric Type	BSA (Calculated - sq m)	301060
+158940288	13	96		Numeric Type	Pulse	8
+151478676	8	11.29		Numeric Type	mg per minute	14440
+181864978	19	11.89		Numeric Type	mg per minute	14440
+181864978	8	132/62		Blood Pressure	BP	5
+181864978	7	71.5	inches	Patient Height	Height	11
+151478676	7	42		Numeric Type	Age	7226
+158940288	15	42		Numeric Type	Age	7226
+158940288	18	2.049		Numeric Type	BSA Haycock	13705
+52919609	10	24		Numeric Type	BMI (Calculated)	5445
+158940288	16	706		Numeric Type	Expected Distance	9429
+75673202	2	None of these		Custom List	Do you have any of the following new or worsening symptoms?	752
+123578078	3	None of these		Custom List	Do you have any of the following new or worsening symptoms?	752
+105315712	3	None of these		Custom List	Do you have any of the following new or worsening symptoms?	752
+158909642	2	None of these		Custom List	Do you have any of the following new or worsening symptoms?	752
+151444858	2	None of these		Custom List	Do you have any of the following new or worsening symptoms?	752
+103663529	3	None of these		Custom List	Do you have any of the following new or worsening symptoms?	752
+181787609	2	None of these		Custom List	Do you have any of the following new or worsening symptoms?	752
+113529828	2	None of these		Custom List	Do you have any of the following new or worsening symptoms?	752
+104803209	3	None of these		Custom List	Do you have any of the following new or worsening symptoms?	752
+135345593	4	None of these		Custom List	Do you have any of the following new or worsening symptoms?	752
+135345593	2	None of these		Custom List	Do you have any of the following new or worsening symptoms?	752
+158940288	6	2921.6	ounces	Patient Weight	Weight	14
+135409106	25	758.8	mL	Numeric Type	Adult High Range Vt 10cc/kg MALE	7074311
+158940288	32	758.8	mL	Numeric Type	Adult High Range Vt 10cc/kg 	3040102605
+158940288	25	758.8	mL	Numeric Type	Adult High Range Vt 10cc/kg MALE	7074311
+135409106	32	758.8	mL	Numeric Type	Adult High Range Vt 10cc/kg 	3040102605
+52919609	8	2784	ounces	Patient Weight	Weight	14
+68875117	8	37		Numeric Type	Age	7226
+181864978	13	77		Numeric Type	Pulse	8
+113578617	26	561.84	mL	Numeric Type	Adult Moderate Range vt 8cc/kg FEMALE	7074314
+52919609	12	739		Numeric Type	Expected Distance	9429
+52919609	25	75.3		Numeric Type	IBW/kg (Calculated) 	3040102602
+52919609	16	75.3	kg	Numeric Type	IBW/kg (Calculated) Male	7074308
+135409106	11	sitting		Custom List	BP Position	210000000013
+123579193	3	sitting		Custom List	BP Position	210000000013
+158940288	10	sitting		Custom List	BP Position	210000000013
+113578617	5	sitting		Custom List	BP Position	210000000013
+181864978	10	sitting		Custom List	BP Position	210000000013
+68875117	2	sitting		Custom List	BP Position	210000000013
+118745686	4	sitting		Custom List	BP Position	210000000013
+52919609	38	sitting		Custom List	BP Position	210000000013
+151478676	3	sitting		Custom List	BP Position	210000000013
+135409106	18	68.59		Numeric Type	Adenosine total mg	14439
+118744115	4	Yes		Custom List	Have you traveled internationally or domestically in the last month?	762
+181864978	28	71.95	kg	Numeric Type	IBW/kg (Calculated) FEMALE	7074312
+181864978	6	2995.2	ounces	Patient Weight	Weight	14
+118744115	5	92		Networked	Region	711
+135409106	9	92		Numeric Type	Pulse	8
+135409106	37	25		Numeric Type	BMI Frailty	210100200230
+135409106	13	25		Numeric Type	BMI (Calculated)	5445
+158940288	14	25		Numeric Type	BMI (Calculated)	5445
+113578617	19	25		Numeric Type	BMI (Calculated)	301070
+113578617	11	25		Numeric Type	BMI (Calculated)	5445
+135409106	6	2880	ounces	Patient Weight	Weight	14
+52919609	9	0 %		String Type	Pct Wt Change	178
+113578617	35	25.1		Numeric Type	BMI Frailty	210100200230
+113578617	34	25.1		Numeric Type	BMI	210000000020
+135409106	15	714		Numeric Type	Expected Distance	9429
+52919609	35	30		Numeric Type	Male Grasp Threshold	210100200234
+135409106	38	30		Numeric Type	Male Grasp Threshold	210100200234
+158940288	38	30		Numeric Type	Male Grasp Threshold	210100200234
+113578617	36	30		Numeric Type	Male Grasp Threshold	210100200234
+181864978	40	30		Numeric Type	Male Grasp Threshold	210100200234
+158940288	12	100	%	Numeric Type	SpO2	10
+151478676	6	97		Numeric Type	Pulse	8
+52919609	28	753	mL	Numeric Type	Adult High Range Vt 10cc/kg 	3040102605
+52919609	19	753	mL	Numeric Type	Adult High Range Vt 10cc/kg MALE	7074311
+68875117	13	83099	Grams	Numeric Type	Difference in Last Recorded Weight (grams)	3051000315
+113578617	16	67.94		Numeric Type	Adenosine total mg	14439
+158940288	36	25.34		Numeric Type	BMI	210000000020
+118745686	1	2892.8	ounces	Patient Weight	Weight	14
+151478676	1	2843.2	ounces	Patient Weight	Weight	14

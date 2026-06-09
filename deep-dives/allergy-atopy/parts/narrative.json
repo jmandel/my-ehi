@@ -1,0 +1,158 @@
+{
+  "summary": "Joshua Mandel carries a textbook atopic profile, and the most clinically important fact about it is one that a plain allergy list actively hides: most of his food \"allergies\" are not food allergies at all, but the oral-allergy-syndrome shadow of a birch-pollen sensitization. His chart lists four active, high-severity allergens — tree nut, sulfa, and penicillin entered together in 2018, and a test-based \"Peanut (diagnostic)\" added in 2020 — each flattened to the single coded reaction \"hives.\" In 2024-2025 an allergy workup finally took the food story apart at the molecular level. A Quest component-resolved IgE panel showed almost all tree nuts simply negative, and the three faint positives — walnut, hazelnut, peanut, all under 1 kU/L — resolved, on component testing, to the birch-cross-reactive PR-10 proteins only (hazelnut Cor a 1, peanut Ara h 8), while the storage proteins that mark true systemic, anaphylaxis-risk food allergy (walnut Jug r 1/Jug r 3, peanut Ara h 2 and the rest) were negative. The allergist read both as oral allergy syndrome. That single distinction reframes the whole picture: the food reactivity is pollen-driven and low systemic risk, and it ties directly to a broadly positive aeroallergen skin-prick test (trees, grass, ragweed, weeds, mugwort, molds, dust mites, dog, cat) and prior allergy shots around 2000. The atopy was formalized in 2025 as two problems — allergic rhinoconjunctivitis and pollen-food allergy — with an EpiPen and loratadine documented. What a plain list could never show, component testing made explicit: this is one pollen-allergic patient whose food cross-reactivity has been correctly de-escalated from \"nut-allergic\" to \"oral allergy syndrome.\"",
+  "sections": [
+    {
+      "id": "overview",
+      "title": "The atopic profile",
+      "narrative": [
+        {
+          "text": "The chart presents four active, high-severity allergies, each flattened to the same single coded reaction, \"hives\": tree nut, sulfa antibiotics, and penicillins were all entered together on Aug 9, 2018 by a nurse during an intake, and a fourth, \"Peanut (diagnostic),\" was added on Jul 14, 2020. As a flat list it reads as a heavily allergic patient with two drug allergies and two nut allergies.",
+          "cites": ["e_alg_2018", "e_alg_peanut"]
+        },
+        {
+          "text": "But two of the four entries carry quiet signals that they are not what a list implies. \"Hives\" on all four is a default coded reaction, not four separately characterized reactions. And the peanut entry is explicitly labeled \"(diagnostic)\" — a clinician's flag that it reflects a positive test, not a witnessed anaphylaxis. The 2024-2025 allergy workup was, in effect, an investigation of how real and how dangerous these food entries actually are — and its answer changed the meaning of the list.",
+          "cites": ["e_alg_2018", "e_alg_peanut", "e_ige_panel"]
+        },
+        {
+          "text": "Behind the food entries sits a long-standing environmental allergy. A skin-prick test on May 9, 2025 was broadly positive across the aeroallergen spectrum — trees, grass, ragweed, weeds, mugwort, molds, dust mites, dog, and cat — and the note records prior subcutaneous immunotherapy (allergy shots) around 2000. This is a polysensitized, pollen-allergic patient of long standing, and that pollen sensitization turns out to be the engine behind the food findings.",
+          "cites": ["e_spt"]
+        }
+      ]
+    },
+    {
+      "id": "peanut-genesis",
+      "title": "How the peanut entry was created",
+      "narrative": [
+        {
+          "text": "The \"Peanut (diagnostic)\" allergy did not come from a reaction. It was created on Jul 14, 2020 at a kiosk allergen review: the system suggested the coded allergen \"Peanut oil,\" the patient or clinician rejected it, and instead added free text reading \"Peanut (diagnostic).\" That free-text add became the coded allergy that the list now shows as high-severity.",
+          "cites": ["e_alg_peanut", "e_peanut_genesis"]
+        },
+        {
+          "text": "The \"(diagnostic)\" qualifier is the tell: it marks a test-based sensitization rather than a clinical anaphylaxis history. Five years later the component testing bore this out exactly — the peanut positivity is birch-cross-reactive Ara h 8, not the storage proteins that would make a true peanut anaphylaxis risk. The list entry and the molecular result agree: this is sensitization, not systemic allergy.",
+          "cites": ["e_peanut_genesis", "e_ige_panel"]
+        }
+      ]
+    },
+    {
+      "id": "ige-components",
+      "title": "Component-resolved IgE testing",
+      "narrative": [
+        {
+          "text": "A Quest component-resolved IgE panel drawn Dec 5, 2024 is the centerpiece of this record, and it lives entirely in the free text of one overview note — there are no structured IgE result rows in the export, because the panel was run by an outside lab. The note is precise enough to reconstruct the whole reasoning: \"Quest IgE testing done 12/5/2024. Macadamia nut, pecan, brazil nut, cashew, pistachio, almond negative. Walnut low 0.12, hazelnut 0.95, peanut 0.13. JUGR1 and JUGR3 negative. Hazelnut component CORA1 only (oral allergy syndrome). Peanut component ARAH8 positive, remainder negative (oral allergy syndrome).\"",
+          "cites": ["e_ige_panel"]
+        },
+        {
+          "text": "Read as whole-allergen numbers alone, the panel is already reassuring: six tree nuts negative, and the three faint positives — walnut, hazelnut, peanut — all sit below 1 kU/L, barely above the detection threshold. A plain allergy list could not distinguish those low positives from a dangerous allergy; component testing can, and that is exactly what it did here.",
+          "cites": ["e_ige_panel"]
+        },
+        {
+          "text": "The molecular layer separates two protein families that a whole-allergen value blurs together. The PR-10 proteins (named Bet v 1 in birch, with homologs in many plant foods) are heat-labile birch-pollen mimics: IgE against them reflects pollen cross-reactivity and causes oral allergy syndrome — mouth and throat itch with raw foods — but rarely systemic reactions. The storage proteins (2S albumins like peanut Ara h 2 or walnut Jug r 1) and lipid transfer proteins are heat-stable and are the markers of true, potentially anaphylactic food allergy. Which protein the IgE binds, not how much, is what tells you the risk.",
+          "cites": ["e_ige_panel"]
+        },
+        {
+          "text": "Every component here lands on the cross-reactive side. Walnut's storage protein (Jug r 1) and LTP (Jug r 3) were both negative — its low whole-allergen value has no dangerous component behind it. Hazelnut was positive for Cor a 1 only, its PR-10/birch homolog. Peanut was positive for Ara h 8, the peanut PR-10, with the storage proteins (the \"remainder\") negative. The allergist labeled both hazelnut and peanut explicitly as oral allergy syndrome. The Ara h 8-only pattern is the classic birch-driven, low-systemic-risk peanut signature — the opposite of the Ara h 2-positive pattern that drives clinic-level concern.",
+          "cites": ["e_ige_panel"]
+        },
+        {
+          "text": "This is the added value of component testing stated plainly: a flat list said \"peanut allergy, high severity\"; the components said \"birch-pollen cross-reactivity, oral allergy syndrome, low systemic risk.\" The same molecular finding ties the food story back to the broadly positive aeroallergen skin-prick test — one pollen sensitization expressing itself across the diet — and is the reason the chart's later language is \"pollen-food allergy,\" not \"nut allergy.\"",
+          "cites": ["e_ige_panel", "e_spt", "e_problem_pfa"]
+        }
+      ]
+    },
+    {
+      "id": "problems-2025",
+      "title": "The 2025 atopy problems",
+      "narrative": [
+        {
+          "text": "On Dec 4, 2025 the workup was formalized into two problem-list entries by Dr. Zoe Rammelkamp: \"Allergic rhinoconjunctivitis, seasonal and perennial\" and \"Pollen-food allergy.\" Both carry a noted date of May 9, 2025 — the day of the allergy visit and skin-prick test — even though they were keyed into the chart that December. The naming itself encodes the analysis: not \"nut allergy,\" but \"pollen-food allergy,\" the unified diagnosis that component testing made possible.",
+          "cites": ["e_problem_arc", "e_problem_pfa"]
+        },
+        {
+          "text": "The pollen-food-allergy problem's overview note is where the whole component analysis is recorded, and the rhinoconjunctivitis note is where the skin-prick panel lives. Together they are the chart's own statement of the case: a polysensitized aeroallergen profile, with food reactivity that is its pollen-cross-reactive echo.",
+          "cites": ["e_problem_pfa", "e_spt"]
+        }
+      ]
+    },
+    {
+      "id": "management",
+      "title": "Referral and medications",
+      "narrative": [
+        {
+          "text": "The thread runs through a referral and two documented medications. A referral to Allergy was placed Nov 27, 2024 by Dr. Rammelkamp under the indication \"past history of nut allergy,\" with the specialty appointment on May 9, 2025 — the same day as the skin-prick test. The referral question (\"is the nut allergy real?\") and its answer (\"oral allergy syndrome\") bracket the molecular workup.",
+          "cites": ["e_referral", "e_spt"]
+        },
+        {
+          "text": "An epinephrine auto-injector (EpiPen 0.3 mg) and loratadine 10 mg appear on the chart, both documented on Dec 4, 2025 as historical medications — that is, recorded as meds the patient already had rather than newly written prescriptions. The pairing fits the picture: an antihistamine for the dominant aeroallergen burden, and a rescue auto-injector retained as precaution given the labeled nut allergies, even though the component testing points to low systemic risk.",
+          "cites": ["e_meds"]
+        }
+      ]
+    },
+    {
+      "id": "assessment",
+      "title": "Assessment",
+      "narrative": [
+        {
+          "text": "This is a polysensitized, pollen-allergic adult with allergic rhinoconjunctivitis and an oral-allergy-syndrome food profile — and the single most useful thing in the record is that component-resolved IgE testing was done and correctly interpreted. It converted four flat, high-severity-looking food/drug allergy entries and three faint nut positives into a coherent diagnosis: birch-pollen cross-reactivity, not primary nut allergy. Walnut, hazelnut, and peanut are all PR-10-driven oral allergy syndrome; the storage proteins that would signal anaphylaxis risk are negative.",
+          "cites": ["e_ige_panel"]
+        },
+        {
+          "text": "What an allergist would do with this: reassure on systemic risk for the three implicated nuts while continuing to honor the documented drug allergies (sulfa, penicillin), which are a separate question the IgE panel does not address; counsel that oral allergy syndrome symptoms are typically worse with raw foods and during pollen season and often tolerable cooked; and revisit whether a full-strength \"high severity\" peanut/tree-nut label and a retained EpiPen still match an Ara h 8-only, storage-protein-negative profile, or whether the labels can be downgraded with a documented shared decision. The aeroallergen burden — the actual driver — is the axis most worth treating, and prior immunotherapy around 2000 plus current loratadine suggest that conversation is already open.",
+          "cites": ["e_ige_panel", "e_alg_2018", "e_meds", "e_spt"]
+        },
+        {
+          "text": "What this export cannot answer, and should be asked rather than mined: the component IgE values exist only as free text in two overview notes, so there are no structured result rows, units, or reference flags to audit — the numbers below 1 kU/L are transcribed from the allergist's note, not from a lab feed. The drug allergies (sulfa, penicillin) carry no reaction detail beyond the default \"hives\" and no test confirmation, so whether they are true allergies, intolerances, or childhood labels is unresolved here. And the export does not record whether the EpiPen has ever been used, whether the nut labels were formally de-escalated after the component results, or what the patient's own symptom experience with these foods actually is.",
+          "cites": ["e_ige_panel", "e_alg_2018", "e_meds"]
+        }
+      ]
+    }
+  ],
+  "evidence": {
+    "e_alg_2018": {
+      "kind": "fact",
+      "date": "Aug 9, 2018",
+      "text": "Tree nut, sulfa antibiotics, and penicillins were entered as active allergies together on Aug 9, 2018 by nurse Tracy Ireland, each marked High severity with the coded reaction \"Hives.\" These remain active. (\"Severity\" in the raw row is a type label; the true severity field reads High.)"
+    },
+    "e_alg_peanut": {
+      "kind": "fact",
+      "date": "Jul 14, 2020",
+      "text": "\"Peanut (diagnostic)\" was added as a fourth active allergy on Jul 14, 2020 (noted by Mary Picone), High severity, reaction \"Hives.\" The \"(diagnostic)\" qualifier marks it as test-based rather than reaction-based."
+    },
+    "e_peanut_genesis": {
+      "kind": "fact",
+      "date": "Jul 14, 2020",
+      "text": "At the Jul 14, 2020 kiosk allergen review, the system-suggested coded allergen \"Peanut oil\" was rejected and a free-text entry \"Peanut (diagnostic)\" was accepted instead; that free-text add became the coded peanut allergy. Tree nut, penicillin, and sulfa were re-affirmed at the same review."
+    },
+    "e_ige_panel": {
+      "kind": "note",
+      "who": "Allergy overview note (pollen-food allergy problem)",
+      "date": "Documented from Quest testing Dec 5, 2024",
+      "quote": "Quest IgE testing done 12/5/2024. Macadamia nut, pecan, brazil nut, cashew, pistachio, almond negative. Walnut low 0.12, hazelnut 0.95, peanut 0.13. JUGR1 and JUGR3 negative. Hazelnut component CORA1 only (oral allergy syndrome). Peanut component ARAH8 positive, remainder negative (oral allergy syndrome)."
+    },
+    "e_spt": {
+      "kind": "note",
+      "who": "Allergy overview note (allergic rhinoconjunctivitis problem)",
+      "date": "Skin-prick test May 9, 2025",
+      "quote": "SPT 5/9/25--trees, molds, dust mites, dog, cat, grass, RW, weeds, mugwort. Prior SCIT ~2000."
+    },
+    "e_problem_arc": {
+      "kind": "fact",
+      "date": "Noted May 9, 2025; entered Dec 4, 2025",
+      "text": "\"Allergic rhinoconjunctivitis, seasonal and perennial\" was placed on the problem list as an active problem by Dr. Zoe Rammelkamp, with a noted date of May 9, 2025 (the allergy-visit / skin-prick date)."
+    },
+    "e_problem_pfa": {
+      "kind": "fact",
+      "date": "Noted May 9, 2025; entered Dec 4, 2025",
+      "text": "\"Pollen-food allergy\" was placed on the problem list as an active problem by Dr. Zoe Rammelkamp, noted May 9, 2025. Its overview note carries the full component-resolved IgE interpretation. The diagnosis name itself reframes the nut findings as pollen cross-reactivity."
+    },
+    "e_referral": {
+      "kind": "fact",
+      "date": "Placed Nov 27, 2024; appointment May 9, 2025",
+      "text": "A referral to Allergy was placed Nov 27, 2024 by Dr. Zoe Rammelkamp under the indication \"Past history of nut allergy,\" status Authorized, with the specialty appointment on May 9, 2025."
+    },
+    "e_meds": {
+      "kind": "fact",
+      "date": "Documented Dec 4, 2025",
+      "text": "An epinephrine auto-injector (EpiPen 0.3 mg) and loratadine 10 mg are recorded on Dec 4, 2025 as historical medications — documented as already in use rather than newly prescribed."
+    }
+  }
+}

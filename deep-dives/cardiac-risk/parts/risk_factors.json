@@ -1,0 +1,673 @@
+{
+  "rows": [
+    {
+      "kind": "demographic",
+      "factor": "age",
+      "value": 43,
+      "unit": "years",
+      "detail": {
+        "dob": "1982-10-26",
+        "age_at_last_chart_contact": 43,
+        "last_actual_chart_contact": "2026-03-25",
+        "last_contact_note": "Latest non-'Scheduled' encounter. A 6/16/2027 'Scheduled' appointment exists in the export (general-patterns §43) and is intentionally excluded from this anchor.",
+        "age_at_export_ref": 43,
+        "export_ref_date": "2026-06-07"
+      },
+      "ascvd_role": "Pooled-Cohort / PREVENT age input (computed from BIRTH_DATE).",
+      "src": "PATIENT:PAT_ID=Z7004242 (BIRTH_DATE)"
+    },
+    {
+      "kind": "demographic",
+      "factor": "sex",
+      "value": "Male",
+      "detail": {
+        "sex_assigned_at_birth": "Male",
+        "gender_identity": "Male"
+      },
+      "ascvd_role": "ASCVD sex input.",
+      "src": "PATIENT:PAT_ID=Z7004242 (SEX_C_NAME)"
+    },
+    {
+      "kind": "demographic",
+      "factor": "race",
+      "value": "White",
+      "detail": {
+        "races": [
+          "White"
+        ]
+      },
+      "ascvd_role": "Race enters the 2013 Pooled-Cohort equations (White vs African-American); not used by 2023 PREVENT.",
+      "src": "PATIENT_RACE:PAT_ID=Z7004242"
+    },
+    {
+      "kind": "demographic",
+      "factor": "ethnicity",
+      "value": "Not Hispanic or Latino",
+      "detail": {},
+      "ascvd_role": "Descriptive; not an ASCVD equation input.",
+      "src": "PATIENT:PAT_ID=Z7004242 (ETHNIC_GROUP_C_NAME)"
+    },
+    {
+      "kind": "demographic",
+      "factor": "living_status",
+      "value": "Alive",
+      "detail": {},
+      "ascvd_role": "Context only.",
+      "src": "PATIENT_4:PAT_ID=Z7004242 (PAT_LIVING_STAT_C_NAME)"
+    },
+    {
+      "kind": "social",
+      "factor": "tobacco_smoking",
+      "value": "Never",
+      "comment": null,
+      "detail": {
+        "tobacco_user": "Never",
+        "pack_years": null,
+        "cigarettes_yn": "N",
+        "cigars_yn": "N",
+        "pipes_yn": "N",
+        "source": "Provider"
+      },
+      "history": [
+        {
+          "date": "8/9/2018",
+          "csn": "724623985",
+          "value": "Never"
+        },
+        {
+          "date": "1/9/2020",
+          "csn": "802802103",
+          "value": "Never"
+        },
+        {
+          "date": "8/29/2022",
+          "csn": "958134730",
+          "value": "Never"
+        },
+        {
+          "date": "3/2/2023",
+          "csn": "991221485",
+          "value": "Never"
+        },
+        {
+          "date": "9/28/2023",
+          "csn": "1028739468",
+          "value": "Never"
+        },
+        {
+          "date": "7/2/2024",
+          "csn": "1076667823",
+          "value": "Never"
+        },
+        {
+          "date": "11/7/2024",
+          "csn": "1098680958",
+          "value": "Never"
+        },
+        {
+          "date": "12/4/2025",
+          "csn": "1169841954",
+          "value": "Never"
+        }
+      ],
+      "ascvd_role": "Current smoking is a Pooled-Cohort / PREVENT input. 'Never' here.",
+      "src": "SOCIAL_HX:PAT_ENC_CSN_ID=1169841954 (SMOKING_TOB_USE_C_NAME); latest of 8 snapshots"
+    },
+    {
+      "kind": "social",
+      "factor": "tobacco_smokeless",
+      "value": "Never",
+      "comment": null,
+      "detail": {
+        "snuff_yn": "N",
+        "chew_yn": "N",
+        "passive_smoke_exposure": null,
+        "source": "Provider"
+      },
+      "history": [
+        {
+          "date": "8/9/2018",
+          "csn": "724623985",
+          "value": "Never"
+        },
+        {
+          "date": "1/9/2020",
+          "csn": "802802103",
+          "value": "Never"
+        },
+        {
+          "date": "8/29/2022",
+          "csn": "958134730",
+          "value": "Never"
+        },
+        {
+          "date": "3/2/2023",
+          "csn": "991221485",
+          "value": "Never"
+        },
+        {
+          "date": "9/28/2023",
+          "csn": "1028739468",
+          "value": "Never"
+        },
+        {
+          "date": "7/2/2024",
+          "csn": "1076667823",
+          "value": "Never"
+        },
+        {
+          "date": "11/7/2024",
+          "csn": "1098680958",
+          "value": "Never"
+        },
+        {
+          "date": "12/4/2025",
+          "csn": "1169841954",
+          "value": "Never"
+        }
+      ],
+      "ascvd_role": "Smokeless tobacco — adverse CV signal; 'Never' here.",
+      "src": "SOCIAL_HX:PAT_ENC_CSN_ID=1169841954 (SMOKELESS_TOB_USE_C_NAME)"
+    },
+    {
+      "kind": "social",
+      "factor": "alcohol",
+      "value": "Yes",
+      "comment": "1-2",
+      "detail": {
+        "oz_per_week": null,
+        "frequency": null,
+        "drinks_per_day": null,
+        "binge": null,
+        "source": "Provider",
+        "note": "Structured numeric alcohol fields are NULL; the amount is in free-text ALCOHOL_COMMENT, which drifts across snapshots (3-4 drinks/wk → 1-2)."
+      },
+      "history": [
+        {
+          "date": "8/9/2018",
+          "csn": "724623985",
+          "value": "Yes",
+          "comment": "drinks 3-4 days /week"
+        },
+        {
+          "date": "1/9/2020",
+          "csn": "802802103",
+          "value": "Yes",
+          "comment": "drinks 3-4 days /week"
+        },
+        {
+          "date": "8/29/2022",
+          "csn": "958134730",
+          "value": "Yes",
+          "comment": "about 3-4 drinks per week"
+        },
+        {
+          "date": "3/2/2023",
+          "csn": "991221485",
+          "value": "Yes",
+          "comment": "about 3-4 drinks per week"
+        },
+        {
+          "date": "9/28/2023",
+          "csn": "1028739468",
+          "value": "Yes",
+          "comment": "about 3-4 drinks per week"
+        },
+        {
+          "date": "7/2/2024",
+          "csn": "1076667823",
+          "value": "Yes",
+          "comment": "about 3-4 drinks per week"
+        },
+        {
+          "date": "11/7/2024",
+          "csn": "1098680958",
+          "value": "Yes",
+          "comment": "1-2"
+        },
+        {
+          "date": "12/4/2025",
+          "csn": "1169841954",
+          "value": "Yes",
+          "comment": "1-2"
+        }
+      ],
+      "ascvd_role": "Modifiable; not an equation input but a counseling/risk-modifier factor.",
+      "src": "SOCIAL_HX:PAT_ENC_CSN_ID=1169841954 (ALCOHOL_USE_C_NAME, ALCOHOL_COMMENT)"
+    },
+    {
+      "kind": "social",
+      "factor": "illicit_drug_use",
+      "value": "No",
+      "comment": null,
+      "detail": {
+        "iv_drug_user": "N",
+        "frequency": null
+      },
+      "history": [
+        {
+          "date": "8/9/2018",
+          "csn": "724623985",
+          "value": "No",
+          "iv": "N"
+        },
+        {
+          "date": "1/9/2020",
+          "csn": "802802103",
+          "value": "No",
+          "iv": "N"
+        },
+        {
+          "date": "8/29/2022",
+          "csn": "958134730",
+          "value": "No",
+          "iv": "N"
+        },
+        {
+          "date": "3/2/2023",
+          "csn": "991221485",
+          "value": "No",
+          "iv": "N"
+        },
+        {
+          "date": "9/28/2023",
+          "csn": "1028739468",
+          "value": "No",
+          "iv": "N"
+        },
+        {
+          "date": "7/2/2024",
+          "csn": "1076667823",
+          "value": "No",
+          "iv": "N"
+        },
+        {
+          "date": "11/7/2024",
+          "csn": "1098680958",
+          "value": "No",
+          "iv": "N"
+        },
+        {
+          "date": "12/4/2025",
+          "csn": "1169841954",
+          "value": "No",
+          "iv": "N"
+        }
+      ],
+      "ascvd_role": "Stimulant use (cocaine/amphetamine) is an acute CV risk; reported 'No', IV 'N'.",
+      "src": "SOCIAL_HX:PAT_ENC_CSN_ID=1169841954 (ILL_DRUG_USER_C_NAME, IV_DRUG_USER_YN)"
+    },
+    {
+      "kind": "social",
+      "factor": "physical_activity",
+      "value": null,
+      "comment": "Not captured in structured SOCIAL_HX fields (PHYS_ACT_DAYS_PER_WEEK / _MIN_PER_SESS are NULL at every snapshot).",
+      "detail": {
+        "days_per_week": null,
+        "min_per_session": null
+      },
+      "history": [
+        {
+          "date": "8/9/2018",
+          "csn": "724623985",
+          "value": null
+        },
+        {
+          "date": "1/9/2020",
+          "csn": "802802103",
+          "value": null
+        },
+        {
+          "date": "8/29/2022",
+          "csn": "958134730",
+          "value": null
+        },
+        {
+          "date": "3/2/2023",
+          "csn": "991221485",
+          "value": null
+        },
+        {
+          "date": "9/28/2023",
+          "csn": "1028739468",
+          "value": null
+        },
+        {
+          "date": "7/2/2024",
+          "csn": "1076667823",
+          "value": null
+        },
+        {
+          "date": "11/7/2024",
+          "csn": "1098680958",
+          "value": null
+        },
+        {
+          "date": "12/4/2025",
+          "csn": "1169841954",
+          "value": null
+        }
+      ],
+      "ascvd_role": "Modifiable lifestyle factor; not captured structurally here.",
+      "src": "SOCIAL_HX:PAT_ENC_CSN_ID=1169841954 (PHYS_ACT_DAYS_PER_WEEK_C_NAME, PHYS_ACT_MIN_PER_SESS_C_NAME)"
+    },
+    {
+      "kind": "family",
+      "relation": "Mother",
+      "condition": "Ovarian cancer",
+      "condition_other": null,
+      "age_onset": null,
+      "age_onset_end": null,
+      "comment": null,
+      "cv_related": false,
+      "source": "Provider",
+      "relative_status": "Alive",
+      "relative_sex": "Female",
+      "relative_death_age": null,
+      "relative_cause_of_death": null,
+      "src": "FAMILY_HX:PAT_ENC_CSN_ID=1169841954,LINE=1 (joined FAMILY_HX_STATUS.FAM_STAT_ID=2)"
+    },
+    {
+      "kind": "family",
+      "relation": "Mother",
+      "condition": "Hypertension",
+      "condition_other": null,
+      "age_onset": null,
+      "age_onset_end": null,
+      "comment": null,
+      "cv_related": true,
+      "source": "Provider",
+      "relative_status": "Alive",
+      "relative_sex": "Female",
+      "relative_death_age": null,
+      "relative_cause_of_death": null,
+      "src": "FAMILY_HX:PAT_ENC_CSN_ID=1169841954,LINE=2 (joined FAMILY_HX_STATUS.FAM_STAT_ID=2)"
+    },
+    {
+      "kind": "family",
+      "relation": "Mother",
+      "condition": "Thyroid disease",
+      "condition_other": null,
+      "age_onset": null,
+      "age_onset_end": null,
+      "comment": "s/p thyroidectomy",
+      "cv_related": false,
+      "source": "Provider",
+      "relative_status": "Alive",
+      "relative_sex": "Female",
+      "relative_death_age": null,
+      "relative_cause_of_death": null,
+      "src": "FAMILY_HX:PAT_ENC_CSN_ID=1169841954,LINE=3 (joined FAMILY_HX_STATUS.FAM_STAT_ID=2)"
+    },
+    {
+      "kind": "family",
+      "relation": "Father",
+      "condition": "Hyperlipidemia",
+      "condition_other": null,
+      "age_onset": null,
+      "age_onset_end": null,
+      "comment": null,
+      "cv_related": true,
+      "source": "Provider",
+      "relative_status": "Alive",
+      "relative_sex": "Male",
+      "relative_death_age": null,
+      "relative_cause_of_death": null,
+      "src": "FAMILY_HX:PAT_ENC_CSN_ID=1169841954,LINE=4 (joined FAMILY_HX_STATUS.FAM_STAT_ID=6)"
+    },
+    {
+      "kind": "family",
+      "relation": "Brother",
+      "condition": "Hypertension",
+      "condition_other": null,
+      "age_onset": null,
+      "age_onset_end": null,
+      "comment": null,
+      "cv_related": true,
+      "source": "Provider",
+      "relative_status": "Alive",
+      "relative_sex": "Male",
+      "relative_death_age": null,
+      "relative_cause_of_death": null,
+      "src": "FAMILY_HX:PAT_ENC_CSN_ID=1169841954,LINE=5 (joined FAMILY_HX_STATUS.FAM_STAT_ID=5)"
+    },
+    {
+      "kind": "family",
+      "relation": "Brother",
+      "condition": "Hyperlipidemia",
+      "condition_other": null,
+      "age_onset": null,
+      "age_onset_end": null,
+      "comment": null,
+      "cv_related": true,
+      "source": "Provider",
+      "relative_status": "Alive",
+      "relative_sex": "Male",
+      "relative_death_age": null,
+      "relative_cause_of_death": null,
+      "src": "FAMILY_HX:PAT_ENC_CSN_ID=1169841954,LINE=6 (joined FAMILY_HX_STATUS.FAM_STAT_ID=5)"
+    },
+    {
+      "kind": "family",
+      "relation": "Brother",
+      "condition": "Colon polyps",
+      "condition_other": null,
+      "age_onset": null,
+      "age_onset_end": null,
+      "comment": null,
+      "cv_related": false,
+      "source": "Provider",
+      "relative_status": "Alive",
+      "relative_sex": "Male",
+      "relative_death_age": null,
+      "relative_cause_of_death": null,
+      "src": "FAMILY_HX:PAT_ENC_CSN_ID=1169841954,LINE=7 (joined FAMILY_HX_STATUS.FAM_STAT_ID=5)"
+    },
+    {
+      "kind": "family",
+      "relation": "Maternal Grandmother",
+      "condition": "Stroke",
+      "condition_other": null,
+      "age_onset": null,
+      "age_onset_end": null,
+      "comment": null,
+      "cv_related": true,
+      "source": "Provider",
+      "relative_status": "Deceased",
+      "relative_sex": "Female",
+      "relative_death_age": null,
+      "relative_cause_of_death": null,
+      "src": "FAMILY_HX:PAT_ENC_CSN_ID=1169841954,LINE=8 (joined FAMILY_HX_STATUS.FAM_STAT_ID=8)"
+    },
+    {
+      "kind": "family",
+      "relation": "Maternal Grandfather",
+      "condition": "Stroke",
+      "condition_other": null,
+      "age_onset": null,
+      "age_onset_end": null,
+      "comment": null,
+      "cv_related": true,
+      "source": "Provider",
+      "relative_status": "Deceased",
+      "relative_sex": "Male",
+      "relative_death_age": null,
+      "relative_cause_of_death": null,
+      "src": "FAMILY_HX:PAT_ENC_CSN_ID=1169841954,LINE=9 (joined FAMILY_HX_STATUS.FAM_STAT_ID=9)"
+    },
+    {
+      "kind": "family",
+      "relation": "Maternal Grandfather",
+      "condition": "Prostate cancer",
+      "condition_other": null,
+      "age_onset": null,
+      "age_onset_end": null,
+      "comment": null,
+      "cv_related": false,
+      "source": "Provider",
+      "relative_status": "Deceased",
+      "relative_sex": "Male",
+      "relative_death_age": null,
+      "relative_cause_of_death": null,
+      "src": "FAMILY_HX:PAT_ENC_CSN_ID=1169841954,LINE=10 (joined FAMILY_HX_STATUS.FAM_STAT_ID=9)"
+    },
+    {
+      "kind": "family",
+      "relation": "Paternal Grandmother",
+      "condition": "Heart attack",
+      "condition_other": null,
+      "age_onset": null,
+      "age_onset_end": null,
+      "comment": null,
+      "cv_related": true,
+      "source": "Provider",
+      "relative_status": "Deceased",
+      "relative_sex": "Female",
+      "relative_death_age": null,
+      "relative_cause_of_death": null,
+      "src": "FAMILY_HX:PAT_ENC_CSN_ID=1169841954,LINE=11 (joined FAMILY_HX_STATUS.FAM_STAT_ID=10)"
+    },
+    {
+      "kind": "family",
+      "relation": "Paternal Grandfather",
+      "condition": "Heart attack",
+      "condition_other": null,
+      "age_onset": null,
+      "age_onset_end": null,
+      "comment": null,
+      "cv_related": true,
+      "source": "Provider",
+      "relative_status": "Deceased",
+      "relative_sex": "Male",
+      "relative_death_age": null,
+      "relative_cause_of_death": null,
+      "src": "FAMILY_HX:PAT_ENC_CSN_ID=1169841954,LINE=12 (joined FAMILY_HX_STATUS.FAM_STAT_ID=11)"
+    }
+  ],
+  "meta": {
+    "entity": "risk_factors",
+    "topic": "cardiac-risk",
+    "patient": {
+      "pat_id": "Z7004242",
+      "name": "MANDEL, JOSHUA C",
+      "sex": "Male",
+      "dob": "1982-10-26"
+    },
+    "generated": "2026-06-08T12:33:54.247Z",
+    "export_ref_date": "2026-06-07",
+    "counts": {
+      "total_rows": 22,
+      "demographic": 5,
+      "social": 5,
+      "family": 12,
+      "family_cv_related": 8
+    },
+    "snapshots": {
+      "social_hx": {
+        "latest_csn": "1169841954",
+        "latest_date": "12/4/2025",
+        "n_snapshots": 8,
+        "all": [
+          {
+            "date": "8/9/2018",
+            "csn": "724623985"
+          },
+          {
+            "date": "1/9/2020",
+            "csn": "802802103"
+          },
+          {
+            "date": "8/29/2022",
+            "csn": "958134730"
+          },
+          {
+            "date": "3/2/2023",
+            "csn": "991221485"
+          },
+          {
+            "date": "9/28/2023",
+            "csn": "1028739468"
+          },
+          {
+            "date": "7/2/2024",
+            "csn": "1076667823"
+          },
+          {
+            "date": "11/7/2024",
+            "csn": "1098680958"
+          },
+          {
+            "date": "12/4/2025",
+            "csn": "1169841954"
+          }
+        ],
+        "note": "SOCIAL_HX is re-snapshotted each reviewed encounter (general-patterns §34); social rows reflect the latest snapshot, with per-snapshot history embedded in each row."
+      },
+      "family_hx": {
+        "latest_csn": "1169841954",
+        "latest_date": "12/4/2025",
+        "n_snapshots": 8,
+        "growth": [
+          {
+            "date": "8/9/2018",
+            "csn": "724623985",
+            "n_rows": 3
+          },
+          {
+            "date": "1/9/2020",
+            "csn": "802802103",
+            "n_rows": 3
+          },
+          {
+            "date": "8/29/2022",
+            "csn": "958134730",
+            "n_rows": 11
+          },
+          {
+            "date": "3/2/2023",
+            "csn": "991221485",
+            "n_rows": 11
+          },
+          {
+            "date": "9/28/2023",
+            "csn": "1028739468",
+            "n_rows": 11
+          },
+          {
+            "date": "7/2/2024",
+            "csn": "1076667823",
+            "n_rows": 11
+          },
+          {
+            "date": "11/7/2024",
+            "csn": "1098680958",
+            "n_rows": 11
+          },
+          {
+            "date": "12/4/2025",
+            "csn": "1169841954",
+            "n_rows": 12
+          }
+        ],
+        "note": "FAMILY_HX grew 3 → 11 → 12 facts across 2018→2025 (general-patterns §34). The dataset uses the latest 12-row snapshot; earlier snapshots are a subset. Colon polyps (Brother) was the 2025 add."
+      }
+    },
+    "source_tables": {
+      "demographics": [
+        "PATIENT",
+        "PATIENT_4",
+        "PATIENT_RACE"
+      ],
+      "social": [
+        "SOCIAL_HX",
+        "PAT_ENC"
+      ],
+      "family": [
+        "FAMILY_HX",
+        "FAMILY_HX_STATUS",
+        "PAT_ENC"
+      ]
+    },
+    "notes": "DATASET layer — complete, not curated. CV relevance is FLAGGED (cv_related) on family rows, never filtered. AGE_OF_ONSET, structured alcohol numerics, and pack-years are NULL in this specimen; alcohol amount is free-text ALCOHOL_COMMENT."
+  }
+}

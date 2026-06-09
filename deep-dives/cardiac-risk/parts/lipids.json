@@ -1,0 +1,176 @@
+{
+  "_meta": {
+    "slot": "lipids",
+    "layer": "STRUCTURED FILL — lipid panels (one per draw) + trend series for the cardiac-risk view model's lipids section. Projected from the lipid-panel labs in dataset.json. Display-clean: unified analyte labels (the older and newer panels' two raw HDL component names both render as analyte 'HDL'), formatted dates, plain flags, derived fasting boolean. No raw ids/columns/timestamps/facility comments.",
+    "built_by": "deep-dives/cardiac-risk/scripts/lipids.ts",
+    "panel_count": 3,
+    "note_fasting": "fasting derived from the lab's PATIENT FASTING / PATIENT WAS NOT FASTING comment; 2018 fasting, 2023 & 2025 non-fasting."
+  },
+  "panels": [
+    {
+      "date": "Aug 9, 2018",
+      "dateIso": "2018-08-09",
+      "fasting": true,
+      "rows": [
+        {
+          "analyte": "Total cholesterol",
+          "value": 159,
+          "unit": "mg/dL",
+          "refText": "0 – 199",
+          "flag": null
+        },
+        {
+          "analyte": "LDL (calculated)",
+          "value": 89,
+          "unit": "mg/dL",
+          "refText": "60 – 129",
+          "flag": null
+        },
+        {
+          "analyte": "HDL",
+          "value": 52,
+          "unit": "mg/dL",
+          "refText": "40 – 125",
+          "flag": null
+        },
+        {
+          "analyte": "Triglycerides",
+          "value": 88,
+          "unit": "mg/dL",
+          "refText": "0 – 149",
+          "flag": null
+        },
+        {
+          "analyte": "Cholesterol / HDL ratio",
+          "value": 3.1,
+          "unit": null,
+          "refText": "0.0 – 5.0",
+          "flag": null
+        }
+      ]
+    },
+    {
+      "date": "Sep 28, 2023",
+      "dateIso": "2023-09-28",
+      "fasting": false,
+      "rows": [
+        {
+          "analyte": "Total cholesterol",
+          "value": 156,
+          "unit": "mg/dL",
+          "refText": "0 – 199",
+          "flag": null
+        },
+        {
+          "analyte": "LDL (calculated)",
+          "value": 94,
+          "unit": "mg/dL",
+          "refText": "60 – 129",
+          "flag": null
+        },
+        {
+          "analyte": "HDL",
+          "value": 44,
+          "unit": "mg/dL",
+          "refText": "40 – 125",
+          "flag": null
+        },
+        {
+          "analyte": "Triglycerides",
+          "value": 92,
+          "unit": "mg/dL",
+          "refText": "0 – 149",
+          "flag": null
+        },
+        {
+          "analyte": "Cholesterol / HDL ratio",
+          "value": 3.5,
+          "unit": null,
+          "refText": "0.0 – 5.0",
+          "flag": null
+        }
+      ]
+    },
+    {
+      "date": "Dec 4, 2025",
+      "dateIso": "2025-12-04",
+      "fasting": false,
+      "rows": [
+        {
+          "analyte": "Total cholesterol",
+          "value": 188,
+          "unit": "mg/dL",
+          "refText": "0 – 200",
+          "flag": null
+        },
+        {
+          "analyte": "LDL (calculated)",
+          "value": 92,
+          "unit": "mg/dL",
+          "refText": "<100",
+          "flag": null
+        },
+        {
+          "analyte": "HDL",
+          "value": 40,
+          "unit": "mg/dL",
+          "refText": ">40",
+          "flag": "Low"
+        },
+        {
+          "analyte": "Triglycerides",
+          "value": 282,
+          "unit": "mg/dL",
+          "refText": "0 – 149",
+          "flag": "High"
+        },
+        {
+          "analyte": "VLDL cholesterol",
+          "value": 56,
+          "unit": "mg/dL",
+          "refText": "<30",
+          "flag": "High"
+        },
+        {
+          "analyte": "Cholesterol / HDL ratio",
+          "value": 4.7,
+          "unit": null,
+          "refText": "0.0 – 5.0",
+          "flag": null
+        }
+      ]
+    }
+  ],
+  "trend": {
+    "dates": [
+      "Aug 9, 2018",
+      "Sep 28, 2023",
+      "Dec 4, 2025"
+    ],
+    "totalChol": [
+      159,
+      156,
+      188
+    ],
+    "ldl": [
+      89,
+      94,
+      92
+    ],
+    "hdl": [
+      52,
+      44,
+      40
+    ],
+    "tg": [
+      88,
+      92,
+      282
+    ],
+    "ratio": [
+      3.1,
+      3.5,
+      4.7
+    ]
+  }
+}

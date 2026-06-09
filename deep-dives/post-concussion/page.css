@@ -1,0 +1,177 @@
+/* Post-concussion deep dive — a clinician's reading surface for a five-year
+   head-injury course. One type scale, one spacing rhythm; the indigo of the
+   medication thread and the slate of the imaging baseline carry meaning. */
+:root {
+  --ink: #1a1d24;
+  --muted: #565d67;
+  --dim: #868d97;
+  --rule: #e4e6eb;
+  --rule-hard: #cdd1d8;
+  --bg: #edeef2;
+  --paper: #ffffff;
+  --accent: #4338ca;        /* nortriptyline / medication thread */
+  --accent-soft: #ececfb;
+  --injury: #c1121f;        /* head injuries */
+  --imaging: #0e7490;       /* the normal scan */
+  --dx: #7c3aed;            /* diagnosis */
+  --care: #b45309;          /* specialty care / referrals */
+  --good: #1a7f43;
+  --warn: #b8860b;
+  --bad: #b42318;
+  --maxw: 1080px;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 15.5px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.page { max-width: var(--maxw); margin: 0 auto; background: var(--paper); box-shadow: 0 1px 6px rgba(0,0,0,.08); }
+h4.subhead { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 26px 0 9px; font-weight: 700; }
+
+/* ---------- header ---------- */
+.page-head { padding: 42px 48px 28px; border-bottom: 3px solid var(--ink); }
+.ph-eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: 12px; font-weight: 700; color: var(--accent); }
+.page-head h1 { font-size: 31px; margin: 6px 0 4px; letter-spacing: -.02em; }
+.ph-demo { color: var(--muted); font-size: 15px; margin-bottom: 18px; }
+.ph-headline { font-size: 16.5px; line-height: 1.64; margin: 0 0 22px; max-width: 80ch; color: #24282e; }
+
+/* arc-at-a-glance strip in the header */
+.arc-board { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.beat-table { width: 100%; border-collapse: collapse; }
+.beat-row td { padding: 9px 12px; border-bottom: 1px solid var(--rule); vertical-align: baseline; }
+.beat-row { border-left: 4px solid var(--rule-hard); }
+.beat-row.injury td.beat-when { border-left: 4px solid var(--injury); }
+.beat-row.imaging td.beat-when { border-left: 4px solid var(--imaging); }
+.beat-row.diagnosis td.beat-when { border-left: 4px solid var(--dx); }
+.beat-row.medication td.beat-when, .beat-row.response td.beat-when, .beat-row.resolution td.beat-when { border-left: 4px solid var(--accent); }
+.beat-row.therapy td.beat-when, .beat-row.care td.beat-when { border-left: 4px solid var(--care); }
+.beat-when { width: 188px; white-space: nowrap; }
+.beat-when a { font-weight: 700; color: var(--ink); text-decoration: none; font-size: 13.5px; }
+.beat-when a:hover { color: var(--accent); text-decoration: underline; }
+.beat-when .beat-date { display: block; font-size: 11.5px; color: var(--dim); font-weight: 600; letter-spacing: .01em; margin-top: 1px; }
+.beat-line { font-size: 13.5px; color: #2b2f34; line-height: 1.5; }
+.beat-row:hover td { background: #f8f9fb; }
+
+.counterweights { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; padding: 11px 14px; background: #f1f8f3; border: 1px solid #cfe6d6; border-radius: 8px; font-size: 13px; }
+.cw-title { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; font-weight: 700; color: var(--good); margin-right: 4px; }
+.cw-item b { color: var(--ink); font-weight: 600; }
+.cw-note { color: var(--muted); font-size: 12px; }
+
+/* ---------- sections ---------- */
+.section { padding: 32px 48px; border-bottom: 1px solid var(--rule); }
+.section h2 { font-size: 21px; margin: 0 0 14px; letter-spacing: -.01em; display: flex; align-items: center; gap: 12px; }
+.sec-n { display: inline-flex; align-items: center; justify-content: center; min-width: 27px; height: 27px; padding: 0 7px;
+  background: var(--ink); color: #fff; border-radius: 6px; font-size: 13px; font-weight: 700; flex: none; }
+
+.prose p { font-size: 15.5px; line-height: 1.66; margin: 0 0 14px; max-width: 82ch; color: #25292e; }
+.prose p:last-child { margin-bottom: 0; }
+
+.fig-note { color: var(--muted); font-size: 13.5px; line-height: 1.58; margin: 12px 0 4px; max-width: 86ch; }
+.fig-note b { color: var(--ink); }
+.tiny { font-size: 11px; color: var(--dim); line-height: 1.5; margin: 8px 0 0; max-width: 86ch; }
+
+.open-flag { font-size: 13.5px; color: var(--muted); background: #fffaf0; border: 1px solid #f0e2c4; border-radius: 8px; padding: 11px 14px; margin-top: 14px; line-height: 1.55; }
+.open-flag-tag { display: inline-block; font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; font-weight: 700; color: var(--warn); margin-right: 8px; }
+
+/* ---------- cite marker + drawer ---------- */
+.cite { display: inline-flex; align-items: center; vertical-align: super; font-size: 11px; line-height: 1; margin-left: 3px;
+  border: none; background: var(--accent-soft); color: var(--accent); cursor: pointer; border-radius: 4px; padding: 2px 3px; font-weight: 700; }
+.cite:hover { background: var(--accent); color: #fff; }
+.cite-n { font-size: 9px; margin-left: 1px; }
+.drawer-scrim { position: fixed; inset: 0; background: rgba(20,25,30,.34); z-index: 40; }
+.drawer { position: fixed; top: 0; right: 0; height: 100vh; width: min(640px, 94vw); background: #fff; z-index: 41;
+  box-shadow: -4px 0 24px rgba(0,0,0,.2); display: flex; flex-direction: column; }
+.drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 2px solid var(--ink); }
+.drawer-title { font-size: 16px; font-weight: 700; }
+.drawer-close { border: none; background: none; font-size: 26px; line-height: 1; cursor: pointer; color: var(--muted); }
+.drawer-close:hover { color: var(--ink); }
+.drawer-body { overflow: auto; padding: 18px 20px 60px; }
+.drawer-foot { font-size: 11.5px; color: var(--dim); line-height: 1.55; margin-top: 22px; border-top: 1px solid var(--rule); padding-top: 12px; }
+.src-block { margin-bottom: 18px; }
+.src-head { font-size: 12.5px; color: var(--muted); margin-bottom: 7px; display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+.src-tag { display: inline-block; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; color: #fff; background: var(--muted); border-radius: 4px; padding: 2px 7px; font-weight: 700; }
+.src-tag.note { background: var(--accent); }
+.src-quote { margin: 0; padding: 13px 15px; background: #f6f6fd; border-left: 3px solid var(--accent); font-size: 14.5px; line-height: 1.6; }
+.src-statement { margin: 0; padding: 13px 15px; background: #f5f6f8; border-left: 3px solid var(--rule-hard); border-radius: 0 6px 6px 0; font-size: 14px; line-height: 1.6; color: #2b2f34; }
+
+/* ---------- generic data grid ---------- */
+table.grid { border-collapse: collapse; width: 100%; font-size: 13.5px; margin: 6px 0; }
+.grid th { text-align: left; padding: 7px 10px; border-bottom: 2px solid var(--rule-hard); color: var(--muted); font-weight: 600; font-size: 12.5px; white-space: nowrap; }
+.grid td { padding: 7px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.grid tr:hover td { background: #f8f9fb; }
+.grid th.num, .grid td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.grid .dim { color: var(--dim); }
+.grid .nowrap { white-space: nowrap; }
+.grid.mini td { padding: 4px 8px; font-size: 12.5px; }
+
+.status-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 12px; white-space: nowrap; }
+.status-pill.ok { background: #eaf6ee; color: var(--good); }
+.status-pill.gap { background: #fdeceb; color: var(--bad); }
+.status-pill.dot::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; display: inline-block; }
+
+.chart { width: 100%; height: auto; display: block; }
+
+/* ---------- centerpiece: dual-track course chart ---------- */
+.course-wrap { margin: 8px 0 4px; border: 1px solid var(--rule); border-radius: 12px; background: #fcfcfe; padding: 10px 12px 6px; }
+.course-svg { width: 100%; height: auto; display: block; }
+.course-legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 4px 6px 8px; font-size: 12px; color: var(--muted); }
+.course-legend .cl-item { display: inline-flex; align-items: center; gap: 6px; }
+.course-legend .cl-sw { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+.course-legend .cl-line { width: 18px; height: 0; border-top: 2.5px solid var(--accent); display: inline-block; }
+
+/* ---------- MRI read card ---------- */
+.mri-card { display: grid; grid-template-columns: 1fr 1.25fr; gap: 0; border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; margin: 8px 0; }
+.mri-meta { background: #f3f8fa; padding: 16px 18px; border-right: 1px solid var(--rule); }
+.mri-impression { font-size: 20px; font-weight: 700; color: var(--imaging); letter-spacing: -.01em; line-height: 1.25; }
+.mri-sub { font-size: 12.5px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+.mri-meta dl { margin: 12px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 12.5px; }
+.mri-meta dt { color: var(--dim); }
+.mri-meta dd { margin: 0; color: var(--ink); font-weight: 500; }
+.mri-report { padding: 16px 18px; }
+.mri-report pre { margin: 0; font: 12px/1.55 ui-monospace, "SF Mono", Menlo, Consolas, monospace; white-space: pre-wrap; color: #2b2f34; max-height: 280px; overflow: auto; }
+.mri-orders { margin-top: 12px; }
+
+/* ---------- referral split ---------- */
+.ref-split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 8px 0; }
+.ref-col { border: 1px solid var(--rule); border-radius: 10px; padding: 14px 16px; background: #fcfcfd; }
+.ref-col.fulfilled { border-top: 3px solid var(--good); }
+.ref-col.expired { border-top: 3px solid var(--bad); }
+.ref-col-head { font-size: 14px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.ref-col-sub { font-size: 12.5px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+.ref-item { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; padding: 7px 0; border-top: 1px solid var(--rule); font-size: 13px; align-items: baseline; }
+.ref-item:first-of-type { border-top: none; }
+.ref-item .ref-to { font-weight: 600; }
+.ref-item .ref-when { font-size: 12px; color: var(--dim); white-space: nowrap; }
+.ref-item .ref-out { grid-column: 1 / -1; font-size: 12px; color: var(--muted); }
+
+/* ---------- response readout ---------- */
+.resp-row { display: grid; grid-template-columns: 1.3fr 1fr; gap: 22px; align-items: start; margin: 6px 0; }
+.resp-quotes { display: flex; flex-direction: column; gap: 12px; }
+.resp-quote { border-left: 3px solid var(--accent); padding: 10px 14px; background: #f6f6fd; border-radius: 0 8px 8px 0; }
+.resp-quote .rq-text { font-size: 14.5px; line-height: 1.55; color: #232347; }
+.resp-quote .rq-meta { font-size: 11.5px; color: var(--muted); margin-top: 6px; }
+.resp-facts { display: flex; flex-direction: column; gap: 12px; }
+.resp-fact { border: 1px solid var(--rule); border-radius: 8px; padding: 12px 14px; background: #fcfcfd; }
+.resp-fact-val { font-size: 22px; font-weight: 700; color: var(--accent); }
+.resp-fact-label { font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--dim); font-weight: 700; margin-top: 2px; }
+.resp-fact-note { font-size: 12.5px; color: var(--muted); line-height: 1.5; margin-top: 5px; }
+
+/* ---------- dx frequency bars ---------- */
+.dxbars { display: flex; flex-direction: column; gap: 6px; margin: 8px 0; }
+.dxbar-row { display: grid; grid-template-columns: 1fr; gap: 3px; }
+.dxbar-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; gap: 10px; }
+.dxbar-name { color: #2b2f34; }
+.dxbar-name.dominant { font-weight: 700; color: var(--dx); }
+.dxbar-n { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--muted); }
+.dxbar-track { height: 13px; background: #f0f1f4; border-radius: 4px; overflow: hidden; }
+.dxbar-fill { height: 13px; border-radius: 4px; background: #c4b5fd; }
+.dxbar-fill.dominant { background: var(--dx); }
+
+/* ---------- footer ---------- */
+.page-foot { padding: 26px 48px 60px; font-size: 12.5px; color: var(--dim); line-height: 1.6; }
+
+@media (max-width: 900px) {
+  .mri-card, .ref-split, .resp-row { grid-template-columns: 1fr; }
+  .page-head, .section, .page-foot { padding-left: 26px; padding-right: 26px; }
+}

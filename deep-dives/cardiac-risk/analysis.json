@@ -1,0 +1,593 @@
+{
+  "meta": {
+    "topic": "cardiac-risk",
+    "layer": "ANALYSIS — the cardiologist's worked understanding over the complete dataset.json + the visit notes. Curation lives HERE: which findings matter, what the trajectory is, what was missed. Every finding cites dataset rows (TABLE:KEY=VAL or entity[index] locators) and/or verbatim note quotes (note:HNO_<id> @ CSN).",
+    "patient": {
+      "name": "MANDEL, JOSHUA C",
+      "sex": "Male",
+      "dob": "1982-10-26",
+      "age_at_last_contact": 43
+    },
+    "reference_frameworks": "ACC/AHA 2017 BP categories; 2013 Pooled Cohort Equations (computed: 10-yr ASCVD 1.06%->2.04% for this confirmed White male) cross-checked against AHA PREVENT 2023; NCEP/AHA lipid thresholds. Patient is in PRIMARY prevention (no established ASCVD, no diabetes). See synthesis.ascvd for the full input/estimate/caveat object.",
+    "generated": "2026-06-08",
+    "dataset_ref": "deep-dives/cardiac-risk/dataset.json",
+    "notes_read": [
+      "note:HNO_1473666038 @ CSN 720803470 (8/9/2018 establish-care, DHILLON)",
+      "note:HNO_1998212111 @ CSN 799951565 (1/9/2020 skin-check/heartburn, DHILLON)",
+      "note:HNO_3819029543 @ CSN 948004323 (8/29/2022 establish-care/annual, RAMMELKAMP)",
+      "note:HNO_4024447284 @ CSN 974614965 (12/1/2022 concussion referral, RAMMELKAMP)",
+      "note:HNO_4215475900 @ CSN 958148810 (3/2/2023 follow-up, RAMMELKAMP)",
+      "note:HNO_4662006870 @ CSN 991225117 (9/28/2023 annual, RAMMELKAMP)",
+      "note:HNO_5231266254 @ CSN 1076261941 (7/2/2024 cervicalgia/concussion, EVERTON)",
+      "note:HNO_5522457878 @ CSN 1028744231 (11/7/2024 annual, RAMMELKAMP)",
+      "note:HNO_6399850741 @ CSN 1098684634 (12/4/2025 annual, RAMMELKAMP)"
+    ]
+  },
+  "headline": "A 43-year-old man in primary prevention with a 7-year pattern of Stage-1-range blood pressure, a single 2022 hypertension diagnosis that was diagnosed, treated for one day on paper, declined, and then never carried forward, worsening lipids (HDL falling 52->40, TG 282, chol/HDL ratio 3.1->4.7), creeping weight (174->187 lb), and a heavy bilateral family history of hypertension, hyperlipidemia, stroke, and early MI. His modifiable cardiovascular risk is real and drifting upward, yet the chart treats him as a healthy young man: hypertension is absent from the problem list, no statin or antihypertensive is active, the chart never calculated an ASCVD risk (this analysis computes it: 10-yr ASCVD 1.06%->2.04%, rising, every input recoverable from the export including race), and two external 2024 emergency cardiovascular work-ups never re-entered the primary-care narrative.",
+  "findings": [
+    {
+      "id": "F1-htn-undercoded",
+      "claim": "Hypertension was formally diagnosed and pharmacologically treated on 8/29/2022, then was never re-coded, never added to the problem list, and never re-addressed at any later visit — it now exists in the chart only as readings, a one-day encounter diagnosis, and a declined prescription.",
+      "significance": "Because 'Primary hypertension' is NOT on the structured problem list (the list holds only GERD, post-concussion syndrome, resolved neck pain, and two allergy diagnoses), it will not surface in problem-list-driven views, registry/quality measures, or any ASCVD risk calculator that reads the problem list. A clinician scanning the chart sees a healthy 43-year-old. The condition is real but invisible to the systems meant to act on it. This is the single most consequential gap in his cardiovascular care.",
+      "evidence": {
+        "diagnosis_made": "8/29/2022 establish-care visit: 'BP of 138/76 is consistent with Stage I HTN... start lisinopril 10 mg daily', billed '99213 for HTN'.",
+        "problem_list_absent": "PROBLEM_LIST has 0 rows for HTN DX_IDs 108212/463437; PROBLEM_LIST_HX also 0. No encounter-dx row carries DX_LINK_PROB_ID.",
+        "never_readdressed": "Every subsequent annual (2023, 2024, 2025) omits HTN from the assessment/plan and instead states the boilerplate 'discussed healthy diet and lifestyle; BP and weight good'."
+      },
+      "cites": [
+        "entity_extras.encounters_dx.htn_coding",
+        "PAT_ENC_DX:PAT_ENC_CSN_ID=948004323,LINE=1",
+        "PROBLEM_LIST:DX_ID IN (108212|463437)=0rows",
+        "note:HNO_3819029543 @ CSN 948004323 — \"HTN. BP of 138/76 is consistent with Stage I HTN. Patient is interested in medication. He has tried dietary modification and feels like it hasn't been successful. -- labs: BMP ordered for baseline lytes and renal function -- start lisinopril 10 mg daily\" and footer \"99213 for HTN.\"",
+        "note:HNO_5522457878 @ CSN 1028744231 — \"-discussed healthy diet and lifestyle; BP and weight good\"",
+        "note:HNO_6399850741 @ CSN 1098684634 — \"-discussed healthy diet and lifestyle; BP and weight good\""
+      ]
+    },
+    {
+      "id": "F2-bp-trajectory",
+      "claim": "Blood pressure has sat in the Stage-1 hypertension range for essentially the entire record: 8 of 9 office readings from 2018-2025 are >=130 systolic or >=80 diastolic, mean systolic 132 (range 122-142), with the only clearly normal reading being the 2018 baseline (122/70). The 12/1/2022 reading 142/74 is the single one Epic auto-flagged abnormal.",
+      "significance": "This is not white-coat lability or a one-off — it is a stable, sustained elevation across seven years and multiple providers, exactly the substrate that ACC/AHA guidelines say should be confirmed (home/ambulatory readings) and treated. The patient himself reported at the 2022 visit that his 'blood pressure typically in the upper 130s for the past 10 years,' so the office readings agree with his own home data. Untreated Stage 1 HTN in a 43-year-old is a decades-long cumulative exposure.",
+      "evidence": {
+        "readings": "122/70 (2018, only normal), 136/83 (2020), 138/76 (8/2022), 142/74 (12/2022, FLAGGED), 134/80 (3/2023), 132/64 (9/2023), 127/81 (7/2024), 128/70 (11/2024), 132/62 (12/2025).",
+        "patient_report": "8/29/2022 note: 'blood pressure typically in the upper 130s for the past 10 years.'"
+      },
+      "cites": [
+        "vitals[kind=blood_pressure] (9 rows)",
+        "V_EHI_FLO_MEAS_VALUE:FSD_ID=118745686 (142/74 ABNORMAL_C_NAME=Yes)",
+        "note:HNO_3819029543 @ CSN 948004323 — \"blood pressure typically in the upper 130s for the past 10 years\"",
+        "note:HNO_4024447284 @ CSN 974614965 — \"BP (!) 142/74 (BP Location: RUE, BP Position: sitting, BP Cuff Size: Reg)\""
+      ]
+    },
+    {
+      "id": "F3-lisinopril-decline",
+      "claim": "The only antihypertensive ever prescribed — lisinopril 10 mg, started 8/29/2022 — was discontinued 9/28/2023 with reason '* Patient refusal (sends cancel message to pharmacy)', and its reported-taking history is N/N (never taken). The decline is documented ONLY in the structured medication record; the 9/28/2023 visit note that bears the same date is silent on hypertension entirely and does not narrate the refusal.",
+      "significance": "The single attempt at pharmacologic BP control failed at the patient-adherence step and was then dropped rather than re-approached (lifestyle re-trial, a different agent, home-BP confirmation, or shared-decision documentation). The gap between the structured record (an explicit refusal) and the note (no mention of BP at all) means a future reader relying on the narrative would never know an antihypertensive had been tried and declined. The thread simply ends.",
+      "evidence": {
+        "order": "ORDER_MED 772179261 lisinopril 10 mg, indication 'Primary hypertension', sent 8/29/2022.",
+        "discontinue": "discon_reason '* Patient refusal', discon_time 9/28/2023 2:38 PM by SMITH, MARY B; taking_yn_history {Y:0, N:2}.",
+        "note_silence": "9/28/2023 annual note A/P lists only 'Chronic stable conditions: 1. Post concussive syndrome' and 'discussed healthy diet and lifestyle; continue to monitor BP' — no mention of lisinopril, refusal, or hypertension."
+      },
+      "cites": [
+        "ORDER_MED:ORDER_MED_ID=772179261",
+        "medications[order_med_id=772179261]",
+        "note:HNO_4662006870 @ CSN 991225117 — \"Chronic stable conditions: 1. Post concussive syndrome... -discussed healthy diet and lifestyle; continue to monitor BP\" (no HTN, no lisinopril mention)"
+      ]
+    },
+    {
+      "id": "F4-lipid-worsening",
+      "claim": "The lipid panel is deteriorating across the three available draws: total cholesterol 159->156->188, HDL 52->44->40 (now flagged Low), total/HDL ratio 3.1->3.5->4.7, and triglycerides 88->92->282 (flagged High) with VLDL 56 (flagged High). The 12/4/2025 panel is the first to carry multiple abnormal flags. LDL has stayed near-stable (89->94->92).",
+      "significance": "An atherogenic shift: the protective HDL is falling while the ratio and triglycerides climb — a metabolic-syndrome-type pattern that tracks with the 13-lb weight gain and is exactly the lipid signature that adds to ASCVD risk beyond LDL alone. The 282 triglyceride and 188 total cholesterol on 12/4/2025 were drawn NON-FASTING lab comment: 'PATIENT WAS NOT FASTING', which inflates triglycerides and the calculated VLDL/ratio — so the true fasting numbers may be milder, but the multi-year HDL decline and ratio rise are not fasting-dependent and are real. A fasting redraw is needed to act on the triglycerides, but the trend already warrants attention.",
+      "evidence": {
+        "fasting_caveat": "2018 panel was 'PATIENT FASTING' (TG 88); 2023 and 2025 panels were 'PATIENT WAS NOT FASTING'.",
+        "hdl_ratio": "HDL 52(2018)->44(2023)->40(2025, Low); chol/HDL 3.1->3.5->4.7.",
+        "trig": "TG 88->92->282 (2025 High, non-fasting); VLDL 56 (High)."
+      },
+      "cites": [
+        "labs[component=HDL] (52,44,40)",
+        "labs[component=TRIGLYCERIDES] (88,92,282)",
+        "labs[component=CHOLESTEROL/HDL RATIO] (3.1,3.5,4.7)",
+        "ORDER_RESULTS:ORDER_PROC_ID=1165205279,LINE=2 (TG 282 High, PATIENT WAS NOT FASTING)",
+        "ORDER_RESULTS:ORDER_PROC_ID=1165205279,LINE=3 (HDL 40 Low)",
+        "ORDER_RESULTS:ORDER_PROC_ID=439060606,LINE=1 (CHOLESTEROL 159, PATIENT FASTING)"
+      ]
+    },
+    {
+      "id": "F5-no-ascvd-no-statin",
+      "claim": "No global ASCVD/PREVENT risk has been computed anywhere in the record, and no lipid-lowering or antiplatelet therapy has ever been ordered — the entire medication history contains no statin, fibrate, ezetimibe, PCSK9 inhibitor, aspirin, or any antihypertensive other than the declined lisinopril.",
+      "significance": "Risk is being managed reading-by-reading and lab-by-lab rather than as an integrated estimate. For a 43-year-old man the 10-year ASCVD number is likely still low, but he has the inputs that drive 30-year / lifetime risk (sustained Stage-1 BP, falling HDL, family loading, overweight) — precisely the patient in whom guidelines favor risk-enhancer-informed discussion and early lifestyle/statin consideration. The chart never frames the question, so the opportunity for early primary prevention is going unaddressed by default rather than by an explicit, documented decision.",
+      "evidence": {
+        "no_drugs": "medications meta: 'ABSENT from the entire med record: no statin/fibrate/ezetimibe/PCSK9, no beta-blocker/CCB/ARB/thiazide/other antihypertensive, no aspirin/antiplatelet, no anticoagulant.' Confirmed by query: 0 rows matching statin/aspirin/losartan/amlodipine/metoprolol/HCTZ.",
+        "no_risk_score": "No ASCVD/PREVENT score artifact in the structured data or any note A/P."
+      },
+      "cites": [
+        "medications (20 rows; cv_relevance_counts antihypertensive:1 [declined], none:15, metabolic-monitor:3, anaphylaxis:1)",
+        "ORDER_MED:statin|aspirin|antihypertensive=0rows"
+      ]
+    },
+    {
+      "id": "F6-family-loading",
+      "claim": "Family history is heavily cardiovascular and bilateral: mother and brother with hypertension; father and brother with hyperlipidemia; both maternal grandparents with stroke; both paternal grandparents with heart attack. 8 of 12 family-history facts are cardiovascular.",
+      "significance": "Two first-degree relatives carry the two exact conditions the patient is drifting toward (HTN, hyperlipidemia), and all four grandparents had a hard atherosclerotic event (stroke x2, MI x2). This is a strong, guideline-recognized risk enhancer. Whether the grandparents' events were premature (the ASCVD-relevant cut: MI/stroke <55 male / <65 female) is unknown — the age of onset is not recorded for every family-history row — but the density of vascular disease across both lineages is itself a reason to treat his modifiable factors more aggressively, not less.",
+      "evidence": {
+        "facts": "Mother: Hypertension; Father: Hyperlipidemia; Brother: Hypertension + Hyperlipidemia; Maternal grandparents: Stroke x2; Paternal grandparents: Heart attack x2.",
+        "onset_missing": "All FAMILY_HX AGE_OF_ONSET fields are NULL."
+      },
+      "cites": [
+        "risk_factors[kind=family] (12 rows, 8 cv_related)",
+        "FAMILY_HX:PAT_ENC_CSN_ID=1169841954,LINE=2 (Mother Hypertension)",
+        "FAMILY_HX:PAT_ENC_CSN_ID=1169841954,LINE=5 (Brother Hypertension)",
+        "FAMILY_HX:PAT_ENC_CSN_ID=1169841954,LINE=11 (Paternal Grandmother Heart attack)",
+        "FAMILY_HX:PAT_ENC_CSN_ID=1169841954,LINE=12 (Paternal Grandfather Heart attack)",
+        "note:HNO_3819029543 @ CSN 948004323 — Family History list: 'Hypertension Mother / Hyperlipidemia Father / Hypertension Brother / Stroke Maternal Grandmother / Stroke Maternal Grandfather / Heart attack Paternal Grandmother / Heart attack Paternal Grandfather'"
+      ]
+    },
+    {
+      "id": "F7-acute-events-unreconciled",
+      "claim": "Two external emergency cardiovascular work-ups in 2024 are present in the data but never re-entered the primary-care record: (a) 5/14/2024 chest-pain ED visit with a NEGATIVE troponin, normal chest x-ray ('cardiac silhouette and pulmonary vasculature within normal limits'), and a CMP/CBC; (b) 7/30/2024 suspected left vertebral-artery dissection work-up with a CT angiogram of the neck that was clean ('No significant atherosclerotic disease... No evidence of vertebral dissection,' <50% ICA stenosis bilaterally) plus IV fluids. Neither has a clinic note, and the 7/2/2024 PCP visit (six weeks after the chest pain) makes no mention of it.",
+      "significance": "Two pieces of genuinely reassuring cardiovascular data — a negative troponin and a clean neck CTA showing no atherosclerosis at 41-42 — are sitting in the chart unintegrated. They argue AGAINST established disease (good news the risk discussion should use), but because they live only as imported external orders with the narrative buried inside the radiology narrative and no reconciliation note, the PCP storyline never acknowledges that the patient had chest pain or a dissection scare at all. The chest pain was attributed in the radiology indication to cannabis ('Chest pain since yesterday after consuming THC') — a context worth carrying forward given his documented occasional cannabis use. The discrete lab values did not survive the import (CMP/troponin resulted as order headers only), so only the abnormal/normal flags and the imaging reads remain.",
+      "evidence": {
+        "chest_pain": "5/14/2024 (CSN 1076628498): TROPONIN order 1025926285 ABNORMAL_YN=N; XR CHEST read normal; CMP ABNORMAL_YN=Y (header only, no discrete values).",
+        "dissection": "7/30/2024 (CSN 1081584507/8): CT ANGIO NECK 1034471692 read clean, no dissection, <50% ICA stenosis bilaterally, no atherosclerosis; 8 NaCl IV rows = one inpatient fluid event.",
+        "no_reconciliation": "0 HNO note bodies on any external CSN; 7/2/2024 PCP note (EVERTON) addresses only cervicalgia/concussion/headache."
+      },
+      "cites": [
+        "acute_event (18 rows; 3 external CSNs)",
+        "ORDER_PROC:ORDER_PROC_ID=1025926285 (TROPONIN, ABNORMAL_YN=N)",
+        "ORDER_NARRATIVE:ORDER_PROC_ID=1025926282 — \"The cardiac silhouette and pulmonary vasculature are within normal limits... INDICATION: Chest pain since yesterday after consuming THC\"",
+        "ORDER_NARRATIVE:ORDER_PROC_ID=1034471692 — \"No significant atherosclerotic disease... Specifically... <50% stenosis of the internal carotid artery... No evidence of vertebral dissection.\"",
+        "note:HNO_5231266254 @ CSN 1076261941 — A/P 'Cervicalgia / Post concussion syndrome / Chronic post-traumatic headache' (no chest-pain or ED reference)"
+      ]
+    },
+    {
+      "id": "F8-metabolic-overweight",
+      "claim": "Weight rose from 174 lb (2018) to 187 lb (2025), +13 lb, with BMI moving from ~24 into the 25-26 overweight range; A1c is normal and stable (5.4% 2023, 5.5% 2025) and the patient self-funded a FreeStyle Libre 3 CGM (3/2024-2025) despite never meeting diabetes criteria.",
+      "significance": "He is not diabetic and not prediabetic by A1c, so dysglycemia is not currently a driver — but the steady weight gain is the plausible common cause behind the simultaneous BP elevation, HDL decline, and triglyceride rise (a clustering toward metabolic syndrome). The fact that he independently wore a CGM signals real engagement with his own metabolic health that the visits could harness — yet the CGM was logged as 'not taking' by 12/2025 and no glucose data from it entered the structured record. Weight/lifestyle is the highest-yield, lowest-risk lever here and is the one the notes gesture at ('healthy diet and lifestyle') without a concrete plan.",
+      "evidence": {
+        "weight": "174.0 (2018) -> 178.3 (8/2022) -> 180.0 (2023) -> 182.6 (11/2024) -> 187.2 lb (12/2025).",
+        "a1c": "5.4% (2023), 5.5% (2025) — both normal.",
+        "cgm": "FreeStyle Libre 3 sensor+reader ORDER_MED 945468374/375/376, ordered 3/12/2024, marked 'Not Taking' 12/4/2025."
+      },
+      "cites": [
+        "vitals[kind=weight] (9 rows)",
+        "labs[component=HEMOGLOBIN A1C] (5.4, 5.5)",
+        "medications[order_med_id=945468375] (FreeStyle Libre 3 reader)",
+        "note:HNO_6399850741 @ CSN 1098684634 — Current Medications: 'Continuous Glucose Sensor (FreeStyle Libre 3 Sensor)... (Patient not taking: Reported on 12/4/2025)'"
+      ]
+    },
+    {
+      "id": "F9-renal-clean",
+      "claim": "End-organ and metabolic safety labs are reassuring: eGFR >90 at both 2022 and 2025, creatinine 0.94->0.98 (normal), potassium normal (5.0, 4.7), glucose 90-97. The only BMP flags are a trivially high CO2 (30, 2022) and a borderline BUN (21, 2025).",
+      "significance": "There is no renal contraindication or electrolyte barrier to an ACE inhibitor/ARB or thiazide — the declined lisinopril could have been safely restarted or substituted at any point. It also means his hypertension has not yet produced detectable kidney injury, so the window for damage-preventing treatment is still open. This is a 'nothing is stopping treatment except inertia' finding.",
+      "evidence": {
+        "egfr": ">90 (2022 and 2025); creatinine 0.94 (2022), 0.98 (2025).",
+        "k": "5.0 (2022), 4.7 (2025)."
+      },
+      "cites": [
+        "labs[component=EGFR NON-AFR/AMER] (>90, >90)",
+        "labs[component=CREATININE] (0.94, 0.98)",
+        "labs[component=POTASSIUM] (5.0, 4.7)"
+      ]
+    },
+    {
+      "id": "F10-ascvd-assembled",
+      "claim": "When the ASCVD-estimator inputs are assembled from the record, the 10-year risk the chart never computed is LOW but non-trivial and rising: every input — including the one input the first pass thought was missing, RACE (PATIENT_RACE_C_NAME='White', PATIENT_RACE LINE 1) — is present in this export, so the estimate does NOT need a wide race-driven spread. As a confirmed White, non-Hispanic male the Pooled Cohort Equations give a defensible 10-year ASCVD of 1.06% on the confirmed-fasting 2018 panel rising to 2.04% on the latest (2025) panel; the AHA PREVENT (2023) base model gives a concordant ~1.6%->2.4% (10-yr ASCVD) / ~1.6%->2.4% (10-yr total-CVD). The estimate has nearly DOUBLED in absolute terms on worsening-but-still-modest inputs, driven mostly by the HDL fall 52->40, not by the non-fasting cholesterol.",
+      "significance": "This is the number the chart should have produced and never did. It reframes the case correctly: the 10-year ASCVD figure is BELOW the 5% 'borderline' and 7.5% 'intermediate' statin-discussion thresholds, so a guideline-literal reading says 'no statin indicated today' — which is exactly why the omission has felt defensible by default. But the honest reading is the opposite: a 43-year-old whose estimate has already nearly DOUBLED (1.06%->2.04%) on worsening-but-still-modest inputs, who carries guideline risk-enhancers (family history, the falling HDL, the metabolic drift) that the equations under-weight, is the textbook candidate for a risk-enhancer-informed discussion and lifestyle intervention NOW, while the 30-year/lifetime risk is the relevant horizon. The point of computing it is not the small percentage; it is that the trajectory of the inputs is unambiguous and the conversation it should trigger has never been framed. Every input, the estimate, and the caveats are shown in the ASCVD section.",
+      "evidence": {
+        "inputs_assembled": "age 43 (DOB 1982-10-26, at 12/4/2025 visit), male (PATIENT.SEX_C_NAME), White / Not-Hispanic (PATIENT_RACE + PATIENT.ETHNIC_GROUP_C_NAME), never-smoker (SOCIAL_HX SMOKING_TOB_USE_C_NAME='Never' at all 8 snapshots), no diabetes (A1c 5.4->5.5%), untreated BP (lisinopril declined/never taken), systolic 132 (mean of 9 office readings AND the latest reading), total cholesterol & HDL from each panel.",
+        "pce_arithmetic": "Pooled Cohort Equations (2013 ACC/AHA), White male, untreated, non-smoker, non-diabetic, SBP 132: 1.06% (TC159/HDL52, 2018 fasting), 1.28% (TC156/HDL44, 2023), 2.04% (TC188/HDL40, 2025). SBP sensitivity on the 2025 panel: 1.78% at SBP122, 2.04% at 132, 2.32% at 142. Independently re-derived from the published coefficient table (baseline survival 0.9144, mean 61.18) — reproduces these figures to 2 decimals.",
+        "prevent_crosscheck": "AHA PREVENT (2023) base model, male, eGFR ~95, non-diabetic, non-smoker, untreated, SBP 132: ~1.6% (2018 panel) to ~2.4% (2025 panel) 10-year ASCVD — concordant with PCE; PREVENT requires no race input, which is the independent confirmation that the White-coefficient PCE is the right read and the discarded African-American spread (3.6-4.1%) was an artifact of the false 'race unknown' assumption.",
+        "race_correction": "The first pass asserted 'race is not in the export' and therefore presented a 1.1-4.1% spread; that was WRONG — PATIENT_RACE_C_NAME='White' (LINE 1) and ETHNIC_GROUP_C_NAME='Not Hispanic or Latino' are both populated. Using the confirmed race collapses the defensible PCE range to 1.06-2.04%.",
+        "caveats": "BP is office-only (no home/ABPM, though the patient's own home report corroborates it — see F11); the latest lipid was NON-FASTING (TC188 may be modestly inflated, so the 2.04% upper PCE bound is, if anything, slightly high — but HDL 40 is directly measured and fasting-independent, so the rise survives a fasting redraw, see F16); eGFR resulted as '>90' so PREVENT uses an assumed 95; PCE is validated for ages 40-79 (43 is in range); LDL is not an explicit PCE input."
+      },
+      "cites": [
+        "synthesis.ascvd",
+        "PATIENT_RACE:PAT_ID=Z7004242,LINE=1 (PATIENT_RACE_C_NAME=White)",
+        "PATIENT:ETHNIC_GROUP_C_NAME=Not Hispanic or Latino",
+        "labs[component=CHOLESTEROL] (159,156,188)",
+        "labs[component=HDL] (52,44,40)",
+        "vitals[kind=blood_pressure] (mean systolic 132, n=9)",
+        "labs[component=HEMOGLOBIN A1C] (5.4,5.5)",
+        "SOCIAL_HX:SMOKING_TOB_USE_C_NAME=Never",
+        "medications[order_med_id=772179261] (lisinopril declined => untreated)"
+      ]
+    },
+    {
+      "id": "F11-no-white-coat",
+      "claim": "His blood pressure elevation is NOT white-coat: the office mean of 132 systolic is concordant with his own reported home pattern of 'upper 130s for the past 10 years,' so the in-clinic readings are corroborated by out-of-office self-report rather than contradicted by it — a comparison the record contains but never draws.",
+      "significance": "White-coat hypertension is the standard reason to NOT treat an office Stage-1 reading without confirmation, and it is the most plausible reason a clinician might have left this untreated. The data refute that escape hatch: the patient volunteered that he 'occasionally checks at home' and runs 'upper 130s for the past 10 years' (note:HNO_3819029543), which agrees with the 132 office mean. So the office Stage-1 classification is, in this one respect, already partially confirmed by the patient's own data — the very confirmation guidelines ask for before treating, and an argument FOR treating rather than a reason to defer. Formal home/ABPM logging is still absent and should be obtained, but the white-coat hypothesis is not supported.",
+      "evidence": {
+        "office_mean": "9 office readings, mean systolic 132.3 (range 122-142), 8/9 at/above Stage-1 threshold.",
+        "home_report": "8/29/2022 note: 'occasionally checks at home' / 'blood pressure typically in the upper 130s for the past 10 years.'",
+        "concordance": "office mean 132 ~ patient-reported 'upper 130s' => concordant, not white-coat."
+      },
+      "cites": [
+        "vitals[kind=blood_pressure] (mean systolic 132.3, n=9)",
+        "note:HNO_3819029543 @ CSN 948004323 — \"occasionally checks at home -- blood pressure typically in the upper 130s for the past 10 years\""
+      ]
+    },
+    {
+      "id": "F12-untreated-both-axes",
+      "claim": "He is untreated on BOTH modifiable lipid/BP axes simultaneously, by two different mechanisms: the one antihypertensive ever started (lisinopril) was declined and never re-attempted, and no lipid-lowering therapy was ever started despite a lipid panel that worsened across every draw — so the atherogenic shift (HDL 52->40, ratio 3.1->4.7) accrued with zero pharmacologic counter-pressure and, unlike the BP, was never even proposed.",
+      "significance": "These are two distinct failure modes that the record never sets side by side. The BP axis failed at the patient-adherence step (a documented decline) and was then abandoned; the lipid axis never reached a decision at all — no statin was offered, declined, or charted, even as the panel deteriorated and HDL crossed into the 'Low' flag. Stating them together shows the under-treatment is not one patient refusal but a systemic non-engagement with the whole modifiable-risk picture: one lever was tried once and dropped, the other was never picked up.",
+      "evidence": {
+        "bp_axis": "lisinopril 10 mg started 8/29/2022, discontinued 9/28/2023 '* Patient refusal'; no second antihypertensive ever ordered.",
+        "lipid_axis": "0 statin/fibrate/ezetimibe/PCSK9/aspirin in the entire med record; lipid panel worsened 2018->2023->2025 with no therapy proposed in any note A/P.",
+        "shift_uncountered": "HDL 52->44->40 (Low), chol/HDL 3.1->3.5->4.7 accrued with no lipid therapy."
+      },
+      "cites": [
+        "medications[order_med_id=772179261] (lisinopril declined)",
+        "ORDER_MED:statin|aspirin|antihypertensive=0rows",
+        "labs[component=HDL] (52,44,40)",
+        "labs[component=CHOLESTEROL/HDL RATIO] (3.1,3.5,4.7)"
+      ]
+    },
+    {
+      "id": "F13-acute-vs-chronic",
+      "claim": "The system reliably worked up his ACUTE cardiovascular symptoms but never addressed his CHRONIC accumulating risk — and the missed-opportunity window is precise: across the ~3.3 years and 6 primary-care visits after the 8/29/2022 hypertension diagnosis (4 of them with a Stage-1-range reading), hypertension was re-addressed at zero, including all 3 visits after the 9/28/2023 documented decline.",
+      "significance": "This is the sharpest single statement of the care pattern. In 2024 the chest pain got a same-day troponin and chest x-ray, and the dissection scare got a neck CTA and IV fluids — an acute apparatus that fired correctly and fast. Over the same period the chronic, asymptomatic, decades-relevant risk (Stage-1 BP, atherogenic lipids) was touched at exactly one visit (the 8/2022 diagnosis) and then never again across six subsequent contacts, three of them after the patient declined the only medication. Acute reactivity vs. chronic neglect is the structural signature, and the undercoding is the mechanism that perpetuates it: with HTN off the problem list, nothing prompts the chronic axis at any of those six visits, while the acute symptom always has a presenting complaint to drive a workup.",
+      "evidence": {
+        "acute_handled": "5/14/2024 chest pain -> troponin (negative) + CXR (normal); 7/30/2024 dissection scare -> neck CTA (clean) + IV NaCl.",
+        "chronic_window": "6 PCP visits after 8/29/2022 dx (12/1/2022 142/74, 3/2/2023 134/80, 9/28/2023 132/64, 7/2/2024 127/81, 11/7/2024 128/70, 12/4/2025 132/62); HTN in A/P at 0 of 6; 3 of those visits (7/2024, 11/2024, 12/2025) post-date the 9/28/2023 decline.",
+        "stage1_count": "5 of the 6 post-dx readings are at/above the Stage-1 threshold (>=130 systolic OR >=80 diastolic): 142/74, 134/80, 132/64, 127/81 (dia 81), 132/62; only 11/7/2024 128/70 is merely Elevated. The 12/1/2022 142/74 is Stage 2."
+      },
+      "cites": [
+        "encounters_dx (6 MAC APL INTERNAL MEDICINE visits after 8/29/2022)",
+        "ORDER_PROC:ORDER_PROC_ID=1025926285 (TROPONIN ABNORMAL_YN=N)",
+        "ORDER_NARRATIVE:ORDER_PROC_ID=1034471692 (neck CTA clean)",
+        "medications[order_med_id=772179261] (decline 9/28/2023)",
+        "note:HNO_5522457878 @ CSN 1028744231 — \"-discussed healthy diet and lifestyle; BP and weight good\"",
+        "note:HNO_6399850741 @ CSN 1098684634 — \"-discussed healthy diet and lifestyle; BP and weight good\""
+      ]
+    },
+    {
+      "id": "F14-office-vs-home-concordant",
+      "claim": "The comparison the chart never draws: the office mean systolic of 132 (9 readings, 2018-2025) is CONCORDANT with the patient's own home report of 'upper 130s for the past 10 years' (8/29/2022 note) — so this is corroborated sustained hypertension, NOT white-coat lability. The two independent data sources (clinic cuff and patient self-monitoring) agree to within a few mmHg, which is exactly the out-of-office confirmation ACC/AHA guidelines ask for before treating.",
+      "significance": "White-coat hypertension is the single most defensible reason a clinician could give for leaving an office Stage-1 reading untreated — and the record contains the data to test that hypothesis and refute it, but never sets the two side by side. The patient volunteered that he 'occasionally checks at home' and runs 'upper 130s,' which if anything is slightly HIGHER than his 132 office mean; office BP is therefore not an over-read. The 'confirm before treating' step is, in this one respect, already partially met by the patient's own data. This converts the white-coat escape hatch into an argument FOR treatment. (Formal logged home/ABPM is still absent and remains the cleanest next step.)",
+      "evidence": {
+        "office": "9 office systolic readings 122,136,138,142,134,132,127,128,132; mean 132.3, range 122-142.",
+        "home": "8/29/2022 note: 'occasionally checks at home -- blood pressure typically in the upper 130s for the past 10 years.'",
+        "verdict": "office mean 132 ~ patient-reported 'upper 130s' => concordant; white-coat NOT supported."
+      },
+      "cites": [
+        "vitals[kind=blood_pressure] (mean systolic 132.3, n=9)",
+        "note:HNO_3819029543 @ CSN 948004323 — \"occasionally checks at home -- blood pressure typically in the upper 130s for the past 10 years\""
+      ]
+    },
+    {
+      "id": "F15-untreated-both-axes-asymmetric",
+      "claim": "He is untreated on BOTH modifiable axes at once, but by two DIFFERENT and never-juxtaposed mechanisms: the BP axis reached a decision and failed at adherence (lisinopril offered, started, then declined and dropped), while the LIPID axis never reached a decision at all (no statin/fibrate/ezetimibe/PCSK9/aspirin ever offered, declined, or charted) even as the panel deteriorated across every draw and HDL crossed into the 'Low' flag. The atherogenic shift (HDL 52->40, ratio 3.1->4.7) thus accrued with zero pharmacologic counter-pressure AND was never even proposed.",
+      "significance": "Stating the two axes together — which no note does — reveals the under-treatment is not one patient refusal but a systemic non-engagement: one lever was tried once and abandoned, the other was never picked up. The asymmetry matters clinically: the BP gap is a shared-decision failure (re-openable with the patient), the lipid gap is an omission of offer (a clinician-side gap). Both leave the same modifiable risk un-countered, and the 8/29/2022 note even shows the clinician knew the lever existed — 'discussed medication options including... BP medication' — making the later silence a discontinuation of attention, not ignorance.",
+      "evidence": {
+        "bp_axis": "lisinopril 10 mg ORDER_MED 772179261 started 8/29/2022, discontinued 9/28/2023 '* Patient refusal', taking_yn_history N/N; no second antihypertensive ever ordered.",
+        "lipid_axis": "0 statin/fibrate/ezetimibe/PCSK9/aspirin in the 20-row med record; lipids worsened 2018->2023->2025 with no therapy proposed in any note A/P.",
+        "offer_existed": "8/29/2022 note A/P: 'Discussed medication options including amitriptyline and BP medication' — the clinician explicitly raised BP pharmacotherapy."
+      },
+      "cites": [
+        "medications[order_med_id=772179261] (lisinopril declined)",
+        "ORDER_MED:statin|aspirin|antihypertensive=0rows",
+        "labs[component=HDL] (52,44,40)",
+        "labs[component=CHOLESTEROL/HDL RATIO] (3.1,3.5,4.7)",
+        "note:HNO_3819029543 @ CSN 948004323 — \"Discussed medication options including amitriptyline and BP medication\""
+      ]
+    },
+    {
+      "id": "F16-fasting-redraw-where-it-lands",
+      "claim": "Where a confirmed-FASTING lipid would place him: the 12/4/2025 panel is non-fasting (TG 282, TC 188), so a fasting redraw would most plausibly LOWER the triglyceride and modestly lower the total cholesterol — but the ASCVD-relevant atherogenic signal is the HDL fall to 40, which is DIRECTLY measured and fasting-INDEPENDENT. Re-running the Pooled Cohort Equations across the plausible fasting-TC range (160-188) with the measured HDL 40 holds his 10-year ASCVD in a tight 1.5-2.0% band; even if fasting reverted total cholesterol all the way to his 2018 level (159), he lands at ~1.45-1.52% — still well above the 1.06% he sat at in 2018 when HDL was 52. The atherogenic shift survives the fasting caveat.",
+      "significance": "This pre-empts the most likely deferral ('the lipid was non-fasting, let's not act on it'). A fasting redraw is genuinely needed to ACT on the 282 triglyceride, but it cannot rescue the risk picture, because the driver is the falling HDL, not the inflated triglyceride. So the fasting caveat narrows the uncertainty on the number without changing the direction or the indicated conversation. Quantifying the redraw scenarios turns 'we should repeat it fasting' from a reason to wait into a bounded prediction of where he will still be.",
+      "evidence": {
+        "nonfasting_flag": "12/4/2025 TG 282 (High) and the panel carry 'PATIENT WAS NOT FASTING'; HDL 40 is a direct measurement on the same panel.",
+        "pce_redraw_scenarios": "PCE White male, SBP132, untreated, HDL 40 fixed: TC188->2.04%, TC180->1.88%, TC170->1.70%, TC160->1.52%; even TC159 (the 2018 fasting value) with HDL40 -> 1.52% vs the 1.06% he had at HDL52. HDL is not fasting-dependent.",
+        "driver": "The 1.06%->2.04% rise is driven mostly by HDL 52->40, not by the non-fasting TC."
+      },
+      "cites": [
+        "synthesis.ascvd",
+        "labs[component=HDL] (52,44,40)",
+        "labs[component=TRIGLYCERIDES] (88,92,282)",
+        "ORDER_RESULTS:ORDER_PROC_ID=1165205279,LINE=2 (TG 282 High, PATIENT WAS NOT FASTING)",
+        "labs[component=CHOLESTEROL] (159,156,188)"
+      ]
+    },
+    {
+      "id": "F17-acute-vs-chronic-window-quantified",
+      "claim": "Acute-vs-chronic mismatch, quantified: in 2024 the system fired correctly and fast for two ACUTE cardiovascular scares (5/14/2024 chest pain -> same-day negative troponin + normal CXR; 7/30/2024 suspected vertebral dissection -> clean neck CTA + IV fluids), while across the same period the CHRONIC accumulating risk was re-addressed at ZERO of the 6 PCP visits that followed the 8/29/2022 hypertension diagnosis — including all 3 visits AFTER the 9/28/2023 documented decline — despite 5 of those 6 visits carrying an at/above-Stage-1 reading. The missed-opportunity window is ~3.3 years (8/29/2022 -> 12/4/2025) and 6 contacts wide.",
+      "significance": "This is the structural signature of the whole case: reactive apparatus intact, proactive apparatus absent. The acute symptom always supplies a presenting complaint that drives a workup; the chronic, asymptomatic risk supplies none, and the undercoding (hypertension off the problem list) removes the only systemic prompt that could have substituted for a symptom. The 2024 negative troponin and clean CTA are genuinely reassuring data that ARGUE the chronic risk is still pre-clinical and therefore still preventable — yet they were never folded back to motivate the chronic conversation. The window is not abstract: it is six specific dated visits at which a 30-second risk discussion was available and not had.",
+      "evidence": {
+        "acute": "5/14/2024 CSN 1076628498: TROPONIN ABNORMAL_YN=N, XR CHEST normal; 7/30/2024 CSN 1081584507/8: neck CTA clean (no atherosclerosis, <50% ICA, no dissection), IV NaCl.",
+        "chronic_zero": "6 post-dx PCP visits (12/1/2022, 3/2/2023, 9/28/2023, 7/2/2024, 11/7/2024, 12/4/2025); HTN in A/P at 0/6; 3 post-date the 9/28/2023 decline; 5/6 readings at/above Stage 1.",
+        "window": "8/29/2022 diagnosis -> 12/4/2025 last contact = ~3.3 years, 6 contacts, re-addressed 0 times."
+      },
+      "cites": [
+        "encounters_dx (6 MAC APL INTERNAL MEDICINE visits after 8/29/2022)",
+        "ORDER_PROC:ORDER_PROC_ID=1025926285 (TROPONIN ABNORMAL_YN=N)",
+        "ORDER_NARRATIVE:ORDER_PROC_ID=1034471692 (neck CTA clean)",
+        "medications[order_med_id=772179261] (decline 9/28/2023)",
+        "vitals[kind=blood_pressure] (5/6 post-dx readings at/above Stage 1)"
+      ]
+    },
+    {
+      "id": "F18-family-onset-absent-everywhere",
+      "claim": "The premature-CVD family-history risk enhancer cannot be confirmed or excluded from ANY source in this export — not the structured FAMILY_HX table (AGE_OF_ONSET is NULL for all 12 cardiovascular facts) and not the notes (the 'Age of Onset' column in the family-history block of every annual note, 2022/2023/2025, is printed blank). So the strongest, ASCVD-guideline-recognized form of the enhancer (first-degree MI/stroke at <55 male / <65 female) is genuinely unrecoverable and must be obtained by asking, not by deeper chart mining.",
+      "significance": "This is a deliberate negative finding: the deep dive went looking in the unstructured notes precisely because the structured onset ages were null, and confirmed they are absent THERE too. That closes the loop honestly — the density of vascular disease (HTN x2 first-degree, hyperlipidemia x2 first-degree, MI x2 and stroke x2 across the grandparents) is itself a recognized soft risk enhancer that argues for treating his modifiable factors more aggressively, but the hard 'premature first-degree event' criterion stays unproven. Stating where the data simply does not exist is as important as stating what it shows; it tells the next clinician exactly which one question to ask.",
+      "evidence": {
+        "structured_null": "FAMILY_HX: 12 CV-related rows (HTN Mother/Brother, hyperlipidemia Father/Brother, stroke x2 maternal grandparents, MI x2 paternal grandparents); AGE_OF_ONSET and AGE_OF_ONSET_END NULL on every one.",
+        "notes_blank": "8/29/2022, 9/28/2023, and 12/4/2025 annual notes each print a Family History table with an 'Age of Onset' column that is empty for every entry.",
+        "first_degree": "The grandparents' MI/stroke are second-degree; the first-degree CV facts (HTN, hyperlipidemia) are not hard ASCVD events, so even with onset ages the classic 'premature first-degree MI/stroke' enhancer would not be met by the current relatives."
+      },
+      "cites": [
+        "risk_factors[kind=family] (12 cv rows, AGE_OF_ONSET null)",
+        "FAMILY_HX:AGE_OF_ONSET=null (all rows)",
+        "note:HNO_3819029543 @ CSN 948004323 — Family History 'Age of Onset' column blank for all entries",
+        "note:HNO_6399850741 @ CSN 1098684634 — Family History 'Age of Onset' column blank for all entries"
+      ]
+    }
+  ],
+  "argument": "Is this patient's cardiovascular risk understood and managed? Partly understood, and essentially not managed. The data tell a coherent story that the chart never assembles. Joshua Mandel is a 43-year-old man whose blood pressure has run in the Stage-1 hypertension range for seven years (mean systolic 132, 8/9 readings at/above threshold, his own home data agreeing), whose HDL has fallen from 52 to 40 while his cholesterol/HDL ratio climbed from 3.1 to 4.7 and triglycerides spiked to 282, who has gained 13 pounds into the overweight range, and who carries hypertension in two first-degree relatives, hyperlipidemia in two more, and a hard atherosclerotic event (stroke or MI) in all four grandparents. Each of these is a recognized, modifiable or risk-enhancing driver; together they are the textbook accumulating profile of a young man on a slow track toward atherosclerotic disease. The management story is one of a single early, correct move that then evaporated. In August 2022 the new PCP did exactly the right thing: named Stage-1 HTN, ordered a baseline BMP, and started lisinopril. But the patient never took it, it was discontinued thirteen months later as a 'Patient refusal' recorded only in the medication table, and from that point hypertension disappears from the record — never re-coded, never problem-listed, never re-raised. The three annual notes since read identically: 'discussed healthy diet and lifestyle; BP and weight good,' a boilerplate that is contradicted by the very vitals printed at the top of the same notes. No ASCVD or PREVENT risk was ever estimated in the chart — so this analysis computes it: a defensible 10-year ASCVD of 1.06%->2.04% for this confirmed White male, every input recoverable from the export, the rise driven mostly by the falling HDL. No statin, no antiplatelet, and no second antihypertensive attempt exists in the entire medication history. The renal/electrolyte labs are clean, so nothing clinical is blocking treatment — only inertia. The trajectory is the point: nothing here is acutely dangerous today (negative troponin, clean neck CTA with no atherosclerosis at 42, normal A1c, normal kidneys), but every modifiable lever is drifting the wrong way and the chart's structure actively hides that. The undercoding (Finding F1) is the mechanism of the neglect, not a clerical footnote: because HTN is not on the problem list, no problem-list-driven reminder, registry, or risk tool will ever flag him, so the omission is self-perpetuating. Meanwhile two genuinely reassuring external cardiovascular work-ups sit unreconciled, so even the good news isn't being used to frame a risk conversation. What a cardiologist would want done: (1) confirm the hypertension with home/ambulatory readings and put it on the problem list; (2) re-open the antihypertensive conversation that ended in a one-sided 'refusal,' with a documented shared decision; (3) repeat the lipids FASTING to get a true triglyceride, and carry the now-computed ASCVD estimate (1.06%->2.04%) into a risk-enhancer-informed shared decision rather than leaving the number unframed; (4) make the weight/lifestyle plan concrete and leverage his demonstrated willingness to self-monitor (the CGM); (5) fold the 2024 negative troponin and clean CTA into the record as the reassuring baseline they are. The fundamentals are favorable and the patient is engaged — but the risk is real, rising, and currently unowned.",
+  "open_questions": [
+    "Are the family cardiovascular events PREMATURE (MI/stroke <55M/<65F)? The age of onset is not recorded for any family-history entry, so the strongest version of the family-history risk enhancer cannot be confirmed from the data — it needs to be asked.",
+    "What are this patient's HOME blood pressures? The 8/29/2022 note says he checks 'occasionally' and runs 'upper 130s for the past 10 years,' but no home/ambulatory readings are stored. Office Stage-1 BP should be confirmed out-of-office before (and to justify) treatment.",
+    "What did the declined lisinopril actually represent — a true informed refusal, a cost/side-effect concern, or a preference for lifestyle-first? The structured reason is a generic '* Patient refusal'; the same-day note is silent. The shared-decision content is unrecoverable from the export.",
+    "What were the discrete values of the 5/14/2024 CMP and troponin and the 7/30/2024 BMP? They resulted as 'Final result' order headers with no discrete-result rows, so only abnormal/normal flags survived the import; the actual numbers are not in the EHI extract.",
+    "Was a fasting lipid ever repeated after the non-fasting 282 triglyceride / 40 HDL on 12/4/2025? No later lab contact exists in the export (last contact 12/4/2025; a 6/16/2027 'Scheduled' encounter is excluded). The atherogenic shift is therefore unconfirmed by a fasting redraw.",
+    "Did any glucose data from the FreeStyle Libre 3 CGM (worn 3/2024-2025) enter the record? No CGM glucose values appear in the structured data; only the device orders are present, and the device was marked 'not taking' by 12/2025."
+  ],
+  "limits": [
+    "Single-specimen, single-export view: only what this patient's Epic EHI export carried. External (UW) emergency data arrived as imported orders/narrative with discrete lab values stripped; no outside clinic notes are present.",
+    "Blood pressures are office readings only (9 encounters); no home/ABPM data, so the Stage-1 classification rests on in-clinic measurement.",
+    "Lipid trend rests on three draws (2018 fasting, 2023 + 2025 non-fasting); the 2025 triglyceride/VLDL/ratio are inflated by non-fasting status and need a fasting confirmation before acting.",
+    "The ASCVD risk score IS now computed: a defensible Pooled-Cohort-Equations 10-year ASCVD of 1.06%->2.04% for this confirmed White, non-Hispanic male, cross-checked against AHA PREVENT 2023. Every PCE input is present in the export — race included (the first pass wrongly believed race was missing). The residual uncertainties are bounded and stated in the caveats below (office-only BP, a non-fasting latest lipid whose effect is quantified in the fasting-redraw scenario, an eGFR resulting as '>90' so assumed 95 for PREVENT); none of them change the order of magnitude or the indicated conversation.",
+    "The premature-family-CVD enhancer remains genuinely unrecoverable: the age of onset is blank for every family-history entry and the 'Age of Onset' column is blank in every annual note, so it must be asked, not mined."
+  ],
+  "synthesis": {
+    "summary": "A deeper synthesis over the assembled record: (1) the 10-year ASCVD that the chart never produced, computed two independent ways with every input abstracted from the data (the ascvd object below); and (2) four comparisons the notes never state but the data supports — office BP corroborated by the patient's own home report (not white-coat), simultaneous under-treatment on both modifiable axes by two different mechanisms, the acute-vs-chronic care mismatch with the missed-opportunity window quantified, and where a fasting-confirmed lipid would land the risk. The throughline: the inputs to a real risk estimate were all present all along; only their assembly was missing.",
+    "ascvd": {
+      "model": "ACC/AHA 2013 Pooled Cohort Equations (PCE) as the primary 10-year ASCVD estimate, with the AHA PREVENT 2023 base model as an independent, race-free cross-check. Both re-derived from their published coefficient tables and verified to reproduce the figures below; primary-prevention patient (no established ASCVD, no diabetes).",
+      "inputs": [
+        {
+          "name": "Age",
+          "value": "43 (at 12/4/2025, latest contact); 35 at 2018 baseline",
+          "source": "structured",
+          "cite": "PATIENT:BIRTH_DATE=10/26/1982; evaluated at note:HNO_6399850741 @ CSN 1098684634 (12/4/2025)"
+        },
+        {
+          "name": "Sex",
+          "value": "Male",
+          "source": "structured",
+          "cite": "PATIENT:SEX_C_NAME=Male"
+        },
+        {
+          "name": "Race",
+          "value": "White (PCE White/Other coefficient set)",
+          "source": "structured — NOT missing (corrects the first pass)",
+          "cite": "PATIENT_RACE:PAT_ID=Z7004242,LINE=1 (PATIENT_RACE_C_NAME=White)"
+        },
+        {
+          "name": "Ethnicity",
+          "value": "Not Hispanic or Latino",
+          "source": "structured",
+          "cite": "PATIENT:ETHNIC_GROUP_C_NAME=Not Hispanic or Latino"
+        },
+        {
+          "name": "Total cholesterol",
+          "value": "159 (2018 fasting) -> 156 (2023) -> 188 mg/dL (2025, non-fasting)",
+          "source": "structured lab",
+          "cite": "labs[component=CHOLESTEROL] (159,156,188); ORDER_RESULTS:ORDER_PROC_ID=439060606,LINE=1 (2018 PATIENT FASTING)"
+        },
+        {
+          "name": "HDL cholesterol",
+          "value": "52 (2018) -> 44 (2023) -> 40 mg/dL (2025, Low) — directly measured, fasting-independent",
+          "source": "structured lab",
+          "cite": "labs[component=HDL] (52,44,40); ORDER_RESULTS:ORDER_PROC_ID=1165205279,LINE=3 (HDL 40 Low)"
+        },
+        {
+          "name": "Systolic BP",
+          "value": "132 mmHg — the mean of 9 office readings (range 122-142) AND, coincidentally, the latest (12/4/2025) reading; corroborated by patient home report 'upper 130s'",
+          "source": "structured vitals + note",
+          "cite": "vitals[kind=blood_pressure] (mean 132.3, n=9); note:HNO_3819029543 @ CSN 948004323 ('upper 130s for the past 10 years')"
+        },
+        {
+          "name": "On BP treatment",
+          "value": "No — the one antihypertensive (lisinopril) was declined and never taken",
+          "source": "structured med",
+          "cite": "medications[order_med_id=772179261] (discon '* Patient refusal', taking_yn_history N/N)"
+        },
+        {
+          "name": "Smoker",
+          "value": "No (never)",
+          "source": "structured",
+          "cite": "SOCIAL_HX:SMOKING_TOB_USE_C_NAME=Never (all 8 snapshots)"
+        },
+        {
+          "name": "Diabetes",
+          "value": "No (A1c 5.4% 2023, 5.5% 2025; both normal)",
+          "source": "structured lab",
+          "cite": "labs[component=HEMOGLOBIN A1C] (5.4,5.5)"
+        },
+        {
+          "name": "eGFR (PREVENT only)",
+          "value": "~95 (assumed; resulted as '>90', no discrete value)",
+          "source": "structured lab (truncated)",
+          "cite": "labs[component=EGFR NON-AFR/AMER] (value_text '>90', 2022 & 2025)"
+        }
+      ],
+      "estimate": {
+        "primary_model": "PCE (White male, untreated, non-smoker, non-diabetic, SBP 132)",
+        "low": "1.06% 10-year ASCVD (on the confirmed-fasting 2018 panel: TC 159 / HDL 52)",
+        "high": "2.04% 10-year ASCVD (on the latest 2025 panel: TC 188 / HDL 40)",
+        "interval_2023": "1.28% (2023 panel: TC 156 / HDL 44)",
+        "basis": "PCE re-derived from the published 2013 coefficient table (White male: baseline survival 0.9144, mean linear-predictor 61.18); reproduces 1.06% / 1.28% / 2.04% across the three panels to 2 decimal places. SBP sensitivity on the 2025 panel: 1.78% at SBP 122, 2.04% at 132, 2.32% at 142.",
+        "prevent_crosscheck": "AHA PREVENT 2023 base model (male, eGFR 95, SBP 132, untreated, non-DM, non-smoker): ~1.64% (2018) -> 2.37% (2025) 10-year ASCVD — concordant with PCE and requiring no race input, which independently confirms the White-coefficient PCE read.",
+        "interpretation": "Below the 5% borderline and 7.5% intermediate statin-discussion thresholds today, so guideline-literal = 'no statin indicated now.' But the estimate has nearly DOUBLED in absolute terms (1.06% -> 2.04%) on still-modest inputs, the rise driven mostly by the falling HDL, and the equations under-weight his risk enhancers (bilateral family CV loading, metabolic drift) and his 30-year/lifetime horizon. The number's value is the trajectory and the conversation it should trigger, not the small percentage."
+      },
+      "caveats": [
+        "RACE is confirmed (White), so — unlike the first pass — there is NO wide race-driven spread; the discarded African-American-coefficient figures (3.6-4.1%) do not apply and were an artifact of a false 'race unknown' assumption.",
+        "BP is OFFICE-ONLY (9 encounters; no logged home/ABPM). It is corroborated by the patient's own home report of 'upper 130s', so it is not over-read, but formal out-of-office confirmation is still absent.",
+        "The latest (2025) lipid was NON-FASTING (TG 282, TC 188). The non-fasting status can inflate TC, so the 2.04% upper bound is, if anything, slightly high — but HDL 40 is directly measured and fasting-independent, so a fasting redraw still lands him ~1.5-2.0%; the atherogenic shift is real regardless.",
+        "eGFR resulted as '>90' with no discrete value, so PREVENT uses an assumed 95; the true value only moves PREVENT trivially at this level.",
+        "PCE is validated for ages 40-79; 43 is in range. The 2018 estimate at age 35 is shown for trajectory only (below the validated floor) and is not a clinical figure.",
+        "LDL is not an explicit PCE input; the LDL has stayed near-stable (89->94->92) and does not drive the change — the HDL does."
+      ],
+      "src": "Computed from dataset.json inputs cited per-input above; PCE/PREVENT coefficients from the published equations (ACC/AHA 2013; Khan et al. Circulation 2024). Re-derivation reproduces the stated figures."
+    },
+    "comparisons": [
+      {
+        "id": "office_vs_home",
+        "finding": "F14",
+        "statement": "Office mean systolic 132 is CONCORDANT with the patient's own home report 'upper 130s for the past 10 years' => corroborated sustained hypertension, NOT white-coat. The chart holds both numbers but never sets them side by side.",
+        "cites": [
+          "vitals[kind=blood_pressure] (mean 132.3, n=9)",
+          "note:HNO_3819029543 @ CSN 948004323"
+        ]
+      },
+      {
+        "id": "both_axes_untreated",
+        "finding": "F15",
+        "statement": "Untreated on BOTH modifiable axes by two different mechanisms: BP reached a decision and failed at adherence (lisinopril declined); lipids never reached a decision at all (no statin ever offered) even as the panel worsened to HDL 40 Low.",
+        "cites": [
+          "medications[order_med_id=772179261]",
+          "ORDER_MED:statin|aspirin|antihypertensive=0rows",
+          "labs[component=HDL] (52,44,40)"
+        ]
+      },
+      {
+        "id": "acute_vs_chronic",
+        "finding": "F17",
+        "statement": "Acute apparatus fired correctly in 2024 (negative troponin, clean neck CTA) while chronic risk was re-addressed at 0 of 6 PCP visits after the 8/29/2022 dx (3 after the 9/28/2023 decline); 5 of those 6 readings were at/above Stage 1; the missed window is ~3.3 years.",
+        "cites": [
+          "encounters_dx (6 visits after 8/29/2022)",
+          "ORDER_PROC:ORDER_PROC_ID=1025926285",
+          "ORDER_NARRATIVE:ORDER_PROC_ID=1034471692",
+          "medications[order_med_id=772179261]"
+        ]
+      },
+      {
+        "id": "fasting_redraw_lands",
+        "finding": "F16",
+        "statement": "A fasting redraw cannot rescue the picture: with the directly-measured HDL 40 held fixed, PCE stays 1.5-2.0% across the plausible fasting-TC range (160-188); even reverting TC to the 2018 value (159) gives 1.52% vs the 1.06% he had at HDL 52. The driver is the HDL fall, which is fasting-independent.",
+        "cites": [
+          "synthesis.ascvd",
+          "labs[component=HDL] (52,44,40)",
+          "labs[component=CHOLESTEROL] (159,156,188)"
+        ]
+      }
+    ],
+    "abstracted_from_notes": [
+      "Home BP self-report 'blood pressure typically in the upper 130s for the past 10 years' and 'occasionally checks at home' (note:HNO_3819029543, 8/29/2022) — the out-of-office corroboration that refutes white-coat (F14).",
+      "Explicit BP-pharmacotherapy offer 'Discussed medication options including amitriptyline and BP medication' (note:HNO_3819029543) — shows the lever was raised, making later silence a discontinuation of attention (F15).",
+      "Premature-CVD onset ages: confirmed ABSENT in the notes too — the 'Age of Onset' column in the family-history block of every annual note (2022/2023/2025) is printed blank, matching the null FAMILY_HX.AGE_OF_ONSET; the enhancer must be asked, not mined (F18).",
+      "Race/ethnicity for the ASCVD model: not stated in the notes (which give only 'originally from Massachusetts', 'works for Microsoft'), but recovered from the STRUCTURED tables (PATIENT_RACE='White', ETHNIC_GROUP='Not Hispanic or Latino') — correcting the first pass's belief that race was missing.",
+      "Non-fasting status of the 2025 lipid ('PATIENT WAS NOT FASTING') and fasting status of the 2018 panel ('PATIENT FASTING'), read from the lab comment text, to bound the fasting-redraw scenario (F16).",
+      "Occasional-cannabis context and the THC-attributed chest pain ('Chest pain since yesterday after consuming THC', radiology indication) — supports the benign read of the 2024 acute scare (F7/F17)."
+    ]
+  },
+  "data": {
+    "row_counts": {
+      "vitals": 90,
+      "labs": 47,
+      "medications": 20,
+      "risk_factors": 22,
+      "encounters_dx": 13,
+      "acute_event": 18,
+      "total": 210
+    },
+    "bp_summary": {
+      "n_readings": 9,
+      "mean_systolic": 132.3,
+      "systolic_range": "122-142",
+      "n_at_or_above_stage1": 8,
+      "n_flagged_abnormal": 1,
+      "src": "V_EHI_FLO_MEAS_VALUE:VALUE_TYPE_C_NAME=Blood Pressure"
+    },
+    "lipid_trend": {
+      "hdl": [
+        52,
+        44,
+        40
+      ],
+      "trig": [
+        88,
+        92,
+        282
+      ],
+      "chol_hdl_ratio": [
+        3.1,
+        3.5,
+        4.7
+      ],
+      "total_chol": [
+        159,
+        156,
+        188
+      ],
+      "dates": [
+        "2018-08-09",
+        "2023-09-28",
+        "2025-12-04"
+      ],
+      "src": "ORDER_RESULTS:order_name=LIPID PANEL"
+    },
+    "weight_trend_lb": {
+      "values": [
+        174,
+        183.2,
+        178.3,
+        180.8,
+        181.8,
+        180,
+        177.7,
+        182.6,
+        187.2
+      ],
+      "src": "IP_FLWSHT_MEAS:FLO_MEAS_ID=14"
+    },
+    "a1c": {
+      "values": [
+        5.4,
+        5.5
+      ],
+      "src": "ORDER_RESULTS:COMPONENT=HEMOGLOBIN A1C"
+    }
+  },
+  "narrative": [
+    {
+      "text": "Hypertension diagnosed and treated once in 8/2022, then declined and never carried forward; absent from the problem list.",
+      "cites": [
+        "PAT_ENC_DX:PAT_ENC_CSN_ID=948004323,LINE=1",
+        "ORDER_MED:ORDER_MED_ID=772179261",
+        "PROBLEM_LIST:DX_ID IN (108212|463437)=0rows"
+      ]
+    },
+    {
+      "text": "Stage-1-range BP for 7 years (mean systolic 132, 8/9 readings >=130/80).",
+      "cites": [
+        "V_EHI_FLO_MEAS_VALUE:FSD_ID=118745686"
+      ]
+    },
+    {
+      "text": "Atherogenic lipid drift: HDL 52->40, chol/HDL 3.1->4.7, TG to 282 (non-fasting).",
+      "cites": [
+        "ORDER_RESULTS:ORDER_PROC_ID=1165205279,LINE=2",
+        "ORDER_RESULTS:ORDER_PROC_ID=1165205279,LINE=3"
+      ]
+    },
+    {
+      "text": "Heavy bilateral CV family history; two external 2024 CV work-ups (negative troponin, clean neck CTA) never reconciled into the PCP record.",
+      "cites": [
+        "FAMILY_HX:PAT_ENC_CSN_ID=1169841954,LINE=11",
+        "ORDER_PROC:ORDER_PROC_ID=1025926285",
+        "ORDER_NARRATIVE:ORDER_PROC_ID=1034471692"
+      ]
+    }
+  ],
+  "sources": {
+    "synthesis.ascvd": "The computed 10-year ASCVD object (synthesis.ascvd in THIS analysis): inputs[] with per-input provenance, estimate{low,high,basis,prevent_crosscheck}, and caveats[]. PCE 1.06%->2.04% for a confirmed White male, PREVENT cross-checked.",
+    "PATIENT_RACE": "Epic PATIENT_RACE table — PATIENT_RACE_C_NAME='White', LINE 1 (the race input the first pass wrongly believed was missing). With PATIENT.ETHNIC_GROUP_C_NAME='Not Hispanic or Latino'.",
+    "dataset.json": "deep-dives/cardiac-risk/dataset.json — the complete normalized dataset all findings cite into.",
+    "note:HNO_3819029543": "8/29/2022 establish-care/annual note (RAMMELKAMP), CSN 948004323 — HTN dx, lisinopril start.",
+    "note:HNO_4662006870": "9/28/2023 annual note (RAMMELKAMP), CSN 991225117 — silent on HTN the day lisinopril was discontinued for refusal.",
+    "note:HNO_6399850741": "12/4/2025 latest annual note (RAMMELKAMP), CSN 1098684634 — 'BP and weight good', HTN absent.",
+    "note:HNO_4024447284": "12/1/2022 concussion-referral note (RAMMELKAMP), CSN 974614965 — BP (!) 142/74 flagged, addressed only concussion.",
+    "note:HNO_5231266254": "7/2/2024 cervicalgia/concussion note (EVERTON), CSN 1076261941 — no mention of the 5/14/2024 chest-pain ED visit.",
+    "note:HNO_5522457878": "11/7/2024 annual note (RAMMELKAMP), CSN 1028744231 — 'BP and weight good', HTN absent.",
+    "note:HNO_1473666038": "8/9/2018 establish-care note (DHILLON), CSN 720803470 — CV baseline (BP 122/70, lipid panel ordered)."
+  }
+}

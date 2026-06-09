@@ -1,0 +1,114 @@
+{
+  "_meta": {
+    "slot": "evidence",
+    "built_by": "hand-abstraction",
+    "note": "Clean evidence map keyed by id. kind:'note' carries a verbatim note/claim quote with author + date; kind:'fact' carries a readable statement with a date. Every figure is reconciled to the DB via the named scripts/substrate; no raw rows, ids, timestamps, or column names appear as content."
+  },
+  "e_machine_overview": {
+    "kind": "fact",
+    "date": "2018 – 2025",
+    "text": "Every charge in the record runs through the same pipeline: a clinic or lab generates a charge at sticker price; the charge is bundled into a claim and sent to Blue Cross; the insurer adjudicates against the plan's fee schedule and returns a remittance (EOB) splitting the charge into insurer-paid, patient-responsibility (deductible + coinsurance), and contractual write-off; the patient share is then billed to the patient and the rest closes out."
+  },
+  "e_coverage": {
+    "kind": "fact",
+    "date": "2018 – 2025",
+    "text": "One insurer covers the entire record: Blue Cross of Wisconsin, plan BCBS WI PPO/Federal, under the Microsoft employer group, with the patient as the self-subscriber. There is no secondary payer."
+  },
+  "e_cost_sharing": {
+    "kind": "fact",
+    "date": "Eligibility grid",
+    "text": "The plan's cost-sharing is $0 office copay and 10% in-network coinsurance (30% out-of-network) across service types — primary care, specialty, occupational/physical/speech therapy, and hospital. That 10% in-network coinsurance is exactly what appears as the patient's small balances downstream."
+  },
+  "e_pb_hb_split": {
+    "kind": "fact",
+    "date": "2018 – 2025",
+    "text": "Money flows through two billing systems. Professional billing (clinic and lab) holds 29 charges totaling $4,821. Hospital billing holds one real episode (a March 2022 occupational-therapy series, $1,638.82); the other three hospital-account shells have no transactions. The two systems are kept separate to avoid double-counting; headline totals are anchored on the professional side."
+  },
+  "e_billed_net": {
+    "kind": "fact",
+    "date": "2018 – 2025",
+    "text": "The professional ledger holds 29 charges totaling $4,821.00. One $315 charge is a voided duplicate (the denial-saga office visit), so the true billed work is $4,506.00. All outstanding balances are $0 — the account is fully worked off."
+  },
+  "e_moneyflow_split": {
+    "kind": "fact",
+    "date": "2018 – 2025",
+    "text": "Of the $4,506.00 in real professional charges, $2,343.69 was contractual write-off, $1,530.44 was paid by Blue Cross, and $631.87 was the patient's responsibility. The three pieces sum to $4,506.00 to the penny — verified against the per-claim remittance, with the hospital-billing OT claim excluded."
+  },
+  "e_carc_45": {
+    "kind": "fact",
+    "date": "2018 – 2025",
+    "text": "By reason code, the professional write-off of $2,343.69 is almost entirely contractual markdown: code 45 ('charges exceed the fee schedule or maximum allowable') accounts for $2,247.69 across 26 service lines, with two small bundling adjustments — code 97 and code 234, $48 each. The patient's $631.87 splits into $604.16 of deductible (code 1) and $27.71 of coinsurance (code 2). These are each claim's final adjudication — denied and reversed cycles dropped, duplicate remittance images collapsed, the hospital-billing OT episode kept separate — so the two groups reconcile to the money-flow split to the penny. (Summing every remittance line instead, including the resubmitted denials and rebills, would inflate code 45 to a gross $8,663.69; that excess is the rebilling churn re-counted, not money written off twice.)"
+  },
+  "e_patient_share": {
+    "kind": "fact",
+    "date": "2018 – 2025",
+    "text": "On the professional side the patient's share was $631.87 — about 14% of the $4,506 billed work — and it splits the way the plan promised: $604.16 of deductible (reason code 1) and $27.71 of 10% coinsurance (reason code 2). The single occupational-therapy episode added a separate $554.27 deductible on the hospital-billing side, the patient's largest single out-of-pocket exposure in the record."
+  },
+  "e_reconcile_artifact": {
+    "kind": "fact",
+    "date": "Reconciliation",
+    "text": "Epic's internal transaction-match log shows a larger 'payment' figure ($2,162.31) and an apparent patient share of $0 — an artifact of recording gross postings before the deductible is shifted to the patient, and of payments whose matching charges fall outside the export's roughly two-year window (the raw ledger 'net' of −$10,205 is the same artifact and is NOT a balance). The honest, claim-level anchor is the per-claim remittance, where insurer-paid + write-off + patient-owed = net billed exactly."
+  },
+  "e_claim_counts": {
+    "kind": "fact",
+    "date": "2018 – 2025",
+    "text": "There are 22 claim submissions covering 21 invoices: 17 closed and paid, 3 rejected, 1 voided, 1 interim-accepted. Every claim was filed to Blue Cross as the primary and only payer."
+  },
+  "e_rebill_pattern": {
+    "kind": "fact",
+    "date": "2018, 2022, 2025",
+    "text": "The four claims that did not pay on the first try were each quietly resubmitted under a new claim number carrying the same charges: the August 2018 preventive visit (rejected, then paid) and its lab (rejected, then paid), the April 2025 telehealth visit (rejected, then paid), and the December 2022 office visit (denied, voided, and rebuilt). Each underlying service was legitimate and eventually paid; the rejections were administrative."
+  },
+  "e_saga_visit": {
+    "kind": "note",
+    "who": "Dr. Zoe Rammelkamp",
+    "date": "Dec 1, 2022",
+    "quote": "Joshua Mandel is a 40 year-old male with a PMH of GERD and post-concussion syndrome who comes to clinic to discuss post-concussion syndrome. -- repeat head injury 3 weeks ago"
+  },
+  "e_saga_denied": {
+    "kind": "fact",
+    "date": "Dec 2022",
+    "text": "The first claim (L1007201490) for the $315 visit came back denied with reason code 16, 'claim lacks information needed for adjudication.' Blue Cross paid $0 and the denial image posted twice. This is a coding/specificity denial, not a clinical one."
+  },
+  "e_saga_void": {
+    "kind": "fact",
+    "date": "Dec 20, 2022",
+    "text": "On December 20, 2022 a billing specialist voided the original charge as a 'Correction' and reposted a new charge in its place; the new charge points back at the old one, preserving the audit trail."
+  },
+  "e_saga_reversal": {
+    "kind": "fact",
+    "date": "Dec 2022",
+    "text": "On the same claim identifier the remittance posted a 'reversal of previous payment' of −$315, unwinding the denied claim so it could be re-adjudicated cleanly."
+  },
+  "e_saga_corrected": {
+    "kind": "note",
+    "who": "Claim note on the rebilled invoice",
+    "date": "Dec 21, 2022",
+    "quote": "CORRECTED CLAIM"
+  },
+  "e_saga_dx_fix": {
+    "kind": "fact",
+    "date": "Dec 2022",
+    "text": "The denied charge carried a single, vague diagnosis — 'postconcussional syndrome.' The corrected charge carried a specific diagnosis set: 'concussion without loss of consciousness, initial encounter,' an external-cause code ('striking against or struck by other objects, initial encounter'), and 'nausea.' That added specificity is exactly the 'missing information' the reason-16 denial flagged, and it let the rebill adjudicate normally."
+  },
+  "e_saga_paid": {
+    "kind": "fact",
+    "date": "Dec 21, 2022",
+    "text": "The corrected claim (L1007233831) adjudicated normally: of the $315 charge, Blue Cross allowed $198.91, wrote off $116.09 (reason code 45, above the allowed amount), assigned $19.89 to the patient's coinsurance (reason code 2), and paid the provider $179.02. The patient paid nothing extra for the denial — the same $19.89 a clean first pass would have owed."
+  },
+  "e_hb_episode": {
+    "kind": "fact",
+    "date": "Mar 11 & 22, 2022",
+    "text": "The one real hospital-billing episode is an occupational-therapy 'Therapies Series' account: an OT evaluation plus two self-care training sessions on March 11 and 22, 2022, totaling $1,638.82. It is not a radiology account. The other three hospital-account shells in the export carry no transactions."
+  },
+  "e_hb_split": {
+    "kind": "fact",
+    "date": "Mar – May 2022",
+    "text": "On the OT episode Blue Cross wrote off $1,084.55 (above the allowed fee plus a bundled service) and applied the entire remaining $554.27 allowed amount to the patient's deductible — so insurance paid $0 and the patient owed the full $554.27. The account closed at a $0 balance on May 11, 2022. This is the patient's single largest out-of-pocket across both billing systems."
+  },
+  "e_correspondence": {
+    "kind": "fact",
+    "date": "Oct 2022, Jan 2025",
+    "text": "The patient-facing money trail is sparse: in October 2022 a $7.82 in-network coinsurance balance triggered a 'small-balance letter' and briefly routed the account to a billing work-queue; in January 2025 a 'need insurance information, no insurance listed' letter went out against a $237 balance with no coverage on file — the only billing friction visible in the correspondence log."
+  }
+}

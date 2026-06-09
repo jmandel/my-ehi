@@ -1,0 +1,325 @@
+{
+  "allergies": [
+    {
+      "allergen": "Tree Nut",
+      "category": "Food (tree nut)",
+      "severity": "High",
+      "reaction": "Hives",
+      "status": "Active",
+      "notedDate": "Aug 9, 2018",
+      "notedBy": "Ireland, Tracy C",
+      "dateAccuracy": null,
+      "date_iso": "2018-08-09",
+      "src": "alg.list",
+      "allergyId": "30689238"
+    },
+    {
+      "allergen": "Sulfa Antibiotics",
+      "category": "Drug (antibiotic)",
+      "severity": "High",
+      "reaction": "Hives",
+      "status": "Active",
+      "notedDate": "Aug 9, 2018",
+      "notedBy": "Ireland, Tracy C",
+      "dateAccuracy": null,
+      "date_iso": "2018-08-09",
+      "src": "alg.list",
+      "allergyId": "30689295"
+    },
+    {
+      "allergen": "Penicillins",
+      "category": "Drug (antibiotic)",
+      "severity": "High",
+      "reaction": "Hives",
+      "status": "Active",
+      "notedDate": "Aug 9, 2018",
+      "notedBy": "Ireland, Tracy C",
+      "dateAccuracy": null,
+      "date_iso": "2018-08-09",
+      "src": "alg.list",
+      "allergyId": "30689317"
+    },
+    {
+      "allergen": "Peanut (diagnostic)",
+      "category": "Food (test-based)",
+      "severity": "High",
+      "reaction": "Hives",
+      "status": "Active",
+      "notedDate": "Jul 14, 2020",
+      "notedBy": "Picone, Mary A",
+      "dateAccuracy": "Exact Date",
+      "date_iso": "2020-07-14",
+      "src": "alg.list",
+      "allergyId": "58599837"
+    }
+  ],
+  "peanutGenesis": [
+    {
+      "allergen": "Penicillins",
+      "accepted": true,
+      "freeText": null,
+      "src": "alg.peanut_genesis"
+    },
+    {
+      "allergen": "Sulfa Antibiotics",
+      "accepted": true,
+      "freeText": null,
+      "src": "alg.peanut_genesis"
+    },
+    {
+      "allergen": "Peanut Oil",
+      "accepted": false,
+      "freeText": null,
+      "src": "alg.peanut_genesis"
+    },
+    {
+      "allergen": "Tree Nut",
+      "accepted": true,
+      "freeText": null,
+      "src": "alg.peanut_genesis"
+    },
+    {
+      "allergen": "Peanut (Diagnostic)",
+      "accepted": true,
+      "freeText": "Peanut (diagnostic)",
+      "src": "alg.peanut_genesis"
+    }
+  ],
+  "igeComponents": {
+    "testName": "Quest component-resolved IgE panel",
+    "testDate": "Dec 5, 2024",
+    "testDate_iso": "2024-12-05",
+    "units": "kU/L (specific IgE)",
+    "positiveThreshold": 0.1,
+    "families": [
+      {
+        "key": "PR-10",
+        "label": "PR-10 (Bet v 1 homolog)",
+        "risk": "cross-reactive",
+        "blurb": "Heat-labile birch-pollen homolog. Positivity reflects pollen cross-reactivity and causes oral allergy syndrome — itch/tingle in the mouth, rarely systemic."
+      },
+      {
+        "key": "storage",
+        "label": "Storage protein (2S albumin)",
+        "risk": "primary",
+        "blurb": "Heat-stable seed storage proteins. Positivity marks true, potentially systemic/anaphylactic food allergy."
+      },
+      {
+        "key": "LTP",
+        "label": "Lipid transfer protein",
+        "risk": "primary",
+        "blurb": "Heat-stable lipid transfer proteins. Positivity can drive systemic reactions independent of pollen."
+      }
+    ],
+    "foods": [
+      {
+        "food": "Walnut",
+        "wholeIgE": "0.12 kU/L",
+        "wholeValue": 0.12,
+        "wholePositive": true,
+        "components": [
+          {
+            "code": "Jug r 1",
+            "name": "Walnut 2S albumin",
+            "family": "Storage protein (2S albumin)",
+            "positive": false,
+            "risk": "primary",
+            "meaning": "Storage-protein marker of true, systemic walnut allergy — negative here."
+          },
+          {
+            "code": "Jug r 3",
+            "name": "Walnut LTP",
+            "family": "Lipid transfer protein",
+            "positive": false,
+            "risk": "primary",
+            "meaning": "Lipid-transfer-protein marker of systemic reactivity — negative here."
+          }
+        ],
+        "interpretation": "Low whole-allergen IgE with both systemic-risk components negative — no evidence of primary walnut allergy."
+      },
+      {
+        "food": "Hazelnut",
+        "wholeIgE": "0.95 kU/L",
+        "wholeValue": 0.95,
+        "wholePositive": true,
+        "components": [
+          {
+            "code": "Cor a 1",
+            "name": "Hazelnut PR-10",
+            "family": "PR-10 (Bet v 1 homolog)",
+            "positive": true,
+            "risk": "cross-reactive",
+            "meaning": "Birch-pollen-cross-reactive component — the only positive. The pattern of oral allergy syndrome."
+          }
+        ],
+        "interpretation": "Oral allergy syndrome (Cor a 1 / PR-10 only)."
+      },
+      {
+        "food": "Peanut",
+        "wholeIgE": "0.13 kU/L",
+        "wholeValue": 0.13,
+        "wholePositive": true,
+        "components": [
+          {
+            "code": "Ara h 8",
+            "name": "Peanut PR-10",
+            "family": "PR-10 (Bet v 1 homolog)",
+            "positive": true,
+            "risk": "cross-reactive",
+            "meaning": "Birch-pollen-cross-reactive component — positive. Low systemic risk."
+          },
+          {
+            "code": "Ara h 1/2/3",
+            "name": "Peanut storage proteins",
+            "family": "Storage protein (2S albumin)",
+            "positive": false,
+            "risk": "primary",
+            "meaning": "Storage-protein markers of severe, systemic peanut allergy — negative ('remainder negative')."
+          }
+        ],
+        "interpretation": "Oral allergy syndrome (Ara h 8 / PR-10 positive, storage proteins negative)."
+      }
+    ],
+    "negatives": [
+      {
+        "food": "Macadamia Nut"
+      },
+      {
+        "food": "Pecan"
+      },
+      {
+        "food": "Brazil Nut"
+      },
+      {
+        "food": "Cashew"
+      },
+      {
+        "food": "Pistachio"
+      },
+      {
+        "food": "Almond"
+      }
+    ],
+    "src": "ige.note_food",
+    "evidenceId": "e_ige_panel"
+  },
+  "problems": [
+    {
+      "diagnosis": "Allergic rhinoconjunctivitis, seasonal and perennial",
+      "status": "Active",
+      "workupDate": "May 9, 2025",
+      "workupDate_iso": "2025-05-09",
+      "enteredBy": "Rammelkamp, Zoe L",
+      "enteredDate": "Dec 4, 2025",
+      "enteredDate_iso": "2025-12-04",
+      "src": "pmr.problems",
+      "evidenceId": "e_problem_arc"
+    },
+    {
+      "diagnosis": "Pollen-food allergy",
+      "status": "Active",
+      "workupDate": "May 9, 2025",
+      "workupDate_iso": "2025-05-09",
+      "enteredBy": "Rammelkamp, Zoe L",
+      "enteredDate": "Dec 4, 2025",
+      "enteredDate_iso": "2025-12-04",
+      "src": "pmr.problems",
+      "evidenceId": "e_problem_pfa"
+    }
+  ],
+  "meds": [
+    {
+      "name": "Epinephrine auto-injector 0.3 mg (EpiPen)",
+      "role": "Emergency rescue (anaphylaxis)",
+      "documentation": "Documented as already-taken (historical), not a new prescription",
+      "documentedDate": "Dec 4, 2025",
+      "documentedDate_iso": "2025-12-04",
+      "src": "pmr.meds",
+      "evidenceId": "e_meds"
+    },
+    {
+      "name": "Loratadine 10 mg",
+      "role": "Antihistamine (daily/PRN)",
+      "documentation": "Documented as already-taken (historical), not a new prescription",
+      "documentedDate": "Dec 4, 2025",
+      "documentedDate_iso": "2025-12-04",
+      "src": "pmr.meds",
+      "evidenceId": "e_meds"
+    }
+  ],
+  "spt": {
+    "test": "Skin-prick test",
+    "date": "May 9, 2025",
+    "date_iso": "2025-05-09",
+    "positives": [
+      "Trees",
+      "Molds",
+      "Dust mites",
+      "Dog",
+      "Cat",
+      "Grass",
+      "Ragweed",
+      "Weeds",
+      "Mugwort"
+    ],
+    "priorImmunotherapy": "Prior subcutaneous immunotherapy (allergy shots), ~2000",
+    "src": "ige.note_env",
+    "evidenceId": "e_spt"
+  },
+  "timeline": [
+    {
+      "date": "Aug 9, 2018",
+      "date_iso": "2018-08-09",
+      "event": "Tree nut, sulfa, and penicillin allergies entered together (all 'High', reaction: hives)",
+      "kind": "allergy",
+      "evidenceId": "e_alg_2018"
+    },
+    {
+      "date": "Jul 14, 2020",
+      "date_iso": "2020-07-14",
+      "event": "'Peanut (diagnostic)' added at a kiosk allergen review — a test-based sensitization, not an anaphylaxis history",
+      "kind": "allergy",
+      "evidenceId": "e_alg_peanut"
+    },
+    {
+      "date": "Nov 27, 2024",
+      "date_iso": "2024-11-27",
+      "event": "Referral to Allergy placed (indication: past history of nut allergy)",
+      "kind": "referral",
+      "evidenceId": "e_referral"
+    },
+    {
+      "date": "Dec 5, 2024",
+      "date_iso": "2024-12-05",
+      "event": "Quest component-resolved IgE panel drawn",
+      "kind": "test",
+      "evidenceId": "e_ige_panel"
+    },
+    {
+      "date": "May 9, 2025",
+      "date_iso": "2025-05-09",
+      "event": "Allergy visit: broadly positive aeroallergen skin-prick test; food + environmental story assembled",
+      "kind": "test",
+      "evidenceId": "e_spt"
+    },
+    {
+      "date": "Dec 4, 2025",
+      "date_iso": "2025-12-04",
+      "event": "Two atopy problems formalized: allergic rhinoconjunctivitis and pollen-food allergy; EpiPen + loratadine documented",
+      "kind": "problem",
+      "evidenceId": "e_problem_pfa"
+    }
+  ],
+  "referral": {
+    "order": "Referral to Allergy",
+    "placedBy": "Rammelkamp, Zoe L",
+    "placedDate": "Nov 27, 2024",
+    "placedDate_iso": "2024-11-27",
+    "indication": "Past history of nut allergy",
+    "status": "Authorized",
+    "appointmentDate": "May 9, 2025",
+    "appointmentDate_iso": "2025-05-09",
+    "src": "pmr.referral",
+    "evidenceId": "e_referral"
+  }
+}

@@ -1,0 +1,1025 @@
+{
+  "summary": "This is a clean, well-behaved billing history with one instructive denial at its center. A single insurer — Blue Cross of Wisconsin, a Microsoft-group PPO with the patient as self-subscriber — covers the entire record, with no secondary payer and a simple cost-sharing rule the whole ledger obeys: $0 office copay and 10% in-network coinsurance. Over eight years (2018–2025) the clinic billed $4,821 in professional charges; one $315 charge is a voided duplicate, so the real billed work is $4,506. Of that, the patient's own share was just $631.87 — about 14% — while Blue Cross paid $1,530.44 and a further $2,343.69 simply evaporated as contractual write-off, the gap between sticker price and the plan's allowed amount that the patient never owes. Twenty-two claim submissions cover twenty-one invoices: seventeen paid and closed, three rejected, one voided. The rejected and voided claims were never paid; each was quietly re-submitted under a new claim number, and every penny reconciles. The centerpiece is one of those: a December 1, 2022 office visit (CPT 99214, $315) that Blue Cross denied for 'missing information,' which the clinic then walked through a textbook void → reverse → repost → rebill correction — fixing the diagnosis coding from a single vague code to a specific concussion diagnosis with an external-cause code — after which the corrected claim paid normally. Separately, one real hospital-billing episode (a March 2022 occupational-therapy series, $1,638.82) was the patient's most expensive single event: insurance paid nothing, the entire $554.27 allowed amount landed on the deductible, and $1,084.55 was written off. The machinery worked; the patient's exposure was small; the only friction visible to him was a $7.82 small-balance letter and a stray 'no insurance on file' notice.",
+  "sections": [
+    {
+      "id": "machine",
+      "title": "How a visit becomes money",
+      "narrative": [
+        {
+          "text": "Every line in this record runs through the same four-step machine. A clinic visit or lab generates a charge at the provider's sticker price. That charge is bundled into a claim and sent to the insurer. The insurer adjudicates it against the plan's fee schedule and returns a remittance (an EOB) that splits the charge into three destinations: an amount it pays the provider, an amount it assigns to the patient (deductible and coinsurance), and a contractual write-off — the gap between the sticker price and the plan's allowed amount, which the provider agrees to erase and the patient never owes. The patient's share is then billed to the patient; everything else closes out.",
+          "cites": [
+            "e_machine_overview"
+          ]
+        },
+        {
+          "text": "One insurer drives the whole record. Blue Cross of Wisconsin (a BCBS WI PPO under the Microsoft employer group, with the patient as the self-subscriber) is the only payer across eight years; there is no secondary insurance. The plan's cost-sharing is simple and consistent: $0 office copay and 10% coinsurance in network. That 10% is exactly what shows up downstream as the patient's small balances — the plan's rules are visible in the math of every claim.",
+          "cites": [
+            "e_coverage",
+            "e_cost_sharing"
+          ]
+        },
+        {
+          "text": "Money flows through two billing systems that must be kept separate. Professional billing (the clinic and lab charges) carries the bulk of the record — 29 charges, $4,821 — while hospital billing carries exactly one real episode (an occupational-therapy series). Mixing the two double-counts; this analysis anchors the headline totals on the professional side and treats the one hospital episode on its own.",
+          "cites": [
+            "e_pb_hb_split"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "totals",
+      "title": "Where the money went",
+      "narrative": [
+        {
+          "text": "On the professional side, the clinic billed $4,821 across 29 charges. One of those — a $315 office visit — is a voided duplicate from the denial saga below, so the real billed work is $4,506. That $4,506 splits cleanly three ways, and the three pieces add back to it to the penny: $2,343.69 was contractual write-off, $1,530.44 was paid by Blue Cross, and just $631.87 was the patient's responsibility.",
+          "cites": [
+            "e_billed_net",
+            "e_moneyflow_split"
+          ]
+        },
+        {
+          "text": "The single largest destination of the sticker price is not payment at all — it is the write-off. More than half of what was charged simply vanished as the contractual adjustment, almost entirely under reason code 45, 'charges exceed the fee schedule or maximum allowable.' This is the structural reality of insured care: the list price is largely fictional, and the allowed amount is what actually governs. The patient's true exposure over eight years of professional care was about 14% of the billed work — and most of that was deductible and 10% coinsurance, exactly as the plan promised.",
+          "cites": [
+            "e_carc_45",
+            "e_patient_share"
+          ]
+        },
+        {
+          "text": "A note on reconciliation, because the raw ledger can mislead. Epic's internal transaction-match log shows a larger 'payment' figure ($2,162.31) and an apparent patient share of zero — an artifact of how it records gross postings before the deductible is shifted onto the patient, and of payments whose matching charges fall outside the export's window. The honest, claim-level figure is the per-claim remittance used here, where insurance-paid, write-off, and patient-owed sum exactly to the net billed.",
+          "cites": [
+            "e_reconcile_artifact"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "claims",
+      "title": "The claims, one by one",
+      "narrative": [
+        {
+          "text": "There are 22 claim submissions covering 21 invoices: 17 closed and paid, 3 rejected, 1 voided, and 1 interim-accepted. Every claim went to Blue Cross as the primary (and only) payer. The closed claims are unremarkable — a preventive visit, an office visit, a lab panel — each marked down to the allowed amount, mostly paid, with a small deductible or coinsurance left to the patient.",
+          "cites": [
+            "e_claim_counts"
+          ]
+        },
+        {
+          "text": "The four that did not pay on the first try are the interesting ones, and they share a pattern: a rejection or denial, followed by a quiet resubmission of the same charges under a new claim number. The August 2018 preventive visit and its lab were each rejected, then rebilled and paid. The April 2025 telehealth visit was rejected, then rebilled and paid. And the December 2022 office visit was denied, voided, and rebuilt — the saga that follows. In every case the underlying service was legitimate and eventually paid; the rejections were administrative, not substantive.",
+          "cites": [
+            "e_rebill_pattern"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "denial",
+      "title": "Anatomy of a denial — the $315 office visit",
+      "narrative": [
+        {
+          "text": "On December 1, 2022 the patient was seen for an office visit coded 99214 (an established-patient visit of moderate complexity), billed at $315. The visit itself was real and routine — the progress note records a 40-year-old man with a history of GERD and post-concussion syndrome who came to clinic to discuss post-concussion syndrome after a repeat head injury three weeks earlier, and the encounter generated a neurology referral.",
+          "cites": [
+            "e_saga_visit"
+          ]
+        },
+        {
+          "text": "The first claim came back denied. Blue Cross returned reason code 16 — 'claim lacks information needed for adjudication' — and paid nothing; the denial image even posted twice. This is not a clinical denial (the plan was not saying the visit was unnecessary); it is a coding/specificity problem, the insurer saying the claim as submitted did not carry enough diagnostic detail to be processed.",
+          "cites": [
+            "e_saga_denied"
+          ]
+        },
+        {
+          "text": "The clinic's correction is a clean, auditable state machine. On December 20, 2022 a billing specialist voided the original charge as a 'Correction' and reposted a brand-new charge in its place, with the new charge pointing back at the old one so the trail is preserved. On the same claim identifier the remittance posted a 'reversal of previous payment' of −$315, unwinding the denied claim. The new charge was then resubmitted (accepted, then closed) carrying the free-text note 'CORRECTED CLAIM' — the only such note in the entire export.",
+          "cites": [
+            "e_saga_void",
+            "e_saga_reversal",
+            "e_saga_corrected"
+          ]
+        },
+        {
+          "text": "What actually fixed the denial was the diagnosis. The denied charge carried a single, vague code — 'postconcussional syndrome.' The corrected charge carried a specific concussion diagnosis ('concussion without loss of consciousness, initial encounter') plus an external-cause code ('struck by other objects, initial encounter') and 'nausea.' That added specificity is precisely the 'missing information' the reason-16 denial was pointing at, and with it the claim adjudicated normally on the second pass.",
+          "cites": [
+            "e_saga_dx_fix"
+          ]
+        },
+        {
+          "text": "The rebill paid. Of the $315 charge, Blue Cross allowed $198.91, wrote off $116.09 as above the allowed amount, assigned $19.89 to the patient's coinsurance, and paid the provider $179.02 — verifiable both in the EOB and by walking the corrected charge back through the remittance. The net cost of the denial to the patient was nothing extra: the same $19.89 coinsurance it would have owed on a clean first pass. The cost was administrative — three claim submissions and a manual correction to recover one $315 visit.",
+          "cites": [
+            "e_saga_paid"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hb",
+      "title": "The hospital-billing episode — occupational therapy",
+      "narrative": [
+        {
+          "text": "Set apart from the clinic ledger is the patient's single most expensive event: a March 2022 occupational-therapy series billed through hospital billing as a 'Therapies Series' account. Three charges — an OT evaluation and two sessions of self-care training — totaled $1,638.82. It is easy to mistake this for a radiology or imaging account; it is not. The other three hospital-account shells in the export are empty, with no transactions at all — an Epic artifact, not real care.",
+          "cites": [
+            "e_hb_episode"
+          ]
+        },
+        {
+          "text": "The remittance on this episode is the cleanest illustration of the deductible in the whole record. Blue Cross wrote off $1,084.55 (the amount above the allowed fee plus a bundled service) and applied the entire remaining $554.27 — the full allowed amount — to the patient's deductible. Because the deductible had not yet been met, insurance paid $0 and the patient owed the whole $554.27. The account closed at a zero balance in May 2022. This one episode accounts for the bulk of the patient's lifetime out-of-pocket across both billing systems.",
+          "cites": [
+            "e_hb_split"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "friction",
+      "title": "What the patient actually saw",
+      "narrative": [
+        {
+          "text": "For all the machinery behind it, the patient-facing money trail is sparse. In October 2022 a $7.82 in-network coinsurance balance was enough to generate a 'small-balance letter' and briefly route the account to a billing work-queue. In January 2025 a 'need insurance information — no insurance listed' letter went out against a $237 balance with no coverage on file — a momentary gap in how the coverage was attached, not a real loss of insurance. That is the entire visible friction over eight years.",
+          "cites": [
+            "e_correspondence"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "assessment",
+      "title": "Assessment",
+      "narrative": [
+        {
+          "text": "From a billing-analyst's chair, this is a healthy account. One payer, no coordination-of-benefits tangle, a consistent cost-sharing rule, every claim reconciled, and a zero balance. The patient's total exposure was modest and entirely explained by plan design — a small deductible and 10% coinsurance — with the single largest out-of-pocket being the $554.27 occupational-therapy deductible. Nothing here suggests over-billing, surprise balances, or aggressive collections.",
+          "cites": [
+            "e_moneyflow_split",
+            "e_hb_split"
+          ]
+        },
+        {
+          "text": "The denial saga is the one place worth a second look, and the lesson is procedural, not financial. The December 2022 visit was denied purely for diagnostic specificity, and the clinic's void-reverse-rebill correction recovered it in full — exactly the workflow a billing office should run. The cost of the denial was three claim submissions and staff time to recover one $315 visit; the patient paid nothing extra. If there is a takeaway it is that a single under-coded diagnosis can stall an otherwise clean claim, and that the correction machinery, when it works, is invisible to the patient.",
+          "cites": [
+            "e_saga_dx_fix",
+            "e_saga_paid"
+          ]
+        },
+        {
+          "text": "What this export cannot answer should be stated plainly. The professional ledger is anchored on the per-claim remittance because Epic's transaction-match log overstates 'payment' and zeroes the patient share — so any figure read straight off the raw ledger net (the famous −$10,205) is an artifact of charges and payments falling on opposite sides of the export's window, not a real balance. The export also does not carry the patient's actual statements or what was ultimately collected from him, only what the plan assigned; whether the $631.87 professional share and the $554.27 OT deductible were paid by check, card, or an HSA is not visible. And the eligibility grid shows the plan's coinsurance rule but not the deductible or out-of-pocket maximum, so the year-to-year deductible math (why one claim hits the deductible and another only coinsurance) can be inferred but not fully reconstructed.",
+          "cites": [
+            "e_reconcile_artifact",
+            "e_cost_sharing",
+            "e_patient_share"
+          ]
+        }
+      ]
+    }
+  ],
+  "evidence": {
+    "e_machine_overview": {
+      "kind": "fact",
+      "date": "2018 – 2025",
+      "text": "Every charge in the record runs through the same pipeline: a clinic or lab generates a charge at sticker price; the charge is bundled into a claim and sent to Blue Cross; the insurer adjudicates against the plan's fee schedule and returns a remittance (EOB) splitting the charge into insurer-paid, patient-responsibility (deductible + coinsurance), and contractual write-off; the patient share is then billed to the patient and the rest closes out."
+    },
+    "e_coverage": {
+      "kind": "fact",
+      "date": "2018 – 2025",
+      "text": "One insurer covers the entire record: Blue Cross of Wisconsin, plan BCBS WI PPO/Federal, under the Microsoft employer group, with the patient as the self-subscriber. There is no secondary payer."
+    },
+    "e_cost_sharing": {
+      "kind": "fact",
+      "date": "Eligibility grid",
+      "text": "The plan's cost-sharing is $0 office copay and 10% in-network coinsurance (30% out-of-network) across service types — primary care, specialty, occupational/physical/speech therapy, and hospital. That 10% in-network coinsurance is exactly what appears as the patient's small balances downstream."
+    },
+    "e_pb_hb_split": {
+      "kind": "fact",
+      "date": "2018 – 2025",
+      "text": "Money flows through two billing systems. Professional billing (clinic and lab) holds 29 charges totaling $4,821. Hospital billing holds one real episode (a March 2022 occupational-therapy series, $1,638.82); the other three hospital-account shells have no transactions. The two systems are kept separate to avoid double-counting; headline totals are anchored on the professional side."
+    },
+    "e_billed_net": {
+      "kind": "fact",
+      "date": "2018 – 2025",
+      "text": "The professional ledger holds 29 charges totaling $4,821.00. One $315 charge is a voided duplicate (the denial-saga office visit), so the true billed work is $4,506.00. All outstanding balances are $0 — the account is fully worked off."
+    },
+    "e_moneyflow_split": {
+      "kind": "fact",
+      "date": "2018 – 2025",
+      "text": "Of the $4,506.00 in real professional charges, $2,343.69 was contractual write-off, $1,530.44 was paid by Blue Cross, and $631.87 was the patient's responsibility. The three pieces sum to $4,506.00 to the penny — verified against the per-claim remittance, with the hospital-billing OT claim excluded."
+    },
+    "e_carc_45": {
+      "kind": "fact",
+      "date": "2018 – 2025",
+      "text": "By reason code, the professional write-off of $2,343.69 is almost entirely contractual markdown: code 45 ('charges exceed the fee schedule or maximum allowable') accounts for $2,247.69 across 26 service lines, with two small bundling adjustments — code 97 and code 234, $48 each. The patient's $631.87 splits into $604.16 of deductible (code 1) and $27.71 of coinsurance (code 2). These are each claim's final adjudication — denied and reversed cycles dropped, duplicate remittance images collapsed, the hospital-billing OT episode kept separate — so the two groups reconcile to the money-flow split to the penny. (Summing every remittance line instead, including the resubmitted denials and rebills, would inflate code 45 to a gross $8,663.69; that excess is the rebilling churn re-counted, not money written off twice.)"
+    },
+    "e_patient_share": {
+      "kind": "fact",
+      "date": "2018 – 2025",
+      "text": "On the professional side the patient's share was $631.87 — about 14% of the $4,506 billed work — and it splits the way the plan promised: $604.16 of deductible (reason code 1) and $27.71 of 10% coinsurance (reason code 2). The single occupational-therapy episode added a separate $554.27 deductible on the hospital-billing side, the patient's largest single out-of-pocket exposure in the record."
+    },
+    "e_reconcile_artifact": {
+      "kind": "fact",
+      "date": "Reconciliation",
+      "text": "Epic's internal transaction-match log shows a larger 'payment' figure ($2,162.31) and an apparent patient share of $0 — an artifact of recording gross postings before the deductible is shifted to the patient, and of payments whose matching charges fall outside the export's roughly two-year window (the raw ledger 'net' of −$10,205 is the same artifact and is NOT a balance). The honest, claim-level anchor is the per-claim remittance, where insurer-paid + write-off + patient-owed = net billed exactly."
+    },
+    "e_claim_counts": {
+      "kind": "fact",
+      "date": "2018 – 2025",
+      "text": "There are 22 claim submissions covering 21 invoices: 17 closed and paid, 3 rejected, 1 voided, 1 interim-accepted. Every claim was filed to Blue Cross as the primary and only payer."
+    },
+    "e_rebill_pattern": {
+      "kind": "fact",
+      "date": "2018, 2022, 2025",
+      "text": "The four claims that did not pay on the first try were each quietly resubmitted under a new claim number carrying the same charges: the August 2018 preventive visit (rejected, then paid) and its lab (rejected, then paid), the April 2025 telehealth visit (rejected, then paid), and the December 2022 office visit (denied, voided, and rebuilt). Each underlying service was legitimate and eventually paid; the rejections were administrative."
+    },
+    "e_saga_visit": {
+      "kind": "note",
+      "who": "Dr. Zoe Rammelkamp",
+      "date": "Dec 1, 2022",
+      "quote": "Joshua Mandel is a 40 year-old male with a PMH of GERD and post-concussion syndrome who comes to clinic to discuss post-concussion syndrome. -- repeat head injury 3 weeks ago"
+    },
+    "e_saga_denied": {
+      "kind": "fact",
+      "date": "Dec 2022",
+      "text": "The first claim (L1007201490) for the $315 visit came back denied with reason code 16, 'claim lacks information needed for adjudication.' Blue Cross paid $0 and the denial image posted twice. This is a coding/specificity denial, not a clinical one."
+    },
+    "e_saga_void": {
+      "kind": "fact",
+      "date": "Dec 20, 2022",
+      "text": "On December 20, 2022 a billing specialist voided the original charge as a 'Correction' and reposted a new charge in its place; the new charge points back at the old one, preserving the audit trail."
+    },
+    "e_saga_reversal": {
+      "kind": "fact",
+      "date": "Dec 2022",
+      "text": "On the same claim identifier the remittance posted a 'reversal of previous payment' of −$315, unwinding the denied claim so it could be re-adjudicated cleanly."
+    },
+    "e_saga_corrected": {
+      "kind": "note",
+      "who": "Claim note on the rebilled invoice",
+      "date": "Dec 21, 2022",
+      "quote": "CORRECTED CLAIM"
+    },
+    "e_saga_dx_fix": {
+      "kind": "fact",
+      "date": "Dec 2022",
+      "text": "The denied charge carried a single, vague diagnosis — 'postconcussional syndrome.' The corrected charge carried a specific diagnosis set: 'concussion without loss of consciousness, initial encounter,' an external-cause code ('striking against or struck by other objects, initial encounter'), and 'nausea.' That added specificity is exactly the 'missing information' the reason-16 denial flagged, and it let the rebill adjudicate normally."
+    },
+    "e_saga_paid": {
+      "kind": "fact",
+      "date": "Dec 21, 2022",
+      "text": "The corrected claim (L1007233831) adjudicated normally: of the $315 charge, Blue Cross allowed $198.91, wrote off $116.09 (reason code 45, above the allowed amount), assigned $19.89 to the patient's coinsurance (reason code 2), and paid the provider $179.02. The patient paid nothing extra for the denial — the same $19.89 a clean first pass would have owed."
+    },
+    "e_hb_episode": {
+      "kind": "fact",
+      "date": "Mar 11 & 22, 2022",
+      "text": "The one real hospital-billing episode is an occupational-therapy 'Therapies Series' account: an OT evaluation plus two self-care training sessions on March 11 and 22, 2022, totaling $1,638.82. It is not a radiology account. The other three hospital-account shells in the export carry no transactions."
+    },
+    "e_hb_split": {
+      "kind": "fact",
+      "date": "Mar – May 2022",
+      "text": "On the OT episode Blue Cross wrote off $1,084.55 (above the allowed fee plus a bundled service) and applied the entire remaining $554.27 allowed amount to the patient's deductible — so insurance paid $0 and the patient owed the full $554.27. The account closed at a $0 balance on May 11, 2022. This is the patient's single largest out-of-pocket across both billing systems."
+    },
+    "e_correspondence": {
+      "kind": "fact",
+      "date": "Oct 2022, Jan 2025",
+      "text": "The patient-facing money trail is sparse: in October 2022 a $7.82 in-network coinsurance balance triggered a 'small-balance letter' and briefly routed the account to a billing work-queue; in January 2025 a 'need insurance information, no insurance listed' letter went out against a $237 balance with no coverage on file — the only billing friction visible in the correspondence log."
+    }
+  },
+  "coverage": {
+    "payer": "Blue Cross of Wisconsin",
+    "plan": "BCBS WI PPO / Federal",
+    "planType": "PPO (indemnity)",
+    "group": "Microsoft",
+    "subscriber": "Self",
+    "secondaryPayer": "None — single payer across the whole record",
+    "costSharing": {
+      "officeCopay": "$0",
+      "inNetworkCoinsurance": "10%",
+      "outNetworkCoinsurance": "30%",
+      "note": "$0 office copay with 10% in-network coinsurance across service types (primary care, specialty, therapy, hospital). That 10% in-network share is exactly what shows up as the patient's small balances downstream."
+    },
+    "src": {
+      "coverageId": "5934765"
+    }
+  },
+  "moneyflow": {
+    "scope": "Professional billing (clinic & lab), 2018–2025",
+    "billedGross": 4821,
+    "voidedDuplicate": 315,
+    "billedNet": 4506,
+    "segments": [
+      {
+        "key": "writeoff",
+        "label": "Contractual write-off",
+        "sub": "The provider erases the gap between sticker price and the plan's allowed amount — the patient never owes it.",
+        "amount": 2343.69,
+        "evidenceId": "e_moneyflow_split"
+      },
+      {
+        "key": "insurance",
+        "label": "Insurance paid",
+        "sub": "What Blue Cross actually sent the provider.",
+        "amount": 1530.44,
+        "evidenceId": "e_moneyflow_split"
+      },
+      {
+        "key": "patient",
+        "label": "Patient owed",
+        "sub": "Deductible plus 10% in-network coinsurance — the patient's real out-of-pocket.",
+        "amount": 631.87,
+        "evidenceId": "e_patient_share"
+      }
+    ],
+    "patientShareNote": "Of $4,506 in real professional charges over eight years, the patient's own share was $631.87 — about 14% — the small deductible-and-coinsurance amounts the plan assigns. More than half the sticker price ($2343.69) simply vanished as contractual write-off the patient never sees.",
+    "reconciliation": {
+      "billedNet": 4506,
+      "insurancePaid": 1530.44,
+      "contractualWriteoff": 2343.69,
+      "patientOwed": 631.87,
+      "checksum": 4506,
+      "note": "Insurance-paid + contractual write-off + patient-owed = net billed, to the penny.",
+      "aggregationNote": "Anchored on the per-claim remittance (the closed claims that actually adjudicated). Epic's transaction-match log shows a larger 'payment' figure ($2,162.31) because it records gross postings before the deductible is shifted to the patient; that log is not the insurer's net-paid and is not used here."
+    }
+  },
+  "claims": {
+    "rows": [
+      {
+        "claimNo": "L1002792520",
+        "date": "Aug 9, 2018",
+        "dateIso": "2018-08-09",
+        "service": "Preventive (annual) visit",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 1,
+        "billed": 335,
+        "insurancePaid": null,
+        "writeoff": null,
+        "patientOwed": null,
+        "status": "Rejected (never paid)",
+        "statusKey": "rejected",
+        "resubmittedFrom": null,
+        "isDenialSaga": false,
+        "src": {
+          "invId": "24584313",
+          "icn": null
+        }
+      },
+      {
+        "claimNo": "L1002792530",
+        "date": "Aug 9, 2018",
+        "dateIso": "2018-08-09",
+        "service": "Lipid panel + blood draw",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 2,
+        "billed": 151,
+        "insurancePaid": null,
+        "writeoff": null,
+        "patientOwed": null,
+        "status": "Rejected (never paid)",
+        "statusKey": "rejected",
+        "resubmittedFrom": null,
+        "isDenialSaga": false,
+        "src": {
+          "invId": "24584314",
+          "icn": null
+        }
+      },
+      {
+        "claimNo": "L1002834030",
+        "date": "Aug 9, 2018",
+        "dateIso": "2018-08-09",
+        "service": "Preventive (annual) visit",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 1,
+        "billed": 335,
+        "insurancePaid": 230.73,
+        "writeoff": 104.27,
+        "patientOwed": 0,
+        "status": "Paid & closed",
+        "statusKey": "closed",
+        "resubmittedFrom": "L1002792520",
+        "isDenialSaga": false,
+        "src": {
+          "invId": "24873734",
+          "icn": "2018241CN0502"
+        }
+      },
+      {
+        "claimNo": "L1002834040",
+        "date": "Aug 9, 2018",
+        "dateIso": "2018-08-09",
+        "service": "Lipid panel + blood draw",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 2,
+        "billed": 151,
+        "insurancePaid": 23.52,
+        "writeoff": 127.48,
+        "patientOwed": 0,
+        "status": "Paid & closed",
+        "statusKey": "closed",
+        "resubmittedFrom": "L1002792530",
+        "isDenialSaga": false,
+        "src": {
+          "invId": "24873736",
+          "icn": "2018241CN0503"
+        }
+      },
+      {
+        "claimNo": "L1004236460",
+        "date": "Jan 9, 2020",
+        "dateIso": "2020-01-09",
+        "service": "Office visit (established)",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 1,
+        "billed": 165,
+        "insurancePaid": 0,
+        "writeoff": 31.71,
+        "patientOwed": 133.29,
+        "status": "Paid & closed",
+        "statusKey": "closed",
+        "resubmittedFrom": null,
+        "isDenialSaga": false,
+        "src": {
+          "invId": "35267927",
+          "icn": "2020010DE9628"
+        }
+      },
+      {
+        "claimNo": "L1004718920",
+        "date": "Jul 14, 2020",
+        "dateIso": "2020-07-14",
+        "service": "Office visit (established)",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 1,
+        "billed": 170,
+        "insurancePaid": 113.3,
+        "writeoff": 56.7,
+        "patientOwed": 0,
+        "status": "Paid & closed",
+        "statusKey": "closed",
+        "resubmittedFrom": null,
+        "isDenialSaga": false,
+        "src": {
+          "invId": "39392511",
+          "icn": "2020228BN6036"
+        }
+      },
+      {
+        "claimNo": "L1006928390",
+        "date": "Aug 29, 2022",
+        "dateIso": "2022-08-29",
+        "service": "Preventive + office visit",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 2,
+        "billed": 516,
+        "insurancePaid": 272.89,
+        "writeoff": 236.12,
+        "patientOwed": 6.99,
+        "status": "Paid & closed",
+        "statusKey": "closed",
+        "resubmittedFrom": null,
+        "isDenialSaga": false,
+        "src": {
+          "invId": "56467923",
+          "icn": "2022264BT5584"
+        }
+      },
+      {
+        "claimNo": "L1006942840",
+        "date": "Aug 29, 2022",
+        "dateIso": "2022-08-29",
+        "service": "Metabolic panel + blood draw",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 2,
+        "billed": 173,
+        "insurancePaid": 7.57,
+        "writeoff": 164.6,
+        "patientOwed": 0.83,
+        "status": "Paid & closed",
+        "statusKey": "closed",
+        "resubmittedFrom": null,
+        "isDenialSaga": false,
+        "src": {
+          "invId": "56523114",
+          "icn": "2022266BM7967"
+        }
+      },
+      {
+        "claimNo": "L1007201490",
+        "date": "Dec 1, 2022",
+        "dateIso": "2022-12-01",
+        "service": "Office visit (established)",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 1,
+        "billed": 315,
+        "insurancePaid": 0,
+        "writeoff": 0,
+        "patientOwed": 0,
+        "status": "Voided (denied, then corrected)",
+        "statusKey": "voided",
+        "resubmittedFrom": null,
+        "isDenialSaga": true,
+        "src": {
+          "invId": "58319567",
+          "icn": "2022341BT5497"
+        }
+      },
+      {
+        "claimNo": "L1007233830",
+        "date": "Dec 1, 2022",
+        "dateIso": "2022-12-01",
+        "service": "Office visit (established)",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 1,
+        "billed": 315,
+        "insurancePaid": null,
+        "writeoff": null,
+        "patientOwed": null,
+        "status": "Accepted (interim)",
+        "statusKey": "accepted",
+        "resubmittedFrom": "L1007201490",
+        "isDenialSaga": true,
+        "src": {
+          "invId": "58660400",
+          "icn": null
+        }
+      },
+      {
+        "claimNo": "L1007233831",
+        "date": "Dec 1, 2022",
+        "dateIso": "2022-12-01",
+        "service": "Office visit (established)",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 1,
+        "billed": 315,
+        "insurancePaid": 179.02,
+        "writeoff": 116.09,
+        "patientOwed": 19.89,
+        "status": "Paid & closed",
+        "statusKey": "closed",
+        "resubmittedFrom": "L1007201490",
+        "isDenialSaga": true,
+        "src": {
+          "invId": "58660400",
+          "icn": "2022341BT5497"
+        }
+      },
+      {
+        "claimNo": "L1007449820",
+        "date": "Mar 2, 2023",
+        "dateIso": "2023-03-02",
+        "service": "Office visit (established)",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 1,
+        "billed": 226,
+        "insurancePaid": 0,
+        "writeoff": 86.03,
+        "patientOwed": 139.97,
+        "status": "Paid & closed",
+        "statusKey": "closed",
+        "resubmittedFrom": null,
+        "isDenialSaga": false,
+        "src": {
+          "invId": "60492688",
+          "icn": "2023072DV0514"
+        }
+      },
+      {
+        "claimNo": "L1007985430",
+        "date": "Sep 28, 2023",
+        "dateIso": "2023-09-28",
+        "service": "Lipid panel + A1c + blood draw",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 3,
+        "billed": 203,
+        "insurancePaid": 19.25,
+        "writeoff": 183.75,
+        "patientOwed": 0,
+        "status": "Paid & closed",
+        "statusKey": "closed",
+        "resubmittedFrom": null,
+        "isDenialSaga": false,
+        "src": {
+          "invId": "65200403",
+          "icn": "2023277DI2086"
+        }
+      },
+      {
+        "claimNo": "L1007990080",
+        "date": "Sep 28, 2023",
+        "dateIso": "2023-09-28",
+        "service": "Flu vaccine + administration",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 2,
+        "billed": 114,
+        "insurancePaid": 38.85,
+        "writeoff": 75.15,
+        "patientOwed": 0,
+        "status": "Paid & closed",
+        "statusKey": "closed",
+        "resubmittedFrom": null,
+        "isDenialSaga": false,
+        "src": {
+          "invId": "65226259",
+          "icn": "2023278BR8828"
+        }
+      },
+      {
+        "claimNo": "L1008016200",
+        "date": "Sep 28, 2023",
+        "dateIso": "2023-09-28",
+        "service": "Preventive (annual) visit",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 1,
+        "billed": 330,
+        "insurancePaid": 223.42,
+        "writeoff": 106.58,
+        "patientOwed": 0,
+        "status": "Paid & closed",
+        "statusKey": "closed",
+        "resubmittedFrom": null,
+        "isDenialSaga": false,
+        "src": {
+          "invId": "65425314",
+          "icn": "2023286CD3233"
+        }
+      },
+      {
+        "claimNo": "L1008789160",
+        "date": "Jul 2, 2024",
+        "dateIso": "2024-07-02",
+        "service": "Office visit + add-on",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 2,
+        "billed": 383,
+        "insurancePaid": 0,
+        "writeoff": 178.85,
+        "patientOwed": 204.15,
+        "status": "Paid & closed",
+        "statusKey": "closed",
+        "resubmittedFrom": null,
+        "isDenialSaga": false,
+        "src": {
+          "invId": "71682363",
+          "icn": "2024191CL6984"
+        }
+      },
+      {
+        "claimNo": "L1008789170",
+        "date": "Jul 2, 2024",
+        "dateIso": "2024-07-02",
+        "service": "Neck X-ray",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 1,
+        "billed": 129,
+        "insurancePaid": 0,
+        "writeoff": 90.75,
+        "patientOwed": 38.25,
+        "status": "Paid & closed",
+        "statusKey": "closed",
+        "resubmittedFrom": null,
+        "isDenialSaga": false,
+        "src": {
+          "invId": "71682364",
+          "icn": "2024191CL7455"
+        }
+      },
+      {
+        "claimNo": "L1009194250",
+        "date": "Nov 7, 2024",
+        "dateIso": "2024-11-07",
+        "service": "Preventive (annual) visit",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 1,
+        "billed": 358,
+        "insurancePaid": 198.19,
+        "writeoff": 159.81,
+        "patientOwed": 0,
+        "status": "Paid & closed",
+        "statusKey": "closed",
+        "resubmittedFrom": null,
+        "isDenialSaga": false,
+        "src": {
+          "invId": "74663281",
+          "icn": "2024318BL0495"
+        }
+      },
+      {
+        "claimNo": "L1009720060",
+        "date": "Apr 23, 2025",
+        "dateIso": "2025-04-23",
+        "service": "Telehealth video visit + add-on",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 2,
+        "billed": 225,
+        "insurancePaid": null,
+        "writeoff": null,
+        "patientOwed": null,
+        "status": "Rejected (never paid)",
+        "statusKey": "rejected",
+        "resubmittedFrom": null,
+        "isDenialSaga": false,
+        "src": {
+          "invId": "78432812",
+          "icn": null
+        }
+      },
+      {
+        "claimNo": "L1009735840",
+        "date": "Apr 23, 2025",
+        "dateIso": "2025-04-23",
+        "service": "Telehealth video visit + add-on",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 2,
+        "billed": 225,
+        "insurancePaid": 0,
+        "writeoff": 136.5,
+        "patientOwed": 88.5,
+        "status": "Paid & closed",
+        "statusKey": "closed",
+        "resubmittedFrom": "L1009720060",
+        "isDenialSaga": false,
+        "src": {
+          "invId": "78539370",
+          "icn": "2025119BP9768"
+        }
+      },
+      {
+        "claimNo": "L1010454700",
+        "date": "Dec 4, 2025",
+        "dateIso": "2025-12-04",
+        "service": "Preventive (annual) visit",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 1,
+        "billed": 358,
+        "insurancePaid": 198.19,
+        "writeoff": 159.81,
+        "patientOwed": 0,
+        "status": "Paid & closed",
+        "statusKey": "closed",
+        "resubmittedFrom": null,
+        "isDenialSaga": false,
+        "src": {
+          "invId": "83775214",
+          "icn": "2025339CJ8368"
+        }
+      },
+      {
+        "claimNo": "L1010466900",
+        "date": "Dec 4, 2025",
+        "dateIso": "2025-12-04",
+        "service": "Metabolic + A1c + lipid + blood draw",
+        "payer": "Blue Cross of Wisconsin",
+        "nCharges": 4,
+        "billed": 355,
+        "insurancePaid": 25.51,
+        "writeoff": 329.49,
+        "patientOwed": 0,
+        "status": "Paid & closed",
+        "statusKey": "closed",
+        "resubmittedFrom": null,
+        "isDenialSaga": false,
+        "src": {
+          "invId": "83859340",
+          "icn": "2025343CQ3952"
+        }
+      }
+    ],
+    "totals": {
+      "nClaims": 22,
+      "nPaid": 17,
+      "nRejected": 3,
+      "nVoided": 1,
+      "nAccepted": 1
+    }
+  },
+  "carc": {
+    "scope": "Professional billing (clinic & lab), 2018–2025 — each claim's final adjudication, net of the denial/rebill churn",
+    "writeoff": {
+      "label": "Contractual write-off",
+      "total": 2343.69,
+      "rows": [
+        {
+          "code": "45",
+          "plain": "Above the plan's allowed amount",
+          "sub": "the gap between sticker price and the fee schedule",
+          "amount": 2247.69,
+          "nLines": 26
+        },
+        {
+          "code": "97",
+          "plain": "Bundled into another service's payment",
+          "amount": 48,
+          "nLines": 1
+        },
+        {
+          "code": "234",
+          "plain": "Not paid separately",
+          "amount": 48,
+          "nLines": 1
+        }
+      ]
+    },
+    "patient": {
+      "label": "Patient responsibility",
+      "total": 631.87,
+      "rows": [
+        {
+          "code": "1",
+          "plain": "Deductible",
+          "amount": 604.16,
+          "nLines": 5
+        },
+        {
+          "code": "2",
+          "plain": "Coinsurance",
+          "amount": 27.71,
+          "nLines": 4
+        }
+      ]
+    },
+    "basis": "Read off each claim's final remittance only — the Processed-as-Primary images, deduped to one per invoice, with the denied and reversed cycles dropped and the hospital-billing OT episode kept separate. The two groups sum to the $2,343.69 write-off and $631.87 patient share in the flow above, to the penny."
+  },
+  "denial": {
+    "title": "The denial saga — one $315 office visit, denied and rebuilt",
+    "visitDate": "Dec 1, 2022",
+    "visitDateIso": "2022-12-01",
+    "cpt": "99214 — established office visit, moderate complexity",
+    "service": "Office visit for post-concussion syndrome",
+    "billed": 315,
+    "finalPaid": 179.02,
+    "finalPatientCoinsurance": 19.89,
+    "finalWriteoff": 116.09,
+    "sharedClaimId": "2022341BT5497",
+    "dxBefore": "Postconcussional syndrome (single, unspecified diagnosis)",
+    "dxAfter": "Concussion without loss of consciousness (initial encounter) + external-cause code + nausea — a more specific, complete diagnosis set",
+    "steps": [
+      {
+        "n": 1,
+        "key": "submitted",
+        "label": "Claim submitted",
+        "date": "Dec 7, 2022",
+        "detail": "The visit is billed to Blue Cross as claim L1007201490 — a $315 charge for a moderate-complexity office visit (CPT 99214).",
+        "money": {
+          "billed": 315
+        },
+        "tone": "neutral",
+        "evidenceId": "e_saga_visit"
+      },
+      {
+        "n": 2,
+        "key": "denied",
+        "label": "Denied",
+        "date": "Dec 2022",
+        "detail": "Blue Cross denies the claim with reason code 16 — 'claim lacks information needed to adjudicate.' Nothing is paid; the denial image posts twice.",
+        "carc": {
+          "code": "16",
+          "plain": "Claim lacks information needed to adjudicate"
+        },
+        "money": {
+          "billed": 315,
+          "paid": 0
+        },
+        "tone": "bad",
+        "evidenceId": "e_saga_denied"
+      },
+      {
+        "n": 3,
+        "key": "voided",
+        "label": "Charge voided (correction)",
+        "date": "Dec 20, 2022",
+        "detail": "A billing specialist voids the original charge as a 'Correction' and reposts a brand-new charge in its place — the new charge points back at the old one, preserving the audit trail.",
+        "money": {
+          "voided": 315
+        },
+        "tone": "action",
+        "evidenceId": "e_saga_void"
+      },
+      {
+        "n": 4,
+        "key": "reversed",
+        "label": "Payment reversed",
+        "date": "Dec 2022",
+        "detail": "On the same claim ID, the remittance posts a 'reversal of previous payment' of −$315, unwinding the denied claim so it can be re-adjudicated cleanly.",
+        "money": {
+          "reversed": -315
+        },
+        "tone": "action",
+        "evidenceId": "e_saga_reversal"
+      },
+      {
+        "n": 5,
+        "key": "rebilled",
+        "label": "Rebilled — corrected claim",
+        "date": "Dec 20–21, 2022",
+        "detail": "The new charge is resubmitted as L1007233830 (accepted) then L1007233831 (closed), tagged with the free-text note 'CORRECTED CLAIM.' The diagnosis is upgraded from a single unspecified code to a specific concussion diagnosis with an external-cause code — fixing exactly the 'missing information' the denial flagged.",
+        "money": {
+          "billed": 315
+        },
+        "tone": "action",
+        "evidenceId": "e_saga_corrected"
+      },
+      {
+        "n": 6,
+        "key": "paid",
+        "label": "Paid",
+        "date": "Dec 21, 2022",
+        "detail": "The corrected claim adjudicates normally: of the $315, Blue Cross allows $198.91, writes off $116.09 (above the allowed amount), assigns $19.89 to the patient's coinsurance, and pays the provider $179.02.",
+        "carc": [
+          {
+            "code": "45",
+            "plain": "Above the plan's allowed amount (sticker-price markdown)",
+            "amount": 116.09
+          },
+          {
+            "code": "2",
+            "plain": "Patient coinsurance",
+            "amount": 19.89
+          }
+        ],
+        "money": {
+          "billed": 315,
+          "allowed": 198.91,
+          "writeoff": 116.09,
+          "coinsurance": 19.89,
+          "paid": 179.02
+        },
+        "tone": "good",
+        "evidenceId": "e_saga_paid"
+      }
+    ]
+  },
+  "hb": {
+    "label": "Occupational-therapy series (Hospital Billing)",
+    "accountClass": "Therapies Series",
+    "payer": "Blue Cross of Wisconsin",
+    "status": "Closed — $0 balance",
+    "zeroBalanceDate": "May 11, 2022",
+    "charges": [
+      {
+        "date": "Mar 11, 2022",
+        "dateIso": "2022-03-11",
+        "service": "OT — self-care training",
+        "amount": 216.27,
+        "src": {
+          "txId": "670514271"
+        }
+      },
+      {
+        "date": "Mar 11, 2022",
+        "dateIso": "2022-03-11",
+        "service": "OT — evaluation",
+        "amount": 557.47,
+        "src": {
+          "txId": "670514272"
+        }
+      },
+      {
+        "date": "Mar 22, 2022",
+        "dateIso": "2022-03-22",
+        "service": "OT — self-care training",
+        "amount": 865.08,
+        "src": {
+          "txId": "672984063"
+        }
+      }
+    ],
+    "billed": 1638.82,
+    "writeoff": 1084.55,
+    "patientDeductible": 554.27,
+    "insurancePaid": 0,
+    "note": "The single real Hospital-Billing episode: three occupational-therapy charges in March 2022 totaling $1,638.82. Blue Cross wrote off $1,084.55 (above the allowed amount + bundled) and applied the entire $554.27 allowed amount to the patient's deductible — so insurance paid $0 and the patient's true out-of-pocket here was $554.27. The account closed at $0 on May 11, 2022.",
+    "emptyShells": 3,
+    "emptyShellsNote": "Three other hospital-account shells exist with no transactions at all — a common Epic artifact, not real episodes of care."
+  },
+  "correspondence": {
+    "events": [
+      {
+        "date": "Oct 5, 2022",
+        "dateIso": "2022-10-05",
+        "label": "Account referred to financial services",
+        "patientBalance": 7.82,
+        "insuranceBalance": 0
+      },
+      {
+        "date": "Oct 6, 2022",
+        "dateIso": "2022-10-06",
+        "label": "Patient statement generated",
+        "patientBalance": 7.82,
+        "insuranceBalance": 0
+      },
+      {
+        "date": "Oct 6, 2022",
+        "dateIso": "2022-10-06",
+        "label": "Coinsurance balance flagged",
+        "patientBalance": 7.82,
+        "insuranceBalance": 0
+      },
+      {
+        "date": "Oct 6, 2022",
+        "dateIso": "2022-10-06",
+        "label": "Small-balance letter sent",
+        "patientBalance": 7.82,
+        "insuranceBalance": 0
+      },
+      {
+        "date": "Jan 6, 2025",
+        "dateIso": "2025-01-06",
+        "label": "‘No insurance on file’ letter sent",
+        "patientBalance": 0,
+        "insuranceBalance": 237
+      }
+    ],
+    "note": "The human-facing money trail is sparse: a $7.82 coinsurance balance in October 2022 triggered a small-balance letter, and in January 2025 a 'no insurance on file' letter went out against a $237 balance with no coverage listed — the only billing friction the patient would have seen."
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "weight": [
+    {
+      "date": "Aug 9, 2018",
+      "date_iso": "2018-08-09",
+      "lb": 174
+    },
+    {
+      "date": "Jan 9, 2020",
+      "date_iso": "2020-01-09",
+      "lb": 183.2
+    },
+    {
+      "date": "Aug 29, 2022",
+      "date_iso": "2022-08-29",
+      "lb": 178.3
+    },
+    {
+      "date": "Dec 1, 2022",
+      "date_iso": "2022-12-01",
+      "lb": 180.8
+    },
+    {
+      "date": "Mar 2, 2023",
+      "date_iso": "2023-03-02",
+      "lb": 181.8
+    },
+    {
+      "date": "Sep 28, 2023",
+      "date_iso": "2023-09-28",
+      "lb": 180
+    },
+    {
+      "date": "Jul 2, 2024",
+      "date_iso": "2024-07-02",
+      "lb": 177.7
+    },
+    {
+      "date": "Nov 7, 2024",
+      "date_iso": "2024-11-07",
+      "lb": 182.6
+    },
+    {
+      "date": "Dec 4, 2025",
+      "date_iso": "2025-12-04",
+      "lb": 187.2
+    }
+  ],
+  "a1c": [
+    {
+      "date": "Sep 28, 2023",
+      "date_iso": "2023-09-28",
+      "pct": 5.4
+    },
+    {
+      "date": "Dec 4, 2025",
+      "date_iso": "2025-12-04",
+      "pct": 5.5
+    }
+  ],
+  "cgm": {
+    "ordered": [
+      {
+        "item": "FreeStyle Libre 3 sensor",
+        "orderedOn": "Mar 12, 2024"
+      },
+      {
+        "item": "FreeStyle Libre 3 reader",
+        "orderedOn": "Mar 12, 2024"
+      },
+      {
+        "item": "FreeStyle Libre 3 sensor",
+        "orderedOn": "May 7, 2024"
+      }
+    ],
+    "note": "Self-funded FreeStyle Libre 3 continuous glucose monitor, first ordered Mar 12, 2024 despite never meeting diabetes criteria — a sign of real engagement with his own metabolic health. By the Dec 4, 2025 visit the device was marked 'not taking,' and no glucose data from it ever entered the record; only the device orders are present."
+  }
+}

@@ -1,0 +1,263 @@
+{
+  "members": [
+    {
+      "id": "mgm",
+      "relation": "Maternal grandmother",
+      "sex": "female",
+      "deceased": true,
+      "affected": [
+        "stroke"
+      ],
+      "conditions": [
+        {
+          "label": "Stroke",
+          "cardiovascular": true
+        }
+      ],
+      "parents": [],
+      "generation": 1
+    },
+    {
+      "id": "mgf",
+      "relation": "Maternal grandfather",
+      "sex": "male",
+      "deceased": true,
+      "affected": [
+        "stroke"
+      ],
+      "conditions": [
+        {
+          "label": "Stroke",
+          "cardiovascular": true
+        },
+        {
+          "label": "Prostate cancer",
+          "cardiovascular": false
+        }
+      ],
+      "parents": [],
+      "generation": 1
+    },
+    {
+      "id": "pgm",
+      "relation": "Paternal grandmother",
+      "sex": "female",
+      "deceased": true,
+      "affected": [
+        "mi"
+      ],
+      "conditions": [
+        {
+          "label": "Heart attack",
+          "cardiovascular": true
+        }
+      ],
+      "parents": [],
+      "generation": 1
+    },
+    {
+      "id": "pgf",
+      "relation": "Paternal grandfather",
+      "sex": "male",
+      "deceased": true,
+      "affected": [
+        "mi"
+      ],
+      "conditions": [
+        {
+          "label": "Heart attack",
+          "cardiovascular": true
+        }
+      ],
+      "parents": [],
+      "generation": 1
+    },
+    {
+      "id": "mother",
+      "relation": "Mother",
+      "sex": "female",
+      "deceased": false,
+      "affected": [
+        "htn"
+      ],
+      "conditions": [
+        {
+          "label": "Ovarian cancer",
+          "cardiovascular": false
+        },
+        {
+          "label": "Hypertension",
+          "cardiovascular": true
+        },
+        {
+          "label": "Thyroid disease",
+          "cardiovascular": false
+        }
+      ],
+      "parents": [
+        "mgm",
+        "mgf"
+      ],
+      "generation": 2
+    },
+    {
+      "id": "father",
+      "relation": "Father",
+      "sex": "male",
+      "deceased": false,
+      "affected": [
+        "hld"
+      ],
+      "conditions": [
+        {
+          "label": "Hyperlipidemia",
+          "cardiovascular": true
+        }
+      ],
+      "parents": [
+        "pgm",
+        "pgf"
+      ],
+      "generation": 2
+    },
+    {
+      "id": "proband",
+      "relation": "Self (proband)",
+      "sex": "male",
+      "deceased": false,
+      "affected": [],
+      "conditions": [],
+      "parents": [
+        "mother",
+        "father"
+      ],
+      "generation": 3,
+      "proband": true
+    },
+    {
+      "id": "brother",
+      "relation": "Brother",
+      "sex": "male",
+      "deceased": false,
+      "affected": [
+        "htn",
+        "hld"
+      ],
+      "conditions": [
+        {
+          "label": "Hypertension",
+          "cardiovascular": true
+        },
+        {
+          "label": "Hyperlipidemia",
+          "cardiovascular": true
+        },
+        {
+          "label": "Colon polyps",
+          "cardiovascular": false
+        }
+      ],
+      "parents": [
+        "mother",
+        "father"
+      ],
+      "generation": 3
+    }
+  ],
+  "conditions": [
+    {
+      "key": "htn",
+      "label": "Hypertension",
+      "color": "#c026d3"
+    },
+    {
+      "key": "hld",
+      "label": "Hyperlipidemia",
+      "color": "#d97706"
+    },
+    {
+      "key": "mi",
+      "label": "Myocardial infarction",
+      "color": "#c1121f"
+    },
+    {
+      "key": "stroke",
+      "label": "Stroke",
+      "color": "#1d4ed8"
+    }
+  ],
+  "meta": {
+    "slot": "family",
+    "layer": "VIEW MODEL — family pedigree slot. A clean 3-generation projection of risk_factors[kind=family] for a graphical pedigree (square=male, circle=female, slash=deceased, ↗P=proband). `affected` holds canonical cardiovascular condition keys mapping to the `conditions` legend; `parents` give the descent graph (grandparents→parent→proband). The proband is synthesised (he has no family-history row of his own).",
+    "generations": [
+      {
+        "generation": 1,
+        "label": "Grandparents",
+        "ids": [
+          "mgm",
+          "mgf",
+          "pgm",
+          "pgf"
+        ]
+      },
+      {
+        "generation": 2,
+        "label": "Parents",
+        "ids": [
+          "mother",
+          "father"
+        ]
+      },
+      {
+        "generation": 3,
+        "label": "Proband & siblings",
+        "ids": [
+          "proband",
+          "brother"
+        ]
+      }
+    ],
+    "total_family_facts": 12,
+    "total_cv_facts": 8,
+    "bilateral": "Cardiovascular loading is bilateral: hypertension (mother, brother) and hyperlipidemia (father, brother) in first-degree relatives; a hard atherosclerotic event in all four grandparents (stroke x2 maternal line, myocardial infarction x2 paternal line).",
+    "onset_caveat": "Age of onset is blank for every family-history row and in every annual note's family-history block, so whether the grandparents' events were premature (the ASCVD-relevant cut: under 55 male / under 65 female) cannot be determined from this export.",
+    "provenance": {
+      "source": "risk_factors[kind=family]",
+      "per_member": [
+        {
+          "id": "mgm",
+          "locator": "risk_factors[relation=Maternal Grandmother]"
+        },
+        {
+          "id": "mgf",
+          "locator": "risk_factors[relation=Maternal Grandfather]"
+        },
+        {
+          "id": "pgm",
+          "locator": "risk_factors[relation=Paternal Grandmother]"
+        },
+        {
+          "id": "pgf",
+          "locator": "risk_factors[relation=Paternal Grandfather]"
+        },
+        {
+          "id": "mother",
+          "locator": "risk_factors[relation=Mother]"
+        },
+        {
+          "id": "father",
+          "locator": "risk_factors[relation=Father]"
+        },
+        {
+          "id": "proband",
+          "locator": null
+        },
+        {
+          "id": "brother",
+          "locator": "risk_factors[relation=Brother]"
+        }
+      ],
+      "all_rows_locator": "risk_factors[kind=family]"
+    }
+  }
+}

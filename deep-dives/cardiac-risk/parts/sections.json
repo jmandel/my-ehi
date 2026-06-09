@@ -1,0 +1,254 @@
+{
+  "_meta": {
+    "layer": "PROSE SPINE — the narrative content of the cardiac-risk deep dive's view model. summary is the clinical-summary paragraph; sections[] follow the storyboard arc, each with a neutral clinical title and a narrative[] of {text, cites}. Every cites entry is an evidenceId resolved by evidence.json. Structured figures (BP band plot, lipid trends, ASCVD gauge, pedigree, etc.) are filled in the FILL phase under the matching section id; this file is the reasoning the views are wrapped around.",
+    "structured_slots_expected": [
+      "bp",
+      "lipids",
+      "ascvd",
+      "family",
+      "metabolic",
+      "htn",
+      "acute"
+    ]
+  },
+  "summary": "Joshua Mandel is a 43-year-old man in primary prevention — no established atherosclerotic disease, no diabetes — whose modifiable cardiovascular risk is real and drifting upward while the chart treats him as a healthy young man. His blood pressure has run in the Stage-1 hypertension range for seven years (mean systolic 132, seven of nine readings at or above threshold, his own home report agreeing), his HDL has fallen from 52 to 40 while the cholesterol-to-HDL ratio climbed from 3.1 to 4.7 and triglycerides spiked to 282, he has gained about 13 pounds into the overweight range, and he carries hypertension in two first-degree relatives, hyperlipidemia in two more, and a hard atherosclerotic event in all four grandparents. Hypertension was correctly diagnosed and treated once, in August 2022, then the thread simply ended: the prescription was declined, it was never re-coded, never added to the problem list, and never re-addressed across six later visits — so no registry, reminder, or risk tool ever flags him. The chart never computed a global risk score; computed here, his 10-year ASCVD has nearly doubled from 1.06% to 2.04% on still-modest inputs, driven mostly by the falling HDL. The fundamentals are favorable — a negative troponin, a clean neck CT angiogram showing no atherosclerosis at 42, a normal A1c, and clean kidneys mean nothing is acutely dangerous and nothing is blocking treatment except inertia — but every modifiable lever is drifting the wrong way, and the chart's structure actively hides that.",
+  "sections": [
+    {
+      "id": "htn",
+      "title": "Hypertension",
+      "narrative": [
+        {
+          "text": "In August 2022 a new primary-care physician did exactly the right thing: she named Stage-1 hypertension on a 138/76 reading, ordered a baseline metabolic panel, started lisinopril 10 mg daily, and billed the visit for hypertension.",
+          "cites": [
+            "e_dx_2022",
+            "e_dx_billed"
+          ]
+        },
+        {
+          "text": "That was the only time the condition was ever acted on. The clinician had explicitly raised the lever — 'discussed medication options including amitriptyline and BP medication' — but the patient never took the lisinopril; it was discontinued thirteen months later as a patient refusal recorded only in the medication record, and no second antihypertensive was ever tried. The later silence is a discontinuation of attention, not ignorance.",
+          "cites": [
+            "e_offer_existed",
+            "e_lisinopril_decline"
+          ]
+        },
+        {
+          "text": "From that point hypertension disappears from the chart. It was never re-coded, never added to the structured problem list, and so never surfaces in any problem-list-driven view, registry, reminder, or risk calculator. A clinician scanning the chart sees a healthy 43-year-old — this is the single most consequential gap in his cardiovascular care, and it is self-perpetuating: with hypertension off the problem list, nothing in the chart's machinery prompts the chronic axis again.",
+          "cites": [
+            "e_problemlist_absent",
+            "e_readdressed_zero"
+          ]
+        },
+        {
+          "text": "The three annual notes since read identically — 'discussed healthy diet and lifestyle; BP and weight good' — a boilerplate contradicted by the very vitals printed at the top of the same notes. On Dec 4, 2025 the note calls the blood pressure good while recording 132/62, a Stage-1 reading.",
+          "cites": [
+            "e_boiler_2023",
+            "e_boiler_2024",
+            "e_boiler_2025",
+            "e_bp_series"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bp",
+      "title": "Blood pressure",
+      "narrative": [
+        {
+          "text": "This is not white-coat lability or a one-off. Across seven years and multiple providers the blood pressure has sat in the Stage-1 range: nine office readings, mean systolic 132, seven of nine at or above the Stage-1 threshold and not one truly normal. The only Stage-2 reading — 142/74 in December 2022 — is the single one Epic auto-flagged.",
+          "cites": [
+            "e_bp_series",
+            "e_bp_flagged"
+          ]
+        },
+        {
+          "text": "The chart even holds the confirmation guidelines ask for before treating. At the 2022 visit the patient volunteered that he checks at home occasionally and runs 'upper 130s for the past 10 years' — concordant with, if anything slightly above, his 132 office mean. The two independent data sources agree, so this is corroborated sustained hypertension and the white-coat escape hatch is refuted by his own data. Formal logged home or ambulatory readings are still absent and remain the cleanest next step.",
+          "cites": [
+            "e_home_report",
+            "e_office_home_concordant"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lipids",
+      "title": "Lipids",
+      "narrative": [
+        {
+          "text": "The lipid panel is deteriorating across the three available draws. Total cholesterol moved 159 → 156 → 188, but LDL stayed essentially flat at 89 → 94 → 92, so LDL is not the story.",
+          "cites": [
+            "e_chol",
+            "e_ldl"
+          ]
+        },
+        {
+          "text": "The story is the protective HDL falling from 52 to 44 to 40, now flagged Low, while the cholesterol-to-HDL ratio climbed from 3.1 to 4.7 — a metabolic-syndrome-type pattern that adds to ASCVD risk beyond LDL alone and tracks the weight gain. Triglycerides spiked to 282 on the latest panel.",
+          "cites": [
+            "e_hdl",
+            "e_ratio",
+            "e_trig"
+          ]
+        },
+        {
+          "text": "The honest caveat is that the 2025 panel was non-fasting, which inflates the triglyceride and the calculated VLDL and ratio; the 2018 baseline was fasting. But the driver — HDL — is measured directly and does not depend on fasting, so the atherogenic shift is real regardless. A fasting redraw is needed to act on the triglyceride, not to confirm the direction.",
+          "cites": [
+            "e_fasting_2018",
+            "e_nonfasting_2025"
+          ]
+        },
+        {
+          "text": "Despite a panel that worsened across every draw, no lipid-lowering therapy was ever ordered, offered, or charted — the lipid axis never reached a decision at all.",
+          "cites": [
+            "e_no_lipid_therapy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ascvd",
+      "title": "ASCVD risk",
+      "narrative": [
+        {
+          "text": "No global ASCVD or PREVENT risk was ever estimated anywhere in the record, so risk was managed reading-by-reading rather than as an integrated number. Computed here from the Pooled Cohort Equations, his 10-year ASCVD runs 1.06% on the 2018 fasting panel → 1.28% (2023) → 2.04% (2025) — it has nearly doubled, driven mostly by the HDL fall from 52 to 40.",
+          "cites": [
+            "e_ascvd_computed"
+          ]
+        },
+        {
+          "text": "Every input is recoverable from this export, including race (White) and ethnicity (Not Hispanic or Latino), which a first pass wrongly believed were missing — so the estimate needs no wide race-driven spread. The AHA PREVENT 2023 model, which requires no race input, gives a concordant ~1.6% → 2.4% and independently confirms the read.",
+          "cites": [
+            "e_ascvd_inputs",
+            "e_prevent_crosscheck"
+          ]
+        },
+        {
+          "text": "Both figures sit below the 5% borderline and 7.5% intermediate statin-discussion thresholds, which is exactly why the omission felt defensible by default. But the honest reading is the opposite: a 43-year-old whose estimate has already nearly doubled on still-modest inputs, who carries guideline risk-enhancers the equations under-weight, is the textbook candidate for a risk-enhancer-informed discussion and lifestyle intervention now — when the 30-year and lifetime horizon is what matters. The value of the number is the trajectory and the conversation it should trigger, not the small percentage.",
+          "cites": [
+            "e_ascvd_computed"
+          ]
+        },
+        {
+          "text": "Two bounded sensitivities answer the obvious objections. Because the blood pressure is office-only, the systolic sensitivity on the 2025 panel spans only 1.78% to 2.32% across his observed range. And a fasting redraw cannot rescue the picture: holding the measured HDL of 40 fixed, the risk stays in a tight 1.5–2.0% band even if total cholesterol reverted all the way to its 2018 value — still well above the 1.06% he sat at when HDL was 52.",
+          "cites": [
+            "e_sbp_sensitivity",
+            "e_fasting_redraw"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family",
+      "title": "Family history",
+      "narrative": [
+        {
+          "text": "The family history is heavily cardiovascular and bilateral. Two first-degree relatives carry the exact two conditions he is drifting toward — his mother has hypertension, his father hyperlipidemia, and his brother both.",
+          "cites": [
+            "e_family_mother_htn",
+            "e_family_father_hld",
+            "e_family_brother"
+          ]
+        },
+        {
+          "text": "And all four grandparents had a hard atherosclerotic event: stroke in both maternal grandparents, heart attack in both paternal grandparents. Eight of the twelve recorded family-history facts are cardiovascular — a guideline-recognized risk enhancer that argues for treating his modifiable factors more aggressively, not less.",
+          "cites": [
+            "e_family_maternal_stroke",
+            "e_family_paternal_mi",
+            "e_family_count"
+          ]
+        },
+        {
+          "text": "Closed honestly: whether those grandparent events were premature — the ASCVD-relevant cut — cannot be answered from this export. The age of onset is blank for every entry in the table and in every annual note's family-history block, so the strongest form of the enhancer must be asked, not mined.",
+          "cites": [
+            "e_family_onset_absent"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "acute",
+      "title": "2024 emergency work-ups",
+      "narrative": [
+        {
+          "text": "The system reliably worked up his acute symptoms. A May 2024 chest-pain emergency visit produced a negative troponin and a normal chest x-ray (the radiology indication attributing the pain to THC use), with a metabolic panel and CBC also drawn.",
+          "cites": [
+            "e_troponin_neg",
+            "e_cxr_read"
+          ]
+        },
+        {
+          "text": "A July 2024 suspected vertebral-artery dissection was worked up with a CT angiogram of the neck that read clean — no atherosclerosis, less than 50% internal-carotid stenosis bilaterally, no dissection — plus intravenous fluids. At age 41–42 this is direct evidence against established atherosclerotic disease.",
+          "cites": [
+            "e_cta_read",
+            "e_dissection_workup"
+          ]
+        },
+        {
+          "text": "Both pieces of genuinely reassuring cardiovascular data sit unintegrated. They arrived only as imported external orders with the findings buried in the radiology narrative, neither carries a clinic note, and the July 2024 primary-care visit six weeks after the chest pain never mentions it — so even the good news is not being used to frame the risk conversation it should anchor.",
+          "cites": [
+            "e_acute_unreconciled",
+            "e_pcp_silent_acute"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "metabolic",
+      "title": "Weight & glycemia",
+      "narrative": [
+        {
+          "text": "He is not diabetic and not prediabetic — A1c 5.4% then 5.5%, both normal — so dysglycemia is not a current driver. But the steady 13-pound gain from 174 to 187 lb, moving BMI into the overweight range, is the plausible common cause behind the simultaneous blood-pressure elevation, HDL decline, and triglyceride rise.",
+          "cites": [
+            "e_weight",
+            "e_a1c"
+          ]
+        },
+        {
+          "text": "Weight and lifestyle are the highest-yield, lowest-risk lever here, and he has shown real engagement: he self-funded a continuous glucose monitor despite never meeting diabetes criteria. The visits could have harnessed that, but by late 2025 the device was marked 'not taking' and no glucose data from it reached the record — the engagement was there and went unused.",
+          "cites": [
+            "e_cgm_engagement",
+            "e_cgm"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "assessment",
+      "title": "Assessment & plan",
+      "narrative": [
+        {
+          "text": "Nothing here is acutely dangerous today — negative troponin, clean neck CT angiogram with no atherosclerosis, normal A1c, normal kidneys — and the clean renal and electrolyte labs mean nothing clinical is blocking treatment except inertia. But every modifiable lever is drifting the wrong way: he is untreated on both the blood-pressure and lipid axes at once, by two different mechanisms. The blood-pressure axis reached a decision and failed at adherence (the declined lisinopril); the lipid axis never reached a decision at all.",
+          "cites": [
+            "e_renal_clean",
+            "e_no_drugs_overall"
+          ]
+        },
+        {
+          "text": "The structural signature is acute reactivity against chronic neglect: the 2024 emergency apparatus fired correctly and fast, while the chronic accumulating risk was re-addressed at zero of the six primary-care visits after the 2022 diagnosis, five of which carried an at-or-above-Stage-1 reading. The undercoding is the mechanism — with hypertension off the problem list, the acute symptom always supplies a presenting complaint while the asymptomatic chronic risk supplies none.",
+          "cites": [
+            "e_acute_vs_chronic",
+            "e_readdressed_zero"
+          ]
+        },
+        {
+          "text": "What a cardiologist would do: confirm the hypertension with home or ambulatory readings and put it on the problem list; re-open the one-sided refusal as a documented shared decision; repeat the lipids fasting and carry the now-computed ASCVD estimate into a risk-enhancer-informed discussion rather than leaving the number unframed; make the weight and lifestyle plan concrete and leverage his demonstrated willingness to self-monitor; and fold the 2024 negative troponin and clean CT angiogram in as the reassuring baseline they are. The fundamentals are favorable and the patient is engaged — but the risk is real, rising, and currently unowned.",
+          "cites": [
+            "e_office_home_concordant",
+            "e_lisinopril_decline",
+            "e_fasting_redraw",
+            "e_cgm_engagement",
+            "e_troponin_neg"
+          ]
+        },
+        {
+          "text": "What this export cannot answer, and should be asked rather than mined: whether the family cardiovascular events were premature (the age of onset is blank everywhere); what the patient's logged home blood pressures are; what the declined lisinopril actually represented (the structured reason is a generic refusal and the same-day note is silent); the discrete values of the 2024 emergency labs (only normal/abnormal flags survived the import); and whether a fasting lipid was ever repeated after the non-fasting 2025 panel.",
+          "cites": [
+            "e_family_onset_absent",
+            "e_office_home_concordant",
+            "e_lisinopril_decline",
+            "e_troponin_neg",
+            "e_nonfasting_2025"
+          ]
+        }
+      ]
+    }
+  ]
+}

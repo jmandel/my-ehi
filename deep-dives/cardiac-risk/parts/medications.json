@@ -1,0 +1,1161 @@
+{
+  "rows": [
+    {
+      "order_med_id": "772179261",
+      "name": "lisinopril (PRINIVIL,ZESTRIL) tablet",
+      "generic": "Lisinopril Tab 10 MG",
+      "description": "LISINOPRIL 10 MG PO TABS",
+      "medication_id": "10449",
+      "status": "Sent",
+      "order_class": "Normal",
+      "ordering_mode": "Outpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": "90 tablet",
+      "refills": "1",
+      "route": "Oral",
+      "sig": "Take 1 (one) tablet by mouth daily.",
+      "indication_dx_id": "108212",
+      "indication": "Primary hypertension",
+      "ordering_date": "8/29/2022 12:00:00 AM",
+      "start_date": "8/29/2022 12:00:00 AM",
+      "end_date": "9/28/2023 12:00:00 AM",
+      "discon_reason": "* Patient refusal (sends cancel message to pharmacy)",
+      "discon_time": "9/28/2023 2:38:00 PM",
+      "discon_user": "SMITH, MARY B",
+      "discon_contact_csn": "991225117",
+      "discon_contact_date": "9/28/2023 12:00:00 AM",
+      "taking_yn_history": {
+        "Y": 0,
+        "N": 2,
+        "blank": 0
+      },
+      "reconciliation_events": [
+        {
+          "entry_dttm": "8/29/2022 2:23:00 PM",
+          "action": "Initial Prescription",
+          "source": "Order Creation",
+          "reason_comment": null
+        }
+      ],
+      "reorder_supersedes": null,
+      "reorder_superseded_by": null,
+      "is_chain_head": true,
+      "enc_csn": "948004323",
+      "enc_date_real": "66350",
+      "ord_prov": "RAMMELKAMP, ZOE L",
+      "auth_prov": "RAMMELKAMP, ZOE L",
+      "cv_relevance": "antihypertensive",
+      "cv_note": "ACE inhibitor for primary hypertension",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "772179261"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=10449",
+          "ORDER_MED_SIG.ORDER_ID=772179261",
+          "ORDER_DX_MED.ORDER_MED_ID=772179261+CLARITY_EDG.DX_ID=108212",
+          "DISCONTINUED_MEDS.MEDS_DISCONTINUED=772179261",
+          "ORDER_RPTD_SIG_HX.ORDER_ID=772179261",
+          "MEDS_REV_HX_LIST.MEDICATION_ORDER_ID=772179261"
+        ]
+      }
+    },
+    {
+      "order_med_id": "772179266",
+      "name": "nortriptyline (PAMELOR) capsule",
+      "generic": "Nortriptyline HCl Cap 10 MG",
+      "description": "NORTRIPTYLINE HCL 10 MG PO CAPS",
+      "medication_id": "5674",
+      "status": "Sent",
+      "order_class": "Normal",
+      "ordering_mode": "Outpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": "90 capsule",
+      "refills": "1",
+      "route": "Oral",
+      "sig": "Take 1 (one) capsule by mouth nightly. Start with 10 mg at night; can increase to 20 mg after 1-2 weeks if no side effects",
+      "indication_dx_id": "260690",
+      "indication": "Post concussion syndrome",
+      "ordering_date": "12/1/2022 12:00:00 AM",
+      "start_date": "12/1/2022 12:00:00 AM",
+      "end_date": "2/20/2023 12:00:00 AM",
+      "discon_reason": null,
+      "discon_time": "2/20/2023 7:27:00 PM",
+      "discon_user": "RAMMELKAMP, ZOE L",
+      "discon_contact_csn": "988126821",
+      "discon_contact_date": "2/19/2023 12:00:00 AM",
+      "taking_yn_history": null,
+      "reconciliation_events": [
+        {
+          "entry_dttm": "12/1/2022 10:15:00 AM",
+          "action": "Initial Prescription",
+          "source": "Order Creation",
+          "reason_comment": null
+        }
+      ],
+      "reorder_supersedes": null,
+      "reorder_superseded_by": "772179269",
+      "is_chain_head": false,
+      "enc_csn": "974614965",
+      "enc_date_real": "66444",
+      "ord_prov": "RAMMELKAMP, ZOE L",
+      "auth_prov": "RAMMELKAMP, ZOE L",
+      "cv_relevance": "none",
+      "cv_note": "",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "772179266"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=5674",
+          "ORDER_MED_SIG.ORDER_ID=772179266",
+          "ORDER_DX_MED.ORDER_MED_ID=772179266+CLARITY_EDG.DX_ID=260690",
+          "DISCONTINUED_MEDS.MEDS_DISCONTINUED=772179266",
+          "ORDER_RPTD_SIG_HX.ORDER_ID=772179266"
+        ]
+      }
+    },
+    {
+      "order_med_id": "772179269",
+      "name": "NORTRIPTYLINE HCL 10 MG PO CAPS",
+      "generic": "Nortriptyline HCl Cap 10 MG",
+      "description": "NORTRIPTYLINE HCL 10 MG PO CAPS",
+      "medication_id": "5674",
+      "status": "Sent",
+      "order_class": "Normal",
+      "ordering_mode": "Outpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": "180 capsule",
+      "refills": "3",
+      "route": null,
+      "sig": "TAKE 1 CAPSULE BY MOUTH EVERY NIGHT. START WITH 1 CAPSULE AT NIGHT; CAN. INCREASE TO 2 CAPSULES AFTER 1-2 WEEKS IF NO SIDE EFFECTS",
+      "indication_dx_id": "260690",
+      "indication": "Post concussion syndrome",
+      "ordering_date": "2/20/2023 12:00:00 AM",
+      "start_date": "2/20/2023 12:00:00 AM",
+      "end_date": "12/22/2023 12:00:00 AM",
+      "discon_reason": "*Reorder (sends cancel message to pharmacy)",
+      "discon_time": "12/22/2023 9:48:00 PM",
+      "discon_user": "RAMMELKAMP, ZOE L",
+      "discon_contact_csn": "1043034397",
+      "discon_contact_date": "12/22/2023 12:00:00 AM",
+      "taking_yn_history": {
+        "Y": 2,
+        "N": 0,
+        "blank": 0
+      },
+      "reconciliation_events": [
+        {
+          "entry_dttm": "2/20/2023 1:27:00 PM",
+          "action": "Initial Prescription",
+          "source": "Order Creation",
+          "reason_comment": null
+        }
+      ],
+      "reorder_supersedes": "772179266",
+      "reorder_superseded_by": "945468373",
+      "is_chain_head": false,
+      "enc_csn": "988126821",
+      "enc_date_real": "66524",
+      "ord_prov": "RAMMELKAMP, ZOE L",
+      "auth_prov": "RAMMELKAMP, ZOE L",
+      "cv_relevance": "none",
+      "cv_note": "",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "772179269"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=5674",
+          "ORDER_MED_SIG.ORDER_ID=772179269",
+          "ORDER_DX_MED.ORDER_MED_ID=772179269+CLARITY_EDG.DX_ID=260690",
+          "DISCONTINUED_MEDS.MEDS_DISCONTINUED=772179269",
+          "ORDER_RPTD_SIG_HX.ORDER_ID=772179269",
+          "MEDS_REV_HX_LIST.MEDICATION_ORDER_ID=772179269"
+        ]
+      }
+    },
+    {
+      "order_med_id": "945468373",
+      "name": "nortriptyline (PAMELOR) capsule",
+      "generic": "Nortriptyline HCl Cap 10 MG",
+      "description": "NORTRIPTYLINE HCL 10 MG PO CAPS",
+      "medication_id": "5674",
+      "status": "Sent",
+      "order_class": "Normal",
+      "ordering_mode": "Outpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": "270 capsule",
+      "refills": "3",
+      "route": "Oral",
+      "sig": "Take 3 (three) capsules by mouth nightly.",
+      "indication_dx_id": "260690",
+      "indication": "Post concussion syndrome",
+      "ordering_date": "12/22/2023 12:00:00 AM",
+      "start_date": "12/22/2023 12:00:00 AM",
+      "end_date": "1/27/2025 12:00:00 AM",
+      "discon_reason": "*Reorder (sends cancel message to pharmacy)",
+      "discon_time": "1/27/2025 6:58:00 PM",
+      "discon_user": "RAMMELKAMP, ZOE L",
+      "discon_contact_csn": "1113285509",
+      "discon_contact_date": "1/27/2025 12:00:00 AM",
+      "taking_yn_history": {
+        "Y": 4,
+        "N": 0,
+        "blank": 0
+      },
+      "reconciliation_events": [
+        {
+          "entry_dttm": "12/22/2023 3:48:00 PM",
+          "action": "Initial Prescription",
+          "source": "Order Creation",
+          "reason_comment": null
+        }
+      ],
+      "reorder_supersedes": "772179269",
+      "reorder_superseded_by": "1034471696",
+      "is_chain_head": false,
+      "enc_csn": "1043034397",
+      "enc_date_real": "66830",
+      "ord_prov": "RAMMELKAMP, ZOE L",
+      "auth_prov": "RAMMELKAMP, ZOE L",
+      "cv_relevance": "none",
+      "cv_note": "",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "945468373"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=5674",
+          "ORDER_MED_SIG.ORDER_ID=945468373",
+          "ORDER_DX_MED.ORDER_MED_ID=945468373+CLARITY_EDG.DX_ID=260690",
+          "DISCONTINUED_MEDS.MEDS_DISCONTINUED=945468373",
+          "ORDER_RPTD_SIG_HX.ORDER_ID=945468373",
+          "MEDS_REV_HX_LIST.MEDICATION_ORDER_ID=945468373"
+        ]
+      }
+    },
+    {
+      "order_med_id": "945468374",
+      "name": "FREESTYLE LIBRE 3 SENSOR MISC",
+      "generic": "Continuous Glucose System Sensor",
+      "description": "FREESTYLE LIBRE 3 SENSOR MISC",
+      "medication_id": "163506",
+      "status": "Sent",
+      "order_class": "Normal",
+      "ordering_mode": "Outpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": "2 each",
+      "refills": "0",
+      "route": null,
+      "sig": "Apply every two weeks",
+      "indication_dx_id": null,
+      "indication": null,
+      "ordering_date": "3/12/2024 12:00:00 AM",
+      "start_date": "3/12/2024 12:00:00 AM",
+      "end_date": "5/7/2024 12:00:00 AM",
+      "discon_reason": null,
+      "discon_time": "5/7/2024 9:16:00 PM",
+      "discon_user": "SMITH, MARY B",
+      "discon_contact_csn": "1066932467",
+      "discon_contact_date": "5/7/2024 12:00:00 AM",
+      "taking_yn_history": null,
+      "reconciliation_events": [
+        {
+          "entry_dttm": "3/12/2024 8:23:00 AM",
+          "action": "Initial Prescription",
+          "source": "Order Creation",
+          "reason_comment": null
+        }
+      ],
+      "reorder_supersedes": null,
+      "reorder_superseded_by": "945468376",
+      "is_chain_head": false,
+      "enc_csn": "1056709125",
+      "enc_date_real": "66908",
+      "ord_prov": "RAMMELKAMP, ZOE L",
+      "auth_prov": "RAMMELKAMP, ZOE L",
+      "cv_relevance": "metabolic-monitor",
+      "cv_note": "CGM sensor/reader — glycemic surveillance, CV-risk-adjacent",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "945468374"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=163506",
+          "ORDER_MED_SIG.ORDER_ID=945468374",
+          "DISCONTINUED_MEDS.MEDS_DISCONTINUED=945468374",
+          "ORDER_RPTD_SIG_HX.ORDER_ID=945468374"
+        ]
+      }
+    },
+    {
+      "order_med_id": "945468375",
+      "name": "FREESTYLE LIBRE 3 READER DEVI",
+      "generic": "Continuous Glucose System Receiver",
+      "description": "FREESTYLE LIBRE 3 READER DEVI",
+      "medication_id": "170050",
+      "status": "Sent",
+      "order_class": "Normal",
+      "ordering_mode": "Outpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": "2 each",
+      "refills": "0",
+      "route": null,
+      "sig": "For use as indicated every 14 days",
+      "indication_dx_id": null,
+      "indication": null,
+      "ordering_date": "3/12/2024 12:00:00 AM",
+      "start_date": "3/12/2024 12:00:00 AM",
+      "end_date": "12/4/2025 12:00:00 AM",
+      "discon_reason": "* Therapy completed (sends cancel message to pharmacy)",
+      "discon_time": "12/4/2025 9:05:00 PM",
+      "discon_user": "SMITH, MARY B",
+      "discon_contact_csn": "1098684634",
+      "discon_contact_date": "12/4/2025 12:00:00 AM",
+      "taking_yn_history": {
+        "Y": 4,
+        "N": 3,
+        "blank": 0
+      },
+      "reconciliation_events": [
+        {
+          "entry_dttm": "3/12/2024 8:23:00 AM",
+          "action": "Initial Prescription",
+          "source": "Order Creation",
+          "reason_comment": null
+        },
+        {
+          "entry_dttm": "12/4/2025 3:04:00 PM",
+          "action": "Not Taking",
+          "source": "Marked as Taking",
+          "reason_comment": null
+        }
+      ],
+      "reorder_supersedes": null,
+      "reorder_superseded_by": null,
+      "is_chain_head": true,
+      "enc_csn": "1056709125",
+      "enc_date_real": "66908",
+      "ord_prov": "RAMMELKAMP, ZOE L",
+      "auth_prov": "RAMMELKAMP, ZOE L",
+      "cv_relevance": "metabolic-monitor",
+      "cv_note": "CGM sensor/reader — glycemic surveillance, CV-risk-adjacent",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "945468375"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=170050",
+          "ORDER_MED_SIG.ORDER_ID=945468375",
+          "DISCONTINUED_MEDS.MEDS_DISCONTINUED=945468375",
+          "ORDER_RPTD_SIG_HX.ORDER_ID=945468375",
+          "MEDS_REV_HX_LIST.MEDICATION_ORDER_ID=945468375"
+        ]
+      }
+    },
+    {
+      "order_med_id": "945468376",
+      "name": "FREESTYLE LIBRE 3 SENSOR MISC",
+      "generic": "Continuous Glucose System Sensor",
+      "description": "FREESTYLE LIBRE 3 SENSOR MISC",
+      "medication_id": "163506",
+      "status": "Sent",
+      "order_class": "Normal",
+      "ordering_mode": "Outpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": "4 each",
+      "refills": "4",
+      "route": null,
+      "sig": "APPLY ONE SENSOR EVERY 2 WEEKS",
+      "indication_dx_id": null,
+      "indication": null,
+      "ordering_date": "5/7/2024 12:00:00 AM",
+      "start_date": "5/7/2024 12:00:00 AM",
+      "end_date": null,
+      "discon_reason": null,
+      "discon_time": null,
+      "discon_user": null,
+      "discon_contact_csn": null,
+      "discon_contact_date": null,
+      "taking_yn_history": {
+        "Y": 4,
+        "N": 3,
+        "blank": 0
+      },
+      "reconciliation_events": [
+        {
+          "entry_dttm": "5/7/2024 4:16:00 PM",
+          "action": "Initial Prescription",
+          "source": "Order Creation",
+          "reason_comment": null
+        },
+        {
+          "entry_dttm": "12/4/2025 3:04:00 PM",
+          "action": "Not Taking",
+          "source": "Marked as Taking",
+          "reason_comment": null
+        }
+      ],
+      "reorder_supersedes": "945468374",
+      "reorder_superseded_by": null,
+      "is_chain_head": true,
+      "enc_csn": "1066932467",
+      "enc_date_real": "66967",
+      "ord_prov": "RAMMELKAMP, ZOE L",
+      "auth_prov": "RAMMELKAMP, ZOE L",
+      "cv_relevance": "metabolic-monitor",
+      "cv_note": "CGM sensor/reader — glycemic surveillance, CV-risk-adjacent",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "945468376"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=163506",
+          "ORDER_MED_SIG.ORDER_ID=945468376",
+          "ORDER_RPTD_SIG_HX.ORDER_ID=945468376",
+          "MEDS_REV_HX_LIST.MEDICATION_ORDER_ID=945468376"
+        ]
+      }
+    },
+    {
+      "order_med_id": "1025926288",
+      "name": "cyclobenzaprine (FLEXERIL) tablet",
+      "generic": "Cyclobenzaprine HCl Tab 5 MG",
+      "description": "CYCLOBENZAPRINE HCL 5 MG PO TABS",
+      "medication_id": "35184",
+      "status": "Sent",
+      "order_class": "Normal",
+      "ordering_mode": "Outpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": "20 tablet",
+      "refills": "0",
+      "route": "Oral",
+      "sig": "Take 1 (one) tablet by mouth nightly as needed for Muscle spasms.",
+      "indication_dx_id": null,
+      "indication": null,
+      "ordering_date": "7/2/2024 12:00:00 AM",
+      "start_date": "7/2/2024 12:00:00 AM",
+      "end_date": "11/7/2024 12:00:00 AM",
+      "discon_reason": "* Therapy completed (sends cancel message to pharmacy)",
+      "discon_time": "11/7/2024 2:25:00 PM",
+      "discon_user": "SMITH, MARY B",
+      "discon_contact_csn": "1028744231",
+      "discon_contact_date": "11/7/2024 12:00:00 AM",
+      "taking_yn_history": {
+        "Y": 0,
+        "N": 0,
+        "blank": 1
+      },
+      "reconciliation_events": [
+        {
+          "entry_dttm": "7/2/2024 10:15:00 AM",
+          "action": "Initial Prescription",
+          "source": "Order Creation",
+          "reason_comment": null
+        }
+      ],
+      "reorder_supersedes": null,
+      "reorder_superseded_by": null,
+      "is_chain_head": true,
+      "enc_csn": "1076261941",
+      "enc_date_real": "67023",
+      "ord_prov": "EVERTON, JENNIFER L",
+      "auth_prov": "EVERTON, JENNIFER L",
+      "cv_relevance": "none",
+      "cv_note": "",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "1025926288"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=35184",
+          "ORDER_MED_SIG.ORDER_ID=1025926288",
+          "DISCONTINUED_MEDS.MEDS_DISCONTINUED=1025926288",
+          "ORDER_RPTD_SIG_HX.ORDER_ID=1025926288",
+          "MEDS_REV_HX_LIST.MEDICATION_ORDER_ID=1025926288"
+        ]
+      }
+    },
+    {
+      "order_med_id": "1025926290",
+      "name": "0.9%  NaCl infusion",
+      "generic": "Sodium Chloride IV Soln 0.9%",
+      "description": "SODIUM CHLORIDE 0.9 % IV SOLN",
+      "medication_id": "27838",
+      "status": "Discontinued",
+      "order_class": "Normal",
+      "ordering_mode": "Inpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": null,
+      "refills": null,
+      "route": "Intravenous",
+      "sig": null,
+      "indication_dx_id": null,
+      "indication": null,
+      "ordering_date": "7/30/2024 12:00:00 AM",
+      "start_date": null,
+      "end_date": "7/30/2024 12:00:00 AM",
+      "discon_reason": null,
+      "discon_time": "7/30/2024 8:33:00 PM",
+      "discon_user": "EPIC, USER",
+      "discon_contact_csn": "1081584507",
+      "discon_contact_date": "7/30/2024 12:00:00 AM",
+      "taking_yn_history": null,
+      "reconciliation_events": [],
+      "reorder_supersedes": null,
+      "reorder_superseded_by": null,
+      "is_chain_head": true,
+      "enc_csn": "1081584507",
+      "enc_date_real": "67051.01",
+      "ord_prov": "GENERIC EXTERNAL DATA PROVIDER",
+      "auth_prov": "GENERIC EXTERNAL DATA PROVIDER",
+      "cv_relevance": "none",
+      "cv_note": "",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "1025926290"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=27838",
+          "DISCONTINUED_MEDS.MEDS_DISCONTINUED=1025926290"
+        ]
+      }
+    },
+    {
+      "order_med_id": "1025926291",
+      "name": "0.9%  NaCl infusion",
+      "generic": "Sodium Chloride IV Soln 0.9%",
+      "description": "SODIUM CHLORIDE 0.9 % IV SOLN",
+      "medication_id": "27838",
+      "status": "Discontinued",
+      "order_class": "Normal",
+      "ordering_mode": "Inpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": null,
+      "refills": null,
+      "route": "Intravenous",
+      "sig": null,
+      "indication_dx_id": null,
+      "indication": null,
+      "ordering_date": "7/30/2024 12:00:00 AM",
+      "start_date": null,
+      "end_date": "7/30/2024 12:00:00 AM",
+      "discon_reason": null,
+      "discon_time": "7/30/2024 8:33:00 PM",
+      "discon_user": "EPIC, USER",
+      "discon_contact_csn": "1081584507",
+      "discon_contact_date": "7/30/2024 12:00:00 AM",
+      "taking_yn_history": null,
+      "reconciliation_events": [],
+      "reorder_supersedes": null,
+      "reorder_superseded_by": null,
+      "is_chain_head": true,
+      "enc_csn": "1081584507",
+      "enc_date_real": "67051.01",
+      "ord_prov": "GENERIC EXTERNAL DATA PROVIDER",
+      "auth_prov": "GENERIC EXTERNAL DATA PROVIDER",
+      "cv_relevance": "none",
+      "cv_note": "",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "1025926291"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=27838",
+          "DISCONTINUED_MEDS.MEDS_DISCONTINUED=1025926291"
+        ]
+      }
+    },
+    {
+      "order_med_id": "1025926292",
+      "name": "0.9%  NaCl infusion",
+      "generic": "Sodium Chloride IV Soln 0.9%",
+      "description": "SODIUM CHLORIDE 0.9 % IV SOLN",
+      "medication_id": "27838",
+      "status": "Discontinued",
+      "order_class": "Normal",
+      "ordering_mode": "Inpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": null,
+      "refills": null,
+      "route": "Intravenous",
+      "sig": null,
+      "indication_dx_id": null,
+      "indication": null,
+      "ordering_date": "7/30/2024 12:00:00 AM",
+      "start_date": null,
+      "end_date": "7/30/2024 12:00:00 AM",
+      "discon_reason": null,
+      "discon_time": "7/30/2024 8:33:00 PM",
+      "discon_user": "EPIC, USER",
+      "discon_contact_csn": "1081584507",
+      "discon_contact_date": "7/30/2024 12:00:00 AM",
+      "taking_yn_history": null,
+      "reconciliation_events": [],
+      "reorder_supersedes": null,
+      "reorder_superseded_by": null,
+      "is_chain_head": true,
+      "enc_csn": "1081584507",
+      "enc_date_real": "67051.01",
+      "ord_prov": "GENERIC EXTERNAL DATA PROVIDER",
+      "auth_prov": "GENERIC EXTERNAL DATA PROVIDER",
+      "cv_relevance": "none",
+      "cv_note": "",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "1025926292"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=27838",
+          "DISCONTINUED_MEDS.MEDS_DISCONTINUED=1025926292"
+        ]
+      }
+    },
+    {
+      "order_med_id": "1034471687",
+      "name": "0.9%  NaCl infusion",
+      "generic": "Sodium Chloride IV Soln 0.9%",
+      "description": "SODIUM CHLORIDE 0.9 % IV SOLN",
+      "medication_id": "27838",
+      "status": "Discontinued",
+      "order_class": "Normal",
+      "ordering_mode": "Inpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": null,
+      "refills": null,
+      "route": "Intravenous",
+      "sig": null,
+      "indication_dx_id": null,
+      "indication": null,
+      "ordering_date": "7/30/2024 12:00:00 AM",
+      "start_date": null,
+      "end_date": "7/30/2024 12:00:00 AM",
+      "discon_reason": null,
+      "discon_time": "7/30/2024 8:33:00 PM",
+      "discon_user": "EPIC, USER",
+      "discon_contact_csn": "1081584507",
+      "discon_contact_date": "7/30/2024 12:00:00 AM",
+      "taking_yn_history": null,
+      "reconciliation_events": [],
+      "reorder_supersedes": null,
+      "reorder_superseded_by": null,
+      "is_chain_head": true,
+      "enc_csn": "1081584507",
+      "enc_date_real": "67051.01",
+      "ord_prov": "GENERIC EXTERNAL DATA PROVIDER",
+      "auth_prov": "GENERIC EXTERNAL DATA PROVIDER",
+      "cv_relevance": "none",
+      "cv_note": "",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "1034471687"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=27838",
+          "DISCONTINUED_MEDS.MEDS_DISCONTINUED=1034471687"
+        ]
+      }
+    },
+    {
+      "order_med_id": "1034471688",
+      "name": "0.9%  NaCl infusion",
+      "generic": "Sodium Chloride IV Soln 0.9%",
+      "description": "SODIUM CHLORIDE 0.9 % IV SOLN",
+      "medication_id": "27838",
+      "status": "Discontinued",
+      "order_class": "Normal",
+      "ordering_mode": "Inpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": null,
+      "refills": null,
+      "route": "Intravenous",
+      "sig": null,
+      "indication_dx_id": null,
+      "indication": null,
+      "ordering_date": "7/30/2024 12:00:00 AM",
+      "start_date": null,
+      "end_date": "7/30/2024 12:00:00 AM",
+      "discon_reason": null,
+      "discon_time": "7/30/2024 8:33:00 PM",
+      "discon_user": "EPIC, USER",
+      "discon_contact_csn": "1081584508",
+      "discon_contact_date": "7/30/2024 12:00:00 AM",
+      "taking_yn_history": null,
+      "reconciliation_events": [],
+      "reorder_supersedes": null,
+      "reorder_superseded_by": null,
+      "is_chain_head": true,
+      "enc_csn": "1081584508",
+      "enc_date_real": "67051.02",
+      "ord_prov": "GENERIC EXTERNAL DATA PROVIDER",
+      "auth_prov": "GENERIC EXTERNAL DATA PROVIDER",
+      "cv_relevance": "none",
+      "cv_note": "",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "1034471688"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=27838",
+          "DISCONTINUED_MEDS.MEDS_DISCONTINUED=1034471688"
+        ]
+      }
+    },
+    {
+      "order_med_id": "1034471689",
+      "name": "0.9%  NaCl infusion",
+      "generic": "Sodium Chloride IV Soln 0.9%",
+      "description": "SODIUM CHLORIDE 0.9 % IV SOLN",
+      "medication_id": "27838",
+      "status": "Discontinued",
+      "order_class": "Normal",
+      "ordering_mode": "Inpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": null,
+      "refills": null,
+      "route": "Intravenous",
+      "sig": null,
+      "indication_dx_id": null,
+      "indication": null,
+      "ordering_date": "7/30/2024 12:00:00 AM",
+      "start_date": null,
+      "end_date": "7/30/2024 12:00:00 AM",
+      "discon_reason": null,
+      "discon_time": "7/30/2024 8:33:00 PM",
+      "discon_user": "EPIC, USER",
+      "discon_contact_csn": "1081584508",
+      "discon_contact_date": "7/30/2024 12:00:00 AM",
+      "taking_yn_history": null,
+      "reconciliation_events": [],
+      "reorder_supersedes": null,
+      "reorder_superseded_by": null,
+      "is_chain_head": true,
+      "enc_csn": "1081584508",
+      "enc_date_real": "67051.02",
+      "ord_prov": "GENERIC EXTERNAL DATA PROVIDER",
+      "auth_prov": "GENERIC EXTERNAL DATA PROVIDER",
+      "cv_relevance": "none",
+      "cv_note": "",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "1034471689"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=27838",
+          "DISCONTINUED_MEDS.MEDS_DISCONTINUED=1034471689"
+        ]
+      }
+    },
+    {
+      "order_med_id": "1034471690",
+      "name": "0.9%  NaCl infusion",
+      "generic": "Sodium Chloride IV Soln 0.9%",
+      "description": "SODIUM CHLORIDE 0.9 % IV SOLN",
+      "medication_id": "27838",
+      "status": "Discontinued",
+      "order_class": "Normal",
+      "ordering_mode": "Inpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": null,
+      "refills": null,
+      "route": "Intravenous",
+      "sig": null,
+      "indication_dx_id": null,
+      "indication": null,
+      "ordering_date": "7/30/2024 12:00:00 AM",
+      "start_date": null,
+      "end_date": "7/30/2024 12:00:00 AM",
+      "discon_reason": null,
+      "discon_time": "7/30/2024 8:33:00 PM",
+      "discon_user": "EPIC, USER",
+      "discon_contact_csn": "1081584508",
+      "discon_contact_date": "7/30/2024 12:00:00 AM",
+      "taking_yn_history": null,
+      "reconciliation_events": [],
+      "reorder_supersedes": null,
+      "reorder_superseded_by": null,
+      "is_chain_head": true,
+      "enc_csn": "1081584508",
+      "enc_date_real": "67051.02",
+      "ord_prov": "GENERIC EXTERNAL DATA PROVIDER",
+      "auth_prov": "GENERIC EXTERNAL DATA PROVIDER",
+      "cv_relevance": "none",
+      "cv_note": "",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "1034471690"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=27838",
+          "DISCONTINUED_MEDS.MEDS_DISCONTINUED=1034471690"
+        ]
+      }
+    },
+    {
+      "order_med_id": "1034471691",
+      "name": "0.9%  NaCl infusion",
+      "generic": "Sodium Chloride IV Soln 0.9%",
+      "description": "SODIUM CHLORIDE 0.9 % IV SOLN",
+      "medication_id": "27838",
+      "status": "Discontinued",
+      "order_class": "Normal",
+      "ordering_mode": "Inpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": null,
+      "refills": null,
+      "route": "Intravenous",
+      "sig": null,
+      "indication_dx_id": null,
+      "indication": null,
+      "ordering_date": "7/30/2024 12:00:00 AM",
+      "start_date": null,
+      "end_date": "7/30/2024 12:00:00 AM",
+      "discon_reason": null,
+      "discon_time": "7/30/2024 8:33:00 PM",
+      "discon_user": "EPIC, USER",
+      "discon_contact_csn": "1081584508",
+      "discon_contact_date": "7/30/2024 12:00:00 AM",
+      "taking_yn_history": null,
+      "reconciliation_events": [],
+      "reorder_supersedes": null,
+      "reorder_superseded_by": null,
+      "is_chain_head": true,
+      "enc_csn": "1081584508",
+      "enc_date_real": "67051.02",
+      "ord_prov": "GENERIC EXTERNAL DATA PROVIDER",
+      "auth_prov": "GENERIC EXTERNAL DATA PROVIDER",
+      "cv_relevance": "none",
+      "cv_note": "",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "1034471691"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=27838",
+          "DISCONTINUED_MEDS.MEDS_DISCONTINUED=1034471691"
+        ]
+      }
+    },
+    {
+      "order_med_id": "1034471696",
+      "name": "nortriptyline (PAMELOR) capsule",
+      "generic": "Nortriptyline HCl Cap 10 MG",
+      "description": "NORTRIPTYLINE HCL 10 MG PO CAPS",
+      "medication_id": "5674",
+      "status": "Sent",
+      "order_class": "Normal",
+      "ordering_mode": "Outpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": "270 capsule",
+      "refills": "3",
+      "route": "Oral",
+      "sig": "Take 3 (three) capsules (30 mg total) by mouth nightly.",
+      "indication_dx_id": "260690",
+      "indication": "Post concussion syndrome",
+      "ordering_date": "1/27/2025 12:00:00 AM",
+      "start_date": "1/27/2025 12:00:00 AM",
+      "end_date": "12/4/2025 12:00:00 AM",
+      "discon_reason": "* Therapy completed (sends cancel message to pharmacy)",
+      "discon_time": "12/4/2025 9:05:00 PM",
+      "discon_user": "SMITH, MARY B",
+      "discon_contact_csn": "1098684634",
+      "discon_contact_date": "12/4/2025 12:00:00 AM",
+      "taking_yn_history": {
+        "Y": 0,
+        "N": 3,
+        "blank": 0
+      },
+      "reconciliation_events": [
+        {
+          "entry_dttm": "1/27/2025 12:58:00 PM",
+          "action": "Initial Prescription",
+          "source": "Order Creation",
+          "reason_comment": null
+        }
+      ],
+      "reorder_supersedes": "945468373",
+      "reorder_superseded_by": null,
+      "is_chain_head": true,
+      "enc_csn": "1113285509",
+      "enc_date_real": "67232",
+      "ord_prov": "RAMMELKAMP, ZOE L",
+      "auth_prov": "RAMMELKAMP, ZOE L",
+      "cv_relevance": "none",
+      "cv_note": "",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "1034471696"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=5674",
+          "ORDER_MED_SIG.ORDER_ID=1034471696",
+          "ORDER_DX_MED.ORDER_MED_ID=1034471696+CLARITY_EDG.DX_ID=260690",
+          "DISCONTINUED_MEDS.MEDS_DISCONTINUED=1034471696",
+          "ORDER_RPTD_SIG_HX.ORDER_ID=1034471696",
+          "MEDS_REV_HX_LIST.MEDICATION_ORDER_ID=1034471696"
+        ]
+      }
+    },
+    {
+      "order_med_id": "1034471697",
+      "name": "nirmatrelvir & ritonavir (PAXLOVID)",
+      "generic": "Nirmatrelvir Tab 20 x 150 MG & Ritonavir Tab 10 x 100 MG Pak",
+      "description": "PAXLOVID (300/100) 20 X 150 MG & 10 X 100MG PO TBPK",
+      "medication_id": "163915",
+      "status": "Sent",
+      "order_class": "Normal",
+      "ordering_mode": "Outpatient",
+      "provider_type": "Authorizing",
+      "dosage": null,
+      "quantity": "30 tablet",
+      "refills": "0",
+      "route": null,
+      "sig": "Take two nirmatrelvir 150mg tablets with one ritonavir 100mg tablet all together by mouth twice daily for 5 days.",
+      "indication_dx_id": "1494821880",
+      "indication": "COVID-19",
+      "ordering_date": "4/23/2025 12:00:00 AM",
+      "start_date": "4/23/2025 12:00:00 AM",
+      "end_date": "12/4/2025 12:00:00 AM",
+      "discon_reason": "* Therapy completed (sends cancel message to pharmacy)",
+      "discon_time": "12/4/2025 9:05:00 PM",
+      "discon_user": "SMITH, MARY B",
+      "discon_contact_csn": "1098684634",
+      "discon_contact_date": "12/4/2025 12:00:00 AM",
+      "taking_yn_history": {
+        "Y": 0,
+        "N": 3,
+        "blank": 0
+      },
+      "reconciliation_events": [
+        {
+          "entry_dttm": "4/23/2025 1:15:00 PM",
+          "action": "Initial Prescription",
+          "source": "Order Creation",
+          "reason_comment": null
+        }
+      ],
+      "reorder_supersedes": null,
+      "reorder_superseded_by": null,
+      "is_chain_head": true,
+      "enc_csn": "1127808563",
+      "enc_date_real": "67318",
+      "ord_prov": "RAMMELKAMP, ZOE L",
+      "auth_prov": "RAMMELKAMP, ZOE L",
+      "cv_relevance": "none",
+      "cv_note": "",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "1034471697"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=163915",
+          "ORDER_MED_SIG.ORDER_ID=1034471697",
+          "ORDER_DX_MED.ORDER_MED_ID=1034471697+CLARITY_EDG.DX_ID=1494821880",
+          "DISCONTINUED_MEDS.MEDS_DISCONTINUED=1034471697",
+          "ORDER_RPTD_SIG_HX.ORDER_ID=1034471697",
+          "MEDS_REV_HX_LIST.MEDICATION_ORDER_ID=1034471697"
+        ]
+      }
+    },
+    {
+      "order_med_id": "1165183056",
+      "name": "EPINEPHRINE 0.3 MG/0.3ML IJ SOAJ",
+      "generic": "Epinephrine Solution Auto-injector 0.3 MG/0.3ML (1:1000)",
+      "description": "EPINEPHRINE 0.3 MG/0.3ML IJ SOAJ",
+      "medication_id": "128807",
+      "status": "Historical Med (documented, not prescribed)",
+      "order_class": "Historical Med",
+      "ordering_mode": "Outpatient",
+      "provider_type": "Documenting",
+      "dosage": null,
+      "quantity": null,
+      "refills": null,
+      "route": "Intramuscular",
+      "sig": "Inject 0.3 mg into the muscle.",
+      "indication_dx_id": null,
+      "indication": null,
+      "ordering_date": "12/4/2025 12:00:00 AM",
+      "start_date": "5/9/2025 12:00:00 AM",
+      "end_date": null,
+      "discon_reason": null,
+      "discon_time": null,
+      "discon_user": null,
+      "discon_contact_csn": null,
+      "discon_contact_date": null,
+      "taking_yn_history": {
+        "Y": 1,
+        "N": 2,
+        "blank": 0
+      },
+      "reconciliation_events": [
+        {
+          "entry_dttm": "12/4/2025 3:04:00 PM",
+          "action": "Historical Med Edited",
+          "source": "Order Creation",
+          "reason_comment": null
+        },
+        {
+          "entry_dttm": "12/4/2025 3:04:00 PM",
+          "action": "Taking As Prescribed",
+          "source": "Marked as Taking",
+          "reason_comment": null
+        },
+        {
+          "entry_dttm": "12/4/2025 3:06:00 PM",
+          "action": "Not Taking",
+          "source": "Marked as Taking",
+          "reason_comment": null
+        }
+      ],
+      "reorder_supersedes": null,
+      "reorder_superseded_by": null,
+      "is_chain_head": true,
+      "enc_csn": "1098684634",
+      "enc_date_real": "67543",
+      "ord_prov": null,
+      "auth_prov": "PROVIDER, NOT IN SYSTEM",
+      "cv_relevance": "anaphylaxis",
+      "cv_note": "Epinephrine auto-injector — CV-active rescue med",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "1165183056"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=128807",
+          "ORDER_MED_SIG.ORDER_ID=1165183056",
+          "ORDER_RPTD_SIG_HX.ORDER_ID=1165183056",
+          "MEDS_REV_HX_LIST.MEDICATION_ORDER_ID=1165183056"
+        ]
+      }
+    },
+    {
+      "order_med_id": "1165183057",
+      "name": "LORATADINE 10 MG PO TABS",
+      "generic": "Loratadine Tab 10 MG",
+      "description": "LORATADINE 10 MG PO TABS",
+      "medication_id": "10466",
+      "status": "Historical Med (documented, not prescribed)",
+      "order_class": "Historical Med",
+      "ordering_mode": "Outpatient",
+      "provider_type": "Documenting",
+      "dosage": null,
+      "quantity": null,
+      "refills": null,
+      "route": null,
+      "sig": "10 mg.",
+      "indication_dx_id": null,
+      "indication": null,
+      "ordering_date": "12/4/2025 12:00:00 AM",
+      "start_date": null,
+      "end_date": null,
+      "discon_reason": null,
+      "discon_time": null,
+      "discon_user": null,
+      "discon_contact_csn": null,
+      "discon_contact_date": null,
+      "taking_yn_history": {
+        "Y": 3,
+        "N": 0,
+        "blank": 0
+      },
+      "reconciliation_events": [
+        {
+          "entry_dttm": "12/4/2025 3:04:00 PM",
+          "action": "Historical Med Edited",
+          "source": "Order Creation",
+          "reason_comment": null
+        },
+        {
+          "entry_dttm": "12/4/2025 3:05:00 PM",
+          "action": "Taking Differently",
+          "source": "Meds and Orders Section",
+          "reason_comment": null
+        }
+      ],
+      "reorder_supersedes": null,
+      "reorder_superseded_by": null,
+      "is_chain_head": true,
+      "enc_csn": "1098684634",
+      "enc_date_real": "67543",
+      "ord_prov": null,
+      "auth_prov": "PROVIDER, NOT IN SYSTEM",
+      "cv_relevance": "none",
+      "cv_note": "",
+      "src": {
+        "table": "ORDER_MED",
+        "key": {
+          "ORDER_MED_ID": "1165183057"
+        },
+        "joined": [
+          "CLARITY_MEDICATION.MEDICATION_ID=10466",
+          "ORDER_MED_SIG.ORDER_ID=1165183057",
+          "ORDER_RPTD_SIG_HX.ORDER_ID=1165183057",
+          "MEDS_REV_HX_LIST.MEDICATION_ORDER_ID=1165183057"
+        ]
+      }
+    }
+  ],
+  "meta": {
+    "entity": "medications",
+    "patient": {
+      "pat_id": "Z7004242",
+      "name": "MANDEL, JOSHUA C"
+    },
+    "source_table": "ORDER_MED",
+    "raw_source_count": 20,
+    "emitted_count": 20,
+    "complete": true,
+    "generated_from": "deep-dives/cardiac-risk/scripts/medications.ts",
+    "cv_relevance_counts": {
+      "antihypertensive": 1,
+      "none": 15,
+      "metabolic-monitor": 3,
+      "anaphylaxis": 1
+    },
+    "notes": [
+      "ONE ROW PER ORDER_MED order (complete, not curated). cv_relevance tags rather than filters.",
+      "Antihypertensive thread = lisinopril 772179261: discon_reason '* Patient refusal', taking_yn_history N/N.",
+      "ABSENT from the entire med record (analysis-relevant): no statin/fibrate/ezetimibe/PCSK9, no beta-blocker/CCB/ARB/thiazide/other antihypertensive, no aspirin/antiplatelet, no anticoagulant.",
+      "Nortriptyline is 4 order rows for ONE continuous therapy (reorder chain 772179266→772179269→945468373→1034471696).",
+      "8 NaCl IV rows = one external inpatient event 7/30/2024 (ORDERING_MODE_C_NAME='Inpatient', GENERIC EXTERNAL DATA PROVIDER).",
+      "Status/dates read from ORDER_MED only (never ORDER_STATUS). Generic via MEDICATION_ID (never ORDER_MED_ID)."
+    ]
+  }
+}

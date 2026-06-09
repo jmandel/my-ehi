@@ -1,0 +1,511 @@
+RECORD_ID	LINE	CVG_FOR_SVC_TYPE_ID	CVG_SVC_TYPE_ID_SERVICE_TYPE_NAME	CVG_SVC_TYPE_ID	EVALUATION_STATUS_C_NAME	COPAY_AMOUNT	DEDUCTIBLE_AMOUNT	DEDUCTIBLE_MET_AMT	COINS_PERCENT	COINS_AMOUNT	OUT_OF_POCKET_MAX	OUT_OF_PCKT_REMAIN	OUT_OF_PCKET_MET_YN	OOP_INCL_DEDUCT_YN	COVERED_DAYS	NON_COVERED_DAYS	COINS_DAYS	LTR_DAYS	ANNUAL_BEN_MAX_AMT	ANNUAL_BEN_REMAIN	LIFETIME_BEN_MAX	LIFETIME_BEN_REMAIN	SPEND_DOWN_AMT	SPEND_DOWN_REMAIN	SPEND_DOWN_INTRVL_C_NAME	PREEXISTING_COND_YN	PREEXIST_COND_DESC	IN_NETWORK_YN	PREFERRED_NETWORK	TRACKING_CODE	DEDUCT_REMAIN_AMT	DAILY_COPAY_AMOUNT	MAX_DAILY_COPAY	FAMILY_TIER_SVC_C_NAME	MAX_VISITS	REMAINING_VISITS	NET_LVL_SVC_C_NAME	NON_COVERED_SVC_C_NAME	PAYOR_ID	SVC_ANNUAL_BEN_USED_AMT	RTE_COPAY_AMOUNT	RTE_DEDUCT_AMOUNT	RTE_DEDUCT_MET	RTE_DEDUCT_REMAIN	RTE_COINS_PERCENT	RTE_OOP_MAX	RTE_OOP_REMAIN	PAYER_BEN_CAT	VISIT_BEN_MAX_AMT	VISIT_OUT_OF_POCKET_MAX_AMT	BENEFITS_LAST_UPDATE_UTC_DTTM	BENEFITS_LAST_UPDATE_USER_ID_NAME	BENEFITS_LAST_UPDATE_USER_ID	BENEFITS_LAST_UPDATE_SRC_C_NAME
+42759240	1	5934765	PRIMARY	1					10																									Individual			In								10									
+42759240	2	5934765	PRIMARY	1					30																									Individual			Out								30									
+42759240	3	5934765	PRIMARY	1		0.00																												Individual			N/A				0.00													
+42759240	4	5934765	ED	2		0.00			10																									Individual			N/A				0.00				10									
+42759240	5	5934765	SPEC	3					10																									Individual			In								10									
+42759240	6	5934765	SPEC	3					30																									Individual			Out								30									
+42759240	7	5934765	SPEC	3		0.00																												Individual			N/A				0.00													
+42759240	8	5934765	HOSP IP	7					10																									Individual			In								10									
+42759240	9	5934765	HOSP IP	7					30																									Individual			Out								30									
+42759240	10	5934765	HOSP IP	7		0.00																												Individual			N/A				0.00													
+42759240	11	5934765	HOSP OP	8					10																									Individual			In								10									
+42759240	12	5934765	HOSP OP	8					30																									Individual			Out								30									
+42759240	13	5934765	HOSP OP	8		0.00																												Individual			N/A				0.00													
+42759240	14	5934765	HOSP	50					10																									Individual			In								10									
+42759240	15	5934765	HOSP	50					30																									Individual			Out								30									
+42759240	16	5934765	HOSP	50		0.00																												Individual			N/A				0.00													
+42759240	17	5934765	HOSP-ED ACC	51		0.00			10																									Individual			N/A				0.00				10									
+42759240	18	5934765	HOSP-ED MED	52		0.00			10																									Individual			N/A				0.00				10									
+42759240	19	5934765	ASC	53					10																									Individual			In								10									
+42759240	20	5934765	ASC	53					30																									Individual			Out								30									
+42759240	21	5934765	ASC	53		0.00																												Individual			N/A				0.00													
+42759240	22	5934765	E-VISIT	103					10																									Individual			In								10									
+42759240	23	5934765	E-VISIT	103					30																									Individual			Out								30									
+42759240	24	5934765	E-VISIT	103		0.00																												Individual			N/A				0.00													
+62064878	1	5934765	PRIMARY	1					10																									Individual			In								10									
+62064878	2	5934765	PRIMARY	1					30																									Individual			Out								30									
+62064878	3	5934765	PRIMARY	1		0.00																												Individual			N/A				0.00													
+62064878	4	5934765	ED	2		0.00			10																									Individual			N/A				0.00				10									
+62064878	5	5934765	SPEC	3					10																									Individual			In								10									
+62064878	6	5934765	SPEC	3					30																									Individual			Out								30									
+62064878	7	5934765	SPEC	3		0.00																												Individual			N/A				0.00													
+62064878	8	5934765	HOSP IP	7					10																									Individual			In								10									
+62064878	9	5934765	HOSP IP	7					30																									Individual			Out								30									
+62064878	10	5934765	HOSP IP	7		0.00																												Individual			N/A				0.00													
+62064878	11	5934765	HOSP OP	8					10																									Individual			In								10									
+62064878	12	5934765	HOSP OP	8					30																									Individual			Out								30									
+62064878	13	5934765	HOSP OP	8		0.00																												Individual			N/A				0.00													
+62064878	14	5934765	HOSP	50					10																									Individual			In								10									
+62064878	15	5934765	HOSP	50					30																									Individual			Out								30									
+62064878	16	5934765	HOSP	50		0.00																												Individual			N/A				0.00													
+62064878	17	5934765	HOSP-ED ACC	51		0.00			10																									Individual			N/A				0.00				10									
+62064878	18	5934765	HOSP-ED MED	52		0.00			10																									Individual			N/A				0.00				10									
+62064878	19	5934765	ASC	53					10																									Individual			In								10									
+62064878	20	5934765	ASC	53					30																									Individual			Out								30									
+62064878	21	5934765	ASC	53		0.00																												Individual			N/A				0.00													
+62064878	22	5934765	E-VISIT	103					10																									Individual			In								10									
+62064878	23	5934765	E-VISIT	103					30																									Individual			Out								30									
+62064878	24	5934765	E-VISIT	103		0.00																												Individual			N/A				0.00													
+62064878	25	5934765	HOME HLTH	515					10																									Individual			In								10									
+62064878	26	5934765	HOME HLTH	515					30																									Individual			Out								30									
+62064878	27	5934765	HOME HLTH	515		0.00																												Individual			N/A				0.00													
+62064878	28	5934765	HOSPICE	520		0.00			10																									Individual			N/A				0.00				10									
+62105543	1	5934765	PRIMARY	1					10																									Individual			In								10									
+62105543	2	5934765	PRIMARY	1					30																									Individual			Out								30									
+62105543	3	5934765	PRIMARY	1																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+62105543	4	5934765	PRIMARY	1		0.00																												Individual			N/A				0.00													
+62105543	5	5934765	ED	2																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+62105543	6	5934765	ED	2		0.00			10																									Individual			N/A				0.00				10									
+62105543	7	5934765	SPEC	3					10																									Individual			In								10									
+62105543	8	5934765	SPEC	3					30																									Individual			Out								30									
+62105543	9	5934765	SPEC	3																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+62105543	10	5934765	SPEC	3		0.00																												Individual			N/A				0.00													
+62105543	11	5934765	HOSP IP	7					10																									Individual			In								10									
+62105543	12	5934765	HOSP IP	7					30																									Individual			Out								30									
+62105543	13	5934765	HOSP IP	7																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+62105543	14	5934765	HOSP IP	7		0.00																												Individual			N/A				0.00													
+62105543	15	5934765	HOSP OP	8					10																									Individual			In								10									
+62105543	16	5934765	HOSP OP	8					30																									Individual			Out								30									
+62105543	17	5934765	HOSP OP	8																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+62105543	18	5934765	HOSP OP	8		0.00																												Individual			N/A				0.00													
+62105543	19	5934765	HOSP	50					10																									Individual			In								10									
+62105543	20	5934765	HOSP	50					30																									Individual			Out								30									
+62105543	21	5934765	HOSP	50																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+62105543	22	5934765	HOSP	50		0.00																												Individual			N/A				0.00													
+62105543	23	5934765	HOSP-ED ACC	51																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+62105543	24	5934765	HOSP-ED ACC	51		0.00			10																									Individual			N/A				0.00				10									
+62105543	25	5934765	HOSP-ED MED	52																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+62105543	26	5934765	HOSP-ED MED	52		0.00			10																									Individual			N/A				0.00				10									
+62105543	27	5934765	ASC	53					10																									Individual			In								10									
+62105543	28	5934765	ASC	53					30																									Individual			Out								30									
+62105543	29	5934765	ASC	53																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+62105543	30	5934765	ASC	53		0.00																												Individual			N/A				0.00													
+62105543	31	5934765	E-VISIT	103					10																									Individual			In								10									
+62105543	32	5934765	E-VISIT	103					30																									Individual			Out								30									
+62105543	33	5934765	E-VISIT	103																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+62105543	34	5934765	E-VISIT	103		0.00																												Individual			N/A				0.00													
+62105543	35	5934765	HOME HLTH	515					10																									Individual			In								10									
+62105543	36	5934765	HOME HLTH	515					30																									Individual			Out								30									
+62105543	37	5934765	HOME HLTH	515																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+62105543	38	5934765	HOME HLTH	515		0.00																												Individual			N/A				0.00													
+62105543	39	5934765	HOSPICE	520																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+62105543	40	5934765	HOSPICE	520		0.00			10																									Individual			N/A				0.00				10									
+62105543	41	5934765	OT	201					10																									Individual			In								10									
+62105543	42	5934765	OT	201					30																									Individual			Out								30									
+62105543	43	5934765	OT	201		0.00																												Individual			N/A				0.00													
+62105543	44	5934765	ST	202					10																									Individual			In								10									
+62105543	45	5934765	ST	202					30																									Individual			Out								30									
+62105543	46	5934765	ST	202		0.00																												Individual			N/A				0.00													
+62105543	47	5934765	PT	203					10																									Individual			In								10									
+62105543	48	5934765	PT	203					30																									Individual			Out								30									
+62105543	49	5934765	PT	203		0.00																												Individual			N/A				0.00													
+62105543	50	5934765	PHYS MED	300					10																									Individual			In								10									
+62105543	51	5934765	PHYS MED	300					30																									Individual			Out								30									
+62105543	52	5934765	PHYS MED	300		0.00																												Individual			N/A				0.00													
+62105543	53	5934765	PSYCH-IP	610		0.00			10																									Individual			N/A				0.00				10									
+62105543	54	5934765	PSYCH-OP	611		0.00			10																									Individual			N/A				0.00				10									
+62105543	55	5934765	OT	201																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+62105543	56	5934765	ST	202																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+62105543	57	5934765	PT	203																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+62105543	58	5934765	PHYS MED	300																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+62105543	59	5934765	PSYCH-IP	610																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+62105543	60	5934765	PSYCH-OP	611																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+51143791	1	5934765	PRIMARY	1					10																									Individual			In								10									
+51143791	2	5934765	PRIMARY	1					30																									Individual			Out								30									
+51143791	3	5934765	PRIMARY	1		0.00																												Individual			N/A				0.00													
+51143791	4	5934765	ED	2		0.00			10																									Individual			N/A				0.00				10									
+51143791	5	5934765	SPEC	3					10																									Individual			In								10									
+51143791	6	5934765	SPEC	3					30																									Individual			Out								30									
+51143791	7	5934765	SPEC	3		0.00																												Individual			N/A				0.00													
+51143791	8	5934765	HOSP IP	7					10																									Individual			In								10									
+51143791	9	5934765	HOSP IP	7					30																									Individual			Out								30									
+51143791	10	5934765	HOSP IP	7		0.00																												Individual			N/A				0.00													
+51143791	11	5934765	HOSP OP	8					10																									Individual			In								10									
+51143791	12	5934765	HOSP OP	8					30																									Individual			Out								30									
+51143791	13	5934765	HOSP OP	8		0.00																												Individual			N/A				0.00													
+51143791	14	5934765	HOSP	50					10																									Individual			In								10									
+51143791	15	5934765	HOSP	50					30																									Individual			Out								30									
+51143791	16	5934765	HOSP	50		0.00																												Individual			N/A				0.00													
+51143791	17	5934765	HOSP-ED ACC	51		0.00			10																									Individual			N/A				0.00				10									
+51143791	18	5934765	HOSP-ED MED	52		0.00			10																									Individual			N/A				0.00				10									
+51143791	19	5934765	ASC	53					10																									Individual			In								10									
+51143791	20	5934765	ASC	53					30																									Individual			Out								30									
+51143791	21	5934765	ASC	53		0.00																												Individual			N/A				0.00													
+51143791	22	5934765	E-VISIT	103		0.00	0.00		0																									Individual			N/A				0.00	0.00			0									
+51143791	23	5934765	PSYCH-IP	610		0.00			10																									Individual			N/A				0.00				10									
+51143791	24	5934765	PSYCH-OP	611		0.00			10																									Individual			N/A				0.00				10									
+82838540	1	5934765	PRIMARY	1					10																									Individual			In								10									
+82838540	2	5934765	PRIMARY	1					30																									Individual			Out								30									
+82838540	3	5934765	PRIMARY	1																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+82838540	4	5934765	PRIMARY	1		0.00																												Individual			N/A				0.00													
+82838540	5	5934765	ED	2																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+82838540	6	5934765	ED	2		0.00			10																									Individual			N/A				0.00				10									
+82838540	7	5934765	HOSP IP	7					10																									Individual			In								10									
+82838540	8	5934765	HOSP IP	7					30																									Individual			Out								30									
+82838540	9	5934765	HOSP IP	7																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+82838540	10	5934765	HOSP IP	7		0.00																												Individual			N/A				0.00													
+82838540	11	5934765	HOSP OP	8					10																									Individual			In								10									
+82838540	12	5934765	HOSP OP	8					30																									Individual			Out								30									
+82838540	13	5934765	HOSP OP	8																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+82838540	14	5934765	HOSP OP	8		0.00																												Individual			N/A				0.00													
+82838540	15	5934765	HOSP	50					10																									Individual			In								10									
+82838540	16	5934765	HOSP	50					30																									Individual			Out								30									
+82838540	17	5934765	HOSP	50																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+82838540	18	5934765	HOSP	50		0.00																												Individual			N/A				0.00													
+82838540	19	5934765	HOSP-ED ACC	51																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+82838540	20	5934765	HOSP-ED ACC	51		0.00			10																									Individual			N/A				0.00				10									
+82838540	21	5934765	HOSP-ED MED	52																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+82838540	22	5934765	HOSP-ED MED	52		0.00			10																									Individual			N/A				0.00				10									
+82838540	23	5934765	E-VISIT	103					10																									Individual			In								10									
+82838540	24	5934765	E-VISIT	103					30																									Individual			Out								30									
+82838540	25	5934765	E-VISIT	103																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+82838540	26	5934765	E-VISIT	103		0.00																												Individual			N/A				0.00													
+82838540	27	5934765	OT	201					10																									Individual			In								10									
+82838540	28	5934765	OT	201					30																									Individual			Out								30									
+82838540	29	5934765	OT	201																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+82838540	30	5934765	OT	201		0.00																												Individual			N/A				0.00													
+82838540	31	5934765	ST	202					10																									Individual			In								10									
+82838540	32	5934765	ST	202					30																									Individual			Out								30									
+82838540	33	5934765	ST	202																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+82838540	34	5934765	ST	202		0.00																												Individual			N/A				0.00													
+82838540	35	5934765	PT	203					10																									Individual			In								10									
+82838540	36	5934765	PT	203					30																									Individual			Out								30									
+82838540	37	5934765	PT	203																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+82838540	38	5934765	PT	203		0.00																												Individual			N/A				0.00													
+82838540	39	5934765	CARD REHAB	205					10																									Individual			In								10									
+82838540	40	5934765	CARD REHAB	205					30																									Individual			Out								30									
+82838540	41	5934765	CARD REHAB	205																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+82838540	42	5934765	CARD REHAB	205		0.00																												Individual			N/A				0.00													
+82838540	43	5934765	PHYS MED	300					10																									Individual			In								10									
+82838540	44	5934765	PHYS MED	300					30																									Individual			Out								30									
+82838540	45	5934765	PHYS MED	300																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+82838540	46	5934765	PHYS MED	300		0.00																												Individual			N/A				0.00													
+54045560	1	5934765	PRIMARY	1					10																									Individual			In								10									
+54045560	2	5934765	PRIMARY	1					30																									Individual			Out								30									
+54045560	3	5934765	PRIMARY	1		0.00																												Individual			N/A				0.00													
+54045560	4	5934765	ED	2		0.00			10																									Individual			N/A				0.00				10									
+54045560	5	5934765	SPEC	3					10																									Individual			In								10									
+54045560	6	5934765	SPEC	3					30																									Individual			Out								30									
+54045560	7	5934765	SPEC	3		0.00																												Individual			N/A				0.00													
+54045560	8	5934765	HOSP IP	7					10																									Individual			In								10									
+54045560	9	5934765	HOSP IP	7					30																									Individual			Out								30									
+54045560	10	5934765	HOSP IP	7		0.00																												Individual			N/A				0.00													
+54045560	11	5934765	HOSP OP	8					10																									Individual			In								10									
+54045560	12	5934765	HOSP OP	8					30																									Individual			Out								30									
+54045560	13	5934765	HOSP OP	8		0.00																												Individual			N/A				0.00													
+54045560	14	5934765	HOSP	50					10																									Individual			In								10									
+54045560	15	5934765	HOSP	50					30																									Individual			Out								30									
+54045560	16	5934765	HOSP	50		0.00																												Individual			N/A				0.00													
+54045560	17	5934765	HOSP-ED ACC	51		0.00			10																									Individual			N/A				0.00				10									
+54045560	18	5934765	HOSP-ED MED	52		0.00			10																									Individual			N/A				0.00				10									
+54045560	19	5934765	ASC	53					10																									Individual			In								10									
+54045560	20	5934765	ASC	53					30																									Individual			Out								30									
+54045560	21	5934765	ASC	53		0.00																												Individual			N/A				0.00													
+54045560	22	5934765	E-VISIT	103					10																									Individual			In								10									
+54045560	23	5934765	E-VISIT	103					30																									Individual			Out								30									
+54045560	24	5934765	E-VISIT	103		0.00																												Individual			N/A				0.00													
+54045560	25	5934765	PSYCH-IP	610		0.00			10																									Individual			N/A				0.00				10									
+54045560	26	5934765	PSYCH-OP	611		0.00			10																									Individual			N/A				0.00				10									
+73667131	1	5934765	PRIMARY	1					10																									Individual			In								10									
+73667131	2	5934765	PRIMARY	1					30																									Individual			Out								30									
+73667131	3	5934765	PRIMARY	1		0.00																												Individual			N/A				0.00													
+73667131	4	5934765	ED	2		0.00			10																									Individual			N/A				0.00				10									
+73667131	5	5934765	SPEC	3					10																									Individual			In								10									
+73667131	6	5934765	SPEC	3					30																									Individual			Out								30									
+73667131	7	5934765	SPEC	3		0.00																												Individual			N/A				0.00													
+73667131	8	5934765	HOSP IP	7					10																									Individual			In								10									
+73667131	9	5934765	HOSP IP	7					30																									Individual			Out								30									
+73667131	10	5934765	HOSP IP	7		0.00																												Individual			N/A				0.00													
+73667131	11	5934765	HOSP OP	8					10																									Individual			In								10									
+73667131	12	5934765	HOSP OP	8					30																									Individual			Out								30									
+73667131	13	5934765	HOSP OP	8		0.00																												Individual			N/A				0.00													
+73667131	14	5934765	HOSP	50					10																									Individual			In								10									
+73667131	15	5934765	HOSP	50					30																									Individual			Out								30									
+73667131	16	5934765	HOSP	50		0.00																												Individual			N/A				0.00													
+73667131	17	5934765	HOSP-ED ACC	51		0.00			10																									Individual			N/A				0.00				10									
+73667131	18	5934765	HOSP-ED MED	52		0.00			10																									Individual			N/A				0.00				10									
+73667131	19	5934765	ASC	53					10																									Individual			In								10									
+73667131	20	5934765	ASC	53					30																									Individual			Out								30									
+73667131	21	5934765	ASC	53		0.00																												Individual			N/A				0.00													
+73667131	22	5934765	E-VISIT	103					10																									Individual			In								10									
+73667131	23	5934765	E-VISIT	103					30																									Individual			Out								30									
+73667131	24	5934765	E-VISIT	103		0.00																												Individual			N/A				0.00													
+73667131	25	5934765	HOME HLTH	515					10																									Individual			In								10									
+73667131	26	5934765	HOME HLTH	515					30																									Individual			Out								30									
+73667131	27	5934765	HOME HLTH	515		0.00																												Individual			N/A				0.00													
+73667131	28	5934765	HOSPICE	520		0.00			10																									Individual			N/A				0.00				10									
+73667131	29	5934765	PRIMARY	1																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73667131	30	5934765	ED	2																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73667131	31	5934765	SPEC	3																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73667131	32	5934765	HOSP IP	7																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73667131	33	5934765	HOSP OP	8																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73667131	34	5934765	HOSP	50																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73667131	35	5934765	HOSP-ED ACC	51																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73667131	36	5934765	HOSP-ED MED	52																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73667131	37	5934765	ASC	53																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73667131	38	5934765	E-VISIT	103																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73667131	39	5934765	HOME HLTH	515																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73667131	40	5934765	HOSPICE	520																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+94219660	1	5934765	PRIMARY	1					10																									Individual			In								10									
+94219660	2	5934765	PRIMARY	1					30																									Individual			Out								30									
+94219660	3	5934765	PRIMARY	1		0.00																												Individual			N/A				0.00													
+94219660	4	5934765	ED	2		0.00			10																									Individual			N/A				0.00				10									
+94219660	5	5934765	HOSP IP	7					10																									Individual			In								10									
+94219660	6	5934765	HOSP IP	7					30																									Individual			Out								30									
+94219660	7	5934765	HOSP IP	7		0.00																												Individual			N/A				0.00													
+94219660	8	5934765	HOSP OP	8					10																									Individual			In								10									
+94219660	9	5934765	HOSP OP	8					30																									Individual			Out								30									
+94219660	10	5934765	HOSP OP	8		0.00																												Individual			N/A				0.00													
+94219660	11	5934765	HOSP	50					10																									Individual			In								10									
+94219660	12	5934765	HOSP	50					30																									Individual			Out								30									
+94219660	13	5934765	HOSP	50		0.00																												Individual			N/A				0.00													
+94219660	14	5934765	HOSP-ED ACC	51		0.00			10																									Individual			N/A				0.00				10									
+94219660	15	5934765	HOSP-ED MED	52		0.00			10																									Individual			N/A				0.00				10									
+94219660	16	5934765	E-VISIT	103					10																									Individual			In								10									
+94219660	17	5934765	E-VISIT	103					30																									Individual			Out								30									
+94219660	18	5934765	E-VISIT	103		0.00																												Individual			N/A				0.00													
+94219660	19	5934765	OT	201					10																									Individual			In								10									
+94219660	20	5934765	OT	201					30																									Individual			Out								30									
+94219660	21	5934765	OT	201		0.00																												Individual			N/A				0.00													
+94219660	22	5934765	ST	202					10																									Individual			In								10									
+94219660	23	5934765	ST	202					30																									Individual			Out								30									
+94219660	24	5934765	ST	202		0.00																												Individual			N/A				0.00													
+94219660	25	5934765	PT	203					10																									Individual			In								10									
+94219660	26	5934765	PT	203					30																									Individual			Out								30									
+94219660	27	5934765	PT	203		0.00																												Individual			N/A				0.00													
+94219660	28	5934765	CARD REHAB	205					10																									Individual			In								10									
+94219660	29	5934765	CARD REHAB	205					30																									Individual			Out								30									
+94219660	30	5934765	CARD REHAB	205		0.00																												Individual			N/A				0.00													
+94219660	31	5934765	PHYS MED	300					10																									Individual			In								10									
+94219660	32	5934765	PHYS MED	300					30																									Individual			Out								30									
+94219660	33	5934765	PHYS MED	300		0.00																												Individual			N/A				0.00													
+94219660	34	5934765	PRIMARY	1																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94219660	35	5934765	ED	2																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94219660	36	5934765	HOSP IP	7																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94219660	37	5934765	HOSP OP	8																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94219660	38	5934765	HOSP	50																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94219660	39	5934765	HOSP-ED ACC	51																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94219660	40	5934765	HOSP-ED MED	52																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94219660	41	5934765	E-VISIT	103																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94219660	42	5934765	OT	201																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94219660	43	5934765	ST	202																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94219660	44	5934765	PT	203																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94219660	45	5934765	CARD REHAB	205																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94219660	46	5934765	PHYS MED	300																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94220097	1	5934765	PRIMARY	1					10																									Individual			In								10									
+94220097	2	5934765	PRIMARY	1					30																									Individual			Out								30									
+94220097	3	5934765	PRIMARY	1																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+94220097	4	5934765	PRIMARY	1		0.00																												Individual			N/A				0.00													
+94220097	5	5934765	ED	2																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+94220097	6	5934765	ED	2		0.00			10																									Individual			N/A				0.00				10									
+94220097	7	5934765	HOSP IP	7					10																									Individual			In								10									
+94220097	8	5934765	HOSP IP	7					30																									Individual			Out								30									
+94220097	9	5934765	HOSP IP	7																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+94220097	10	5934765	HOSP IP	7		0.00																												Individual			N/A				0.00													
+94220097	11	5934765	HOSP OP	8					10																									Individual			In								10									
+94220097	12	5934765	HOSP OP	8					30																									Individual			Out								30									
+94220097	13	5934765	HOSP OP	8																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+94220097	14	5934765	HOSP OP	8		0.00																												Individual			N/A				0.00													
+94220097	15	5934765	HOSP	50					10																									Individual			In								10									
+94220097	16	5934765	HOSP	50					30																									Individual			Out								30									
+94220097	17	5934765	HOSP	50																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+94220097	18	5934765	HOSP	50		0.00																												Individual			N/A				0.00													
+94220097	19	5934765	HOSP-ED ACC	51																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+94220097	20	5934765	HOSP-ED ACC	51		0.00			10																									Individual			N/A				0.00				10									
+94220097	21	5934765	HOSP-ED MED	52																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+94220097	22	5934765	HOSP-ED MED	52		0.00			10																									Individual			N/A				0.00				10									
+94220097	23	5934765	E-VISIT	103					10																									Individual			In								10									
+94220097	24	5934765	E-VISIT	103					30																									Individual			Out								30									
+94220097	25	5934765	E-VISIT	103																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+94220097	26	5934765	E-VISIT	103		0.00																												Individual			N/A				0.00													
+94220097	27	5934765	OT	201					10																									Individual			In								10									
+94220097	28	5934765	OT	201					30																									Individual			Out								30									
+94220097	29	5934765	OT	201																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94220097	30	5934765	OT	201		0.00																												Individual			N/A				0.00													
+94220097	31	5934765	ST	202					10																									Individual			In								10									
+94220097	32	5934765	ST	202					30																									Individual			Out								30									
+94220097	33	5934765	ST	202																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94220097	34	5934765	ST	202		0.00																												Individual			N/A				0.00													
+94220097	35	5934765	PT	203					10																									Individual			In								10									
+94220097	36	5934765	PT	203					30																									Individual			Out								30									
+94220097	37	5934765	PT	203																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94220097	38	5934765	PT	203		0.00																												Individual			N/A				0.00													
+94220097	39	5934765	CARD REHAB	205					10																									Individual			In								10									
+94220097	40	5934765	CARD REHAB	205					30																									Individual			Out								30									
+94220097	41	5934765	CARD REHAB	205																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94220097	42	5934765	CARD REHAB	205		0.00																												Individual			N/A				0.00													
+94220097	43	5934765	PHYS MED	300					10																									Individual			In								10									
+94220097	44	5934765	PHYS MED	300					30																									Individual			Out								30									
+94220097	45	5934765	PHYS MED	300																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+94220097	46	5934765	PHYS MED	300		0.00																												Individual			N/A				0.00													
+48067901	1	5934765	PRIMARY	1					10																									Individual			In								10									
+48067901	2	5934765	PRIMARY	1					30																									Individual			Out								30									
+48067901	3	5934765	PRIMARY	1		0.00																												Individual			N/A				0.00													
+48067901	4	5934765	ED	2		0.00			10																									Individual			N/A				0.00				10									
+48067901	5	5934765	SPEC	3					10																									Individual			In								10									
+48067901	6	5934765	SPEC	3					30																									Individual			Out								30									
+48067901	7	5934765	SPEC	3		0.00																												Individual			N/A				0.00													
+48067901	8	5934765	HOSP IP	7					10																									Individual			In								10									
+48067901	9	5934765	HOSP IP	7					30																									Individual			Out								30									
+48067901	10	5934765	HOSP IP	7		0.00																												Individual			N/A				0.00													
+48067901	11	5934765	HOSP OP	8					10																									Individual			In								10									
+48067901	12	5934765	HOSP OP	8					30																									Individual			Out								30									
+48067901	13	5934765	HOSP OP	8		0.00																												Individual			N/A				0.00													
+48067901	14	5934765	HOSP	50					10																									Individual			In								10									
+48067901	15	5934765	HOSP	50					30																									Individual			Out								30									
+48067901	16	5934765	HOSP	50		0.00																												Individual			N/A				0.00													
+48067901	17	5934765	HOSP-ED ACC	51		0.00			10																									Individual			N/A				0.00				10									
+48067901	18	5934765	HOSP-ED MED	52		0.00			10																									Individual			N/A				0.00				10									
+48067901	19	5934765	ASC	53					10																									Individual			In								10									
+48067901	20	5934765	ASC	53					30																									Individual			Out								30									
+48067901	21	5934765	ASC	53		0.00																												Individual			N/A				0.00													
+48067901	22	5934765	E-VISIT	103		0.00	0.00		0																									Individual			N/A				0.00	0.00			0									
+48067901	23	5934765	PSYCH-IP	610		0.00			10																									Individual			N/A				0.00				10									
+48067901	24	5934765	PSYCH-OP	611		0.00			10																									Individual			N/A				0.00				10									
+73957825	1	5934765	PRIMARY	1					10																									Individual			In								10									
+73957825	2	5934765	PRIMARY	1					30																									Individual			Out								30									
+73957825	3	5934765	PRIMARY	1																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73957825	4	5934765	PRIMARY	1		0.00																												Individual			N/A				0.00													
+73957825	5	5934765	ED	2																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73957825	6	5934765	ED	2		0.00			10																									Individual			N/A				0.00				10									
+73957825	7	5934765	SPEC	3					10																									Individual			In								10									
+73957825	8	5934765	SPEC	3					30																									Individual			Out								30									
+73957825	9	5934765	SPEC	3																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73957825	10	5934765	SPEC	3		0.00																												Individual			N/A				0.00													
+73957825	11	5934765	HOSP IP	7					10																									Individual			In								10									
+73957825	12	5934765	HOSP IP	7					30																									Individual			Out								30									
+73957825	13	5934765	HOSP IP	7																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73957825	14	5934765	HOSP IP	7		0.00																												Individual			N/A				0.00													
+73957825	15	5934765	HOSP OP	8					10																									Individual			In								10									
+73957825	16	5934765	HOSP OP	8					30																									Individual			Out								30									
+73957825	17	5934765	HOSP OP	8																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73957825	18	5934765	HOSP OP	8		0.00																												Individual			N/A				0.00													
+73957825	19	5934765	HOSP	50					10																									Individual			In								10									
+73957825	20	5934765	HOSP	50					30																									Individual			Out								30									
+73957825	21	5934765	HOSP	50																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73957825	22	5934765	HOSP	50		0.00																												Individual			N/A				0.00													
+73957825	23	5934765	HOSP-ED ACC	51																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73957825	24	5934765	HOSP-ED ACC	51		0.00			10																									Individual			N/A				0.00				10									
+73957825	25	5934765	HOSP-ED MED	52																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73957825	26	5934765	HOSP-ED MED	52		0.00			10																									Individual			N/A				0.00				10									
+73957825	27	5934765	ASC	53					10																									Individual			In								10									
+73957825	28	5934765	ASC	53					30																									Individual			Out								30									
+73957825	29	5934765	ASC	53																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73957825	30	5934765	ASC	53		0.00																												Individual			N/A				0.00													
+73957825	31	5934765	E-VISIT	103					10																									Individual			In								10									
+73957825	32	5934765	E-VISIT	103					30																									Individual			Out								30									
+73957825	33	5934765	E-VISIT	103																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73957825	34	5934765	E-VISIT	103		0.00																												Individual			N/A				0.00													
+73957825	35	5934765	HOME HLTH	515					10																									Individual			In								10									
+73957825	36	5934765	HOME HLTH	515					30																									Individual			Out								30									
+73957825	37	5934765	HOME HLTH	515																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73957825	38	5934765	HOME HLTH	515		0.00																												Individual			N/A				0.00													
+73957825	39	5934765	HOSPICE	520																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73957825	40	5934765	HOSPICE	520		0.00			10																									Individual			N/A				0.00				10									
+73851563	1	5934765	PRIMARY	1					10																									Individual			In								10									
+73851563	2	5934765	PRIMARY	1					30																									Individual			Out								30									
+73851563	3	5934765	PRIMARY	1																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+73851563	4	5934765	PRIMARY	1		0.00																												Individual			N/A				0.00													
+73851563	5	5934765	ED	2																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+73851563	6	5934765	ED	2		0.00			10																									Individual			N/A				0.00				10									
+73851563	7	5934765	SPEC	3					10																									Individual			In								10									
+73851563	8	5934765	SPEC	3					30																									Individual			Out								30									
+73851563	9	5934765	SPEC	3																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+73851563	10	5934765	SPEC	3		0.00																												Individual			N/A				0.00													
+73851563	11	5934765	HOSP IP	7					10																									Individual			In								10									
+73851563	12	5934765	HOSP IP	7					30																									Individual			Out								30									
+73851563	13	5934765	HOSP IP	7																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+73851563	14	5934765	HOSP IP	7		0.00																												Individual			N/A				0.00													
+73851563	15	5934765	HOSP OP	8					10																									Individual			In								10									
+73851563	16	5934765	HOSP OP	8					30																									Individual			Out								30									
+73851563	17	5934765	HOSP OP	8																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+73851563	18	5934765	HOSP OP	8		0.00																												Individual			N/A				0.00													
+73851563	19	5934765	HOSP	50					10																									Individual			In								10									
+73851563	20	5934765	HOSP	50					30																									Individual			Out								30									
+73851563	21	5934765	HOSP	50																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+73851563	22	5934765	HOSP	50		0.00																												Individual			N/A				0.00													
+73851563	23	5934765	HOSP-ED ACC	51																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+73851563	24	5934765	HOSP-ED ACC	51		0.00			10																									Individual			N/A				0.00				10									
+73851563	25	5934765	HOSP-ED MED	52																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+73851563	26	5934765	HOSP-ED MED	52		0.00			10																									Individual			N/A				0.00				10									
+73851563	27	5934765	ASC	53					10																									Individual			In								10									
+73851563	28	5934765	ASC	53					30																									Individual			Out								30									
+73851563	29	5934765	ASC	53																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+73851563	30	5934765	ASC	53		0.00																												Individual			N/A				0.00													
+73851563	31	5934765	E-VISIT	103					10																									Individual			In								10									
+73851563	32	5934765	E-VISIT	103					30																									Individual			Out								30									
+73851563	33	5934765	E-VISIT	103																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+73851563	34	5934765	E-VISIT	103		0.00																												Individual			N/A				0.00													
+73851563	35	5934765	HOME HLTH	515					10																									Individual			In								10									
+73851563	36	5934765	HOME HLTH	515					30																									Individual			Out								30									
+73851563	37	5934765	HOME HLTH	515																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73851563	38	5934765	HOME HLTH	515		0.00																												Individual			N/A				0.00													
+73851563	39	5934765	HOSPICE	520																														N/A			N/A														7/1/2024 6:13:36 PM	RTE, USER	RTEUSER	Eligibility Query
+73851563	40	5934765	HOSPICE	520		0.00			10																									Individual			N/A				0.00				10									
+73851563	41	5934765	OT	201					10																									Individual			In								10									
+73851563	42	5934765	OT	201					30																									Individual			Out								30									
+73851563	43	5934765	OT	201																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+73851563	44	5934765	OT	201		0.00																												Individual			N/A				0.00													
+73851563	45	5934765	ST	202					10																									Individual			In								10									
+73851563	46	5934765	ST	202					30																									Individual			Out								30									
+73851563	47	5934765	ST	202																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+73851563	48	5934765	ST	202		0.00																												Individual			N/A				0.00													
+73851563	49	5934765	PT	203					10																									Individual			In								10									
+73851563	50	5934765	PT	203					30																									Individual			Out								30									
+73851563	51	5934765	PT	203																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+73851563	52	5934765	PT	203		0.00																												Individual			N/A				0.00													
+73851563	53	5934765	PHYS MED	300					10																									Individual			In								10									
+73851563	54	5934765	PHYS MED	300					30																									Individual			Out								30									
+73851563	55	5934765	PHYS MED	300																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+73851563	56	5934765	PHYS MED	300		0.00																												Individual			N/A				0.00													
+73851563	57	5934765	PSYCH-IP	610																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+73851563	58	5934765	PSYCH-IP	610		0.00			10																									Individual			N/A				0.00				10									
+73851563	59	5934765	PSYCH-OP	611																														N/A			N/A														11/4/2024 8:55:59 AM	RTE, USER	RTEUSER	Eligibility Query
+73851563	60	5934765	PSYCH-OP	611		0.00			10																									Individual			N/A				0.00				10									
+109320070	1	5934765	PRIMARY	1					10																									Individual			In								10									
+109320070	2	5934765	PRIMARY	1					30																									Individual			Out								30									
+109320070	3	5934765	PRIMARY	1																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+109320070	4	5934765	PRIMARY	1		0.00																												Individual			N/A				0.00													
+109320070	5	5934765	ED	2																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+109320070	6	5934765	ED	2		0.00			10																									Individual			N/A				0.00				10									
+109320070	7	5934765	HOSP IP	7					10																									Individual			In								10									
+109320070	8	5934765	HOSP IP	7					30																									Individual			Out								30									
+109320070	9	5934765	HOSP IP	7																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+109320070	10	5934765	HOSP IP	7		0.00																												Individual			N/A				0.00													
+109320070	11	5934765	HOSP OP	8					10																									Individual			In								10									
+109320070	12	5934765	HOSP OP	8					30																									Individual			Out								30									
+109320070	13	5934765	HOSP OP	8																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+109320070	14	5934765	HOSP OP	8		0.00																												Individual			N/A				0.00													
+109320070	15	5934765	HOSP	50					10																									Individual			In								10									
+109320070	16	5934765	HOSP	50					30																									Individual			Out								30									
+109320070	17	5934765	HOSP	50																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+109320070	18	5934765	HOSP	50		0.00																												Individual			N/A				0.00													
+109320070	19	5934765	HOSP-ED ACC	51																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+109320070	20	5934765	HOSP-ED ACC	51		0.00			10																									Individual			N/A				0.00				10									
+109320070	21	5934765	HOSP-ED MED	52																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+109320070	22	5934765	HOSP-ED MED	52		0.00			10																									Individual			N/A				0.00				10									
+109320070	23	5934765	E-VISIT	103					10																									Individual			In								10									
+109320070	24	5934765	E-VISIT	103					30																									Individual			Out								30									
+109320070	25	5934765	E-VISIT	103																														N/A			N/A														12/1/2025 4:28:46 PM	RTE, USER	RTEUSER	Eligibility Query
+109320070	26	5934765	E-VISIT	103		0.00																												Individual			N/A				0.00													
+109320070	27	5934765	OT	201					10																									Individual			In								10									
+109320070	28	5934765	OT	201					30																									Individual			Out								30									
+109320070	29	5934765	OT	201																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+109320070	30	5934765	OT	201		0.00																												Individual			N/A				0.00													
+109320070	31	5934765	ST	202					10																									Individual			In								10									
+109320070	32	5934765	ST	202					30																									Individual			Out								30									
+109320070	33	5934765	ST	202																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+109320070	34	5934765	ST	202		0.00																												Individual			N/A				0.00													
+109320070	35	5934765	PT	203					10																									Individual			In								10									
+109320070	36	5934765	PT	203					30																									Individual			Out								30									
+109320070	37	5934765	PT	203																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+109320070	38	5934765	PT	203		0.00																												Individual			N/A				0.00													
+109320070	39	5934765	CARD REHAB	205					10																									Individual			In								10									
+109320070	40	5934765	CARD REHAB	205					30																									Individual			Out								30									
+109320070	41	5934765	CARD REHAB	205																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+109320070	42	5934765	CARD REHAB	205		0.00																												Individual			N/A				0.00													
+109320070	43	5934765	PHYS MED	300					10																									Individual			In								10									
+109320070	44	5934765	PHYS MED	300					30																									Individual			Out								30									
+109320070	45	5934765	PHYS MED	300																														N/A			N/A														4/23/2025 3:33:21 PM	RTE, USER	RTEUSER	Eligibility Query
+109320070	46	5934765	PHYS MED	300		0.00																												Individual			N/A				0.00													
