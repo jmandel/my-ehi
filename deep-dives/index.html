@@ -12,7 +12,7 @@
   .wrap { max-width:820px; margin:0 auto; background:#fff; padding:56px 40px 80px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
   h1 { font-size:32px; letter-spacing:-.02em; margin:0 0 6px; }
   .sub { color:var(--muted); margin:0 0 8px; }
-  .note { color:var(--muted); font-size:14px; border-left:3px solid var(--rule); padding-left:12px; margin:18px 0 32px; }
+  .intro { color:var(--muted); font-size:15px; margin:18px 0 24px; max-width:720px; }
   a.card { display:block; text-decoration:none; color:inherit; border:1px solid var(--rule); border-radius:12px;
     padding:18px 20px; margin:14px 0; transition:border-color .15s, transform .15s; }
   a.card:hover { border-color:var(--accent); transform:translateY(-1px); }
@@ -34,16 +34,12 @@
 <div class="wrap">
   <h1>EHI export lab</h1>
   <p class="sub">An agent harness plus insight-driven readings of one real Epic EHI export — Joshua C. Mandel's record.</p>
-  <p class="note">Each is a standalone static app built <strong>view-first</strong>: a single clean view
-  model (structured data <em>and</em> the assessment narrative) powers a bespoke clinical tool. The spine is
-  the reasoning; every claim drills to a clean source quote. The agent harness is different: it exposes the
-  redacted SQLite export, note files, skills, JavaScript execution, and plotting libraries for live
-  exploration. Serve over HTTP (open each card); if a page is unbuilt, run
-  <code>bun build index.html --outdir dist</code> in its folder.</p>
+  <p class="intro">Explore static deep dives, or use the browser agent harness to query the redacted SQLite
+  export, read bundled notes and skills, and render live charts from the published files below.</p>
 
   <section class="files" aria-labelledby="published-files">
     <h2 id="published-files">Published data files</h2>
-    <p>The GitHub Pages artifact places shared browser data at the site root under <code>data/</code>.</p>
+    <p>Shared browser data lives under <code>data/</code> in the published site.</p>
     <ul>
       <li><a href="data/ehi.sqlite"><code>data/ehi.sqlite</code></a> — browser SQLite database built from the redacted EHI table export during publish.</li>
       <li><a href="data/fs.zip"><code>data/fs.zip</code></a> — normal zip archive of git-tracked reading skill files plus redacted rich-text note files used by the agent harness filesystem.</li>
