@@ -514,35 +514,56 @@ function useHarness() {
   const [agentStateText, setAgentStateText] = React.useState("{}");
   const agentStateRef = React.useRef<Record<string, unknown>>({});
   const toolResultsRef = React.useRef<ToolResultRecord[]>([]);
+  const bundleRef = React.useRef<Record<string, Uint8Array> | null>(null);
+  const bundlePromiseRef = React.useRef<Promise<Record<string, Uint8Array>> | null>(null);
   const stageRef = React.useRef<HTMLDivElement | null>(null);
+
+  const loadBundle = React.useCallback(async () => {
+    if (bundleRef.current) return bundleRef.current;
+    if (!bundlePromiseRef.current) {
+      bundlePromiseRef.current = fetch("../data/my-ehi-skills.zip").then(async (res) => {
+        if (!res.ok) throw new Error(`Could not fetch ../data/my-ehi-skills.zip (${res.status})`);
+        return unzipSync(new Uint8Array(await res.arrayBuffer()));
+      });
+    }
+    const bundle = await bundlePromiseRef.current;
+    bundleRef.current = bundle;
+    return bundle;
+  }, []);
 
   const loadDb = React.useCallback(async () => {
     if (db) return db;
     setDbStatus("loading sql.js");
     const SQL = await initSqlJs({ locateFile: () => "../data/sql-wasm.wasm" });
-    setDbStatus("fetching ehi.sqlite");
-    const res = await fetch("../data/ehi.sqlite");
-    if (!res.ok) throw new Error(`Could not fetch ../data/ehi.sqlite (${res.status})`);
-    const bytes = new Uint8Array(await res.arrayBuffer());
+    setDbStatus("fetching my-ehi-skills.zip");
+    const bundle = await loadBundle();
+    const bytes = bundle["ehi.sqlite"];
+    if (!bytes) throw new Error("data/my-ehi-skills.zip did not contain ehi.sqlite");
     const next = new SQL.Database(bytes);
     setDb(next);
     setDbStatus(`${(bytes.byteLength / 1024 / 1024).toFixed(1)} MB loaded`);
     return next;
-  }, [db]);
+  }, [db, loadBundle]);
 
   const loadFs = React.useCallback(async () => {
     if (fsIndex) return fsIndex;
-    const res = await fetch("../data/fs.zip");
-    if (!res.ok) throw new Error(`Could not fetch ../data/fs.zip (${res.status})`);
-    const entries = unzipSync(new Uint8Array(await res.arrayBuffer()));
+    const entries = await loadBundle();
     const next: FsIndex = {
       files: Object.entries(entries)
+        .filter(([path]) => path !== "ehi.sqlite" && path !== "core-prompt.txt")
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([path, bytes]) => ({ path, text: strFromU8(bytes) })),
     };
     setFsIndex(next);
     return next;
-  }, [fsIndex]);
+  }, [fsIndex, loadBundle]);
+
+  const loadCorePrompt = React.useCallback(async () => {
+    const bundle = await loadBundle();
+    const bytes = bundle["core-prompt.txt"];
+    if (!bytes) throw new Error("data/my-ehi-skills.zip did not contain core-prompt.txt");
+    return strFromU8(bytes);
+  }, [loadBundle]);
 
   const syncState = React.useCallback(() => {
     setAgentStateText(JSON.stringify(agentStateRef.current, null, 2));
@@ -722,7 +743,7 @@ function useHarness() {
     Object.assign(window, { ehiAgent: helpers });
   }, [helpers]);
 
-  return { dbStatus, fsIndex, agentStateText, agentStateRef, loadDb, loadFs, syncState, helpers, stageRef };
+  return { dbStatus, fsIndex, agentStateText, agentStateRef, loadDb, loadFs, loadCorePrompt, syncState, helpers, stageRef };
 }
 
 type ModelActivity = {
@@ -937,7 +958,7 @@ function compactCount(value: number) {
 }
 
 function App() {
-  const { dbStatus, fsIndex, agentStateText, agentStateRef, loadDb, loadFs, syncState, helpers, stageRef } = useHarness();
+  const { dbStatus, fsIndex, agentStateText, agentStateRef, loadDb, loadFs, loadCorePrompt, syncState, helpers, stageRef } = useHarness();
   const [apiKey, setApiKey] = React.useState(localStorage.getItem("openrouter_api_key") ?? "");
   const [model, setModel] = React.useState(initialOpenRouterModel);
   const [systemPrompt, setSystemPrompt] = React.useState(initialSystemPrompt);
@@ -975,11 +996,7 @@ function App() {
   }, [loadDb, loadFs]);
   React.useEffect(() => {
     let cancelled = false;
-    fetch("../data/core-prompt.txt")
-      .then(async (r) => {
-        if (!r.ok) throw new Error(String(r.status));
-        return r.text();
-      })
+    loadCorePrompt()
       .then((text) => {
         if (cancelled) return;
         setSystemPrompt((prev) => prev === initialSystemPrompt ? `${initialSystemPrompt}\n\n${text}` : prev);
@@ -989,7 +1006,7 @@ function App() {
         if (!cancelled) setCorePromptStatus("core prompt not available");
       });
     return () => { cancelled = true; };
-  }, []);
+  }, [loadCorePrompt]);
 
   const reset = () => {
     const hasWork = messages.some((m) => m.role !== "system") || traces.length > 0 || stageRef.current?.textContent?.trim();

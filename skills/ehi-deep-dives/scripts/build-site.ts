@@ -26,11 +26,12 @@ rmSync(absOut, { recursive: true, force: true });
 mkdirSync(absOut, { recursive: true });
 const dataDir = join(absOut, "data");
 mkdirSync(dataDir, { recursive: true });
+let builtDb: string | null = null;
 
 // Shared static data for browser-only tools. The DB is generated from the redacted raw export at build time;
 // it is intentionally not checked into the repository.
 if (existsSync("raw/EHITables")) {
-  const builtDb = join(dataDir, "ehi.sqlite");
+  builtDb = join(dataDir, "ehi.sqlite");
   const loadTables = Bun.spawnSync({
     cmd: ["bun", "skills/reading-epic-ehi-export/scripts/load-ehi-sqlite.ts", "raw", builtDb],
     stdout: "pipe", stderr: "pipe",
@@ -47,7 +48,7 @@ if (existsSync("raw/EHITables")) {
     console.error(`SQLite schema-doc load failed:\n${loadSchema.stderr.toString()}`);
     process.exit(1);
   }
-  console.log(`built browser SQLite DB -> ${outDir}/data/ehi.sqlite`);
+  console.log(`built browser SQLite DB for bundle -> ${outDir}/data/my-ehi-skills.zip`);
 } else {
   console.warn("raw/EHITables not found; skipping browser SQLite DB build");
 }
@@ -72,7 +73,7 @@ if (existsSync(sqlWasm)) {
     stdout: "pipe", stderr: "pipe",
   });
   if (tracked.exitCode !== 0) {
-    console.error(`git ls-files failed while building fs.zip:\n${tracked.stderr.toString()}`);
+    console.error(`git ls-files failed while building my-ehi-skills.zip:\n${tracked.stderr.toString()}`);
     process.exit(1);
   }
   const bundlePaths = tracked.stdout.toString()
@@ -81,14 +82,12 @@ if (existsSync(sqlWasm)) {
     .filter(includeBundlePath)
     .sort();
   if (!bundlePaths.length) {
-    console.error("no tracked files matched fs.zip allowlist");
+    console.error("no tracked files matched my-ehi-skills.zip allowlist");
     process.exit(1);
   }
   const zipEntries: Record<string, Uint8Array> = {};
   for (const path of bundlePaths) zipEntries[path] = new Uint8Array(readFileSync(path));
-  const zipped = zipSync(zipEntries, { level: 9 });
-  await Bun.write(join(dataDir, "fs.zip"), zipped);
-  console.log(`zipped ${bundlePaths.length} tracked files -> ${outDir}/data/fs.zip`);
+  if (builtDb && existsSync(builtDb)) zipEntries["ehi.sqlite"] = new Uint8Array(readFileSync(builtDb));
 
   const coreSkillPaths = [
     "skills/reading-epic-ehi-export/SKILL.md",
@@ -97,7 +96,7 @@ if (existsSync(sqlWasm)) {
     const prompt = [
       "Core baked-in Epic EHI reading skill",
       "",
-      "The static site includes a zipped virtual filesystem exposed to execute_javascript through listFiles(pattern), readFile(path), and grepFiles(pattern, options). It is built only from git-tracked files and contains skills/reading-epic-ehi-export/** plus redacted rich-text note payloads at raw/Rich Text/*.RTF and raw/Rich Text/_INDEX.HTML.",
+      "The static site includes data/my-ehi-skills.zip, a normal zip archive exposed to execute_javascript through sql(query), listFiles(pattern), readFile(path), and grepFiles(pattern, options). It contains generated ehi.sqlite plus a virtual filesystem built only from git-tracked files: skills/reading-epic-ehi-export/** and redacted rich-text note payloads at raw/Rich Text/*.RTF and raw/Rich Text/_INDEX.HTML.",
       "",
       "When a skill below references a relative path such as reference/patterns/general-patterns.md or scripts/q.ts, resolve it relative to the directory containing that SKILL.md. For example, inside skills/reading-epic-ehi-export/SKILL.md, reference/patterns/general-patterns.md means skills/reading-epic-ehi-export/reference/patterns/general-patterns.md. Use readFile() or grepFiles() to inspect those referenced files before relying on them.",
       "",
@@ -109,9 +108,12 @@ if (existsSync(sqlWasm)) {
         `\n--- END ${path} ---\n`,
       ]),
     ].join("\n");
-    await Bun.write(join(dataDir, "core-prompt.txt"), prompt);
-    console.log(`wrote core prompt -> ${outDir}/data/core-prompt.txt`);
+    zipEntries["core-prompt.txt"] = new TextEncoder().encode(prompt);
   }
+  const zipped = zipSync(zipEntries, { level: 9 });
+  await Bun.write(join(dataDir, "my-ehi-skills.zip"), zipped);
+  if (builtDb && existsSync(builtDb)) rmSync(builtDb);
+  console.log(`zipped ${Object.keys(zipEntries).length} files -> ${outDir}/data/my-ehi-skills.zip`);
 }
 
 // A dive = a subdirectory with its own index.html entry point.
