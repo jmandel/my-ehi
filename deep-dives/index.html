@@ -19,6 +19,13 @@
   .card h2 { margin:0 0 4px; font-size:20px; color:var(--accent); }
   .card .kicker { text-transform:uppercase; letter-spacing:.07em; font-size:11px; font-weight:700; color:var(--muted); }
   .card p { margin:6px 0 0; color:var(--ink); font-size:15px; }
+  .files { border:1px solid var(--rule); border-radius:12px; padding:16px 18px; margin:22px 0 28px; background:#fbfcfd; }
+  .files h2 { margin:0 0 6px; font-size:18px; }
+  .files p { margin:4px 0 10px; color:var(--muted); font-size:14px; }
+  .files ul { margin:0; padding-left:20px; }
+  .files li { margin:6px 0; font-size:14px; }
+  .files a { color:var(--accent); font-weight:700; text-decoration:none; }
+  .files a:hover { text-decoration:underline; }
   footer { color:var(--muted); font-size:13px; margin-top:36px; border-top:1px solid var(--rule); padding-top:14px; }
   code { background:#f1f3f5; padding:1px 5px; border-radius:4px; font-size:13px; }
 </style>
@@ -33,6 +40,17 @@
   redacted SQLite export, note files, skills, JavaScript execution, and plotting libraries for live
   exploration. Serve over HTTP (open each card); if a page is unbuilt, run
   <code>bun build index.html --outdir dist</code> in its folder.</p>
+
+  <section class="files" aria-labelledby="published-files">
+    <h2 id="published-files">Published data files</h2>
+    <p>The GitHub Pages artifact places shared browser data at the site root under <code>data/</code>.</p>
+    <ul>
+      <li><a href="data/ehi.sqlite"><code>data/ehi.sqlite</code></a> — browser SQLite database built from the redacted EHI table export during publish.</li>
+      <li><a href="data/fs.zip"><code>data/fs.zip</code></a> — normal zip archive of git-tracked reading skill files plus redacted rich-text note files used by the agent harness filesystem.</li>
+      <li><a href="data/core-prompt.txt"><code>data/core-prompt.txt</code></a> — the top-level Epic EHI reading skill text loaded into the harness system prompt.</li>
+      <li><a href="data/sql-wasm.wasm"><code>data/sql-wasm.wasm</code></a> — sql.js WebAssembly runtime loaded by the browser harness.</li>
+    </ul>
+  </section>
 
   <a class="card" href="agent-harness/dist/index.html">
     <div class="kicker">Agent workspace</div>

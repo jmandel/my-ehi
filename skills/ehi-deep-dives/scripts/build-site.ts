@@ -14,7 +14,8 @@
 // CI just runs this after `bun install` and uploads outDir as the Pages artifact (see .github/workflows).
 //
 import { existsSync, rmSync, mkdirSync, readdirSync, statSync, cpSync, readFileSync } from "node:fs";
-import { resolve, join, relative } from "node:path";
+import { resolve, join } from "node:path";
+import { zipSync } from "fflate";
 
 const divesDir = (process.argv[2] ?? "deep-dives").replace(/\/+$/, "");
 const outDir = (process.argv[3] ?? "site").replace(/\/+$/, "");
@@ -57,43 +58,46 @@ if (existsSync(sqlWasm)) {
   console.log(`copied sql.js wasm -> ${outDir}/data/sql-wasm.wasm`);
 }
 
-if (existsSync("skills") || existsSync("raw/Rich Text")) {
-  const files: { path: string; text: string }[] = [];
+{
   const textExt = new Set([".md", ".ts", ".tsx", ".js", ".json", ".css", ".html", ".txt"]);
-  const includeTextFile = (p: string, name: string) => {
+  const includeBundlePath = (path: string) => {
+    const name = path.split("/").at(-1) ?? "";
     const ext = name.includes(".") ? name.slice(name.lastIndexOf(".")).toLowerCase() : "";
-    if (p.startsWith(`skills/`)) return textExt.has(ext);
-    if (p.startsWith(join("raw", "Rich Text"))) return ext === ".rtf" || name === "_INDEX.HTML";
+    if (path.startsWith("skills/reading-epic-ehi-export/")) return textExt.has(ext);
+    if (path.startsWith("raw/Rich Text/")) return ext === ".rtf" || name === "_INDEX.HTML";
     return false;
   };
-  const walk = (dir: string) => {
-    for (const name of readdirSync(dir).sort()) {
-      const p = join(dir, name);
-      const st = statSync(p);
-      if (st.isDirectory()) {
-        if (name === "node_modules" || name === "dist") continue;
-        if (p === join("raw", "EHITables")) continue; // SQLite is the table interface; don't duplicate TSVs into JSON.
-        if (p === join("raw", "_redaction")) continue;
-        walk(p);
-      } else if (st.isFile() && st.size < 400_000) {
-        if (includeTextFile(p, name)) files.push({ path: relative(".", p), text: readFileSync(p, "utf8") });
-      }
-    }
-  };
-  if (existsSync("skills")) walk("skills");
-  if (existsSync("raw/Rich Text")) walk("raw/Rich Text");
-  await Bun.write(join(dataDir, "fs.json"), JSON.stringify({ files }, null, 2));
-  console.log(`indexed ${files.length} text files -> ${outDir}/data/fs.json`);
+  const tracked = Bun.spawnSync({
+    cmd: ["git", "ls-files", "-z", "skills/reading-epic-ehi-export", "raw/Rich Text"],
+    stdout: "pipe", stderr: "pipe",
+  });
+  if (tracked.exitCode !== 0) {
+    console.error(`git ls-files failed while building fs.zip:\n${tracked.stderr.toString()}`);
+    process.exit(1);
+  }
+  const bundlePaths = tracked.stdout.toString()
+    .split("\0")
+    .filter(Boolean)
+    .filter(includeBundlePath)
+    .sort();
+  if (!bundlePaths.length) {
+    console.error("no tracked files matched fs.zip allowlist");
+    process.exit(1);
+  }
+  const zipEntries: Record<string, Uint8Array> = {};
+  for (const path of bundlePaths) zipEntries[path] = new Uint8Array(readFileSync(path));
+  const zipped = zipSync(zipEntries, { level: 9 });
+  await Bun.write(join(dataDir, "fs.zip"), zipped);
+  console.log(`zipped ${bundlePaths.length} tracked files -> ${outDir}/data/fs.zip`);
 
   const coreSkillPaths = [
     "skills/reading-epic-ehi-export/SKILL.md",
-    "skills/ehi-deep-dives/SKILL.md",
   ].filter(existsSync);
   if (coreSkillPaths.length) {
     const prompt = [
-      "Core baked-in analysis skills",
+      "Core baked-in Epic EHI reading skill",
       "",
-      "The static site includes a virtual filesystem exposed to execute_javascript through listFiles(pattern), readFile(path), and grepFiles(pattern, options). It contains selected text files from skills/ plus redacted rich-text note payloads at raw/Rich Text/*.RTF and raw/Rich Text/_INDEX.HTML.",
+      "The static site includes a zipped virtual filesystem exposed to execute_javascript through listFiles(pattern), readFile(path), and grepFiles(pattern, options). It is built only from git-tracked files and contains skills/reading-epic-ehi-export/** plus redacted rich-text note payloads at raw/Rich Text/*.RTF and raw/Rich Text/_INDEX.HTML.",
       "",
       "When a skill below references a relative path such as reference/patterns/general-patterns.md or scripts/q.ts, resolve it relative to the directory containing that SKILL.md. For example, inside skills/reading-epic-ehi-export/SKILL.md, reference/patterns/general-patterns.md means skills/reading-epic-ehi-export/reference/patterns/general-patterns.md. Use readFile() or grepFiles() to inspect those referenced files before relying on them.",
       "",

@@ -3,6 +3,9 @@ import { createRoot } from "react-dom/client";
 import initSqlJs, { type Database, type SqlValue } from "sql.js";
 import * as d3 from "d3";
 import vegaEmbed from "vega-embed";
+import { strFromU8, unzipSync } from "fflate";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import "./page.css";
 
 type Role = "system" | "user" | "assistant" | "tool";
@@ -26,86 +29,171 @@ type Trace = {
   resultFull?: string;
   resultForModel?: string;
 };
-type FsIndex = { files: { path: string; text: string }[] };
-type OpenRouterModel = {
+type ToolResultRecord = {
   id: string;
-  name?: string;
-  context_length?: number;
-  pricing?: Record<string, string>;
-  supported_parameters?: string[];
+  index: number;
+  status: "ok" | "error";
+  started: string;
+  codePreview: string;
+  content: string;
+  totalChars: number;
+  retainedChars: number;
+  retentionCapped: boolean;
 };
+type FsIndex = { files: { path: string; text: string }[] };
 
-const DEFAULT_MODEL = "openrouter/free";
+const DEFAULT_MODEL = "deepseek/deepseek-v4-flash";
+const LEGACY_AUTO_MODELS = new Set(["deepseek/deepseek-v4-pro"]);
 const MAX_STEPS = 8;
-const MAX_AUTONOMOUS_TURNS = 12;
-const MAX_TOOL_CHARS = 14000;
+const MAX_AUTONOMOUS_TURNS = 25;
+const MAX_TOOL_CHARS = 50_000;
+const DEFAULT_TOOL_PAGE_CHARS = 50_000;
+const MAX_TOOL_PAGE_CHARS = 1_000_000;
+const MAX_RETAINED_TOOL_CHARS = 10_000_000;
 
 const initialSystemPrompt = `You are an exploratory web agent embedded in a static Epic EHI export site.
 
-You can call one tool: execute_javascript({ code }).
+You have one tool: execute_javascript({ code }). JavaScript runs intentionally unsandboxed in the browser page. Use it to query SQLite, read bundled files, inspect schema, render artifacts, and keep lightweight state.
 
-The JavaScript runs intentionally unsandboxed in the page. Use it to query the client-side SQLite database,
-read bundled skill files, inspect schema, and write directly to the stage DOM.
+Mission:
+- Investigate the export with evidence. Do not rely on table names, memory, or guesses when a domain guide or live schema can be read.
+- Translate any CLI/script guidance in the baked skills into this browser harness: use sql(), schema(), readFile(), grepFiles(), plot_vegalite(), renderHtml(), appendHtml(), and normal assistant messages.
+- For nontrivial findings, say which guide(s), table(s), query/check, or note file(s) support the claim.
 
-Available helpers inside execute_javascript:
-- await sql(query, params?, options?) -> rows as objects. options.limit defaults to 200.
-- await tables(pattern?) -> populated table catalog.
-- await schema(tableName) -> live PRAGMA table_info rows.
-- await sample(tableName, limit?) -> sample rows.
-- await listFiles(pattern?) -> bundled file paths from skills plus redacted raw text payloads.
-- await readFile(path) -> bundled file text.
-- await grepFiles(pattern, options?) -> {path, line, text} matches.
-- state -> persistent JSON object. Mutate it to carry notes/results across tool calls.
-- d3 -> D3 module.
+API reference:
+
+Query helpers:
+- await sql(query, params?, options?) -> { rows, rowCount, truncated }. options.limit defaults to 200.
+- await tables(pattern?) -> populated table catalog from _tables.
+- await schema(tableName) -> live PRAGMA table_info rows. Use this before trusting column names.
+- await sample(tableName, limit?) -> small sample rows.
+
+File helpers:
+- await listFiles(pattern?) -> bundled paths from the zip filesystem.
+- await readFile(path, options?) -> readable file text. .RTF files are converted to plain text unless options.raw is true.
+- await grepFiles(pattern, options?) -> { path, line, text } matches. .RTF files are searched as plain text unless options.raw is true.
+
+Retained-result helpers:
+- listToolResults() -> catalog of retained tool outputs.
+- readToolResult(indexOrId?, options?) -> page through a retained full tool output. Defaults to the latest.
+- scanToolResult(indexOrId?, pattern, options?) -> search retained output without returning the whole text.
+- Prefer retained results for large raw outputs. Prefer state for small durable facts you want re-threaded through the next tool call.
+
+Rendering and analysis helpers:
 - await plot_vegalite(spec, options?) -> append a Vega-Lite chart to the stage.
+- plot_vegalite options.width/options.height are treated as Vega-Lite spec dimensions when the spec does not set them.
+- d3 -> D3 module.
+- renderHtml(html), appendHtml(html), clearStage(), stage -> DOM stage controls.
+- state -> persistent JSON object for concise notes/results across tool calls.
+
+Date helpers:
 - epicDateRealToDate(value) -> Date for Epic *_DATE_REAL serial dates.
 - epicDateRealToIso(value) -> YYYY-MM-DD for Epic *_DATE_REAL serial dates.
 - parseEpicDateText(value) -> Date for rendered M/D/YYYY timestamp text.
-- stage -> HTMLElement for visual output.
-- renderHtml(html), appendHtml(html), clearStage().
 
-Tool return values:
+Required exploration workflow:
+1. Identify the user's domain(s): encounters, medications, labs, notes, messages, problems, vitals, allergies, immunizations, referrals, imaging/media, procedures, billing/coverage, providers/care teams, or another export-shape topic.
+2. Read the relevant guide(s) before deep querying. Read full guide files with readFile(path); do not pre-truncate them with slice(). The tool result handler will cap what is initially sent and retain the full output for follow-up. Start with skills/reading-epic-ehi-export/reference/clinical-areas/README.md if unsure. Common guide paths include:
+   - skills/reading-epic-ehi-export/reference/clinical-areas/encounters-and-visits.md
+   - skills/reading-epic-ehi-export/reference/clinical-areas/medications-and-orders.md
+   - skills/reading-epic-ehi-export/reference/clinical-areas/lab-results.md
+   - skills/reading-epic-ehi-export/reference/clinical-areas/clinical-notes-and-documents.md
+   - skills/reading-epic-ehi-export/reference/clinical-areas/patient-provider-messaging.md
+   - skills/reading-epic-ehi-export/reference/clinical-areas/problems-and-diagnoses.md
+   - skills/reading-epic-ehi-export/reference/clinical-areas/vitals-and-flowsheets.md
+   - skills/reading-epic-ehi-export/reference/clinical-areas/allergies.md
+   - skills/reading-epic-ehi-export/reference/clinical-areas/immunizations.md
+   - skills/reading-epic-ehi-export/reference/clinical-areas/referrals.md
+   - skills/reading-epic-ehi-export/reference/clinical-areas/imaging-and-media.md
+   - skills/reading-epic-ehi-export/reference/clinical-areas/procedures-and-surgeries.md
+   - skills/reading-epic-ehi-export/reference/clinical-areas/coverage-and-billing.md
+   - skills/reading-epic-ehi-export/reference/clinical-areas/providers-and-care-teams.md
+3. Read skills/reading-epic-ehi-export/reference/patterns/general-patterns.md when the work touches identifiers, joins, *_DATE_REAL dates, text affinity, base/supplement tables, category names, audit/history tables, or unstructured tie-backs.
+4. Inspect live metadata: _tables, _schema_table, _schema_column, schema(table), and small samples. Remember all SQLite values are text unless cast.
+5. Return compact evidence: counts, representative rows, exact SQL/JS checks, and the guides used. Render larger visual or tabular artifacts to the stage.
+
+Result visibility and tool protocol:
+- To answer in the conversation, return normal assistant text with no tool call.
+- To continue investigating, call execute_javascript.
 - A single-expression tool body is returned automatically, e.g. await sql("select * from _tables limit 5").
 - In statement-style JavaScript, use return explicitly, e.g. const rows = await sql(...); return rows.
-- If you only render to the stage or mutate state, a transcript return value is optional.
-- Helper names are injected into an inner async scope; local variables may reuse ordinary names like sample,
-  schema, or rows without colliding with the helper API.
-- Tool failures return JSON with ok:false, error.name, error.message, a stack excerpt, and line-numbered
-  user code. Read that error and repair the next tool call; do not continue as if the failed tool worked.
+- console.log() is not returned to the model; it only goes to browser devtools. To communicate with the model, return a value, mutate state, render to the stage, or inspect retained results.
+- Tool failures return JSON with ok:false, error.name, error.message, stack excerpt, and line-numbered user code. Repair the next call; do not continue as if the failed tool worked.
+- Large tool outputs are initially capped. Full outputs are retained up to about 10 MB per tool call. If truncated, scan or condense first with scanToolResult(); page deliberately with readToolResult().
+- Do not manually slice reference guides or source notes just to stay under the tool cap. Return the full readFile() result when you need to read it; if the model-visible result is truncated, use readToolResult() or scanToolResult() to inspect the retained full output.
+- Helper names are injected into an inner async scope, so local variables may reuse ordinary names such as sample, schema, or rows.
+- The human can send new instructions while you are running. Treat the newest human message as authoritative.
+- You may set state.done = true from JavaScript when the run should stop after that tool result.
 
-Epic date rules:
-- Do not pass *_DATE_REAL values such as 67543 to new Date(). They are numeric Epic serial dates: integer
-  days since 1840-12-31, with decimal fractions for same-day sequencing.
-- Use epicDateRealToDate() / epicDateRealToIso() for *_DATE_REAL columns. Use parseEpicDateText() for
-  rendered text date columns like START_DATE or ORDERING_DATE.
+State guidance:
+- Use state for compact, durable working memory across tool calls: chosen domain, guides read, candidate tables, important SQL snippets, small counts, selected IDs, plot metadata, and open questions.
+- Do not put large query results, full notes, or long file contents in state. Return them, render them, or rely on retained tool results and readToolResult()/scanToolResult().
+- Keep state JSON-serializable and small. Replace old keys when the investigation changes direction.
+- Good pattern:
+  state.investigation = {
+    domain: "medications",
+    guidesRead: ["medications-and-orders.md", "general-patterns.md"],
+    candidateTables: ["ORDER_MED", "ORDER_MED_SIG", "CLARITY_MEDICATION"],
+    checks: [{ name: "order rows", sql: "SELECT COUNT(*) FROM ORDER_MED", count: 55 }],
+    next: "Verify medication names against CLARITY_MEDICATION"
+  };
+- Use state.done = true only after rendering/returning enough evidence for the current user request.
 
-Conversation vs. stage:
-- To answer in the conversation, return normal assistant message text. Do not call a tool for ordinary prose.
-- If the answer is complete, return the final answer as normal assistant text with no tool call.
-- If you need to keep working, call execute_javascript. You may include a short assistant message before the
-  tool call, and it will be shown in the conversation.
-- The stage is only for artifacts that benefit from layout or visuals: small tables, SVGs, mini dashboards,
-  note snippets, and plots. Do not render plain prose into the stage just to answer the human.
+Stage and conversation:
+- Conversation is for prose answers, reasoning summaries, and concise evidence.
+- Stage is for artifacts that benefit from layout or visuals: tables, SVGs, mini dashboards, note snippets, Vega-Lite plots, and custom DOM.
+- Do not render plain prose into the stage just to answer the human.
+- If you render to the stage, also return a concise receipt with what was rendered and what data/query supports it.
 
-Notes quickstart:
-- The detailed notes guide is bundled at
-  skills/reading-epic-ehi-export/reference/clinical-areas/clinical-notes-and-documents.md. Read it before
-  doing serious note work.
-- Rich-text note bodies are files under raw/Rich Text/*.RTF; there is no SQLite column containing the RTF
-  body. Use await listFiles("raw/Rich Text"), await grepFiles("term", { pathIncludes: "raw/Rich Text" }),
-  and await readFile(path).
-- Use HNO_INFO as the note spine. Join note versions with HNO_INFO.NOTE_ID = NOTE_ENC_INFO.NOTE_ID. Link
-  to encounters through HNO_INFO.PAT_ENC_CSN_ID when populated. Do not use NOTE_ENC_INFO.PAT_ENC_CSN_ID as
-  the note encounter key; in this export it is blank.
-- Plain text note body chunks, when present, are in HNO_PLAIN_TEXT via NOTE_CSN_ID = NOTE_ENC_INFO.CONTACT_SERIAL_NUM.
+Epic guardrails:
+- Do not pass *_DATE_REAL values such as 67543 to new Date(). They are Epic serial dates: integer days since 1840-12-31, with decimal fractions for same-day sequencing. Use epicDateRealToDate() or epicDateRealToIso().
+- Use parseEpicDateText() for rendered text date columns like START_DATE or ORDERING_DATE.
+- Rich-text note bodies live at raw/Rich Text/*.RTF. readFile() and grepFiles() return converted note text by default; use { raw: true } only when you need RTF source.
+- For notes, use HNO_INFO as the note spine. Join versions with HNO_INFO.NOTE_ID = NOTE_ENC_INFO.NOTE_ID. Encounter linkage is HNO_INFO.PAT_ENC_CSN_ID when populated. Do not use NOTE_ENC_INFO.PAT_ENC_CSN_ID as the note encounter key.
 
-When analyzing data, show the SQL or JS check you used. Keep state concise and purposeful.
+Working patterns:
+1. Read guide + inspect schema:
+   const guide = await readFile("skills/reading-epic-ehi-export/reference/clinical-areas/medications-and-orders.md");
+   const family = await sql("SELECT table_name, n_rows FROM _tables WHERE table_name LIKE 'ORDER_MED%' ORDER BY n_rows DESC");
+   const cols = await schema("ORDER_MED");
+   return { guidesRead: ["medications-and-orders.md"], guide, check: "ORDER_MED family inventory", tables: family.rows, selectedColumns: cols.rows.filter(c => /ORDER|MED|DATE|STATUS/.test(c.name)) };
 
-Run protocol:
-- Continue working by calling execute_javascript when more investigation or rendering is needed.
-- When the task is complete, respond with normal assistant text and no tool call.
-- You may also set state.done = true from JavaScript when the run should stop after that tool result.
-- If the human sends a new message while you are running, it will be inserted into the same run. Treat it as the newest instruction.`;
+2. Query + render table:
+   const result = await sql("SELECT table_name, n_rows FROM _tables ORDER BY n_rows DESC LIMIT 10");
+   renderHtml("<table><tr><th>Table</th><th>Rows</th></tr>" + result.rows.map(r => "<tr><td>" + r.table_name + "</td><td>" + r.n_rows + "</td></tr>").join("") + "</table>");
+   return { rendered: "top populated tables", rowCount: result.rows.length, sql: "SELECT table_name, n_rows FROM _tables ORDER BY n_rows DESC LIMIT 10" };
+
+3. Search notes as text:
+   const hits = await grepFiles("hypertension", { pathIncludes: "raw/Rich Text", limit: 5 });
+   const firstNoteText = hits[0] ? await readFile(hits[0].path) : "";
+   return { hits, firstNoteText };
+
+4. Plot with Vega-Lite:
+   const rows = (await sql("SELECT table_name, n_rows FROM _tables ORDER BY n_rows DESC LIMIT 20")).rows;
+   await plot_vegalite({ data: { values: rows }, mark: "bar", encoding: { y: { field: "table_name", type: "nominal", sort: "-x" }, x: { field: "n_rows", type: "quantitative" } } });
+   return { plotted: true, rows: rows.length };
+
+Vega-Lite guidance:
+- Put width/height in the spec or pass them as plot_vegalite(spec, { width, height }); do not assume vegaEmbed options resize the chart.
+- Avoid mixing unlike units on one y axis. For labs, either facet by unit/test group, normalize values, or use separate aligned panels.
+- Do not put facet channels such as column/row inside a layered unit spec. Use a top-level facet/repeat spec, or make separate layers in one shared coordinate system.
+- For temporal lab history, prefer x type "temporal" with point/line marks. Ordinal dates and bars can overlap labels when there are few repeated dates.
+- Include tooltip fields that show value, unit, date, reference range, and source table/order id.
+
+5. Handle truncation without dumping:
+   const catalog = listToolResults();
+   const latest = catalog.at(-1);
+   const hits = latest ? scanToolResult(latest.index, "ERROR|WARN|hypertension", { limit: 20 }) : null;
+   return { retainedResults: catalog, hits };
+
+6. Keep concise investigation state:
+   state.investigation = {
+     domain: "labs",
+     guidesRead: ["lab-results.md", "general-patterns.md"],
+     candidateTables: ["ORDER_RESULTS", "ORDER_PROC"],
+     next: "Check where external result values are represented"
+   };
+   return { savedState: state.investigation };`;
 
 const toolDefinition = {
   type: "function",
@@ -130,6 +218,21 @@ function truncate(s: string, n = MAX_TOOL_CHARS) {
   return s.length > n ? `${s.slice(0, n)}\n... [truncated ${s.length - n} chars]` : s;
 }
 
+function toolResultForModel(content: string, record: ToolResultRecord) {
+  if (content.length <= MAX_TOOL_CHARS) return content;
+  const nextOffset = Math.min(MAX_TOOL_CHARS, record.retainedChars);
+  return `${content.slice(0, MAX_TOOL_CHARS)}
+... [TRUNCATED ${content.length - MAX_TOOL_CHARS} chars before sending to the model]
+
+FOLLOW-UP HINT:
+- Full retained result: #${record.index} (${record.id})
+- Retained chars: ${record.retainedChars}/${record.totalChars}${record.retentionCapped ? " (retention cap reached)" : ""}
+- Next offset: ${nextOffset}
+- To continue: return readToolResult(${record.index}, { offset: ${nextOffset}, length: ${DEFAULT_TOOL_PAGE_CHARS} })
+- To request a larger explicit page: return readToolResult(${record.index}, { offset: ${nextOffset}, length: ${Math.min(MAX_TOOL_PAGE_CHARS, 100_000)} })
+- To list retained results: return listToolResults()`;
+}
+
 function stringifyResult(value: unknown) {
   if (value === undefined) return "(no return value; use `return ...` in statement-style JavaScript to send a value back to the transcript)";
   if (typeof value === "string") return value;
@@ -144,6 +247,111 @@ function numberedCode(code: string, maxLines = 220) {
   return shown.join("\n");
 }
 
+function unique<T>(values: T[]) {
+  return [...new Set(values)];
+}
+
+function extractSqlTableNames(code: string) {
+  const names: string[] = [];
+  const tablePattern = /\b(?:from|join|update|into)\s+(?:"([^"]+)"|'([^']+)'|`([^`]+)`|([A-Za-z_][\w$]*))/gi;
+  let match: RegExpExecArray | null;
+  while ((match = tablePattern.exec(code))) {
+    const name = match[1] ?? match[2] ?? match[3] ?? match[4];
+    if (name && !["select", "where"].includes(name.toLowerCase())) names.push(name);
+  }
+  return unique(names);
+}
+
+function patternFromName(name: string) {
+  const token = name.split(/[_\W]+/).filter(Boolean).sort((a, b) => b.length - a.length)[0] ?? name;
+  return `%${token}%`;
+}
+
+function buildErrorGuidance(err: Error, code: string) {
+  const message = err.message;
+  const tables = extractSqlTableNames(code);
+  const firstTable = tables[0];
+  const noColumn = /no such column:\s*([A-Za-z_][\w$]*)/i.exec(message);
+  const noTable = /no such table:\s*([A-Za-z_][\w$]*)/i.exec(message);
+  const syntax = /syntax error/i.test(message);
+  const vega = /vega|signal|mark|encoding|scale|duplicate signal/i.test(message);
+
+  if (noColumn) {
+    const column = noColumn[1];
+    const nextActions = [
+      `Do not guess column names. Inspect live schema before retrying.`,
+      firstTable
+        ? `Run: const cols = await schema(${JSON.stringify(firstTable)}); return { table: ${JSON.stringify(firstTable)}, columns: cols.rows };`
+        : `Run schema("TABLE_NAME") for the table you queried.`,
+    ];
+    if (firstTable) {
+      nextActions.push(`Run: const rows = await sample(${JSON.stringify(firstTable)}, 5); return rows;`);
+    }
+    if (tables.length) {
+      nextActions.push(`If this is the wrong table family, run: return await tables(${JSON.stringify(patternFromName(firstTable))});`);
+    } else {
+      nextActions.push(`If the table is uncertain, run tables("%keyword%") and then schema(theTable).`);
+    }
+    return {
+      kind: "sqlite_missing_column",
+      likelyCause: `${column} is not present in the live SQLite schema${firstTable ? ` for ${firstTable}` : ""}.`,
+      missingColumn: column,
+      detectedTables: tables,
+      nextActions,
+    };
+  }
+
+  if (noTable) {
+    const table = noTable[1];
+    return {
+      kind: "sqlite_missing_table",
+      likelyCause: `${table} is not a table in this SQLite export, or the table name differs from the Epic guide/example.`,
+      missingTable: table,
+      nextActions: [
+        `Run: return await tables(${JSON.stringify(patternFromName(table))});`,
+        `If no rows return, broaden the search: return await tables("%${table.split("_")[0]}%");`,
+        `After selecting a live table, run schema(tableName) and sample(tableName, 5) before querying columns.`,
+      ],
+    };
+  }
+
+  if (syntax) {
+    return {
+      kind: "sqlite_syntax_or_javascript_wrapper",
+      likelyCause: "SQLite rejected the query syntax, or JavaScript template/string construction produced invalid SQL.",
+      detectedTables: tables,
+      nextActions: [
+        "Return the SQL string first if interpolation is involved.",
+        "Run a smaller SELECT with one WHERE predicate, then add clauses back.",
+        "If identifiers contain unusual characters, inspect schema(tableName) and quote identifiers with double quotes.",
+      ],
+    };
+  }
+
+  if (vega) {
+    return {
+      kind: "vega_lite_or_rendering",
+      likelyCause: "The Vega-Lite spec or render call failed.",
+      nextActions: [
+        "Return the spec object to inspect generated fields and duplicate names.",
+        "Use unique param/signal names for each plot.",
+        "Render a minimal spec first, then add layers/transforms back.",
+      ],
+    };
+  }
+
+  return {
+    kind: "javascript_or_tool_error",
+    likelyCause: "The JavaScript tool call failed before producing a value.",
+    detectedTables: tables,
+    nextActions: [
+      "Read the stack excerpt and line-numbered userCode.",
+      "Retry with a smaller expression that returns intermediate values.",
+      "For SQL, inspect tables(), schema(tableName), and sample(tableName, 5) before assuming names.",
+    ],
+  };
+}
+
 function formatToolError(error: unknown, code: string) {
   const err = error instanceof Error ? error : new Error(String(error));
   return JSON.stringify({
@@ -153,13 +361,13 @@ function formatToolError(error: unknown, code: string) {
       message: err.message,
       stack: err.stack?.split("\n").slice(0, 12).join("\n") ?? null,
     },
+    diagnosis: buildErrorGuidance(err, code),
     userCode: numberedCode(code),
-    guidance: "Fix the JavaScript or Vega-Lite spec and retry. If a plot failed, inspect the stage error and the stack excerpt.",
   }, null, 2);
 }
 
 function makeToolFunction(AsyncFunction: FunctionConstructor, code: string) {
-  const helperPrelude = "const { sql, tables, schema, sample, listFiles, readFile, grepFiles, state, d3, plot_vegalite, plotVegaLite, epicDateRealToDate, epicDateRealToIso, parseEpicDateText, stage, renderHtml, appendHtml, clearStage } = helpers;";
+  const helperPrelude = "const { sql, tables, schema, sample, listFiles, readFile, grepFiles, listToolResults, readToolResult, scanToolResult, state, d3, plot_vegalite, plotVegaLite, epicDateRealToDate, epicDateRealToIso, parseEpicDateText, stage, renderHtml, appendHtml, clearStage } = helpers;";
   const expression = code.trim().replace(/;+\s*$/, "");
   if (expression) {
     try {
@@ -205,6 +413,87 @@ function parseEpicDateText(value: unknown) {
   return new Date(Number(m[3]), Number(m[1]) - 1, Number(m[2]), hour, Number(m[5]), Number(m[6]));
 }
 
+function withVegaLiteDimensions(spec: unknown, options?: Record<string, unknown>) {
+  if (!spec || typeof spec !== "object" || Array.isArray(spec)) return spec;
+  const next = { ...(spec as Record<string, unknown>) };
+  if (options?.width != null && next.width == null) next.width = options.width;
+  if (options?.height != null && next.height == null) next.height = options.height;
+  if (next.autosize == null) next.autosize = { type: "fit-x", contains: "padding" };
+  return next;
+}
+
+function vegaEmbedOptions(options?: Record<string, unknown>) {
+  const { width: _width, height: _height, ...embedOptions } = options ?? {};
+  return embedOptions;
+}
+
+function rtfToText(rtf: string): string {
+  let i = 0;
+  let out = "";
+  const skipStack: boolean[] = [false];
+  const skipDepth = () => skipStack[skipStack.length - 1];
+  const emit = (s: string) => { if (!skipDepth()) out += s; };
+
+  while (i < rtf.length) {
+    const c = rtf[i];
+    if (c === "{") { skipStack.push(skipDepth()); i++; continue; }
+    if (c === "}") { if (skipStack.length > 1) skipStack.pop(); i++; continue; }
+    if (c === "\\") {
+      const next = rtf[i + 1];
+      if (next === "'") {
+        const code = parseInt(rtf.slice(i + 2, i + 4), 16);
+        if (!Number.isNaN(code)) emit(decodeRtfByte(code));
+        i += 4;
+        continue;
+      }
+      if (next === "~") { emit(" "); i += 2; continue; }
+      if (next === "-" || next === "_") { i += 2; continue; }
+      if (next === "*") { skipStack[skipStack.length - 1] = true; i += 2; continue; }
+      if (next === "\\" || next === "{" || next === "}") { emit(next); i += 2; continue; }
+      if (next === "\n" || next === "\r") { emit("\n"); i += 2; continue; }
+      const m = /^\\([a-zA-Z]+)(-?\d+)?\s?/.exec(rtf.slice(i));
+      if (m) {
+        const word = m[1];
+        const arg = m[2];
+        i += m[0].length;
+        if (word === "u" && arg != null) {
+          let code = parseInt(arg, 10);
+          if (code < 0) code += 65536;
+          emit(String.fromCharCode(code));
+          if (rtf[i] === "?") i++;
+          continue;
+        }
+        if (["fonttbl", "colortbl", "stylesheet", "info", "pict", "object", "themedata",
+             "colorschememapping", "latentstyles", "datastore", "generator"].includes(word)) {
+          skipStack[skipStack.length - 1] = true;
+          continue;
+        }
+        if (word === "par" || word === "line" || word === "row" || word === "sect" || word === "page") { emit("\n"); continue; }
+        if (word === "cell" || word === "tab" || word === "nestcell") { emit("\t"); continue; }
+        continue;
+      }
+      i++;
+      continue;
+    }
+    if (c === "\r" || c === "\n") { i++; continue; }
+    emit(c);
+    i++;
+  }
+  return out
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .split("\n").map((line) => line.replace(/[ \t]+$/g, "")).join("\n")
+    .trim();
+}
+
+function decodeRtfByte(code: number): string {
+  const cp1252: Record<number, string> = {
+    0x91: "‘", 0x92: "’", 0x93: "“", 0x94: "”", 0x95: "•", 0x96: "–", 0x97: "—",
+    0x85: "…", 0xa0: " ", 0xb0: "°", 0xae: "®", 0xa9: "©",
+  };
+  return cp1252[code] ?? String.fromCharCode(code);
+}
+
 function makeRows(db: Database, query: string, params?: SqlValue[] | Record<string, SqlValue>, limit = 200) {
   const stmt = db.prepare(query);
   if (params) stmt.bind(params as never);
@@ -224,6 +513,7 @@ function useHarness() {
   const [fsIndex, setFsIndex] = React.useState<FsIndex | null>(null);
   const [agentStateText, setAgentStateText] = React.useState("{}");
   const agentStateRef = React.useRef<Record<string, unknown>>({});
+  const toolResultsRef = React.useRef<ToolResultRecord[]>([]);
   const stageRef = React.useRef<HTMLDivElement | null>(null);
 
   const loadDb = React.useCallback(async () => {
@@ -242,9 +532,14 @@ function useHarness() {
 
   const loadFs = React.useCallback(async () => {
     if (fsIndex) return fsIndex;
-    const res = await fetch("../data/fs.json");
-    if (!res.ok) throw new Error(`Could not fetch ../data/fs.json (${res.status})`);
-    const next = (await res.json()) as FsIndex;
+    const res = await fetch("../data/fs.zip");
+    if (!res.ok) throw new Error(`Could not fetch ../data/fs.zip (${res.status})`);
+    const entries = unzipSync(new Uint8Array(await res.arrayBuffer()));
+    const next: FsIndex = {
+      files: Object.entries(entries)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([path, bytes]) => ({ path, text: strFromU8(bytes) })),
+    };
     setFsIndex(next);
     return next;
   }, [fsIndex]);
@@ -283,20 +578,24 @@ function useHarness() {
       const needle = pattern?.toLowerCase();
       return idx.files.map((f) => f.path).filter((p) => !needle || p.toLowerCase().includes(needle));
     };
-    const readFile = async (path: string) => {
+    const readableText = (path: string, text: string, raw?: boolean) => {
+      if (raw) return text;
+      return path.toLowerCase().endsWith(".rtf") ? rtfToText(text) : text;
+    };
+    const readFile = async (path: string, options?: { raw?: boolean }) => {
       const idx = await loadFs();
       const file = idx.files.find((f) => f.path === path);
       if (!file) throw new Error(`No bundled file: ${path}`);
-      return file.text;
+      return readableText(file.path, file.text, options?.raw);
     };
-    const grepFiles = async (pattern: string, options?: { caseSensitive?: boolean; limit?: number; pathIncludes?: string }) => {
+    const grepFiles = async (pattern: string, options?: { caseSensitive?: boolean; limit?: number; pathIncludes?: string; raw?: boolean }) => {
       const idx = await loadFs();
       const flags = options?.caseSensitive ? "" : "i";
       const re = new RegExp(pattern, flags);
       const out: { path: string; line: number; text: string }[] = [];
       const limit = options?.limit ?? 200;
       for (const file of idx.files.filter((f) => !options?.pathIncludes || f.path.includes(options.pathIncludes))) {
-        const lines = file.text.split(/\r?\n/);
+        const lines = readableText(file.path, file.text, options?.raw).split(/\r?\n/);
         for (let i = 0; i < lines.length; i++) {
           if (re.test(lines[i])) out.push({ path: file.path, line: i + 1, text: lines[i] });
           if (out.length >= limit) return out;
@@ -304,13 +603,98 @@ function useHarness() {
       }
       return out;
     };
+    const listToolResults = () => toolResultsRef.current.map((r) => ({
+      index: r.index,
+      id: r.id,
+      status: r.status,
+      started: r.started,
+      codePreview: r.codePreview,
+      totalChars: r.totalChars,
+      retainedChars: r.retainedChars,
+      retentionCapped: r.retentionCapped,
+    }));
+    const readToolResult = (indexOrId?: number | string, options?: { offset?: number; length?: number }) => {
+      const results = toolResultsRef.current;
+      const record = indexOrId == null
+        ? results.at(-1)
+        : typeof indexOrId === "number"
+          ? results.find((r) => r.index === indexOrId)
+          : results.find((r) => r.id === indexOrId);
+      if (!record) throw new Error(`No retained tool result for ${indexOrId ?? "latest"}`);
+      const offset = Math.max(0, options?.offset ?? 0);
+      const length = Math.max(1, Math.min(options?.length ?? DEFAULT_TOOL_PAGE_CHARS, MAX_TOOL_PAGE_CHARS));
+      const text = record.content.slice(offset, offset + length);
+      const nextOffset = offset + text.length < record.retainedChars ? offset + text.length : null;
+      return {
+        index: record.index,
+        id: record.id,
+        status: record.status,
+        offset,
+        requestedLength: length,
+        returnedChars: text.length,
+        nextOffset,
+        totalChars: record.totalChars,
+        retainedChars: record.retainedChars,
+        retentionCapped: record.retentionCapped,
+        text,
+      };
+    };
+    const scanToolResult = (indexOrId: number | string | undefined, pattern: string, options?: { caseSensitive?: boolean; limit?: number; contextChars?: number }) => {
+      const results = toolResultsRef.current;
+      const record = indexOrId == null
+        ? results.at(-1)
+        : typeof indexOrId === "number"
+          ? results.find((r) => r.index === indexOrId)
+          : results.find((r) => r.id === indexOrId);
+      if (!record) throw new Error(`No retained tool result for ${indexOrId ?? "latest"}`);
+      const re = new RegExp(pattern, options?.caseSensitive ? "g" : "gi");
+      const limit = options?.limit ?? 50;
+      const contextChars = Math.max(0, Math.min(options?.contextChars ?? 180, 2000));
+      const matches: { offset: number; match: string; context: string }[] = [];
+      let m: RegExpExecArray | null;
+      while ((m = re.exec(record.content)) && matches.length < limit) {
+        const start = Math.max(0, m.index - contextChars);
+        const end = Math.min(record.content.length, m.index + m[0].length + contextChars);
+        matches.push({ offset: m.index, match: m[0], context: record.content.slice(start, end) });
+        if (m[0].length === 0) re.lastIndex++;
+      }
+      return {
+        index: record.index,
+        id: record.id,
+        pattern,
+        matchCountReturned: matches.length,
+        retainedChars: record.retainedChars,
+        totalChars: record.totalChars,
+        matches,
+      };
+    };
+    const rememberToolResult = (record: Omit<ToolResultRecord, "index" | "content" | "retainedChars" | "retentionCapped"> & { content: string }) => {
+      const retentionCapped = record.content.length > MAX_RETAINED_TOOL_CHARS;
+      const content = retentionCapped
+        ? `${record.content.slice(0, MAX_RETAINED_TOOL_CHARS)}\n... [retention cap reached; omitted ${record.content.length - MAX_RETAINED_TOOL_CHARS} chars]`
+        : record.content;
+      const next: ToolResultRecord = {
+        ...record,
+        index: toolResultsRef.current.length + 1,
+        content,
+        totalChars: record.content.length,
+        retainedChars: content.length,
+        retentionCapped,
+      };
+      toolResultsRef.current.push(next);
+      return next;
+    };
+    const clearToolResults = () => {
+      toolResultsRef.current = [];
+    };
     const plot_vegalite = async (spec: unknown, options?: Record<string, unknown>) => {
       if (!stageRef.current) throw new Error("No stage element is mounted.");
       const mount = document.createElement("div");
       mount.className = "plot";
       stageRef.current.appendChild(mount);
       try {
-        await vegaEmbed(mount, spec as never, { actions: false, ...options });
+        const normalizedSpec = withVegaLiteDimensions(spec, options);
+        await vegaEmbed(mount, normalizedSpec as never, { actions: false, ...vegaEmbedOptions(options) });
         return { ok: true, plotIndex: stageRef.current.querySelectorAll(".plot").length };
       } catch (e) {
         mount.className = "plot plot-error";
@@ -321,11 +705,13 @@ function useHarness() {
     };
     return {
       sql, tables, schema, sample,
-      listFiles, readFile, grepFiles,
+      listFiles, readFile, grepFiles, listToolResults, readToolResult, scanToolResult,
       listSkillFiles: listFiles, readSkillFile: readFile, grepSkillFiles: grepFiles,
       d3, plot_vegalite, plotVegaLite: plot_vegalite,
       epicDateRealToDate, epicDateRealToIso, parseEpicDateText,
       renderHtml, appendHtml, clearStage,
+      _rememberToolResult: rememberToolResult,
+      _clearToolResults: clearToolResults,
       state: agentStateRef.current,
       syncState,
       get stage() { return stageRef.current; },
@@ -339,7 +725,84 @@ function useHarness() {
   return { dbStatus, fsIndex, agentStateText, agentStateRef, loadDb, loadFs, syncState, helpers, stageRef };
 }
 
-async function callOpenRouter(apiKey: string, model: string, messages: ChatMessage[], signal?: AbortSignal) {
+type ModelActivity = {
+  active: boolean;
+  chars: number;
+};
+
+function streamedAssistantCharCount(message: ChatMessage) {
+  const contentChars = message.content?.length ?? 0;
+  const toolChars = message.tool_calls?.reduce((sum, call) => sum + call.function.name.length + call.function.arguments.length, 0) ?? 0;
+  return contentChars + toolChars;
+}
+
+function mergeToolCallDelta(target: ChatMessage, deltaCall: Partial<ToolCall> & { index?: number }) {
+  const index = deltaCall.index ?? 0;
+  if (!target.tool_calls) target.tool_calls = [];
+  let current = target.tool_calls[index];
+  if (!current) {
+    current = {
+      id: deltaCall.id ?? `tool_call_${index}`,
+      type: "function",
+      function: { name: "", arguments: "" },
+    };
+    target.tool_calls[index] = current;
+  }
+  if (deltaCall.id) current.id = deltaCall.id;
+  if (deltaCall.type) current.type = deltaCall.type;
+  if (deltaCall.function?.name) current.function.name += deltaCall.function.name;
+  if (deltaCall.function?.arguments) current.function.arguments += deltaCall.function.arguments;
+}
+
+async function readOpenRouterStream(res: Response, onActivity?: (activity: ModelActivity) => void) {
+  const reader = res.body?.getReader();
+  if (!reader) throw new Error("OpenRouter streaming response did not include a readable body.");
+  const decoder = new TextDecoder();
+  let buffer = "";
+  const assistant: ChatMessage = { role: "assistant", content: "" };
+
+  const handleLine = (line: string) => {
+    if (!line.startsWith("data:")) return false;
+    const data = line.slice(5).trim();
+    if (!data) return false;
+    if (data === "[DONE]") return true;
+    const parsed = JSON.parse(data);
+    const choice = parsed.choices?.[0];
+    const delta = choice?.delta;
+    if (!delta) return false;
+    if (delta.role) assistant.role = delta.role;
+    if (delta.content) assistant.content = `${assistant.content ?? ""}${delta.content}`;
+    if (delta.tool_calls?.length) {
+      for (const call of delta.tool_calls) mergeToolCallDelta(assistant, call);
+    }
+    onActivity?.({ active: true, chars: streamedAssistantCharCount(assistant) });
+    return false;
+  };
+
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split(/\r?\n/);
+    buffer = lines.pop() ?? "";
+    for (const line of lines) {
+      if (handleLine(line)) {
+        await reader.cancel().catch(() => undefined);
+        if (!assistant.content) assistant.content = null;
+        assistant.tool_calls = assistant.tool_calls?.filter(Boolean);
+        return assistant;
+      }
+    }
+  }
+  buffer += decoder.decode();
+  for (const line of buffer.split(/\r?\n/)) handleLine(line);
+  if (!assistant.content) assistant.content = null;
+  assistant.tool_calls = assistant.tool_calls?.filter(Boolean);
+  return assistant;
+}
+
+async function callOpenRouter(apiKey: string, model: string, messages: ChatMessage[], signal?: AbortSignal, onActivity?: (activity: ModelActivity) => void) {
+  onActivity?.({ active: true, chars: 0 });
   const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -356,11 +819,19 @@ async function callOpenRouter(apiKey: string, model: string, messages: ChatMessa
       tool_choice: "auto",
       parallel_tool_calls: false,
       temperature: 0.2,
+      stream: true,
     }),
   });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`OpenRouter ${res.status}: ${text}`);
+  }
+  const contentType = res.headers.get("content-type") ?? "";
+  if (contentType.includes("text/event-stream")) return readOpenRouterStream(res, onActivity);
   const text = await res.text();
-  if (!res.ok) throw new Error(`OpenRouter ${res.status}: ${text}`);
-  return JSON.parse(text).choices?.[0]?.message as ChatMessage;
+  const assistant = JSON.parse(text).choices?.[0]?.message as ChatMessage;
+  onActivity?.({ active: true, chars: streamedAssistantCharCount(assistant) });
+  return assistant;
 }
 
 function parseToolCode(call: ToolCall) {
@@ -371,12 +842,23 @@ function parseToolCode(call: ToolCall) {
   }
 }
 
-function compactToolResult(content: string | null) {
-  if (!content) return "No tool output.";
-  const [body] = content.split(/\n\nagent_state:\n/);
-  const trimmed = body.trim();
-  if (!trimmed || trimmed.startsWith("(no return value") || trimmed === "undefined") return "Tool completed with no returned value. See the stage and trace for effects.";
-  return truncate(trimmed, 900);
+function MarkdownContent({ children }: { children: string }) {
+  return (
+    <div className="markdown">
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          table: ({ children, ...props }) => (
+            <div className="table-scroll">
+              <table {...props}>{children}</table>
+            </div>
+          ),
+        }}
+      >
+        {children}
+      </ReactMarkdown>
+    </div>
+  );
 }
 
 function MessageView({ m, traces }: { m: ChatMessage; traces: Trace[] }) {
@@ -386,7 +868,7 @@ function MessageView({ m, traces }: { m: ChatMessage; traces: Trace[] }) {
       <b>{m.role}</b>
       {m.tool_calls?.length ? (
         <>
-          {m.content ? <pre className="assistant-text">{m.content}</pre> : null}
+          {m.content ? <MarkdownContent>{m.content}</MarkdownContent> : null}
           <div className="tool-call-list">
             {m.tool_calls.map((call) => (
               <details className="tool-call-card" key={call.id} open>
@@ -400,11 +882,11 @@ function MessageView({ m, traces }: { m: ChatMessage; traces: Trace[] }) {
         <div className="tool-result-card">
           <span className={trace?.status ?? "ok"}>{trace?.status ?? "tool result"}</span>
           {trace?.elapsedMs != null ? <em>{trace.elapsedMs} ms</em> : null}
-          <pre>{compactToolResult(m.content)}</pre>
-          <small>{trace?.resultFull && trace.resultForModel && trace.resultFull !== trace.resultForModel ? "Model saw the bounded output above. Full output is retained in Tool trace." : "Full code and output are in Tool trace."}</small>
+          <pre>{m.content ?? "No tool output."}</pre>
+          <small>{trace?.resultFull && trace.resultForModel && trace.resultFull !== trace.resultForModel ? "This is exactly the bounded output sent back to the model. Full output is retained in Tool trace." : "This is exactly the output sent back to the model."}</small>
         </div>
       ) : m.content ? (
-        <pre>{m.content}</pre>
+        <MarkdownContent>{m.content}</MarkdownContent>
       ) : (
         <pre />
       )}
@@ -426,19 +908,47 @@ function TraceView({ t }: { t: Trace }) {
   );
 }
 
+function CopyModelId({ value, onUse }: { value: string; onUse: (value: string) => void }) {
+  const [copied, setCopied] = React.useState(false);
+  const copy = async () => {
+    await navigator.clipboard.writeText(value);
+    onUse(value);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1200);
+  };
+  return (
+    <button className="copy-model" onClick={() => void copy()} title={`Copy ${value}`} type="button">
+      <code>{value}</code>
+      <span aria-hidden="true">{copied ? "Copied" : "Copy"}</span>
+    </button>
+  );
+}
+
+function initialOpenRouterModel() {
+  const saved = localStorage.getItem("openrouter_model");
+  if (!saved || LEGACY_AUTO_MODELS.has(saved)) return DEFAULT_MODEL;
+  return saved;
+}
+
+function compactCount(value: number) {
+  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
+  if (value >= 1_000) return `${(value / 1_000).toFixed(1)}K`;
+  return String(value);
+}
+
 function App() {
   const { dbStatus, fsIndex, agentStateText, agentStateRef, loadDb, loadFs, syncState, helpers, stageRef } = useHarness();
   const [apiKey, setApiKey] = React.useState(localStorage.getItem("openrouter_api_key") ?? "");
-  const [model, setModel] = React.useState(localStorage.getItem("openrouter_model") ?? DEFAULT_MODEL);
+  const [model, setModel] = React.useState(initialOpenRouterModel);
   const [systemPrompt, setSystemPrompt] = React.useState(initialSystemPrompt);
   const [messages, setMessages] = React.useState<ChatMessage[]>([{ role: "system", content: initialSystemPrompt }]);
   const [corePromptStatus, setCorePromptStatus] = React.useState("loading core prompt");
-  const [input, setInput] = React.useState("Find one interesting export-shape issue in the SQLite data, show the raw check, and render a small table in the stage.");
+  const [input, setInput] = React.useState("What was my last blood sugar?");
   const [traces, setTraces] = React.useState<Trace[]>([]);
-  const [freeModels, setFreeModels] = React.useState<OpenRouterModel[]>([]);
-  const [modelStatus, setModelStatus] = React.useState("finding free models");
   const [busy, setBusy] = React.useState(false);
   const [runStatus, setRunStatus] = React.useState<"idle" | "running" | "stopping" | "stopped" | "done">("idle");
+  const [turnsRemaining, setTurnsRemaining] = React.useState(MAX_AUTONOMOUS_TURNS);
+  const [modelActivity, setModelActivity] = React.useState<ModelActivity>({ active: false, chars: 0 });
   const [queuedCount, setQueuedCount] = React.useState(0);
   const [error, setError] = React.useState<string | null>(null);
   const messagesRef = React.useRef<ChatMessage[]>(messages);
@@ -491,54 +1001,24 @@ function App() {
     setQueuedCount(0);
     setBusy(false);
     setRunStatus("idle");
+    setTurnsRemaining(MAX_AUTONOMOUS_TURNS);
+    setModelActivity({ active: false, chars: 0 });
     setMessages([{ role: "system", content: systemPrompt }]);
     setTraces([]);
+    helpers._clearToolResults();
     agentStateRef.current = {};
     syncState();
     helpers.clearStage();
     setError(null);
   };
 
-  const loadFreeModels = React.useCallback(async () => {
-    setError(null);
-    setModelStatus("finding free models");
-    const res = await fetch("https://openrouter.ai/api/v1/models");
-    const json = await res.json();
-    if (!res.ok) throw new Error(`OpenRouter models ${res.status}: ${JSON.stringify(json)}`);
-    const models = (json.data ?? []) as OpenRouterModel[];
-    const isFree = (m: OpenRouterModel) => {
-      const p = m.pricing ?? {};
-      return m.id.includes(":free") || ["prompt", "completion", "request"].some((k) => p[k] === "0");
-    };
-    const usage = (m: OpenRouterModel) => {
-      const any = m as OpenRouterModel & Record<string, any>;
-      return Number(any.usage_last_week ?? any.usage?.last_week ?? any.top_provider?.usage_last_week ?? any.activity?.last_week ?? 0);
-    };
-    const scored = models.filter(isFree).sort((a, b) => {
-      const at = a.supported_parameters?.includes("tools") ? 1 : 0;
-      const bt = b.supported_parameters?.includes("tools") ? 1 : 0;
-      const ac = Number((a as OpenRouterModel & { created?: number }).created ?? 0);
-      const bc = Number((b as OpenRouterModel & { created?: number }).created ?? 0);
-      return bt - at || usage(b) - usage(a) || bc - ac || (b.context_length ?? 0) - (a.context_length ?? 0) || a.id.localeCompare(b.id);
-    });
-    setFreeModels(scored.slice(0, 40));
-    if (scored[0] && (!localStorage.getItem("openrouter_model") || model === DEFAULT_MODEL)) setModel(scored[0].id);
-    setModelStatus(scored.length ? `${scored.length} free models found` : "using free router fallback");
-  }, [model]);
-
-  React.useEffect(() => {
-    void loadFreeModels().catch((e) => {
-      setModelStatus("free model list unavailable; using free router fallback");
-      console.warn(e);
-    });
-  }, [loadFreeModels]);
-
   const runTool = async (call: ToolCall) => {
     const parsed = JSON.parse(call.function.arguments || "{}") as { code?: string };
     const code = parsed.code ?? "";
     const traceId = call.id || crypto.randomUUID();
+    const startedIso = new Date().toISOString();
     const started = performance.now();
-    setTraces((prev) => [...prev, { id: traceId, code, status: "running", started: new Date().toISOString() }]);
+    setTraces((prev) => [...prev, { id: traceId, code, status: "running", started: startedIso }]);
     try {
       const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
       const fn = makeToolFunction(AsyncFunction, code);
@@ -546,16 +1026,30 @@ function App() {
       helpers.syncState();
       const stateSnapshot = JSON.stringify(agentStateRef.current, null, 2);
       const resultFull = `${stringifyResult(value)}\n\nagent_state:\n${stateSnapshot}`;
-      const resultForModel = truncate(resultFull);
+      const record = helpers._rememberToolResult({
+        id: traceId,
+        status: "ok",
+        started: startedIso,
+        codePreview: code.trim().slice(0, 240),
+        content: resultFull,
+      });
+      const resultForModel = toolResultForModel(record.content, record);
       const elapsedMs = Math.round(performance.now() - started);
-      setTraces((prev) => prev.map((t) => t.id === traceId ? { ...t, status: "ok", elapsedMs, resultFull, resultForModel } : t));
+      setTraces((prev) => prev.map((t) => t.id === traceId ? { ...t, status: "ok", elapsedMs, resultFull: record.content, resultForModel } : t));
       return resultForModel;
     } catch (e) {
       const resultFull = formatToolError(e, code);
-      const resultForModel = truncate(resultFull);
+      const record = helpers._rememberToolResult({
+        id: traceId,
+        status: "error",
+        started: startedIso,
+        codePreview: code.trim().slice(0, 240),
+        content: resultFull,
+      });
+      const resultForModel = toolResultForModel(record.content, record);
       helpers.syncState();
       const elapsedMs = Math.round(performance.now() - started);
-      setTraces((prev) => prev.map((t) => t.id === traceId ? { ...t, status: "error", elapsedMs, resultFull, resultForModel } : t));
+      setTraces((prev) => prev.map((t) => t.id === traceId ? { ...t, status: "error", elapsedMs, resultFull: record.content, resultForModel } : t));
       return resultForModel;
     }
   };
@@ -570,6 +1064,15 @@ function App() {
     setMessages(merged);
     messagesRef.current = merged;
     return merged;
+  };
+
+  const continueWithQueued = (next: ChatMessage[]) => {
+    if (!queuedRef.current.length) return null;
+    if (agentStateRef.current.done === true) {
+      delete agentStateRef.current.done;
+      syncState();
+    }
+    return drainQueued(next);
   };
 
   const enqueueDuringRun = (content: string) => {
@@ -605,6 +1108,8 @@ function App() {
     }
     setBusy(true);
     setRunStatus("running");
+    setTurnsRemaining(MAX_AUTONOMOUS_TURNS);
+    setModelActivity({ active: false, chars: 0 });
     stopRequestedRef.current = false;
     setError(null);
     queuedRef.current = [];
@@ -614,23 +1119,40 @@ function App() {
     messagesRef.current = next;
     setInput("");
     try {
+      let completed = false;
+      let stopReason: string | null = null;
       for (let turn = 0; turn < MAX_AUTONOMOUS_TURNS; turn++) {
-        if (stopRequestedRef.current) break;
+        setTurnsRemaining(MAX_AUTONOMOUS_TURNS - turn);
+        if (stopRequestedRef.current) {
+          stopReason = "Stopped by user request.";
+          break;
+        }
         next = drainQueued(next);
         const controller = new AbortController();
         abortRef.current = controller;
-        const assistant = await callOpenRouter(apiKey.trim(), model.trim(), next, controller.signal);
+        const assistant = await callOpenRouter(apiKey.trim(), model.trim(), next, controller.signal, setModelActivity);
+        setModelActivity({ active: false, chars: 0 });
+        setTurnsRemaining(Math.max(0, MAX_AUTONOMOUS_TURNS - turn - 1));
         next = [...next, assistant];
         setMessages(next);
         messagesRef.current = next;
         if (!assistant.tool_calls?.length && (assistant.content ?? "").trim()) {
+          const queuedNext = continueWithQueued(next);
+          if (queuedNext) {
+            next = queuedNext;
+            continue;
+          }
           setRunStatus("done");
+          completed = true;
           break;
         }
         if (assistant.tool_calls?.length) {
           let toolSteps = 0;
           for (const call of assistant.tool_calls) {
-            if (stopRequestedRef.current) break;
+            if (stopRequestedRef.current) {
+              stopReason = "Stopped by user request.";
+              break;
+            }
             if (call.function.name !== "execute_javascript") continue;
             const result = await runTool(call);
             next = [...next, { role: "tool", tool_call_id: call.id, content: result }];
@@ -638,17 +1160,39 @@ function App() {
             messagesRef.current = next;
             toolSteps++;
             if (isDoneAfterTool()) break;
-            if (toolSteps >= MAX_STEPS) break;
+            if (toolSteps >= MAX_STEPS) {
+              stopReason = `Stopped after ${MAX_STEPS} tool calls in one assistant turn. Send another message to continue from the retained conversation and tool trace.`;
+              break;
+            }
+          }
+          const queuedNext = !stopReason ? continueWithQueued(next) : null;
+          if (queuedNext) {
+            next = queuedNext;
+            continue;
           }
           if (isDoneAfterTool()) {
             setRunStatus("done");
+            completed = true;
+            break;
+          }
+          if (stopReason) break;
+          if (turn === MAX_AUTONOMOUS_TURNS - 1) {
+            stopReason = `Stopped because the autonomous loop limit was exhausted after ${MAX_AUTONOMOUS_TURNS} assistant turns. Send another message to continue from the retained conversation and tool trace.`;
             break;
           }
           continue;
         }
+        completed = true;
         break;
       }
+      if (!completed && stopReason && !stopRequestedRef.current) {
+        next = [...next, { role: "assistant", content: stopReason }];
+        setMessages(next);
+        messagesRef.current = next;
+        setRunStatus("stopped");
+      }
     } catch (e) {
+      setModelActivity({ active: false, chars: 0 });
       if (e instanceof DOMException && e.name === "AbortError") {
         setRunStatus("stopped");
       } else {
@@ -662,6 +1206,13 @@ function App() {
     }
   };
 
+  const runLabel = runStatus === "running"
+    ? `${runStatus} · ${String(turnsRemaining).padStart(2, "0")} left${modelActivity.active ? ` · ${compactCount(modelActivity.chars)} chars` : ""}${queuedCount ? ` · ${queuedCount} queued` : ""}`
+    : `${runStatus}${queuedCount ? `, ${queuedCount} queued` : ""}`;
+  const sideRunLabel = runStatus === "running"
+    ? queuedCount ? `running, ${queuedCount} queued` : "running"
+    : runStatus;
+
   return (
     <main className="shell">
       <section className="side">
@@ -672,30 +1223,28 @@ function App() {
         </header>
         <div className="settings">
           <label>OpenRouter API key<input value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder="sk-or-v1-..." type="password" /></label>
-          <div className="guide">
-            <b>Key setup</b>
+          <details className="guide" open={!apiKey.trim()}>
+            <summary>Key setup</summary>
             <ol>
               <li>Open <a href="https://openrouter.ai/keys" target="_blank" rel="noreferrer">openrouter.ai/keys</a>.</li>
               <li>Create an API key and paste it here. The key stays in this browser.</li>
-              <li>The app picks a current free model automatically. You can override it below.</li>
+              <li>Pick a model on OpenRouter, copy its model ID, and paste it below.</li>
             </ol>
-          </div>
+          </details>
           <label>Model<input value={model} onChange={(e) => setModel(e.target.value)} /></label>
-          {freeModels.length ? (
-            <select value={model} onChange={(e) => setModel(e.target.value)}>
-              {freeModels.map((m) => (
-                <option key={m.id} value={m.id}>{m.supported_parameters?.includes("tools") ? "tools " : ""}{m.id} · ctx {m.context_length ?? "?"}</option>
-              ))}
-            </select>
-          ) : null}
-          <label>System prompt<textarea value={systemPrompt} onChange={(e) => setSystemPrompt(e.target.value)} /></label>
+          <div className="model-links" aria-label="OpenRouter model links">
+            <a href="https://openrouter.ai/rankings" target="_blank" rel="noreferrer">Popular models</a>
+            <a href="https://openrouter.ai/models?fmt=cards&max_price=0" target="_blank" rel="noreferrer">Free models</a>
+          </div>
+          <div className="model-help">
+            <p>Default model:</p>
+            <CopyModelId value={DEFAULT_MODEL} onUse={setModel} />
+            <p>On OpenRouter, open a model page and copy the ID under the model title.</p>
+          </div>
           <dl>
-            <div><dt>SQLite</dt><dd>{dbStatus}</dd></div>
-            <div><dt>FS</dt><dd>{fsIndex ? `${fsIndex.files.length} files indexed` : "not loaded"}</dd></div>
-            <div><dt>Models</dt><dd>{modelStatus}</dd></div>
-            <div><dt>Prompt</dt><dd>{corePromptStatus}</dd></div>
-            <div><dt>Run</dt><dd>{runStatus}{queuedCount ? `, ${queuedCount} queued` : ""}</dd></div>
-            <div><dt>Tool</dt><dd>execute_javascript</dd></div>
+            <div><dt>Data</dt><dd>{dbStatus}</dd></div>
+            <div><dt>Files</dt><dd>{fsIndex ? `${fsIndex.files.length} indexed` : "not loaded"}</dd></div>
+            <div><dt>Run</dt><dd>{sideRunLabel}</dd></div>
           </dl>
           <button
             className="reset"
@@ -707,17 +1256,33 @@ function App() {
           </button>
           <details className="api-help">
             <summary>JavaScript API</summary>
-            <pre>{`await sql("select ...")
-await tables("%ORDER%")
-await schema("ORDER_RESULTS")
-await sample("PAT_ENC", 5)
-await listFiles("Rich Text")
-await readFile("raw/Rich Text/HNO_...")
-await grepFiles("hypertension", { pathIncludes: "Rich Text" })
-state.notes = [...]
-d3.rollups(...)
-await plot_vegalite({ mark: "bar", data: { values }, encoding: ... })
-renderHtml("<h2>...</h2>")`}</pre>
+            <pre>{`Query:
+  await sql("select ...")
+  await tables("%ORDER%")
+  await schema("ORDER_RESULTS")
+  await sample("PAT_ENC", 5)
+
+Files:
+  await listFiles("Rich Text")
+  await readFile("raw/Rich Text/...")
+  await grepFiles("hypertension", { pathIncludes: "Rich Text" })
+
+Retained output:
+  listToolResults()
+  readToolResult()
+  scanToolResult(undefined, "ERROR|WARN")
+
+Render:
+  await plot_vegalite(spec)
+  renderHtml("<table>...</table>")
+
+State:
+  state.investigation = {
+    domain: "labs",
+    guidesRead: ["lab-results.md"],
+    next: "Check latest glucose row"
+  }
+  state.done = true`}</pre>
           </details>
         </div>
       </section>
@@ -728,8 +1293,12 @@ renderHtml("<h2>...</h2>")`}</pre>
             <h2>Conversation</h2>
             <p>{busy ? "The agent is running. New messages are queued into this same loop." : "Ask the agent to inspect the export, run JavaScript, query SQLite, and render into the stage."}</p>
           </div>
-          <span className={`status ${runStatus}`}>{runStatus}{queuedCount ? ` · ${queuedCount} queued` : ""}</span>
+          <span className={`status ${runStatus}${modelActivity.active ? " model-active" : ""}`}>{runLabel}</span>
         </div>
+        <details className="system-prompt-editor">
+          <summary>System prompt</summary>
+          <textarea value={systemPrompt} onChange={(e) => setSystemPrompt(e.target.value)} spellCheck={false} />
+        </details>
         <div className="messages" onScroll={onConversationScroll} ref={messagesElRef}>
           {messages.filter((m) => m.role !== "system").length ? (
             messages.filter((m) => m.role !== "system").map((m, i) => <MessageView m={m} traces={traces} key={i} />)

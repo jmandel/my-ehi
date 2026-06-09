@@ -22,13 +22,15 @@ const port = Number(process.argv[3] ?? 8088);
 const CT: Record<string, string> = {
   html: "text/html; charset=utf-8", js: "text/javascript; charset=utf-8", css: "text/css; charset=utf-8",
   json: "application/json; charset=utf-8", svg: "image/svg+xml", png: "image/png", jpg: "image/jpeg",
-  jpeg: "image/jpeg", gif: "image/gif", ico: "image/x-icon", woff2: "font/woff2", map: "application/json",
+  jpeg: "image/jpeg", gif: "image/gif", ico: "image/x-icon", wasm: "application/wasm",
+  zip: "application/zip", woff2: "font/woff2", map: "application/json",
 };
 
 const server = Bun.serve({
   port,
   async fetch(req) {
     let path = decodeURIComponent(new URL(req.url).pathname);
+    if (path === "/favicon.ico") return new Response(null, { status: 204 });
     if (path.endsWith("/")) path += "index.html";          // directory -> its index
     let file = Bun.file(root + path);
     if (!(await file.exists()) && !/\.[a-z0-9]+$/i.test(path)) {
