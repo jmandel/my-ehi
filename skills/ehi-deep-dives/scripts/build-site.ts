@@ -87,29 +87,7 @@ if (existsSync(sqlWasm)) {
   }
   const zipEntries: Record<string, Uint8Array> = {};
   for (const path of bundlePaths) zipEntries[path] = new Uint8Array(readFileSync(path));
-  if (builtDb && existsSync(builtDb)) zipEntries["ehi.sqlite"] = new Uint8Array(readFileSync(builtDb));
-
-  const coreSkillPaths = [
-    "skills/reading-epic-ehi-export/SKILL.md",
-  ].filter(existsSync);
-  if (coreSkillPaths.length) {
-    const prompt = [
-      "Core baked-in Epic EHI reading skill",
-      "",
-      "The static site includes data/my-ehi-skills.zip, a normal zip archive exposed to execute_javascript through sql(query), listFiles(pattern), readFile(path), and grepFiles(pattern, options). It contains generated ehi.sqlite plus a virtual filesystem built only from git-tracked files: skills/reading-epic-ehi-export/** and redacted rich-text note payloads at raw/Rich Text/*.RTF and raw/Rich Text/_INDEX.HTML.",
-      "",
-      "When a skill below references a relative path such as reference/patterns/general-patterns.md or scripts/q.ts, resolve it relative to the directory containing that SKILL.md. For example, inside skills/reading-epic-ehi-export/SKILL.md, reference/patterns/general-patterns.md means skills/reading-epic-ehi-export/reference/patterns/general-patterns.md. Use readFile() or grepFiles() to inspect those referenced files before relying on them.",
-      "",
-      "Do not assume a referenced file is already in context. If a cited reference, script, or clinical-area guide matters, explicitly read it from the virtual filesystem.",
-      "",
-      ...coreSkillPaths.flatMap((path) => [
-        `\n--- BEGIN ${path} ---\n`,
-        readFileSync(path, "utf8"),
-        `\n--- END ${path} ---\n`,
-      ]),
-    ].join("\n");
-    zipEntries["core-prompt.txt"] = new TextEncoder().encode(prompt);
-  }
+  if (builtDb && existsSync(builtDb)) zipEntries["db/ehi.sqlite"] = new Uint8Array(readFileSync(builtDb));
   const zipped = zipSync(zipEntries, { level: 9 });
   await Bun.write(join(dataDir, "my-ehi-skills.zip"), zipped);
   if (builtDb && existsSync(builtDb)) rmSync(builtDb);

@@ -494,6 +494,25 @@ function decodeRtfByte(code: number): string {
   return cp1252[code] ?? String.fromCharCode(code);
 }
 
+function corePromptFromSkill(skillText: string) {
+  const skillPath = "skills/reading-epic-ehi-export/SKILL.md";
+  return [
+    "Core baked-in Epic EHI reading skill",
+    "",
+    "The static site includes data/my-ehi-skills.zip, a normal zip archive exposed to execute_javascript through sql(query), listFiles(pattern), readFile(path), and grepFiles(pattern, options). It contains db/ehi.sqlite plus a virtual filesystem built only from git-tracked files: skills/reading-epic-ehi-export/** and redacted rich-text note payloads at raw/Rich Text/*.RTF and raw/Rich Text/_INDEX.HTML.",
+    "",
+    "When the skill below references a relative path such as reference/patterns/general-patterns.md or scripts/q.ts, resolve it relative to the directory containing that SKILL.md. For example, inside skills/reading-epic-ehi-export/SKILL.md, reference/patterns/general-patterns.md means skills/reading-epic-ehi-export/reference/patterns/general-patterns.md. Use readFile() or grepFiles() to inspect those referenced files before relying on them.",
+    "",
+    "Do not assume a referenced file is already in context. If a cited reference, script, or clinical-area guide matters, explicitly read it from the virtual filesystem.",
+    "",
+    `--- BEGIN ${skillPath} ---`,
+    "",
+    skillText,
+    "",
+    `--- END ${skillPath} ---`,
+  ].join("\n");
+}
+
 function makeRows(db: Database, query: string, params?: SqlValue[] | Record<string, SqlValue>, limit = 200) {
   const stmt = db.prepare(query);
   if (params) stmt.bind(params as never);
@@ -537,8 +556,8 @@ function useHarness() {
     const SQL = await initSqlJs({ locateFile: () => "../data/sql-wasm.wasm" });
     setDbStatus("fetching my-ehi-skills.zip");
     const bundle = await loadBundle();
-    const bytes = bundle["ehi.sqlite"];
-    if (!bytes) throw new Error("data/my-ehi-skills.zip did not contain ehi.sqlite");
+    const bytes = bundle["db/ehi.sqlite"];
+    if (!bytes) throw new Error("data/my-ehi-skills.zip did not contain db/ehi.sqlite");
     const next = new SQL.Database(bytes);
     setDb(next);
     setDbStatus(`${(bytes.byteLength / 1024 / 1024).toFixed(1)} MB loaded`);
@@ -550,7 +569,7 @@ function useHarness() {
     const entries = await loadBundle();
     const next: FsIndex = {
       files: Object.entries(entries)
-        .filter(([path]) => path !== "ehi.sqlite" && path !== "core-prompt.txt")
+        .filter(([path]) => path !== "db/ehi.sqlite")
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([path, bytes]) => ({ path, text: strFromU8(bytes) })),
     };
@@ -560,9 +579,9 @@ function useHarness() {
 
   const loadCorePrompt = React.useCallback(async () => {
     const bundle = await loadBundle();
-    const bytes = bundle["core-prompt.txt"];
-    if (!bytes) throw new Error("data/my-ehi-skills.zip did not contain core-prompt.txt");
-    return strFromU8(bytes);
+    const bytes = bundle["skills/reading-epic-ehi-export/SKILL.md"];
+    if (!bytes) throw new Error("data/my-ehi-skills.zip did not contain skills/reading-epic-ehi-export/SKILL.md");
+    return corePromptFromSkill(strFromU8(bytes));
   }, [loadBundle]);
 
   const syncState = React.useCallback(() => {
