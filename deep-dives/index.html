@@ -39,12 +39,10 @@
 
   <section class="files" aria-labelledby="published-files">
     <h2 id="published-files">Published data files</h2>
-    <p>Shared browser data lives under <code>data/</code> in the published site.</p>
+    <p>The agent harness loads these two published files from <code>data/</code> at startup.</p>
     <ul>
-      <li><a href="data/ehi.sqlite"><code>data/ehi.sqlite</code></a> — browser SQLite database built from the redacted EHI table export during publish.</li>
-      <li><a href="data/fs.zip"><code>data/fs.zip</code></a> — normal zip archive of git-tracked reading skill files plus redacted rich-text note files used by the agent harness filesystem.</li>
-      <li><a href="data/core-prompt.txt"><code>data/core-prompt.txt</code></a> — the top-level Epic EHI reading skill text loaded into the harness system prompt.</li>
-      <li><a href="data/sql-wasm.wasm"><code>data/sql-wasm.wasm</code></a> — sql.js WebAssembly runtime loaded by the browser harness.</li>
+      <li><a href="data/ehi.sqlite"><code>data/ehi.sqlite</code></a> — generated SQLite database for SQL queries through the browser agent.</li>
+      <li><a href="data/fs.zip"><code>data/fs.zip</code></a> — normal zip archive of bundled reading skills and redacted rich-text note files for <code>listFiles()</code>, <code>readFile()</code>, and <code>grepFiles()</code>.</li>
     </ul>
   </section>
 
