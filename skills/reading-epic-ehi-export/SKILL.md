@@ -195,6 +195,33 @@ ids, `LINE`, and the `*_DATE_REAL` floats all have TEXT affinity and sort *lexic
 `MAX`/range filters lie unless you `CAST(... AS INTEGER/REAL)` (general-patterns §17). This is the single
 most common source of "the data looks wrong" — see the date example in the quickstart below.
 
+**Third crucial caveat — a blank column is rarely "no data"; usually you're one join short.** An Epic
+export is full of columns that *exist but are empty* because the real value lives elsewhere — and reasoning
+from the column names you happen to see on the one table you opened cannot tell a populated field from a
+**decoy**. Two mechanisms account for most of it. (1) A denormalized **`_NAME` companion was dropped**, so
+the name is blank and you must resolve the **code** through its master file — `PROBLEM_LIST.DESCRIPTION` is
+empty, so the diagnosis name comes from `DX_ID → CLARITY_EDG.DX_NAME` (general-patterns §6). (2) A **value
+column is excluded from its spine table** and re-exposed only through an export **`V_EHI_*` view** or a
+sibling/child table — a flowsheet reading is *not* on `IP_FLWSHT_MEAS`, it is in `V_EHI_FLO_MEAS_VALUE`; a
+medication's dose is *not* in `ORDER_MED.DOSAGE`, it is in `HV_DISCRETE_DOSE`. **What goes wrong** is the
+worst kind of error, because it is silent: you query the obvious column, get blanks, and conclude "no
+problems," "not measured," "never prescribed" — shipping a **false negative that reads like a finding**, with
+no error to warn you. So treat any **"none / empty / not available" as a smell, not a result**: rows that
+exist (`COUNT(*) > 0`) carrying blank display strings are the tell that you read the decoy. Before you assert
+a fact is *absent*, confirm against the source's **code** column and the dictionary or `V_EHI_*` view that the
+domain's clinical-area guide names — surfacing exactly these decoys is what those guides are *for*.
+
+And that is the deeper rule: **when a domain already has a field guide, going table-hunting in it does not
+just waste effort — it is how you misread the structure.** These shapes are counterintuitive by design, so
+poking around the raw tables and trusting first impressions leads you to take a **decoy column for the
+truth**, an **`_ALL` superset master for the spine** (`PROBLEM_LIST_ALL`'s 56 rows are problems +
+immunizations + allergies + system records, not 56 problems), a **re-extraction snapshot count for real
+events** (`IMM_ADMIN`'s row count is not the number of shots), or one table's id for another's namespace —
+each a trap the guide already chased to *why* and warns you off. So **read the guide for the domain before
+you query it**; reserve open-ended table exploration for genuinely *unmapped* territory, or for
+adversarially **verifying** a guide's claims against your own specimen — never to rediscover, and likely
+re-break, a structure that is already mapped.
+
 ### Step 3 — Locate the unstructured material with fan-out
 
 The notes, messages, and media are where the clinical story lives. Map them at scale (the join paths are

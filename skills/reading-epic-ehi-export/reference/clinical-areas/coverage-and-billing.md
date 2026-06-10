@@ -92,6 +92,7 @@ rebill saga. Epic Resolute splits this into two parallel worlds — **Profession
 - **Claim-status feed.** `RECONCILE_CLM.CLAIM_REC_ID = RECONCILE_CLAIM_STATUS.CLAIM_RECON_ID`; `CLM_VALUE_RECORD.CLAIM_RECON_ID` also points here. Order events by `CAST(CONTACT_DATE_REAL AS REAL)` (LINE is not unique — gotcha 6).
 - **Guarantor → patient.** `ACCT_GUAR_PAT_INFO(ACCOUNT_ID, LINE) → PAT_ID`. Verified guarantor 1810018166 → `Z#######` (Self) and `Z8599632` (Father). `ACCOUNT` itself has no `PAT_ID`.
 - **Coverage benefits.** `SERVICE_BENEFITS.RECORD_ID = COVERAGE_BENEFITS.RECORD_ID` (eligibility header → per-service-type detail). Payer/plan: `COVERAGE.PAYOR_ID` = `ARPB_TRANSACTIONS.PAYOR_ID` = `INV_BASIC_INFO.EPM_ID` (EPM payor master); `PLAN_ID` = `INV_BASIC_INFO.EPP_ID` (EPP plan master).
+- **Resolving payer/plan/member names.** `COVERAGE.PAYOR_ID`/`PLAN_ID` (and the same ids on `ARPB_TRANSACTIONS`/`INV_BASIC_INFO`) are **bare numeric keys with no inline `_NAME` companion** (general-patterns §6) — resolve the payer via `CLARITY_EPM.PAYOR_NAME` (1302 → "BLUE CROSS OF WISCONSIN") and the plan via `CLARITY_EPP.BENEFIT_PLAN_NAME` (130204 → "BCBS WI PPO/FEDERAL"). The displayable subscriber/member ID is **not on `COVERAGE`** — it lives in `COVERAGE_MEMBER_LIST.MEM_NUMBER`. Two pre-resolved export views save the joins: `V_EHI_COVERAGE_SUBS` (one fully-resolved subscriber row per coverage) and `V_EHI_CVG_COVERAGE_HIST_ALL`.
 
 ## Unstructured tie-back
 
@@ -120,7 +121,9 @@ Mostly structured, but several text/correspondence hooks:
 
 8. **CARC buckets explain where the money went.** When an 835 posts, `PMT_EOB_INFO_II` records the X12 CARC code (`EOB_CODES`) with its ANSI group (`PEOB_EOB_GRPCODE_C_NAME`): code **45** "exceeds fee schedule" → *Contractual Obligation* (the write-off adjustment); **97** "payment included in another service" → Contractual Obligation; **1/2** (deductible/coinsurance) → *Patient Responsibility* (moves balance to self-pay). A typical visit: charge $170 = payment $113.30 + contractual adjustment $56.70. **Handle:** sum `AMOUNT` grouped by `PEOB_EOB_GRPCODE_C_NAME` to split allowed vs written-off vs patient-owed — **but only over the *final* adjudication.** EOB lines exist for *every* claim submission, including the rejected/voided/rebilled ones (gotcha 7, 9), so summing CARC `AMOUNT` across all of `PMT_EOB_INFO_II` is a **gross** figure that double-counts the denial→rebill churn and can exceed total charges. The real *net* write-off is charge-anchored (`net charges − insurance-paid − patient-responsibility`, deduping invoices by charge `TX_ID` per gotcha 7). If you report a "by reason code" total, label it gross and reconcile it to the net — a part cannot exceed its whole (§42).
 
-   **Recipe — a net-by-reason composition that reconciles.** You *can* get a clean by-reason split, but compute it from the **remittance-image** family (`CL_RMT_*`), not the payment-anchored `PMT_EOB_INFO_II` — because the image header `CL_RMT_CLM_INFO.CLM_STAT_CD_C_NAME` carries the claim **status**, the lever that isolates the final adjudication. Steps: (a) keep only `CLM_STAT_CD_C_NAME = 'Processed as Primary'` (this drops the `Denied` + `Reversal of previous payment` rows of every denial/void/rebill cycle, whose live charges survive once as the rebilled Processed claim); (b) dedupe to one image per claim run, `MIN(IMAGE_ID)` per `INV_NO` (the export can carry the *same* remittance image twice — verify the dupes are line-for-line identical first); (c) split PB from HB so you reconcile against the right charge base — `CL_RMT_SVCE_LN_INF.SVC_LINE_CHG_PB_ID` vs `SVC_LINE_CHG_HB_ID` ties each service line back to its `ARPB_`/`HSP_TRANSACTIONS` charge; (d) `SUM(SVC_ADJ_AMT)` from `CL_RMT_SVC_LVL_ADJ` grouped by `SVC_ADJ_REASON_CD` + `SVC_CAS_GRP_CODE_C_NAME`. The Contractual-Obligation group then equals the net write-off and the Patient-Responsibility group equals the net patient share, to the penny. **Reason-code-free cross-check:** on `ARPB_TRANSACTIONS`, the per-charge `TOTAL_MATCH_*` rollups net exactly to the charges while the naive `SUM` of all Payment+Adjustment rows is inflated by reversal/repost churn — so over the non-void charges, write-off = `ΣTOTAL_MTCH_ADJ`, insurer-paid = `Σ(TOTAL_MTCH_INS_AMT − TOTAL_MTCH_INS_ADJ)`, patient = `Σ(TOTAL_MATCH_AMT − TOTAL_MTCH_INS_AMT)`, and `OUTSTANDING_AMT` should sum to ~0. Two independent routes landing on the same write-off and patient figures is the confirmation.
+   **The reliable net figure is charge-anchored and reason-code-free.** On `ARPB_TRANSACTIONS`, the per-charge `TOTAL_MATCH_*` rollups net exactly to the charges while the naive `SUM` of all Payment+Adjustment rows is inflated by reversal/repost churn — so over the non-void charges, write-off = `ΣTOTAL_MTCH_ADJ`, insurer-paid = `Σ(TOTAL_MTCH_INS_AMT − TOTAL_MTCH_INS_ADJ)`, patient = `Σ(TOTAL_MATCH_AMT − TOTAL_MTCH_INS_AMT)`, and `OUTSTANDING_AMT` sums to ~0 (verified write-off −2343.69, patient −631.87 in this specimen). Treat that as the truth.
+
+   **The image-side by-reason split is informational only — it does *not* reconcile to the penny here.** You can compute a by-reason split from the **remittance-image** family (`CL_RMT_*`): (a) keep only `CL_RMT_CLM_INFO.CLM_STAT_CD_C_NAME = 'Processed as Primary'` to drop the `Denied` + `Reversal of previous payment` rows; (b) dedupe to one image per claim run, `MIN(IMAGE_ID)` per `INV_NO`; (c) split PB from HB via `CL_RMT_SVCE_LN_INF.SVC_LINE_CHG_PB_ID` vs `SVC_LINE_CHG_HB_ID`; (d) `SUM(SVC_ADJ_AMT)` from `CL_RMT_SVC_LVL_ADJ` grouped by `SVC_ADJ_REASON_CD` + `SVC_CAS_GRP_CODE_C_NAME`. But in this specimen the result (Contractual Obligation 3428.24 / Patient Responsibility 1186.14) **overshoots** the charge-side net above — because 18 Processed-as-Primary runs survive the `MIN(IMAGE_ID)` dedup and denial/rebill churn is still double-counted across runs. Report the image-side reason split as informational; the charge-anchored figure is the one that reconciles.
 
 9. **The full void/reverse/rebill saga is preserved, not overwritten.** A denied claim (CARC 16) posts a $0 EOB; correcting it **voids** the charge (`ARPB_TX_VOID`, `VOID_REASON`/`REPOST_TYPE_C_NAME` 'Correction', `DEL_REVERSE_DATE`), the remittance **reverses** (`CL_RMT_CLM_INFO.CLM_STAT_CD_C_NAME` 'Reversal of previous payment', a negative `CLAIM_CHRG_AMT`), a new charge is **reposted** (`ARPB_TRANSACTIONS.REPOST_ETR_ID` on the new TX points at the old; `ARPB_TX_VOID.OLD_ETR_ID`/`REPOSTED_ETR_ID`), and it **rebills** under a new L-number that pays. Verified: charge 315026147 voided 12/20/2022 → reposted 317236398; invoice `L1007201490` shows Denied $315 + Reversal −$315 under the same ICN. **Handle:** all states coexist — to read "what finally happened," follow `REPOST_ETR_ID` to the live TX and the final non-Rejected invoice.
 
@@ -190,8 +193,18 @@ ORDER BY cb.RECORD_ID;   -- NB: multiple COVERAGE_BENEFITS rows per RECORD_ID fa
 ```
 
 ```sql
--- 7. NET write-off / patient share BY REASON CODE (reconciles to charges; see gotcha 8).
--- Final adjudication only: Processed-as-Primary, one image per claim run, PB split from HB.
+-- 7a. NET write-off / patient share (reliable, reason-code-free, charge-anchored — see gotcha 8).
+SELECT ROUND(SUM(CAST(TOTAL_MTCH_ADJ AS REAL)),2)                                       writeoff,
+       ROUND(SUM(CAST(TOTAL_MTCH_INS_AMT AS REAL)) - SUM(CAST(TOTAL_MTCH_INS_ADJ AS REAL)),2) insurer_paid,
+       ROUND(SUM(CAST(TOTAL_MATCH_AMT AS REAL))   - SUM(CAST(TOTAL_MTCH_INS_AMT AS REAL)),2)  patient,
+       ROUND(SUM(CAST(OUTSTANDING_AMT AS REAL)),2)                                      outstanding
+FROM ARPB_TRANSACTIONS
+WHERE TX_TYPE_C_NAME='Charge' AND (VOID_DATE IS NULL OR VOID_DATE='');  -- per-charge rollups, not naive SUM
+```
+
+```sql
+-- 7b. Image-side split BY REASON CODE (informational only — does NOT reconcile to 7a in this specimen; see gotcha 8).
+-- 18 Processed-as-Primary runs survive the MIN(IMAGE_ID) dedup, so denial/rebill churn is still double-counted.
 WITH keep AS (
   SELECT INV_NO, MIN(IMAGE_ID) img            -- dedupe a remittance image carried twice
   FROM CL_RMT_CLM_INFO
@@ -204,14 +217,7 @@ FROM keep k
 JOIN CL_RMT_SVC_LVL_ADJ a ON a.IMAGE_ID = k.img
 GROUP BY a.SVC_CAS_GRP_CODE_C_NAME, a.SVC_ADJ_REASON_CD
 ORDER BY grp, amount DESC;
--- Contractual-Obligation total == net write-off; Patient-Responsibility total == net patient share.
--- Cross-check (reason-code-free) on the charge side:
-SELECT ROUND(SUM(CAST(TOTAL_MTCH_ADJ AS REAL)),2)                                       writeoff,
-       ROUND(SUM(CAST(TOTAL_MTCH_INS_AMT AS REAL)) - SUM(CAST(TOTAL_MTCH_INS_ADJ AS REAL)),2) insurer_paid,
-       ROUND(SUM(CAST(TOTAL_MATCH_AMT AS REAL))   - SUM(CAST(TOTAL_MTCH_INS_AMT AS REAL)),2)  patient,
-       ROUND(SUM(CAST(OUTSTANDING_AMT AS REAL)),2)                                      outstanding
-FROM ARPB_TRANSACTIONS
-WHERE TX_TYPE_C_NAME='Charge' AND (VOID_DATE IS NULL OR VOID_DATE='');  -- per-charge rollups, not naive SUM
+-- This specimen: Contractual Obligation 3428.24 / Patient Responsibility 1186.14 — overshoots 7a (2343.69 / 631.87).
 ```
 
 ## Open questions / specimen notes

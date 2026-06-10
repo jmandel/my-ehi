@@ -113,6 +113,10 @@ hook to the rest of the chart is the encounter CSN on `IMMUNE.IMM_CSN`.
    got 9xxxx. The magnitude carries no semantic meaning. *Handle:* always resolve via `CLARITY_IMMUNZATN` (or
    the `_NAME` companion); never infer CVX-ness from the id size. Note the two models can assign *different*
    ids to the same shot (HepA: `IMM_ADMIN` id 38 "HEPATITIS A ADULT" vs `IMMUNE` id 85 "HEPATITIS A (HAVRIX)").
+   **There is no CVX (or any standardized vaccine code) anywhere in this export** — `CLARITY_IMMUNZATN` has only
+   `IMMUNZATN_ID`+`NAME`, and no immunization table has a CVX column. The *only* external standardized code is an
+   NDC on `IMMUNE` (`NDC_NUM_ID_NDC_CODE`, e.g. `58160-909-52`), and it is populated on just 1 of 19 rows here.
+   A CVX crosswalk must be built from outside the export (map by name, or via NDC where present).
 
 7. **`IMM_DUE_TYPE_ID` can be blank with the real label only in `_FT`.** *Observe:* an `IMM_DUE` row with
    empty `IMM_DUE_TYPE_ID` carries `IMM_DUE_TYPE_FT = "Td"`. *Mechanism:* the forecast item wasn't matched to a

@@ -22,6 +22,7 @@ Spine (the five history sections), then the supporting review/index tables.
 | `FAMILY_HX_STATUS` | **The relatives themselves** (vital status + pedigree). One row per relative. | 46 | `(PAT_ENC_CSN_ID, LINE)`. `FAM_STAT_REL_C_NAME`, `FAM_STAT_STATUS_C_NAME` (Alive/Deceased), `FAM_STAT_SEX_C_NAME`, `FAM_STAT_DEATH_AGE`, `FAM_STAT_COD_C_NAME` (cause of death), `FAM_STAT_ID` (relative id within snapshot), `FAM_STAT_FATHER_ID`/`FAM_STAT_MOTHER_ID` (pedigree pointers), `HX_LNK_ENC_CSN` (the visit). |
 | `SOCIAL_HX` | **Social history — one wide snapshot per encounter.** | 8 | `PAT_ENC_CSN_ID`, **91 columns**, exactly 1 row per history contact. Tobacco (`TOBACCO_USER_C_NAME`, `SMOKING_TOB_USE_C_NAME`), alcohol (`ALCOHOL_USE_C_NAME` + free-text `ALCOHOL_COMMENT`), sexual (`SEXUALLY_ACTIVE_C_NAME`, `*_PARTNER_YN`, contraception `*_YN`), `YEARS_EDUCATION`, SDOH (`FIN_RESOURCE_STRAIN_C_NAME`, `FOOD_INSECURITY_*`, IPV, transport…), `UNKNOWN_FAM_HX_YN`. |
 | `SOCIAL_ADL_HX` | **Activities-of-daily-living Q&A** — tall child of social hx. | 104 | `(PAT_ENC_CSN_ID, LINE)`. `HX_ADL_QUESTION_ID_RECORD_NAME` (e.g. "SOCIAL ADL: EXERCISE", "SEAT BELT/CAR SEAT"), `HX_ADL_RESPONSE_C_NAME`, `HX_ADL_COMMENTS`. **13 templated questions × 8 snapshots = 104**; every response here is "Not Asked" (see Gotchas). |
+| `PAT_SOCIAL_HX_DOC` | **Social hx free-text narrative** ("Social Documentation" blob). | 6 | `(PAT_ENC_CSN_ID, LINE)`, `HX_SOCIAL_DOC`. The free narrative (occupation/living situation), 1 row per social-hx snapshot — separate from `SOCIAL_HX`'s inline `*_COMMENT` columns. Join on `PAT_ENC_CSN_ID`, order by `LINE`. |
 | `MEDICAL_HX` | **Past medical history.** One row per (condition × encounter). | 6 | `(PAT_ENC_CSN_ID, LINE)`. Condition stored as **`DX_ID` → `CLARITY_EDG`** (not a category). `MEDICAL_HX_DATE` (free-text fuzzy onset), `MED_HX_ANNOTATION`. |
 | `SURGICAL_HX` | **Past surgical history.** One row per (procedure × encounter). | 8 | `(PAT_ENC_CSN_ID, LINE)`. Procedure stored as **`PROC_ID` → `CLARITY_EAP`** (procedure master, not EDG). `SURGICAL_HX_DATE` (free-text), `SURG_HX_START_DT`/`_END_DT`, `SURG_LATERALITY_C_NAME`, `COMMENTS`/`PROC_COMMENTS`, `HX_LNK_ENC_CSN`. |
 | `PAT_HX_REV_TYPE` | **Which history *sections* were reviewed**, per encounter. | 68 | `(PAT_ENC_CSN_ID, GROUP_LINE, VALUE_LINE)`. `HX_REVIEWED_TYPE_C_NAME` ∈ {Tobacco, Family, Medical, Surgical, Alcohol, Drug Use, Sexual Activity, Socioeconomic, …}. This is the attestation that **drives** the per-encounter re-snapshot. |
@@ -69,6 +70,11 @@ lives inline:
 - `SOCIAL_HX.ALCOHOL_COMMENT` / `SEX_COMMENT` / `ILLICIT_DRUG_CMT` / `TOB_HX_SMOKE_EXPOSURE_CMT` — the
   free-text counterpart beside each coded `_C_NAME` (§14). E.g. `ALCOHOL_USE_C_NAME = "Yes"` beside
   `ALCOHOL_COMMENT` = "about 3-4 drinks per week".
+- **Exception — social hx *does* have a dedicated free-text child table:** the narrative "Social
+  Documentation" blob lives in `PAT_SOCIAL_HX_DOC` (`PAT_ENC_CSN_ID`, `LINE`, `HX_SOCIAL_DOC`), joined to
+  `SOCIAL_HX` on `PAT_ENC_CSN_ID` and reassembled `ORDER BY CAST(LINE AS INT)`. This is *distinct* from the
+  inline `*_COMMENT` columns above — it's the free narrative (e.g. occupation/living situation) rather than a
+  per-field note. 6 rows here (1 per social-hx snapshot); re-snapshotted like the rest (§19).
 - `SOCIAL_ADL_HX.HX_ADL_COMMENTS`, `FAMILY_HX_STATUS.FAM_STAT_COMMENT`, `MEDICAL_HX.MED_HX_ANNOTATION`,
   `SURGICAL_HX.COMMENTS`/`PROC_COMMENTS`, `FAM_HX_PAT_ONLY.FAM_HX_FERT_STAT_NOTES` — present but empty here.
 
@@ -165,15 +171,16 @@ LEFT JOIN FAMILY_HX_STATUS m
 WHERE c.PAT_ENC_CSN_ID = (SELECT PAT_ENC_CSN_ID FROM latest)
 ORDER BY CAST(c.LINE AS INT);
 
--- 3. Past medical & surgical history with names, attributed to the real visit date
+-- 3. Past medical & surgical history with names, attributed to a visit date
+-- MEDICAL_HX has no HX_LNK_ENC_CSN, so attribute it via its own PAT_ENC_CSN_ID
+-- (the history contact); SURGICAL_HX has HX_LNK_ENC_CSN → the .00 office visit.
 SELECT 'medical' AS kind, edg.DX_NAME AS item, m.MEDICAL_HX_DATE AS hx_date,
-       (SELECT CONTACT_DATE FROM PAT_ENC e WHERE e.PAT_ENC_CSN_ID = m.HX_LNK_ENC_CSN) AS visit
+       (SELECT CONTACT_DATE FROM PAT_ENC e WHERE e.PAT_ENC_CSN_ID = m.PAT_ENC_CSN_ID) AS visit
 FROM MEDICAL_HX m LEFT JOIN CLARITY_EDG edg ON m.DX_ID = edg.DX_ID
 UNION ALL
 SELECT 'surgical', eap.PROC_NAME, s.SURGICAL_HX_DATE,
        (SELECT CONTACT_DATE FROM PAT_ENC e WHERE e.PAT_ENC_CSN_ID = s.HX_LNK_ENC_CSN)
 FROM SURGICAL_HX s LEFT JOIN CLARITY_EAP eap ON s.PROC_ID = eap.PROC_ID;
--- NOTE: MEDICAL_HX has no HX_LNK_ENC_CSN column; join its PAT_ENC_CSN_ID instead (see quirk #1).
 
 -- 4. Social history, current snapshot — status flag beside its free-text detail
 SELECT TOBACCO_USER_C_NAME, SMOKING_TOB_USE_C_NAME,

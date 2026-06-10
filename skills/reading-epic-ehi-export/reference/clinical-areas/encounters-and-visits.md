@@ -14,7 +14,7 @@ by `PAT_ID`. If you only learn one join in the whole export, learn `child.PAT_EN
 | table | role | rows in specimen | notes |
 |---|---|---|---|
 | `PAT_ENC` | **Spine.** One row per contact; PK `PAT_ENC_CSN_ID`. Date, visit/PCP provider, department, appt status, closure, calc status, AVS, copay/coverage/account IDs. | 169 | All 169 CSNs distinct: one base row per contact. |
-| `PAT_ENC_2` | Supplement: vitals (`PHYS_BP`/`PHYS_TEMP`/`PHYS_SPO2`), smoking, cosigner/supervising prov, tel-message fields, `PARENT_ENC_CSN_ID`, visit payor. | 169 | 1:1 on `PAT_ENC_CSN_ID`. |
+| `PAT_ENC_2` | Supplement: in-row vitals (`PHYS_BP`/`PHYS_SPO2`/`PHYS_PEAK_FLOW`; temperature is only a *source code* `PHYS_TEMP_SRC_C_NAME`, no value column), smoking, cosigner/supervising prov, tel-message fields, `PARENT_ENC_CSN_ID`, visit payor. | 169 | 1:1 on `PAT_ENC_CSN_ID`. These `PHYS_*` fields are populated on only a handful of contacts (`PHYS_BP` 9, `PHYS_SPO2` 2, `PHYS_PEAK_FLOW` 0) — see Gotcha #9 for the real vitals spine. |
 | `PAT_ENC_3` | Supplement: billing area, checkout user, copay calc, referral type, self-pay. | 169 | **Join trap:** key column is `PAT_ENC_CSN` (no `_ID`). |
 | `PAT_ENC_4` | Supplement: `VISIT_NUMBER`, eCheck-in status, copay collection, `ORIG_ENC_CSN`, BCRA inputs. | 169 | 1:1. |
 | `PAT_ENC_5` | Supplement: prepay/discount, `EVISIT_STATUS_C_NAME`, `ATTR_DEPARTMENT_ID`, video-visit flag. | 169 | 1:1. (Discovery report said its schema doc was missing; in this DB build it documents 34 cols — see Gotchas.) |
@@ -137,6 +137,22 @@ Encounters anchor nearly all unstructured content **by CSN**:
 8. **`PAT_ENC_DX` vs `PAT_ENC_LOS_DX` are different.** `PAT_ENC_DX` is the clinical encounter diagnosis list
    (with `DX_ID`, primary/chronic flags, problem-link). `PAT_ENC_LOS_DX` is the much thinner dx pointer list
    attached to the **E&M level-of-service charge** (`PAT_ENC_DISP`). Don't substitute one for the other.
+
+9. **The in-row `PHYS_*` vitals are a near-empty cache — real per-encounter vitals live on the flowsheet
+   spine.** *Observed:* `PAT_ENC_2.PHYS_BP` is populated on only 9 contacts, `PHYS_SPO2` on 2, `PHYS_PEAK_FLOW`
+   on 0; there is no `PHYS_TEMP` value column at all (only `PHYS_TEMP_SRC_C_NAME`, a source code). *Why:*
+   structured measurements are recorded on the flowsheet/measurement model, not denormalized onto `PAT_ENC_2`.
+   *Handle:* reach them via `PAT_ENC.INPATIENT_DATA_ID` → `IP_FLWSHT_REC.INPATIENT_DATA_ID` (yields `FSD_ID`)
+   → `IP_FLWSHT_MEAS` (`FSD_ID`+`LINE`; carries `FLO_MEAS_ID_DISP_NAME`/time, **but no value column**) — the
+   measurement value itself is exposed only through the export view **`V_EHI_FLO_MEAS_VALUE`**
+   (`MEAS_VALUE_EXTERNAL`, `UNITS`), joined on `FSD_ID`+`LINE`:
+   ```sql
+   SELECT e.PAT_ENC_CSN_ID, m.FLO_MEAS_ID_DISP_NAME, v.MEAS_VALUE_EXTERNAL, v.UNITS
+   FROM PAT_ENC e
+   JOIN IP_FLWSHT_REC r ON e.INPATIENT_DATA_ID = r.INPATIENT_DATA_ID
+   JOIN IP_FLWSHT_MEAS m ON r.FSD_ID = m.FSD_ID
+   JOIN V_EHI_FLO_MEAS_VALUE v ON m.FSD_ID = v.FSD_ID AND m.LINE = v.LINE;
+   ```
 
 ## Recipes
 

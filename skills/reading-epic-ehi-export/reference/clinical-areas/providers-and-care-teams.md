@@ -133,6 +133,16 @@ are not the unstructured corpus — they are the name dictionary the corpus poin
    missing data or filter these as broken; they're a contact *type*. When you need a provider for them,
    look at `MYC_MESG.PROV_ID` / the message routing, not `PAT_ENC`.
 
+8. **`EXTERNAL_NAME` (the patient-facing display column) goes *blank* on external-origin rows whose
+   internal name is populated.** In `CLARITY_SER` the lone blank-`EXTERNAL_NAME` row is `3724611`
+   "MAC LAB APL"; in `CLARITY_DEP` it is `8` "GENERIC EXTERNAL DATA DEPARTMENT" — exactly the external/lab
+   rows from Gotcha 4, where `PROV_NAME`/`DEPARTMENT_NAME` carries the name but the patient-facing column is
+   empty. (Most sentinels still *do* have an `EXTERNAL_NAME` — `199995`, `8800099`, `E1011` all populate
+   it — so this is an external-origin quirk, not a sentinel-wide rule.) **Handling:** when you project a
+   display name off `EXTERNAL_NAME` (as Recipe 4 does for department), wrap it
+   `COALESCE(NULLIF(EXTERNAL_NAME,''), PROV_NAME)` / `COALESCE(NULLIF(EXTERNAL_NAME,''), DEPARTMENT_NAME)`
+   or those external-origin contacts render nameless.
+
 ## Recipes
 
 ```sql
@@ -160,7 +170,7 @@ ORDER BY tt.TR_TEAM_BEG_DTTM DESC;
 -- 4. Rendering provider + department + title per visit (encounter spine)
 SELECT e.PAT_ENC_CSN_ID, e.CONTACT_DATE,
        s.PROV_NAME AS visit_provider, e.VISIT_PROV_TITLE_NAME AS title,
-       d.EXTERNAL_NAME AS department
+       COALESCE(NULLIF(d.EXTERNAL_NAME,''), d.DEPARTMENT_NAME) AS department   -- EXTERNAL_NAME blank on external-origin depts (§8)
 FROM PAT_ENC e
 LEFT JOIN CLARITY_SER s ON s.PROV_ID = e.VISIT_PROV_ID
 LEFT JOIN CLARITY_DEP d ON d.DEPARTMENT_ID = e.DEPARTMENT_ID

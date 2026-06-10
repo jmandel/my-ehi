@@ -21,6 +21,11 @@ contact where it was placed/resulted, §2). Results hang off the order by `ORDER
 | `ORDER_PROC_2` | 1:1 supplement (§6): specimen collection/receipt — `SPECIMN_TAKEN_DATE/TIME`, `SPECIMEN_RECV_DATE`, `COLLECTOR_USER_ID_NAME`, `LAST_RESULT_UPD_TM`. | 42 | Left-join on `ORDER_PROC_ID`. |
 | `ORDER_PROC_3` | 1:1 supplement: result-routing/review status — `PROV_STATUS_C_NAME`, `RESULT_TYPE_C_NAME`, `RESULT_TRACK_STS_C_NAME`. | 42 | |
 | `ORDER_PROC_4` | 1:1 supplement: in-process status timestamps (`IPROC_STATUS_*`). | 42 | |
+| `ORDER_PROC_5` | 1:1 supplement: performing-lab + financial/exam detail — `LAST_RSLT_LAB_ID_LLB_NAME` (the lab that produced the result, 11/42 populated), `BILL_AREA_ID_BILL_AREA_NAME`, imaging exam fields. | 42 | Left-join on `ORDER_ID`. |
+| `ORDER_PROC_6` | 1:1 supplement: result/chart provenance — `FIRST_FINAL`/`LAST_FINAL` (and `FIRST_CHART`/`LAST_CHART`/`*_CORR`) `_USER_ID_NAME` + `_UTC_DTTM` (who finalized/charted/corrected, and when; 20/42 have a final user). | 42 | Left-join on `ORDER_ID`. |
+| `ORDER_REVIEW` | Per-line result review, keyed `(ORDER_ID, LINE)`: `REVIEW_USER_ID_NAME`, `REVIEWED_TIME`, `REVIEW_ACCEPTED_YN`. | 14 | `ORDER_ID` = `ORDER_PROC_ID`. The "provider reviewed/accepted this result" trail; `REVIEW_ACCEPTED_YN` is blank on a not-yet-accepted line. |
+| `ORDER_IMPRESSION` | Discrete impression/conclusion lines for imaging reads, keyed `(ORDER_PROC_ID, LINE)`: `IMPRESSION`. | 11 | All Imaging here. The conclusion surfaces as structured lines, not only buried in `ORDER_NARRATIVE`. |
+| `SPEC_TYPE_SNOMED` | Specimen type as a bare SNOMED code, keyed `(ORDER_ID, LINE)`: `TYPE_SNOMED_CT` (e.g. `119297000`). | 16 | No `_NAME` companion and no SNOMED dictionary shipped (sibling `SPEC_SOURCE_SNOMED` is also code-only) — resolve the code outside the export. |
 | `ORDER_DX_PROC` | Indication diagnoses for the order, keyed `(ORDER_PROC_ID, LINE)`. Holds `DX_ID` (join `CLARITY_EDG`). | 41 | "Why was this ordered" — e.g. "Preventative health care". No `DX_NAME` companion here. |
 | `CLARITY_COMPONENT` | Component master file: `COMPONENT_ID → NAME`. | 24 | **Redundant** — `ORDER_RESULTS.COMPONENT_ID_NAME` already carries the same label (verified 0 mismatches). |
 | `OBS_MTHD_ID` | *In this export*, a thin 4-col order/contact index `(ORDER_ID, CONTACT_DATE_REAL, LINE, CONTACT_DATE)` over the 9 resulted lab orders. | 46 | Schema doc says "methods used to perform component test" — the method payload was **stripped** (§5). |
@@ -63,6 +68,9 @@ This domain *contains* unstructured material; here is how each piece reassembles
   per row, blank lines preserved (§8). It is the **sole** home of imaging/radiology reads (no structured
   `ORDER_RESULTS` rows for imaging) and of some lab interpretive blocks (COVID PCR disclaimer). Concatenate
   in `CAST(LINE AS INT)` order.
+- **Imaging conclusions** also surface as discrete lines in `ORDER_IMPRESSION(ORDER_PROC_ID, LINE, IMPRESSION)`
+  (all 11 rows here are Imaging) — the radiologist's "IMPRESSION:" block as structured lines rather than only
+  embedded in the full `ORDER_NARRATIVE` read. Reassemble the same way (`CAST(LINE AS INT)` order).
 - **Interpretive comments** (reference-range legends, performing-lab footnotes like eGFR address blocks)
   live in `ORDER_RES_COMMENT.RESULTS_CMT`, line-exploded by `LINE_COMMENT`, attached to a component LINE.
 - **Per-component free text** can also sit in `ORDER_RESULTS.COMPONENT_COMMENT` (sparsely used here).

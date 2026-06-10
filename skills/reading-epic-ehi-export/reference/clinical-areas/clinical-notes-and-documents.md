@@ -50,8 +50,10 @@ All verified against rows in this specimen.
 - **Content marker:** `NOTE_CONTENT_INFO.NOTE_CSN_ID = NOTE_ENC_INFO.CONTACT_SERIAL_NUM`; 79/80 land on a
   `NOTE_FORMAT_C_NAME = 'Rich Text'` contact.
 - **Author / entry user:** `HNO_INFO.ENTRY_USER_ID = CLARITY_EMP.USER_ID` (alphanumeric Epic login, e.g.
-  `BURKEBD1`; 69 join). `NOTE_ENC_INFO.AUTH_LNKED_PROV_ID = CLARITY_SER.PROV_ID` (80 join). Every `*_ID`
-  ships beside a denormalized `*_ID_NAME` companion (§4), so you usually don't need the join for display.
+  `BURKEBD1`; 69 join). `NOTE_ENC_INFO.AUTH_LNKED_PROV_ID = CLARITY_SER.PROV_ID` (80 join). Most `*_ID`
+  cols ship beside a denormalized `*_ID_NAME` companion (§4), so you usually don't need the join for display
+  — but `AUTH_LNKED_PROV_ID` is a counterexample (no `_NAME` sibling), so resolve it through
+  `CLARITY_SER.PROV_NAME` (or just use the populated `AUTHOR_USER_ID_NAME` for author display).
 - **Note → order → report text:** `HNO_ORDERS.NOTE_ID = HNO_INFO.NOTE_ID`; `HNO_ORDERS.ORDER_ID =
   ORDER_PROC.ORDER_PROC_ID = ORDER_NARRATIVE.ORDER_PROC_ID`. Verified: `NOTE_ID 5231916898 → ORDER_ID
   1025926289` (XR cervical spine, 96 narrative lines).
@@ -176,7 +178,8 @@ FROM NOTE_ENC_INFO WHERE NOTE_ID = :note_id;
 -- 5. A problem's overview note text (cached preview + full body location).
 SELECT pl.PROBLEM_LIST_ID, pl.OVERVIEW_NOTE_ID,
        substr(pl.PROBLEM_CMT,1,80) AS cached_preview,   -- §23
-       h.IP_NOTE_TYPE_C_NAME AS overview_note_type
+       COALESCE(NULLIF(h.IP_NOTE_TYPE_C_NAME,''),
+                NULLIF(h.NOTE_TYPE_NOADD_C_NAME,'')) AS overview_note_type  -- IP_NOTE_TYPE is blank for these
 FROM PROBLEM_LIST pl
 JOIN HNO_INFO h ON h.NOTE_ID = pl.OVERVIEW_NOTE_ID
 WHERE pl.OVERVIEW_NOTE_ID IS NOT NULL;       -- body = RTF for these Rich-Text overview notes

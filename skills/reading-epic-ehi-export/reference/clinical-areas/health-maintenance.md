@@ -6,8 +6,9 @@ due, records due/overdue status over time, and logs how each was satisfied (a sh
 visit code). This is the "are you up to date on your screenings/vaccines?" layer that sits *on top of* the
 actual immunization and lab data.
 
-**Where it sits.** Every HM table is keyed by `PAT_ID` (the EPT patient, §1) — HM is a per-patient
-rollup, not a per-encounter fact. It connects *out* to encounters only weakly: the reminder-letter tables
+**Where it sits.** Almost every HM table is keyed by `PAT_ID` (the EPT patient, §1) — HM is a per-patient
+rollup, not a per-encounter fact. (The exception is `PAT_HM_LETTER`, which is CSN-keyed, not `PAT_ID`-keyed;
+the two masterfiles carry no patient key at all.) It connects *out* to encounters only weakly: the reminder-letter tables
 carry a `PAT_ENC_CSN_ID` (§2), and completions correlate to `IMMUNE`/`ORDER_RESULTS` rows **by date, not
 by foreign key**. Think of HM as a derived dashboard computed from immunizations, labs, and visits.
 
@@ -20,8 +21,8 @@ by foreign key**. Think of HM as a derived dashboard computed from immunizations
 | `HM_HISTORY` | completion ledger (how topics were satisfied) | 53 | Type (`Immunization`/`Result Component`/`LOS Code`/`E/M Code`) + completion instant. **No topic id** — only `(PAT_ID, LINE)`. |
 | `HM_FORECAST_INFO` | next-completion forecast per topic | 7 | Topic id + `EARLIEST_VALID_DATE` (when the next dose/screen first becomes valid). |
 | `PAT_HM_CUR_GUIDE` | HM **plans** in force at last update | 24 | One row per enrolled plan (concrete protocol). |
-| `HM_PLAN_INFO` | **masterfile** — HM plan/protocol id → name | 24 | Concrete plans, e.g. "Hepatitis B 0-60y", "COVID-19: Age 6mo-64y". |
-| `CLARITY_HM_TOPIC` | **masterfile** — HM topic id → name | 24 | Abstract topics, e.g. "COVID-19 Vaccine", "Lab-Diabetes Screening". **Different id space from plans** (see gotchas). |
+| `HM_PLAN_INFO` | **masterfile** — HM plan/protocol id → name | 24 | Concrete plans, e.g. "Hepatitis B 0-60y", "COVID-19: Age 6mo-64y". Display column is `HM_PLAN_NAME`. |
+| `CLARITY_HM_TOPIC` | **masterfile** — HM topic id → name | 24 | Abstract topics, e.g. "COVID-19 Vaccine", "Lab-Diabetes Screening". Display column is `NAME`. **Different id space from plans** (see gotchas). |
 | `PAT_HM_LETTER` | reminder-letter events (topic + due) | 1 | CSN-keyed; ties a letter to a topic and encounter. |
 | `HM_ENC_DATE` | the encounter a letter was sent for | 1 | `PAT_ID` + `HM_LET_PAT_ENC_CSN_ID` (→ `PAT_ENC`). |
 
@@ -33,8 +34,10 @@ immunization/lab data, not a dedicated link table.
 
 All joins below were run against the specimen and confirmed.
 
-- **Patient anchor.** Every HM table has `PAT_ID` (single value `Z#######` here). HM is per-patient; there
-  is no CSN on the spine tables (§1). Verified: `count(DISTINCT PAT_ID)=1` on all six patient-level tables.
+- **Patient anchor.** The six patient-level HM tables carry `PAT_ID` (single value `Z#######` here);
+  `PAT_HM_LETTER` is keyed by `PAT_ENC_CSN_ID` instead, and the two masterfiles have no patient key. HM is
+  per-patient; there is no CSN on the spine tables (§1). Verified: `count(DISTINCT PAT_ID)=1` on all six
+  patient-level tables.
 - **Current state → plan masterfile.** `PATIENT_HMT_STATUS.ACTIVE_HM_PLAN_ID` →
   `HM_PLAN_INFO.HM_PLAN_ID`. Verified: 23/23 rows match, and the inline companion
   `ACTIVE_HM_PLAN_ID_HM_PLAN_NAME` (§4) equals `HM_PLAN_INFO.HM_PLAN_NAME` on every row. The column
@@ -134,13 +137,16 @@ domains (immunizations, labs); HM itself stores only the status/date rollup.
 ## Recipes
 
 ```sql
--- 1. Current preventive-care dashboard: every active topic, its concrete plan, and last completion.
+-- 1. Current preventive-care dashboard: every active topic, its concrete plan, and last update.
 SELECT s.LINE,
        s.ACTIVE_HM_PLAN_ID_HM_PLAN_NAME AS active_plan,
-       s.HMT_LAST_UPDATE_DT             AS last_done,
+       s.HMT_LAST_UPDATE_DT             AS last_update,  -- update timestamp, NOT a completion date
        s.HM_ACTIVE_SERIES_C_NAME        AS series
 FROM PATIENT_HMT_STATUS s
 ORDER BY CAST(s.LINE AS INT);
+-- CAVEAT: HMT_LAST_UPDATE_DT is the row's last-update timestamp, blank for any topic never acted on
+-- (14/23 rows here — the travel/pediatric vaccines). For the true last-completed date per topic use the
+-- highest-LINE HM_HISTORICAL_STATUS.LAST_COMPLETED_DATE (Recipe 3), not this column.
 ```
 
 ```sql

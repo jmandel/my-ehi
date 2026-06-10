@@ -18,10 +18,10 @@ carry `PAT_ID`. The referred-*to* visit, when in-system, is a separate `PAT_ENC`
 | `REFERRAL_HIST` | lifecycle audit trail (§17) | 175 | `(REFERRAL_ID, LINE)` per change. `CHANGE_TYPE_C_NAME`, `NEW_RFL_STATUS_C_NAME`, who/when |
 | `REFERRAL_DX` | diagnoses on the referral (§7) | 11 | `(REFERRAL_ID, LINE)`; `DX_ID` → `CLARITY_EDG` |
 | `REFERRAL_REASONS` | reason-for-referral list (§7) | 7 | `REFERRAL_REASON_C_NAME` (e.g. "Specialty Services Required") |
-| `REFERRAL_PX` | procedures/visit-units requested (§7) | 10 | `PX_ID`, `UNITS_REQUESTED`/`UNITS_APPROVED` |
+| `REFERRAL_PX` | procedures/visit-units requested (§7) | 10 | `PX_ID` (no `_NAME` companion) → `CLARITY_EAP.PROC_ID` → `PROC_NAME` (order-side namespace; resolves 10/10, e.g. "AMB REFERRAL TO GASTROENTEROLOGY"); `UNITS_REQUESTED`/`UNITS_APPROVED` |
 | `REFERRAL_NOTES` | bridge to note text | 9 | `(REFERRAL_ID, LINE, NOTE_ID)` → HNO note / `Rich Text/HNO_<id>_*.RTF` |
 | `REFERRAL_CVG` | coverage(s) attached | 10 | `(REFERRAL_ID, LINE, CVG_ID)`, `AUTH_REQUIRED_YN`, `CVG_AUTH_STATUS_C_NAME` |
-| `REFERRAL_CVG_AUTH` | per-coverage auth/cert detail | 4 | 78 cols; precert/auth numbers, validity dates |
+| `REFERRAL_CVG_AUTH` | per-coverage auth/cert detail | 4 | 78 cols; precert **status/agency/dates** (`PRE_CERT_STATUS_C_NAME`, `PRE_CERT_AGENCY_*`, `AUTH_FROM_DT`/`AUTH_TO_DT`) — **no auth-number column** |
 | `REFERRAL_APT` | appointments fulfilling the referral | 3 | **internal** visit via `SERIAL_NUMBER`=CSN, **external** via `EXT_SVC_*` |
 | `ASSOCIATED_REFERRALS` | encounter→referral link | 2 | keyed by `PAT_ENC_CSN_ID`; `ASSOCIATED_REFERRAL_ID` |
 | `REFERRAL_CROSS_ORG` | cross-organization (Care Everywhere) referral | 2 | external org name + OID; the "leaked"/community-connect dimension |
@@ -56,8 +56,11 @@ carry `PAT_ID`. The referred-*to* visit, when in-system, is a separate `PAT_ENC`
   `922942674` & `922943112` (two completed OT visits at MHM OT NEURO CENTRAL, provider Gilmour).
 - **Diagnoses.** `REFERRAL_DX.DX_ID` → `CLARITY_EDG.DX_ID` → `DX_NAME` (e.g. `260690` → "Post concussion
   syndrome"). Note `REFERRAL_DX.DX_TEXT` ships empty here; the name comes only from the `CLARITY_EDG` join.
-- **Coverage.** `REFERRAL_CVG.CVG_ID` → coverage records; `REFERRAL_CVG_AUTH` carries the precert/auth
-  numbers per coverage (see §15 — `AUTH_NUM`/`PRE_CERT_NUM` on the base too).
+- **Coverage.** `REFERRAL_CVG.CVG_ID` → `COVERAGE.COVERAGE_ID` (note the column-name mismatch; joins all
+  10 rows). `REFERRAL_CVG_AUTH` carries precert **status/agency/dates** per coverage, **not** an auth
+  number — there is no `AUTH_NUM`/`PRE_CERT_NUM` column on it. Those literal number columns live only on
+  base `REFERRAL` (`AUTH_NUM`, `PRE_CERT_NUM`) and are blank for all 10 here, so no auth number is
+  retrievable in this specimen.
 - **User attribution.** `REFERRAL_HIST.CHANGE_USER_ID`, `REFERRAL_NOTES.NOTE_USER_ID` →
   `CLARITY_EMP.USER_ID` → `NAME` (alphanumeric logins like `RAMMELZL`, `KEH405`).
 
@@ -129,7 +132,9 @@ the same Epic instance:
   (`REFERRAL_CROSS_ORG`: org "UW Health, Affiliates and Community Connect Partners", OID
   `1.2.840.114350.1.13.283.2.7.2.827076`). Its `REFERRAL_APT` line has a **blank `SERIAL_NUMBER`** and a
   populated `EXT_SVC_*` block (`EXT_SVC_PROV_ID 147388`, `EXT_SVC_DTTM 5/9/2025 9:30 AM`) — that visit is
-  **not** a `PAT_ENC`; no internal notes/results exist for it, only this stub.
+  **not** a `PAT_ENC`; no internal notes/results exist for it, only this stub. The "external" provider id
+  is still resolvable, though: `EXT_SVC_PROV_ID` ships with no `_NAME` companion but joins
+  `CLARITY_SER.PROV_ID` → `PROV_NAME` (`147388` → "SANDERSON, HELEN P"), so the stub is not nameless.
 - *Test in SQL:* `REFERRAL_APT.SERIAL_NUMBER IN (SELECT PAT_ENC_CSN_ID FROM PAT_ENC)` → internal;
   otherwise external. Gastro/Neuro referrals here have neither (referred out, never scheduled internally,
   blank `REFERRAL_5` CSNs) — referred-to care simply isn't in the chart.
@@ -194,7 +199,9 @@ FROM REFERRAL_NOTES rn ORDER BY CAST(rn.REFERRAL_ID AS REAL), CAST(rn.LINE AS RE
   confirmed from this specimen.
 - **`ORDERS_ONLY_CSN` is empty** in this export though its schema doc defines a `REFERRAL_ID` order link.
   Genre tables to expect but not present here: it, and a richer `REFERRAL_CVG_AUTH` population.
-- **Cross-org / "leaked" referrals** appear via `REFERRAL_CROSS_ORG` (2 rows, both to UW Health). The
+- **Cross-org / "leaked" referrals** appear via `REFERRAL_CROSS_ORG` — 2 rows for **two distinct
+  referrals** (Allergy `23182184` *and* Neuro `15963353`, not just the Allergy one), both pointing to UW
+  Health. The
   `REFERRAL_4.IS_LEAKED_YN` / `RFL_DIRECTION_C_NAME` fields that would characterize in/outbound direction
   exist but are sparsely populated here — a specimen with inbound referrals would exercise them.
 - Specimen shape: 10 referrals Jan 2020–Nov 2024 — Gastroenterology, Neurology (×3), OT, PT, Allergy, plus

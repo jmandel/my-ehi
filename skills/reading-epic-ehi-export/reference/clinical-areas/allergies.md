@@ -129,6 +129,10 @@ carry a `PAT_ENC_CSN_ID` you can join to `PAT_ENC` and onward to that visit's no
    patient made the allergy known (renders at 12:00 AM — calendar, §11); `ALRGY_ENTERED_DTTM` is the **instant**
    it was keyed in (real wall-clock), and per its doc reflects the *most recent edit*, not first entry.
    *Handle:* use `DATE_NOTED` for clinical onset/"noted," `ALRGY_ENTERED_DTTM` for the audit instant.
+   `ALLERGY` also carries `ALLERGY_NOTED_DATE_ACCURACY_C_NAME`, a precision qualifier for `DATE_NOTED`
+   (the accuracy-flagged-date pattern, general-patterns §21): here "Exact Date" on the 7/14/2020 allergy and
+   **blank** on the three 2018 ones. A blank means precision was *never recorded*, so render `DATE_NOTED`
+   with that caveat rather than as a guaranteed-exact onset.
 
 ## Recipes
 
@@ -145,7 +149,13 @@ JOIN ALLERGY a            ON a.ALLERGY_ID = pa.ALLERGY_RECORD_ID   -- inner join
 LEFT JOIN ALLERGY_REACTIONS r ON r.ALLERGY_ID = a.ALLERGY_ID
 WHERE pa.PAT_ID = (SELECT PAT_ID FROM PATIENT LIMIT 1)
 GROUP BY a.ALLERGY_ID
-ORDER BY a.DATE_NOTED;
+-- DATE_NOTED is M/D/YYYY *display text* (§11, general-patterns §19), so a raw ORDER BY sorts
+-- lexically (7/14/2020 before 8/9/2018). There is no *_DATE_REAL here; parse to YYYYMMDD to
+-- sort chronologically (ALRGY_ENTERED_DTTM is text too — don't sort on it either).
+ORDER BY printf('%s-%02d-%02d',
+    substr(a.DATE_NOTED, instr(a.DATE_NOTED,'/')+instr(substr(a.DATE_NOTED, instr(a.DATE_NOTED,'/')+1),'/')+1, 4),         -- YYYY
+    CAST(substr(a.DATE_NOTED, 1, instr(a.DATE_NOTED,'/')-1) AS INT),                                                        -- M
+    CAST(substr(substr(a.DATE_NOTED, instr(a.DATE_NOTED,'/')+1), 1, instr(substr(a.DATE_NOTED, instr(a.DATE_NOTED,'/')+1),'/')-1) AS INT));  -- D
 
 -- 2) Spot deleted/superseded allergies (EPT pointer with no LPL detail).
 SELECT pa.LINE, pa.ALLERGY_RECORD_ID

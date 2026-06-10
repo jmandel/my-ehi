@@ -12,7 +12,7 @@ Both sides name a diagnosis by `DX_ID` → `CLARITY_EDG`.
 
 | table | role | rows in specimen | notes |
 |---|---|---|---|
-| `PROBLEM_LIST` | **Spine.** Current state of every problem ever on the list (active, resolved, deleted all persist). One row per `PROBLEM_LIST_ID`. | 5 | Carries `DX_ID`, `DESCRIPTION`, `NOTED_DATE`/`NOTED_END_DATE` (fuzzy onset), `RESOLVED_DATE`, `DATE_OF_ENTRY` (last edit), `PROBLEM_STATUS_C_NAME`, `CHRONIC_YN`, `SHOW_IN_MYC_YN`, `OVERVIEW_NOTE_ID`, `PROBLEM_CMT`. |
+| `PROBLEM_LIST` | **Spine.** Current state of every problem ever on the list (active, resolved, deleted all persist). One row per `PROBLEM_LIST_ID`. | 5 | Carries `DX_ID`, `DESCRIPTION` (blank in this specimen — name comes from `CLARITY_EDG`), `NOTED_DATE`/`NOTED_END_DATE` (fuzzy onset), `RESOLVED_DATE`, `DATE_OF_ENTRY` (last edit), `PROBLEM_STATUS_C_NAME`, `CHRONIC_YN`, `SHOW_IN_MYC_YN`, `OVERVIEW_NOTE_ID`, `PROBLEM_CMT`. |
 | `PAT_PROBLEM_LIST` | The patient's ordered **pointer list** — which LPL ids appear on the chart, in display order. | 5 | `(PAT_ID, LINE, PROBLEM_LIST_ID)`. Includes resolved problems (not "active-only"). |
 | `PROBLEM_LIST_ALL` | Generic **index of every LPL record** for the patient, of any type. | 56 | `RECORD_TYPE_C_NAME` partitions: Problem List, Immunization, Allergy, **System**. Maps each `PROBLEM_LIST_ID`→`PAT_ID`. `HX_SOURCE_ID` (type-7→type-1 link) NULL here. |
 | `PROBLEM_LIST_HX` | **Change-audit / version history** of each problem, one `LINE` per edit. | 6 | `(PROBLEM_LIST_ID, LINE)`. `HX_STATUS_C_NAME`, `HX_DATE_OF_ENTRY` (effective) vs `HX_ENTRY_INST` (instant), `HX_ENTRY_USER_ID`, `HX_PROBLEM_EPT_CSN` (the encounter the edit happened in), `HX_PROBLEM_ID` (= the `DX_ID`). |
@@ -190,11 +190,13 @@ WHERE p.OVERVIEW_NOTE_ID IS NOT NULL;       -- then read Rich Text/<OVERVIEW_NOT
 - **Specimen counts (illustrative):** 5 problems (4 Active, 1 Resolved, 0 Deleted); 18 distinct encounter
   diagnoses over 27 CSNs; 44 diagnoses in `CLARITY_EDG`; 9 clinician reviews 2018→2025; 12 patient-review
   rows. Only 2 problems (GERD, post-concussion) are ever linked from encounter dx.
-- **Sparse columns in this specimen:** `CLASS_OF_PROBLEM_C_NAME`, `PROBLEM_TYPE_C_NAME`, `PRIORITY_C_NAME`,
+- **Sparse columns in this specimen:** `PROBLEM_LIST.DESCRIPTION`, `PROBLEM_LIST_HX.HX_DESCRIPTION`,
+  `CLASS_OF_PROBLEM_C_NAME`, `PROBLEM_TYPE_C_NAME`, `PRIORITY_C_NAME`,
   `DIAG_START_DATE`/`DIAG_END_DATE`, staging columns (`STAGE_ID`, `PROB_STAGE_STATUS_C_NAME`),
   `PAT_FRIENDLY_TEXT`, and `PROBLEM_LIST_ALL.HX_SOURCE_ID` are all empty/NULL here. They exist on the
   schema and may populate in oncology/staged-condition records on other exports — don't assume they're
-  always blank.
+  always blank. In particular `DESCRIPTION`/`HX_DESCRIPTION` are blank for every row, so never display
+  them as the problem label — always resolve the name through `DX_ID` → `CLARITY_EDG.DX_NAME`.
 - **Fuzzy onset:** `NOTED_DATE`/`NOTED_END_DATE` form a [start,end] pair (§12). Here, when both are set
   they're equal (exact date); the oldest problem (GERD) has `NOTED_END_DATE` NULL. A year-only onset would
   show Jan 1..Dec 31.

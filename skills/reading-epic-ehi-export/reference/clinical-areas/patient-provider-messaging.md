@@ -35,9 +35,14 @@ soft-delete/revoke sentinel "Soft deleted") is **NULL on all 116 rows** — no r
 questionnaire messages) are **empty on every row** — the questionnaire link is via `MYC_MESG_QUESR_ANS`,
 not these columns.
 
-Master/lookup joins: `FROM_USER_ID`/`TO_USER_ID`/`PROV_ID` → `CLARITY_SER` (provider/staff SER);
-`DEPARTMENT_ID` → `CLARITY_DEP`; `RQSTD_PHARMACY_ID` → pharmacy. Each ID has a denormalized `_NAME`
-companion beside it (§4), so you rarely need the master file for display.
+Master/lookup joins — **two distinct id spaces**: the message **parties** `FROM_USER_ID`/`TO_USER_ID`
+are alphanumeric MyChart/EMP **user** ids (e.g. `TJC322`, `MYCHARTG`) → `CLARITY_EMP.USER_ID`
+(display `CLARITY_EMP.NAME`) — they are **not** in `CLARITY_SER` (18/18 and 4/4 resolve in EMP, 0 in SER).
+The **provider** `PROV_ID` is a numeric SER id → `CLARITY_SER.PROV_ID`/`PROV_NAME` (all 12 resolve);
+`DEPARTMENT_ID` → `CLARITY_DEP.DEPARTMENT_ID`/`DEPARTMENT_NAME` (all 5); `RQSTD_PHARMACY_ID` → pharmacy.
+The two **party** ids carry denormalized `_NAME` companions (`FROM_USER_ID_NAME`/`TO_USER_ID_NAME`, §4),
+so you rarely need the master for display; **`PROV_ID` and `DEPARTMENT_ID` have no inline `_NAME` companion** —
+resolve those through the master file. (Cross-ref general-patterns §6/§41 on namespace-dependent id resolution.)
 
 ## How they join
 
@@ -68,8 +73,9 @@ All joins below were run against the specimen and the row math stated is what ca
   169 encounter rows are message encounters). `PAT_ENC_THREADS.THREAD_ID` is a **separate** in-basket
   thread id (27 populated) and does **not** join to `MESSAGE_ID`/`INBASKET_MSG_ID` — treat it as a
   marker that "this telephone encounter was threaded to another user," not a message key.
-- **Party / department.** `FROM_USER_ID`/`TO_USER_ID`/`PROV_ID → CLARITY_SER.PROV_ID`;
-  `DEPARTMENT_ID → CLARITY_DEP.DEPARTMENT_ID` (`PROV_ID` set on 99/116, `DEPARTMENT_ID` on 100/116).
+- **Party / department.** `FROM_USER_ID`/`TO_USER_ID → CLARITY_EMP.USER_ID` (alphanumeric MyChart/EMP
+  user ids — 18/18 and 4/4 resolve in EMP, 0 in SER); `PROV_ID → CLARITY_SER.PROV_ID` (numeric SER id,
+  12/12); `DEPARTMENT_ID → CLARITY_DEP.DEPARTMENT_ID` (5/5) (`PROV_ID` set on 99/116, `DEPARTMENT_ID` on 100/116).
 
 ## Unstructured tie-back
 

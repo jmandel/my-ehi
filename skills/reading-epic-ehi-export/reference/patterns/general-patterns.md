@@ -101,6 +101,11 @@ plain `_ID_NAME` for users…). **Materialization is systematic, not random for 
 (`_PROV_NAME`) companions are *always dropped* (the SER master ships only as a hidden view, so you must
 join `CLARITY_SER`), while `EMP` user `_NAME` companions *always ship populated* (trust `*_USER_ID_NAME`
 inline). Long companion names are **truncated to 32 chars** (`REFERRING_PROV_ID_REFERRING_PROV_NAM`).
+**A missing companion never means the name is unavailable — it means you pick the right master by the id's
+namespace (§41):** `SER` provider ids (`PROV_ID`, `VISIT_PROV_ID`, `EXT_SVC_PROV_ID`) → `CLARITY_SER.PROV_NAME`;
+`EMP`/MyChart user ids (`FROM_USER_ID`/`TO_USER_ID` and other alphanumeric `*_USER_ID`s) → `CLARITY_EMP.USER_ID`;
+departments (`DEPARTMENT_ID`) → `CLARITY_DEP.DEPARTMENT_NAME`. Never resolve a user id against the provider
+master — `FROM_USER_ID`/`TO_USER_ID` land 18/18 in `CLARITY_EMP` and 0/18 in `CLARITY_SER`.
 **Example.** `ORDER_MED.PHARMACY_ID` beside `PHARMACY_ID_PHARMACY_NAME`; `ORD_CREATR_USER_ID` (`RAMMELZL`)
 beside populated `ORD_CREATR_USER_ID_NAME`; but `PAT_ENC.VISIT_PROV_ID` ships **no** `_PROV_NAME` companion.
 

@@ -12,12 +12,12 @@ on, §2) and `PAT_ID` (§1). Surgical history rows tie to the encounter where th
 |---|---|---|---|
 | `ORDER_PROC` | **Spine.** One row per ordered procedure (header). | 42 | Covers ALL order types: `ORDER_TYPE_C_NAME` ∈ Lab, Microbiology, Imaging, Outpatient Referral, Immunization/Injection. **No surgical/OR procedure orders in this specimen.** PK `ORDER_PROC_ID`, FK `PROC_ID`→`CLARITY_EAP`. |
 | `ORDER_PROC_2` … `ORDER_PROC_6` | Numbered supplements (1:1 on `ORDER_PROC_ID`, §6). | 42 each | More columns of the same order: specimen handling, charge timestamps, `REMARKS_HNO_ID` (note tie-back), referral routing. Left-join the stack. |
-| `CLARITY_EAP` (+`_3`,`_5`) | Procedure master file (EAP). `PROC_ID`→`PROC_NAME`. | 64 | The Rosetta for every `PROC_ID` — orderable AND charge procedures both live here. `_3.PT_FRIENDLY_NAME` and CPT are blank/absent here. |
+| `CLARITY_EAP` (+`_3`,`_5`) | Procedure master file (EAP). `PROC_ID`→`PROC_NAME`. | 64 | The Rosetta for every `PROC_ID` — orderable AND charge procedures both live here. `_3.PT_FRIENDLY_NAME` is a layperson name: **blank for order-side `PROC_ID`s, populated for most charge-side ones** (29/64 rows) — see Gotcha 5. CPT is absent. |
 | `ORDER_DX_PROC` | Diagnoses attached to an order (`LINE` child rows, §7). | 41 | `(ORDER_PROC_ID, LINE)` → `DX_ID`→`CLARITY_EDG`. Why a procedure was ordered. |
 | `ORDER_NARRATIVE` | Line-exploded procedure result/report text (§8). | 465 | `(ORDER_PROC_ID, LINE)`, one physical line per row. Imaging reads + a couple lab interp blocks. 6 distinct orders here. |
 | `ORDER_IMPRESSION` | Radiologist **impression** lines for imaging. | 11 | `(ORDER_PROC_ID, LINE)` → `IMPRESSION` text. The "bottom line" of a read. |
 | `ORDER_RAD_READING` | Reading physician for an imaging study. | 4 | `(ORDER_PROC_ID, LINE)` → `PROV_ID`→`CLARITY_SER`. External reads show "GENERIC EXTERNAL DATA PROVIDER". |
-| `ORDER_PARENT_INFO` | Panel/parent linkage for an order. | 42 | `ORDER_ID`/`PARENT_ORDER_ID`; here mostly self-referential (no true child split). |
+| `ORDER_PARENT_INFO` | Panel/parent linkage for an order. | 42 | `ORDER_ID`/`PARENT_ORDER_ID`; 31/42 self-referential, but **11 rows encode a real parent→child link** (the parent is a distinct, present `ORDER_PROC_ID`). |
 | `ORD_PROC_INSTR` | Free-text process instructions on an order. | 9 | `(ORDER_ID, LINE)` → `ORDER_PROC_INSTR`. |
 | `ORDER_SIGNED_PROC` | Verbal/cosign provenance for an order. | 4 | Who gave/cosigned the verbal order, with timestamps. |
 | `ORDER_RESULTS` | Discrete lab result components. | 47 | See the **labs** guide. Imaging has *no* `ORDER_RESULTS` rows — its result is the narrative. |
@@ -109,12 +109,17 @@ discrete `ORDER_RESULTS` components:
    *Handle:* don't try to join orders to charges on `PROC_ID`. Bridge order↔charge via the encounter CSN
    (`ORDER_PROC.PAT_ENC_CSN_ID = ARPB_TRANSACTIONS.PAT_ENC_CSN_ID`) and date, not via `PROC_ID`. (§15, §24)
 5. **No CPT/HCPCS code is exported — only Epic's internal `PROC_ID` and the display name.** *Observe:*
-   `CLARITY_EAP` has just `PROC_ID, PROC_NAME`; `CLARITY_EAP_3.PT_FRIENDLY_NAME` is blank; there is no
+   `CLARITY_EAP` has just `PROC_ID, PROC_NAME`; there is no
    `PROC_CODE`/`CPT`/`PROC_IDENTIFIER` column anywhere populated for these rows. *Mechanism:* this org's
    export ships the resolved procedure *name* but not the external code crosswalk (the same shape labs hit
    with LOINC, §13/§14 friction). The transmitted procedure code that *would* read like "HC:99213:95" is not
    present in this specimen's `ARPB_TRANSACTIONS`. *Handle:* identify procedures by `PROC_NAME` + `MODIFIER_*`;
    treat CPT as **not recoverable** here unless a claim-detail table (`*_CLAIM_*`) carries it.
+   *Patient-friendly names:* `CLARITY_EAP_3.PT_FRIENDLY_NAME` carries layperson descriptions (e.g.
+   "Hemoglobin A1C level") for **most charge-side `PROC_ID`s but is blank for every order-side one** — so to
+   show a patient-friendly procedure name, resolve charge `PROC_ID`s with
+   `COALESCE(NULLIF(CLARITY_EAP_3.PT_FRIENDLY_NAME,''), CLARITY_EAP.PROC_NAME)`; order-side names fall through
+   to the coded `PROC_NAME`.
 6. **Imaging has a result but no `ORDER_RESULTS`; labs are the reverse.** *Observe:* the 9 imaging orders
    have 0 `ORDER_RESULTS` rows but rich `ORDER_NARRATIVE`/`ORDER_IMPRESSION`; several FINAL labs have neither.
    *Mechanism:* a radiology result *is* prose — it lives in the narrative, not as discrete analytes. *Handle:*
@@ -143,10 +148,15 @@ GROUP BY op.ORDER_PROC_ID
 ORDER BY CAST(op.PAT_ENC_DATE_REAL AS REAL);
 
 -- 2. Patient-reported surgical history (deduped — collapse the per-encounter re-snapshots).
-SELECT e.PROC_NAME, MAX(pe.CONTACT_DATE) AS last_reviewed
+--    last_reviewed via PAT_ENC_DATE_REAL: CONTACT_DATE is M/D/YYYY text, so MAX() over it sorts
+--    lexically (returns 9/28/2023, not the true 12/4/2025) — same trap as the LINE warning above.
+SELECT e.PROC_NAME,
+       (SELECT pe2.CONTACT_DATE FROM SURGICAL_HX s2
+        LEFT JOIN PAT_ENC pe2 ON s2.HX_LNK_ENC_CSN = pe2.PAT_ENC_CSN_ID
+        WHERE s2.PROC_ID = s.PROC_ID
+        ORDER BY CAST(pe2.PAT_ENC_DATE_REAL AS REAL) DESC LIMIT 1) AS last_reviewed
 FROM SURGICAL_HX s
 LEFT JOIN CLARITY_EAP e ON s.PROC_ID = e.PROC_ID
-LEFT JOIN PAT_ENC pe    ON s.HX_LNK_ENC_CSN = pe.PAT_ENC_CSN_ID
 GROUP BY s.PROC_ID, e.PROC_NAME;
 
 -- 3. Reassemble an imaging report (narrative) + its impression for one study.
@@ -182,8 +192,9 @@ ORDER BY a.SERVICE_DATE;
 - **CPT/HCPCS is absent** from `CLARITY_EAP` and `ARPB_TRANSACTIONS` in this export. Whether another org's
   export ships a transmitted `PROC_IDENTIFIER`/claim-detail code (the "HC:99213:95" shape referenced in §15)
   is unverified against this specimen.
-- `ORDER_PARENT_INFO` rows are self-referential (`ORDER_ID = PARENT_ORDER_ID`) here, so no true panel→child
-  procedure split was observable; `PANEL_PROC_ID` on `ORDER_PROC` is unpopulated.
+- `ORDER_PARENT_INFO` is mixed: 31/42 rows are self-referential (`ORDER_ID = PARENT_ORDER_ID`), but **11
+  rows do encode a genuine parent→child link** (the `PARENT_ORDER_ID` is a distinct, present `ORDER_PROC_ID`).
+  `PANEL_PROC_ID` on `ORDER_PROC` is unpopulated, so the panel-membership variant is still unobserved here.
 - `TIMEOUT` (procedure safety time-out) exists with 2 rows but the type/attestation payload is blank — only
   the `PAT_CSN` + creation date survived the export, so it documents *that* a time-out occurred, not its content.
 - `REFERRAL_PX.PX_ID` (procedures on a referral) is a third place a `PROC_ID` appears; not chased to whether it

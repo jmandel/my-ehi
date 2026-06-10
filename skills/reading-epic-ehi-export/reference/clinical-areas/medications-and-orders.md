@@ -142,14 +142,33 @@ All joins below were run against rows in this specimen and confirmed.
    audit who reviewed the list and the `TAKING_YN` they set. *Handle:* to know *why/when* a med stopped,
    read these event tables, not just `ORDER_MED.END_DATE`.
 
+9. **`ORDER_MED.DOSAGE` is NULL on every order — read the dose from the `HV_*` discrete fields.**
+   `DOSAGE` is a free-text dose cache that is blank for all 20 rows. The structured dose lives in
+   `HV_DISCRETE_DOSE` + its unit in `HV_DOSE_UNIT_C_NAME` (both populated on 7 rows, e.g. `30`/`mg`),
+   and the frequency in `HV_DISCR_FREQ_ID_FREQ_NAME` (5 rows, e.g. "NIGHTLY", "NIGHTLY PRN"); for human
+   display pair these with the sig string from `ORDER_MED_SIG.SIG_TEXT` (§"Unstructured tie-back"). The
+   `HV_*` fields are themselves blank on the inpatient NaCl and some historical/reordered rows, so they
+   are best-effort discrete values, not a guarantee. *Handle:* never project `ORDER_MED.DOSAGE`.
+
+10. **`QUANTITY` / `REFILLS` / `PHARMACY_ID_PHARMACY_NAME` are dispensing fields — populated only for
+    transmitted outpatient Rx.** All three are filled on exactly the 10 `Normal` + `Outpatient` orders and
+    blank on the 8 inpatient NaCl orders and the 2 `Historical Med` rows. *Mechanism:* these describe a
+    dispensed/transmitted prescription, which the inpatient and documented-history orders are not.
+    *Handle:* a blank here means "not a dispensed prescription," **not** missing data — interpret it the
+    same way you split `Historical Med`/inpatient from prescribed (gotchas 4, 6).
+
 ## Recipes
 
 ```sql
 -- 1. All medication orders, human-readable (drug, dose, status, indication, pharmacy).
+--    Dose/freq come from the HV_* discrete fields (ORDER_MED.DOSAGE is NULL on every row — gotcha 9);
+--    QUANTITY/REFILLS/PHARMACY are populated only for transmitted outpatient Rx (gotcha 10).
 SELECT om.ORDER_MED_ID,
        COALESCE(om.DISPLAY_NAME, om.DESCRIPTION)        AS drug,
        cm.GENERIC_NAME,
-       om.DOSAGE, om.QUANTITY, om.REFILLS,
+       om.HV_DISCRETE_DOSE, om.HV_DOSE_UNIT_C_NAME,
+       om.HV_DISCR_FREQ_ID_FREQ_NAME                    AS frequency,
+       om.QUANTITY, om.REFILLS,
        om.ORDER_STATUS_C_NAME  AS status,
        om.ORDER_CLASS_C_NAME   AS class,
        om.ORDERING_MODE_C_NAME AS mode,

@@ -37,6 +37,19 @@ Every value and every finding is produced by one of these; they compose, and eac
 > Reach for the cheapest operation that suffices. Don't make an agent transcribe what a script could
 > compute; don't make a script fake a judgment only reading can make.
 
+## Project off the field guide, not raw `PRAGMA`
+
+Before you write projection SQL for a domain, **open that domain's field guide**
+(`reading-epic-ehi-export/reference/clinical-areas/<area>.md`) and use its documented join recipes and
+value/current-state tables — don't reconstruct the query from raw column exploration of the spine table. This
+is the reading skill's **"third crucial caveat"** (see its SKILL.md): a blank column is rarely "no data," so
+**any verdict that resolves to "none / empty / not measured / never done" is a smell, not a result.** A dropped
+`*_NAME` companion resolves through its `CLARITY_*` dictionary (a diagnosis name via `DX_ID → CLARITY_EDG`); a
+value missing from the spine lives in a `V_EHI_*` view (a flowsheet reading via `V_EHI_FLO_MEAS_VALUE`, not
+`IP_FLWSHT_MEAS`). In a deep dive the stakes are higher because the false negative ships as a *finding* ("no
+chronic problems", "never screened") — confirm absence against the code column and the guide's named
+dictionary/view before any claim asserts it.
+
 ## Everything you emit is a clean PROJECTION
 
 The view model is what the app renders, so **do the cleaning here, once.** Project into clean, semantic,
@@ -81,4 +94,7 @@ or readable statement (with author + date) — quote the *note*, not its cache (
 §40). Gate with `bun lib/validate-extract.ts <viewmodel.json>` (auto-detects the dataset vs. view-model shape).
 Note text via `lib/rtf2txt.ts`. PHI: never emit SSN, street address, email, phone, or the MRN (`APL…`); the
 opaque `PAT_ID` surrogate (`Z#######`) is not a direct identifier. Bun + TypeScript + SQLite only; no
-future/fabricated provenance; `PRAGMA` the real columns (they drift).
+future/fabricated provenance; `PRAGMA` the real columns (they drift). **An aggregate that resolves to
+none/empty/"not available" is a publish smell** — re-derive it through the field-guide recipe (dictionary join
+/ `V_EHI_*` value view) before any claim asserts absence; the linter can't catch a *false* absence, so this
+one is on you.
