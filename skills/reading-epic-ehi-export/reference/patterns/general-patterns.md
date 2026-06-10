@@ -41,7 +41,7 @@ known to vary or to have bitten an analyst, it says so.
 ### 1. `PAT_ID` — the patient master key (but most tables don't carry it)
 **Mechanism.** `PAT_ID` is the patient master-file (EPT) key — an opaque token like `Z#######`, the
 cleanest patient join *when present*. But it is **not** ubiquitous: in one specimen only ~89 of 590
-populated tables carry `PAT_ID` and ~90 carry the encounter CSN; **426 of 590 carry neither** and reach
+populated tables carry `PAT_ID` and ~90 carry the encounter CSN; **427 of 590 carry neither** and reach
 the patient only by a renamed-CSN column (§4) or a parent-chain join (§3). The human-facing **MRN**
 (`PAT_MRN_ID`) lives essentially only on `PATIENT`; the same person can hold different facility MRNs while
 keeping one `PAT_ID`. Join on `PAT_ID` where it exists; otherwise walk up.
@@ -57,7 +57,8 @@ master files, so a `*_CSN_ID`/`CONTACT_SERIAL_NUM` is often *that record's own* 
 encounter CSN, and won't join `PAT_ENC` (§4). And the columns that would group contacts into a logical
 visit (`PAT_ENC_2.PARENT_ENC_CSN_ID`, `PAT_ENC_4.ORIG_ENC_CSN`, `PAT_ENC_6.LINKED_ENC_CSN`) **may be 100%
 NULL** — then same-day grouping (`FLOOR(CAST(PAT_ENC_DATE_REAL AS REAL))`) is your only handle.
-**Example.** One day carries 4 `PAT_ENC` rows with distinct CSNs (`.00/.01/.02/.03`); but
+**Example.** One day carries 4 `PAT_ENC` rows with distinct CSNs, their `PAT_ENC_DATE_REAL` values stepping
+`.00/.01/.02/.03` (§18); but
 `NOTE_ENC_INFO.PAT_ENC_CSN_ID` is **NULL on all 194 rows** (the note links by its own `CONTACT_SERIAL_NUM`),
 so "join the note by its CSN column" silently returns nothing.
 
@@ -84,9 +85,10 @@ candidate encounter CSN — then verify it actually joins (some are the record's
 **Mechanism.** Records reference Epic master files by an `*_ID` column holding that master's key; the
 masters are the `CLARITY_*` files (and `ZC_*` when shipped). The **column prefix encodes the role**, the
 master is invariant: *any* `*_PROV_ID` (`VISIT_`, `BILLING_`, `AUTHRZING_`, `REFERRING_`, `ATTEND_`, …)
-joins `CLARITY_SER.PROV_ID`. Watch the **right master**: providers→`CLARITY_SER`, users→`CLARITY_EMP`,
-diagnoses→`CLARITY_EDG`, departments→`CLARITY_DEP`, **locations→`CLARITY_LOC`** (a `*_LOC_ID` joined to
-`CLARITY_DEP` silently returns blank — §41), drugs (`MEDICATION_ID`)→`CLARITY_MEDICATION`, orderables
+joins `CLARITY_SER.PROV_ID` — though a given id can still be a dangling pointer (§15): in one specimen
+`ORDER_PROC.DEPT_REF_PROV_ID` resolved in no master at all. Watch the **right master**:
+providers→`CLARITY_SER`, users→`CLARITY_EMP`, diagnoses→`CLARITY_EDG`, departments→`CLARITY_DEP`,
+**locations→`CLARITY_LOC`** (a `*_LOC_ID` joined to `CLARITY_DEP` silently returns blank — §41), drugs (`MEDICATION_ID`)→`CLARITY_MEDICATION`, orderables
 (`PROC_ID`)→`CLARITY_EAP`. IDs are opaque and **not always numeric** — user/provider IDs are often
 alphanumeric logins (`RAMMELZL`, `MBS403`).
 **Example.** `PAT_ENC.VISIT_PROV_ID` → `CLARITY_SER.PROV_ID` → `PROV_NAME`; `PATIENT.CUR_PRIM_LOC_ID` →
@@ -95,18 +97,22 @@ alphanumeric logins (`RAMMELZL`, `MBS403`).
 ### 6. Denormalized `<ID>_<MASTERFILE>_NAME` companions
 **Mechanism.** To spare a join, Epic often exports a **sibling name column** next to a foreign key:
 `<COL>_<thing>_NAME` holds the resolved label. Treat the suffix as an **open rule** (`<COL>_<X>_NAME` =
-the resolved label for `<COL>`), not a fixed list — one specimen had 578 such columns across dozens of
-suffixes (`_PROV_NAME`, `_DX_NAME`, `_PHARMACY_NAME`, `_MODIFIER_NAME`, `_PLAN_NAME`, `_REMIT_CODE_NAME`,
-plain `_ID_NAME` for users…). **Materialization is systematic, not random for providers:** `SER`
-(`_PROV_NAME`) companions are *always dropped* (the SER master ships only as a hidden view, so you must
-join `CLARITY_SER`), while `EMP` user `_NAME` companions *always ship populated* (trust `*_USER_ID_NAME`
-inline). Long companion names are **truncated** (`REFERRING_PROV_ID_REFERRING_PROV_NAM` — the trailing "E"
-of `_NAME` cut; there is no universal 32-char cap, other exported names run longer).
+the resolved label for `<COL>`), not a fixed list — one specimen had 578 non-category `*_NAME` columns
+across dozens of suffixes (`_PROV_NAME`, `_DX_NAME`, `_PHARMACY_NAME`, `_MODIFIER_NAME`, `_PLAN_NAME`,
+`_REMIT_CODE_NAME`, plain `_ID_NAME` for users…; roughly three-quarters are true `<COL>_<X>_NAME` siblings,
+the rest standalone master name columns like `PROV_NAME`). **Materialization is systematic, not random for
+providers:** companions with the standard `*_ID_PROV_NAME` suffix are systematically dropped (the export
+ships `CLARITY_SER` itself, so resolve provider names by joining it), while `EMP` user `_NAME` companions
+*always ship populated* (trust `*_USER_ID_NAME` inline). But a SER name can still ship under a
+*nonstandard* companion — `REFERRING_PROV_ID_REFERRING_PROV_NAM` ships populated in `ORDER_PROC`/`REFERRAL`
+and matches `CLARITY_SER.PROV_NAME` exactly — so test the sibling column before assuming you must join.
+Long companion names are **truncated** (that same `…_REFERRING_PROV_NAM` — the trailing "E" of `_NAME` cut;
+there is no universal 32-char cap, other exported names run longer).
 **A missing companion never means the name is unavailable — it means you pick the right master by the id's
 namespace (§41):** `SER` provider ids (`PROV_ID`, `VISIT_PROV_ID`, `EXT_SVC_PROV_ID`) → `CLARITY_SER.PROV_NAME`;
 `EMP`/MyChart user ids (`FROM_USER_ID`/`TO_USER_ID` and other alphanumeric `*_USER_ID`s) → `CLARITY_EMP.USER_ID`;
 departments (`DEPARTMENT_ID`) → `CLARITY_DEP.DEPARTMENT_NAME`. Never resolve a user id against the provider
-master — `FROM_USER_ID`/`TO_USER_ID` land 18/18 in `CLARITY_EMP` and 0/18 in `CLARITY_SER`.
+master — `FROM_USER_ID`/`TO_USER_ID` land 19/19 in `CLARITY_EMP` and 0/19 in `CLARITY_SER`.
 **Example.** `ORDER_MED.PHARMACY_ID` beside `PHARMACY_ID_PHARMACY_NAME`; `ORD_CREATR_USER_ID` (`RAMMELZL`)
 beside populated `ORD_CREATR_USER_ID_NAME`; but `PAT_ENC.VISIT_PROV_ID` ships **no** `_PROV_NAME` companion.
 
@@ -127,16 +133,20 @@ the data.
 
 ### 8. Base + numbered supplement tables (horizontal overflow)
 **Mechanism.** A master file with more items than one physical table is sharded into a base + numbered
-supplements (`PAT_ENC`…`PAT_ENC_8`, `ARPB_TRANSACTIONS`…`_3`, `PATIENT`…`_6`), each **1:1 on the key**
-(same row count, more columns); left-join the stack to reconstruct the record. Caveats that bite:
+supplements (`PAT_ENC`…`PAT_ENC_8`, `ARPB_TRANSACTIONS`…`ARPB_TRANSACTIONS3`, `PATIENT`…`_6`), each
+**1:1 on the key** (same row count, more columns); left-join the stack to reconstruct the record. Caveats that bite:
 - **Verify before assuming 1:1:** a numbered/suffixed name does **not** prove a supplement.
   `PMT_EOB_INFO_I` (87) and `PMT_EOB_INFO_II` (111) are not a 1:1 pair — they're `(TX_ID, LINE)` **child**
-  tables (§9). Rule: equal row count **and** no `LINE` column ⇒ supplement; `LINE` present + unequal ⇒ child.
+  tables (§9). Rule: equal row count **and** no `LINE` column ⇒ supplement; `LINE` present + unequal ⇒ child;
+  `LINE` present + **equal** ⇒ usually a 1:1 supplement of a table that is itself `LINE`-keyed
+  (`ACCOUNT_CONTACT_2`, `SVC_LN_INFO_2`/`_3`) — 1:1 on the composite (parent, `LINE`) key.
 - **Key-name drift:** `PAT_ENC_3`'s key is `PAT_ENC_CSN` (no `_ID`); `ORDER_MED_2/3/4/5/7` key on
   `ORDER_ID` while the base + `_6` use `ORDER_MED_ID`. Joining all supplements on one name silently fails.
-- **Numbering is non-contiguous** (`CLARITY_EAP`, `_3`, `_5` — skips `_2`/`_4`) and uses mixed styles
-  (Roman `_I`/`_II`). **The generic key `RECORD_ID`** plays the same role across sibling claim/coverage
-  tables.
+- **Numbering is non-contiguous** (`CLARITY_EAP`, `_3`, `_5` — skips `_2`/`_4`) and the naming style is
+  mixed: underscored (`PAT_ENC_2`), bare-digit (`ARPB_TRANSACTIONS2` — no underscore, so a `_2`-style guess
+  gets "no such table"), even both within one family (`CLAIM_INFO2`, `CLAIM_INFO3` **and** `CLAIM_INFO_3`
+  all ship). Roman `_I`/`_II` names are usually child tables, not supplements (above). **The generic key
+  `RECORD_ID`** plays the same role across sibling claim/coverage tables.
 - **A critical FK can live only on a supplement** (`ORDER_PROC_2.REFERRAL_ID` is the *only* order↔referral
   link) — so `PRAGMA` every `_N` table before concluding a link is absent. **A supplement may ship data
   with no schema doc** (e.g. `SUPPLY_LOT`).
@@ -156,8 +166,10 @@ dense 1..N** — an order can run `LINE 1..113` with only 15 rows, so you cannot
 **Mechanism.** Beyond the flat `(parent, LINE)`, a recurring family encodes a list-of-lists with a
 **two-dimensional ordinal**: `GROUP_LINE` indexes the outer group, `VALUE_LINE` the items within it.
 Reassemble ordering on `CAST(GROUP_LINE AS INT), CAST(VALUE_LINE AS INT)`.
-**Example.** `IMM_ADMIN_GROUPS(DOCUMENT_ID, GROUP_LINE, VALUE_LINE)`; the same shape in several
-`ALERT_*`/`COMM_PREFERENCES_*` tables.
+**Example.** `COMM_PREFERENCES_APRV(PREFERENCES_ID, GROUP_LINE, VALUE_LINE)`; the same shape in several
+`ALERT_*`/`COMM_PREFERENCES_*` tables. Watch for an extra contact dimension in the key:
+`IMM_ADMIN_GROUPS` needs `(DOCUMENT_ID, CONTACT_DATE_REAL, GROUP_LINE, VALUE_LINE)` — the rows are
+contact-versioned (§34-flavor), and `(DOCUMENT_ID, GROUP_LINE, VALUE_LINE)` alone is not unique.
 
 ### 11. Line-chunked free text
 **Mechanism.** Long free text (note bodies, result narratives, message bodies) is split across many `LINE`
@@ -170,42 +182,54 @@ rows — which is *why* the TSV never needs embedded newlines. Reassemble concat
 **Mechanism.** A single real-world event can legitimately produce many rows (infusion rate changes, a
 re-asserted history fact, a multiply-published flowsheet score), so raw `COUNT(*)` **overstates** distinct
 events. Auto-calculated rows are often **indistinguishable from entered ones except by measure identity**.
-**Example.** Eight identical `0.9% NaCl infusion` `ORDER_MED` rows = one IV event; a PHQ-2 item published
-under three `FLO_MEAS_ID`s (Numeric + String + Retired) triple-counts if summed naively.
+**Example.** Eight identical `0.9% NaCl infusion` `ORDER_MED` rows = one IV event; a PHQ-2 total published
+under four `FLO_MEAS_ID`s (Numeric + String + two Retired variants) multiply-counts if summed naively.
 
 ### 13. `_ALL` generic-master superset tables
 **Mechanism.** Several Chronicles masters are shared across concepts. The export ships a `<X>_ALL` table
-holding **every** record of that master regardless of type (with `PAT_ID` and a `RECORD_TYPE_C_NAME`
-discriminator), while the familiar `<X>` table is one filtered (often current-only) slice. Recognize it by
-the `_ALL` suffix + a type discriminator + a much higher row count. To enumerate a concept fully you may
-need `_ALL`; for just the active slice use the focused table. (Not version history (§35) and not
-soft-delete (§32) — one physical master serving many concepts.)
+holding **every** record of that master regardless of type, while the familiar `<X>` table is one filtered
+(often current-only) slice. Recognize it by the `_ALL` suffix plus — often, but not always — a type
+discriminator and a higher row count: `PROBLEM_LIST_ALL` carries both `PAT_ID` and `RECORD_TYPE_C_NAME`,
+but `HAR_ALL` (24 rows ⊇ `HSP_ACCOUNT`'s 4 in one specimen) has `PAT_ID` and **no** discriminator,
+`CLM_ALL` keys on `CLAIM_ID`/`PATIENT_OR_MEMBER_ID` with neither, and `EPISODE_ALL` can hold exactly the
+same rows as `EPISODE`. To enumerate a concept fully you may need `_ALL`; for just the active slice use the
+focused table. (Not version history (§35) and not soft-delete (§32) — one physical master serving many
+concepts.)
 **Example.** `PROBLEM_LIST` (5 current problems) ⊂ `PROBLEM_LIST_ALL` (56), which by `RECORD_TYPE_C_NAME`
 holds System(28)/Immunization(19)/Problem(5)/Allergy(4) — the LPL master backs problems, immunizations
-**and** allergies. Same shape: `HAR_ALL`, `CLM_ALL`, `EPISODE_ALL`.
+**and** allergies.
 
 ### 14. The on-disk filename is the foreign key
-**Mechanism.** Two unstructured corpora are joined to the chart **by filename**: a clinical note's body
-lives only at `Rich Text/<NOTE_ID>...RTF` (there is no DB body column — see §32 note), and a scanned media
-file is reached by `DOC_INFORMATION.SCAN_FILE` = the literal filename in `Media/`. The filename *is* the
-join key; treat the file tree as a keyed table.
+**Mechanism.** Two unstructured corpora are joined to the chart **by filename**: a rich-text note's body
+lives only at `Rich Text/HNO_<NOTE_ID>_*.RTF` — no DB column holds it (`HNO_NOTE_TEXT` isn't exported,
+§32 note; plain-text-only notes instead ship in `HNO_PLAIN_TEXT`, §11, and many notes have no body in
+either place) — and a scanned media file is reached by `DOC_INFORMATION.SCAN_FILE` = the literal filename
+in `Media/`. The filename *is* the join key; treat the file tree as a keyed table. But `SCAN_FILE` is the
+attachment *pointer*, not always a filename: bare-numeric values (blob/encounter-level storage) name no
+file, and a filename-shaped value can reference a file the export omitted (§15) — treat
+`SCAN_FILE LIKE '%.%'` as "names a file," then verify it exists.
 **Example.** `DOC_INFORMATION.SCAN_FILE = 'IX-prd-3385360490.JPG'` ↔ that file in `Media/`; `Rich Text/`
-filenames begin with the `NOTE_ID` found in `HNO_INFO`.
+filenames embed the `HNO_INFO` `NOTE_ID` after the literal `HNO_` prefix.
 
 ### 15. Pointer rows survive; referenced bodies may be omitted
 **Mechanism.** Index/pointer tables can reference more entities than the export materializes — the pointer
 row ships but the payload doesn't (a row-level export-scope gap, distinct from schema-doc gaps §7 and
 soft-delete §32). Left-join and tolerate NULL targets; don't assume a referenced id resolves.
-**Example.** `PAT_ENC_DOCS`/`PATIENT_DOCS` name ~58 document ids but only ~22 have a `DOC_INFORMATION`
-body; a `SCAN_FILE` can name a file that wasn't included.
+**Example.** `PAT_ENC_DOCS`/`PATIENT_DOCS` name 53 distinct document ids but only 17 resolve to a
+`DOC_INFORMATION` row (the body table holds 22 rows, several unreferenced by these pointers); a
+`SCAN_FILE` can name a file that wasn't included.
 
 ### 16. `EPISODE` — a longitudinal care thread above the encounter
 **Mechanism.** An `EPISODE` groups encounters into a named, dated course of care (a grouping level above
-the CSN), linked to member encounters via a bridge keyed `(EPISODE_ID, LINE→CSN)`. The `EPISODE` master is
+the CSN), linked to member records via a bridge keyed `(EPISODE_ID, LINE)` — but the EHI cut of
+`ALL_EPISODE_CSN_LINKS` ships only one link-INI's payload columns (the transplant pair
+`TREATMENT_PLAN_ID`/`TREATMENT_PLAN_CSN_ID`), so for an ordinary-encounter episode the link rows exist
+with **every payload column NULL** and membership must be triangulated: domain bridges that carry a CSN,
+the episode's date window, referral CSNs — see the episodes guide. The `EPISODE` master is
 OB/specialty-heavy, so for a non-OB episode nearly all columns are NULL — a clean case of one master
 serving many specialties and shipping mostly empty.
-**Example.** `EPISODE` "OT Neuro TBI" (Resolved); `ALL_EPISODE_CSN_LINKS` bridges it to its contacts; 40+
-pregnancy/transplant columns are NULL.
+**Example.** `EPISODE` "OT Neuro TBI" (Resolved); its `ALL_EPISODE_CSN_LINKS` rows exist but carry no CSN
+at all; 40+ pregnancy/transplant columns are NULL.
 
 ---
 
@@ -217,15 +241,17 @@ pregnancy/transplant columns are NULL.
 sort **lexically** and lie. This unifies the §9 `LINE` and §18 date warnings: `CAST(... AS INTEGER/REAL)`
 any numeric-looking id/line/date before ordering, aggregating, or range-filtering.
 **Example.** `MAX(PAT_ENC_CSN_ID)` returns a lexical `'996…'` while the true max is a 10-digit `'1…'`;
-`MIN(CAST(PAT_ENC_CSN_ID AS INTEGER))` is correct.
+`MAX(CAST(PAT_ENC_CSN_ID AS INTEGER))` is correct (`MIN` lies symmetrically — the lexical "min" is a
+10-digit `'1…'` string).
 
 ### 18. `*_DATE_REAL` — decimal contact dates
 **Mechanism.** Epic stores a logical date as a FLOAT: **integer part = days since the epoch 1840-12-31**,
 **two-digit fraction sequences contacts on the same calendar day** (`.00` first, `.01` second…). The
 companion `*_DATE`/`CONTACT_DATE` renders only the day (at midnight), so `*_DATE_REAL` is the true sort key
 and same-day tiebreaker (after `CAST … AS REAL`, §17). Three caveats: **not every `*_DATE_REAL` is a
-contact date** — some are internal attributes constant per entity (a flowsheet `FLO_CNCT_DATE_REAL` is
-fixed per measure and decodes to nonsense), so confirm it varies per row and lands near the human date;
+contact date** — some are internal attributes of another record (a flowsheet `FLO_CNCT_DATE_REAL` belongs
+to the measure's master record — a re-edited measure can carry a second value — and decodes to nonsense
+relative to the observation time), so confirm it varies per row and lands near the human date;
 **some high-value tables have none** (`ARPB_TRANSACTIONS` ships only text dates — fall back to the L-number
 or a sibling table's `*_DATE_REAL`); **an inherited `*_DATE_REAL` is the parent's date**, not the child
 event's instant (a notification message carries the future *appointment's* date).
@@ -256,8 +282,9 @@ instead carry a full real instant — so only when there's a sibling `*_DATE`).
 is exact*), or a separate **accuracy category** declaring precision (`*_DATE_ACCURACY_C_NAME` =
 "Exact Date"). Don't conflate generic `*_END_DATE` interval-ends (`FILL_END_DATE`, `EFF_END_DATE`) with
 fuzzy-onset companions — most are real interval ends, not fuzz.
-**Example.** `ALLERGY.ALLERGY_NOTED_DATE_ACCURACY_C_NAME` = "Exact Date"; `PROBLEM_LIST.NOTED_DATE` =
-`NOTED_END_DATE` (exact) on every populated row in one specimen.
+**Example.** `ALLERGY.ALLERGY_NOTED_DATE_ACCURACY_C_NAME` = "Exact Date"; `PROBLEM_LIST.NOTED_END_DATE`,
+where populated, equals `NOTED_DATE` (all onsets exact) in one specimen — and one row carries a
+`NOTED_DATE` with no end date at all.
 
 ### 22. Inverted / complement dates as filesystem & sort keys
 **Mechanism.** To sort newest-first, Epic sometimes stores a **complement** of `*_DATE_REAL`
@@ -296,7 +323,9 @@ because either may be entered. For numeric results the cluster is wider than two
 with the **`9999999` sentinel** meaning "no real number — read the text"), `ORD_VALUE` (text), and often
 `VALUE_NORMALIZED` / `ORD_RAW_VALUE` (operator results like ">90"). Read across the cluster; filter the
 sentinel before averaging/plotting.
-**Example.** A qualitative lab: `ORD_VALUE` = ">90", `VALUE_NORMALIZED` = ">90", `ORD_NUM_VALUE` = `9999999`.
+**Example.** A qualitative lab: `ORD_VALUE` = ">90", `ORD_NUM_VALUE` = `9999999` — and `VALUE_NORMALIZED`
+packs the operator with a control byte (`'>' || char(16) || '90'`), so an equality test like
+`VALUE_NORMALIZED = '>90'` returns nothing; match on `ORD_VALUE` or strip control characters first.
 
 ### 26. Packed / type-tagged measurement values
 **Mechanism.** A measurement's value can be **compound**, and a sibling `VALUE_TYPE_C_NAME` declares how to
@@ -336,22 +365,26 @@ you read the unit — weight in **ounces**, height in **inches**. Carry the unit
 - Encounters: `ENC_CLOSED_YN` (manual closure) vs `CALCULATED_ENC_STAT_C_NAME` (derived rollup) — an
   encounter can be calc-Complete yet never closed; don't equate them.
 - Labs/orders: `ORDER_STATUS_C_NAME` (order-level) vs `RESULT_STATUS_C_NAME` (component-level) — distinct
-  axes; and a status of "Final result" does **not** guarantee result rows exist.
+  axes; and "Final result" lives on a *third*, lab-level axis, `ORDER_PROC.LAB_STATUS_C_NAME`
+  (`ORDER_STATUS_C_NAME` reads Completed/Sent/Canceled; `RESULT_STATUS_C_NAME` reads "Final"). A
+  `LAB_STATUS_C_NAME` of "Final result" does **not** guarantee result rows exist.
 - The table named `ORDER_STATUS` is **not** the med status field (that's `ORDER_MED.ORDER_STATUS_C_NAME`).
-- Patient alive/dead: `PATIENT.PAT_STATUS_C_NAME` is often **blank**; the computed living status is
-  `PATIENT_4.PAT_LIVING_STAT_C_NAME` (and can read "Not A Patient").
-**Example.** Encounter cross-tab: calc-Complete with `ENC_CLOSED_YN` both Y and blank; "Final result" CMP
-with zero `ORDER_RESULTS` rows.
+- Patient alive/dead: `PATIENT.PAT_STATUS_C_NAME` can be **blank** in some exports (populated "Alive" in
+  others); cross-check the computed living status `PATIENT_4.PAT_LIVING_STAT_C_NAME`, which in
+  multi-patient or non-patient charts can read "Not A Patient".
+**Example.** Encounter cross-tab: calc-Complete with `ENC_CLOSED_YN` both Y and blank; a
+`LAB_STATUS_C_NAME` "Final result" CMP with zero `ORDER_RESULTS` rows (7 of 17 "Final result" orders in
+one specimen).
 
 ### 31. `_HX` has two meanings — classify by column semantics, not the prefix
 **Mechanism.** `_HX` is overloaded: **clinical-history** tables hold patient history facts (`FAMILY_HX`,
 `SOCIAL_HX`, `SURGICAL_HX`); **change-audit/version** tables hold row versions over time. The old "HX_-
 prefixed columns ⇒ audit" heuristic is **unreliable** — `REFERRAL_HIST` (audit) uses `CHANGE_*`/`NEW_*`,
-`MEDS_REV_HX` uses `*_REV_*`, `ACCT_HOME_PHONE_HX` has no `HX_` at all, while clinical `SURGICAL_HX` *has*
-an `HX_LNK_ENC_CSN`. Classify **semantically**: change/version verbs (`CHANGE`/`REV`/`PREVIOUS`/`NEW`/`OLD`
-+ per-edit user+instant) ⇒ audit; clinical nouns ⇒ history. A **third flavor** is a review/attestation log
-(one row per "list reviewed at encounter X", keyed by reviewer+CSN) — e.g. `PATIENT_ALG_UPD_HX`,
-`PROB_LIST_REV_HX`.
+`ACCT_HOME_PHONE_HX` has no `HX_` at all, while clinical `SURGICAL_HX` *has* an `HX_LNK_ENC_CSN`. Classify
+**semantically**: old/new-value capture (`CHANGE`/`PREVIOUS`/`NEW`/`OLD` + per-edit user+instant) ⇒ version
+audit; clinical nouns ⇒ history. A **third flavor** is a review/attestation log (one row per "list reviewed
+at encounter X", keyed by reviewer+CSN, with **no** old/new-value columns) — `REV` is *its* signature verb,
+not audit's — e.g. `PATIENT_ALG_UPD_HX`, `PROB_LIST_REV_HX`, `MEDS_REV_HX`.
 **Example.** `PROBLEM_LIST_HX` (audit, versions of one problem) vs `FAMILY_HX` (history facts) vs
 `PROB_LIST_REV_HX` (attestation log).
 
@@ -359,8 +392,10 @@ an `HX_LNK_ENC_CSN`. Classify **semantically**: change/version verbs (`CHANGE`/`
 **Mechanism.** Chronicles rarely deletes; records are marked Resolved/Deleted/Archived and kept, so the
 export ships the full lifetime (resolved problems, discontinued meds, voided charges). **Variant:**
 sometimes the export *drops the deleted detail row* and leaves only a **dangling bridge id** with no status
-flag — detect the deletion by a `LEFT JOIN` miss, not a status read. (Note: a rich-text note body has **no
-DB table at all** — `HNO_NOTE_TEXT` isn't exported; the RTF file is the only copy, §14.)
+flag — detect the deletion by a `LEFT JOIN` miss, not a status read. (Note: the rich-text note body table
+`HNO_NOTE_TEXT` isn't exported, so for most notes the RTF file is the only copy (§14) — though
+`HNO_PLAIN_TEXT` (§11) carries an in-DB plain-text body for a minority of notes; check it before falling
+back to the RTF.)
 **Example.** `PROBLEM_LIST` keeps a "Resolved" problem with a `RESOLVED_DATE`; but a deleted allergy's
 detail is absent from `ALLERGY`, leaving an orphan pointer in `PAT_ALLERGIES`.
 
@@ -368,17 +403,23 @@ detail is absent from `ALLERGY`, leaving an orphan pointer in `PAT_ALLERGIES`.
 **Mechanism.** In billing, voiding a charge doesn't flag one row (§32's simple model) — it creates a **new
 reversing transaction** and records the linkage in a void/match table; both the original and the reversal
 persist with their own ids. To net finances you **pair** them, not filter a flag.
-**Example.** `ARPB_TX_VOID` links original `ETR 315026147` to reposted `317236398` (`REPOST_TYPE` =
-"Correction"); the original `ARPB_TRANSACTIONS` row still ships with `VOID_DATE` set.
+**Example.** `ARPB_TX_VOID` links original `ETR 315026147` to reposted `317236398` — the *reposted* TX's
+row carries `OLD_ETR_ID` = the original, while the *original* TX's row carries `REPOST_TYPE_C_NAME` =
+"Correction" plus the `DEL_CHARGE_USER_ID`/`DEL_CHARGE_INSTANT` who/when; the original `ARPB_TRANSACTIONS`
+row still ships with `VOID_DATE` set.
 
 ### 34. Per-encounter re-snapshot of histories (and snapshot-CSN vs source-CSN)
 **Mechanism.** Family/social/medical/surgical histories are re-filed in full each encounter they're
 reviewed, tagged with that encounter's CSN — so facts repeat; take the **latest CSN** for the current view,
 and the *growth* between snapshots shows when a fact was added (naive `COUNT` over-counts). A single
-snapshot row can carry **two** CSNs: `PAT_ENC_CSN_ID` = where this copy was *filed*, `HX_LNK_ENC_CSN` = the
-encounter that *originally created* the fact — they differ row by row.
-**Example.** `FAMILY_HX`: 3 rows at an early CSN, 11 at a later one; `FAMILY_HX_STATUS` row filed at a 2024
-CSN carries `HX_LNK_ENC_CSN` = a 2022 CSN.
+snapshot row carries **two** CSNs: `PAT_ENC_CSN_ID` = the history *contact* this copy was filed under (an
+abstract filing contact, not the visit), `HX_LNK_ENC_CSN` = the actual encounter in which the history was
+created/edited (per the schema description). It is one value per snapshot — not per fact — and in a
+specimen the two are never equal on any row; join `HX_LNK_ENC_CSN → PAT_ENC` for the real visit (the
+histories guide's Gotcha 1).
+**Example.** `FAMILY_HX`: 3 rows at an early CSN, 11 at a later one; `SOCIAL_HX.PAT_ENC_CSN_ID` =
+724623985 while `HX_LNK_ENC_CSN` = 720803470 — the same-day office visit (the `.00` contact, §18), not the
+history contact.
 
 ### 35. Current-state collapse vs version history
 **Mechanism.** Many domains ship both a current-state table (collapse to "now" = last `_HX` line) and the
@@ -393,7 +434,9 @@ earlier original entry by a different clinician.
 validity window `EFF_DATE..TERM_DATE` (contiguous, non-overlapping). The **currently-in-effect** row is the
 one with **`TERM_DATE` NULL** (open interval); historical rows have a non-null term. Distinct from fuzzy
 onset (§21) and per-edit audit (§31). For "current," filter `TERM_DATE IS NULL`; for "true on date D,"
-find `EFF_DATE ≤ D < COALESCE(TERM_DATE, ∞)`.
+find `EFF_DATE ≤ D ≤ COALESCE(TERM_DATE, ∞)` — `TERM_DATE` is **inclusive** (in a specimen the successor's
+`EFF_DATE` = predecessor's `TERM_DATE` + 1 day, so a half-open `<` predicate leaves the term day matching
+no row).
 **Example.** `PAT_PCP`: LINE 1 EFF 2018 TERM 2022, LINE 2 EFF 2022 TERM NULL ⇒ LINE 2 is the current PCP.
 Same shape: `PAT_PRIM_LOC`, `COVERAGE_MEMBER_LIST.MEM_EFF_FROM_DATE`.
 
@@ -401,8 +444,11 @@ Same shape: `PAT_PRIM_LOC`, `COVERAGE_MEMBER_LIST.MEM_EFF_FROM_DATE`.
 **Mechanism.** When Chronicles records a lifecycle action (delete, void, sign, cosign), it persists a
 coupled triplet: `<ACTION>_USER_ID` (+`_NAME`), `<ACTION>_INSTANT_DTTM`, and often `<ACTION>_REASON_C_NAME`
 /`_COMMENT`. The row is kept (§32); the triplet tells you who/when/why without a separate audit row.
-**Example.** `HNO_INFO.DELETE_USER_ID` + `DELETE_INSTANT_DTTM` (note retained, flagged);
-`PAT_ENC_COMM_MGT.COMM_VOID_USER_ID` + `_INSTANT_DTTM` + `_REASON_C_NAME` + `_COMMENT`.
+**Example.** `ORDER_MED.DISCON_USER_ID` + `DISCON_TIME` + `RSN_FOR_DISCON_C_NAME` (populated on most
+discontinued meds; note the instant's name varies — `DISCON_TIME`, `DEL_CHARGE_INSTANT` — not always
+`*_INSTANT_DTTM`); `ARPB_TX_VOID.DEL_CHARGE_USER_ID` + `DEL_CHARGE_INSTANT` on the §33 void. The shape
+also ships empty-but-present where the action never happened: `HNO_INFO.DELETE_*` and
+`PAT_ENC_COMM_MGT.COMM_VOID_*` exist as columns but are all NULL in one specimen.
 
 ### 38. The self-describing field-level change ledger (`V_EHI_*_AUDIT`)
 **Mechanism.** The `V_EHI_*_AUDIT` views are a generic data-change ledger: each row names the changed field
@@ -412,7 +458,8 @@ field's history even when its own table has no `_HX`. But it's dominated by ETL/
 ETL" in bulk-load clusters), so treat it as change/access **metadata**, not clinical content, and often the
 single largest "table" by row count.
 **Example.** `V_EHI_REG_ITEM_AUDIT_EPT`: `CHANGED_DATA_ELEMENT` = "INCOMPLETE_NOTE_EPT.PAT_ENC_CSN_ID",
-`NEW_VALUE_EXTERNAL` = a CSN, with UTC vs local instants 5h apart.
+`NEW_VALUE_EXTERNAL` = a CSN, with UTC vs local instants 5h apart (6h in winter — the offset is
+DST-seasonal).
 
 ---
 
@@ -437,11 +484,13 @@ be **NULL while the source is populated**, so `COALESCE(cache, source)` and go t
 
 ### 41. The same concept can live in two ID spaces
 **Mechanism.** Distinct subsystems mint distinct ids for related things; joining across the boundary
-silently returns nothing. Canonical instances (all verified): **`ORDER_PROC_ID` vs `ORDER_MED_ID`** (0
-overlap — procedure/lab orders vs med orders; result children key `ORDER_PROC_ID`, sig children
-`ORDER_MED_ID`); **provider `SER` vs user `EMP`** (the same human is `SER 599471` *and* `EMP ALG006`;
-SER≈numeric, EMP≈alphanumeric login); **`*_LOC_ID`→`CLARITY_LOC` vs `DEPARTMENT_ID`→`CLARITY_DEP`**;
-**orderable `PROC_ID` (`ORDER_PROC`) vs charge `PROC_ID` (`ARPB_TRANSACTIONS`)** (non-overlapping EAP
+silently returns nothing — or worse, returns a wrong-but-plausible row where small integer ids happen to
+exist in both spaces (`LOC` id `1` and `DEP` id `1` name different things in one specimen). Canonical
+instances (all verified): **`ORDER_PROC_ID` vs `ORDER_MED_ID`** (0
+overlap — procedure/lab orders vs med orders; result children key `ORDER_PROC_ID`, sig children key the
+ORDER_MED id space via a column literally named `ORDER_MED_SIG.ORDER_ID`); **provider `SER` vs user
+`EMP`** (the same human is `SER 599471` *and* `EMP ALG006`; SER≈numeric, EMP≈alphanumeric login);
+**`*_LOC_ID`→`CLARITY_LOC` vs `DEPARTMENT_ID`→`CLARITY_DEP`**; **orderable `PROC_ID` (`ORDER_PROC`) vs charge `PROC_ID` (`ARPB_TRANSACTIONS`)** (non-overlapping EAP
 records that both resolve through `CLARITY_EAP`); **`MEDICATION_ID` (drug, ERX) vs `ORDER_MED_ID` (order)**.
 *Note:* `PAT_ENC_CURR_MEDS.CURRENT_MED_ID` **does** join `ORDER_MED.ORDER_MED_ID` cleanly here (it *is* an
 order id) — measure the resolve rate before assuming a bridge is needed.
@@ -461,10 +510,12 @@ a symmetric dedup.
 **Mechanism.** A snapshot includes future-dated rows: scheduled future appointments, and automated/
 administrative contacts (recurring "Nth-of-month" med-refresh or billing jobs) with real CSNs but NULL
 provider/department. The **tell** that an empty-looking contact is a real automated contact (not a blank
-row) is that it still carries a `PAT_ENC_CURR_MEDS` snapshot and a billing link. Don't read `MAX(date)` as
-"last care," and exclude these before counting visits.
-**Example.** A `Scheduled` appointment a year past the export; dozens of monthly NULL-dept contacts each
-with a 3-med current-meds snapshot.
+row) is that it often still carries a `PAT_ENC_CURR_MEDS` snapshot (44 of 95 NULL-dept/provider contacts
+in one specimen); don't lean on the per-encounter billing sidecar (`PAT_ENC_BILLING_ENC`) — that row is
+emitted for *every* contact (§46) and discriminates nothing. Don't read `MAX(date)` as "last care," and
+exclude these before counting visits.
+**Example.** A `Scheduled` appointment a year past the export; dozens of monthly NULL-dept contacts, each
+with a small (1–4-med) current-meds snapshot.
 
 ### 44. External-origin sentinels
 **Mechanism.** Data imported from outside Epic (Care Everywhere, outside labs/imaging) is tagged with
@@ -495,12 +546,13 @@ the change-ledger giants. Use the `V_EHI_*` companion wherever a base table's va
 value; the number is in `V_EHI_FLO_MEAS_VALUE`.
 
 ### 48. The in-basket "pool" party model
-**Mechanism.** In MyChart/in-basket messaging, the named `FROM_USER`/`TO_USER` party (often a physician) is
-frequently **not** the actual author of a reply — a nurse/MA answers from a shared pool, with `ORIGINAL_TO`
-recording the re-route. So a party-name column may be the *targeted* user, not the *acting* one (a §6
+**Mechanism.** In MyChart/in-basket messaging, the named `MYC_MESG.FROM_USER_ID`/`TO_USER_ID` party (often
+a physician) is frequently **not** the actual author of a reply — a nurse/MA answers from a shared pool,
+with `ORIGINAL_TO` preserving the originally-targeted user when the message is re-routed (on most rows it
+simply equals `TO_USER_ID`). So a party-name column may be the *targeted* user, not the *acting* one (a §6
 companion caveat specific to messaging).
-**Example.** A message `TO_USER` names the doctor while the reply is authored from the pool; `ORIGINAL_TO`
-holds the routing.
+**Example.** A message's `TO_USER_ID` names the doctor while the reply is authored from the pool;
+`ORIGINAL_TO` keeps the original target.
 
 ---
 
