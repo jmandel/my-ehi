@@ -108,9 +108,8 @@ rebuilt, and extended. The set, and what each is responsible for:
 
 | artifact | responsibility |
 |---|---|
-| `STORYBOARD.md` | **The design, written first** (steps 1–3): the argument the page makes, the tool the domain expert wants, the section-by-section beats, the structural rule. Read it to understand **what the dive is and why**. (See `deep-dives/cardiac-risk/STORYBOARD.md` for the shape.) |
 | `viewmodel.json` | **The deliverable**: clean, display-ready data + narrative + evidence the app imports — and the single home for the actual values and quotes. |
-| `BUILD.md` | **The recipe from raw to the view model** — a *data + abstraction spec*: the **target schema in TypeScript** + per slot, how an analyst **queries and abstracts** from the raw export (`db/ehi.sqlite` + `raw/`) to that shape — the source tables, the derivation **logic in words**, and the abstraction rubrics, as a **workflow of parallel agents**. Explains the logic, doesn't recreate the scripts; independent of any intermediate files. *Method, not data* (defined below). |
+| `BUILD.md` | **The recipe from raw to the view model** — a *data + abstraction spec*: the **target schema in TypeScript** + per slot, how an analyst **queries and abstracts** from the raw export (`db/ehi.sqlite` + `raw/`) to that shape — the source tables, the derivation **logic in words**, and the abstraction rubrics, as a **workflow of parallel agents**. Explains the logic, doesn't recreate the scripts; independent of any intermediate files. *Method, not data* (defined below). May open with a **short design-rationale section** (the argument the page makes, the section beats) when that isn't already evident from the dive itself. |
 | `parts/` + `scripts/` | **An optional runnable implementation** of BUILD's recipe (kept when it earns it — e.g. a complex computation): the slot files + bun/SQLite code. The recipe in `BUILD.md` stands without them. Where kept, `parts/` is the editable source and `viewmodel.json` is its assembled output (anti-drift, below). |
 | `app.tsx` / `index.html` / `page.css` (+ local `components/`) | the static app. |
 
@@ -172,12 +171,15 @@ and **re-assemble**; editing the generated view model directly is how it drifts 
 come from. A dive with no kept pipeline has `viewmodel.json` as its hand-authored source, and `BUILD.md` is
 the recipe that could rebuild it.
 
-**STORYBOARD vs BUILD.** STORYBOARD is the **design** (what the page argues, for the reader who wants to
-understand the dive); BUILD is the **build spec** (how each slot is populated, for the rebuilder). Two files,
-two jobs — don't merge them.
+**One orienting doc, not two.** `BUILD.md` is the dive's single self-documentation file — its job is to
+save the next person from **reverse-engineering the view model** (the interface, the per-slot derivation,
+and the judgment rubrics that no script records). Design rationale, where worth keeping, is a short opening
+section *inside* BUILD, not a separate document: the finished dive already shows its narrative and
+visualization choices on screen. (Some earlier dives also carry a standalone `STORYBOARD.md` — grandfathered,
+fine to keep, but don't create new ones.)
 
-**Casing:** the two orienting docs are upper-case like `README.md` — `STORYBOARD.md`, `BUILD.md`; everything
-else in the folder stays lower-case. Keep it uniform across every dive.
+**Casing:** the orienting doc is upper-case like `README.md` — `BUILD.md`; everything else in the folder
+stays lower-case. Keep it uniform across every dive.
 
 Run every intensive step as a workflow; the lead orchestrates from receipts and screenshots and does not
 hand-build. Fan out over views/slots, adversarially verify each claim against the data, and run an explicit
@@ -189,7 +191,7 @@ hand-build. Fan out over views/slots, adversarially verify each claim against th
 
 Static site, `bun` + TypeScript + React + D3 (add `zustand` for interaction state; other libs when they
 earn it). **Each dive is one self-contained folder** — data and app co-located:
-`deep-dives/<name>/{STORYBOARD.md, viewmodel.json, parts/, scripts/, BUILD.md, app.tsx, index.html, page.css, components/…}`. The app
+`deep-dives/<name>/{BUILD.md, viewmodel.json, parts/, scripts/, app.tsx, index.html, page.css, components/…}`. The app
 imports **only** its sibling view model — `import vm from "./viewmodel.json"` — and bun inlines it at build
 time; `parts/` holds the hand-editable view-model slots an `assemble` script stitches into `viewmodel.json`,
 and `scripts/` is how that JSON was derived from the DB. Nothing reaches across to a separate data tree.
@@ -235,8 +237,8 @@ bun <skill>/scripts/build-site.ts deep-dives site               # ship: assemble
 4. **Screenshot-verify** the dive renders end to end (it must be served over HTTP).
 5. **Don't commit build artifacts.** `dist/`, `site/`, and **screenshots are throwaway** — write shots to
    `/tmp`, never into the dive folder, and let `.gitignore` keep `deep-dives/*/dist/` and `deep-dives/*/*.png`
-   out of the repo. What you commit is `STORYBOARD.md`, `viewmodel.json`, `parts/`+`scripts/` (if kept),
-   `BUILD.md`, and the app source — not its outputs.
+   out of the repo. What you commit is `BUILD.md`, `viewmodel.json`, `parts/`+`scripts/` (if kept), and the
+   app source — not its outputs.
 
 ## The toolbox (compose and extend — it is NOT a layout)
 

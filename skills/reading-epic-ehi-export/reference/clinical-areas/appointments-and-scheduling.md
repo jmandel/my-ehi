@@ -9,26 +9,27 @@ encounter it becomes.
 **Where it sits.** There is **no separate appointment id** — an appointment IS an encounter.
 Every appointment fact hangs off `PAT_ENC_CSN_ID` (the encounter CSN, §2) and the patient
 `PAT_ID`. The appointment is a *facet* of the encounter, carried partly in `PAT_ENC` itself and
-partly in the keyed child table `PAT_ENC_APPT` and the wide `PAT_ENC_2..7` supplements (§6).
+partly in the keyed child table `PAT_ENC_APPT` and the wide `PAT_ENC_2..7` supplements (§8).
 
 ## Tables
 
 | table | role | rows in specimen | notes |
 |---|---|---|---|
 | `PAT_ENC` | spine: carries `APPT_STATUS_C_NAME`, check-in/cancel actors, AVS print, dept/provider | 169 | appointment status lives **only** here; PK `PAT_ENC_CSN_ID`. See the *encounters* guide for the full PAT_ENC family. |
-| `PAT_ENC_APPT` | appointment "skeleton": one row per provider on the appt, holds `PROV_START_TIME` (the slot time) | 74 | PK `(PAT_ENC_CSN_ID, LINE)`; `LINE` = provider in a joint appt (all `LINE=1` here — no joint appts). Thinner than the schema doc (§5). |
+| `PAT_ENC_APPT` | appointment "skeleton": one row per provider on the appt, holds `PROV_START_TIME` (the slot time) | 74 | PK `(PAT_ENC_CSN_ID, LINE)`; `LINE` = provider in a joint appt (all `LINE=1` here — no joint appts). Thinner than the schema doc (§7). |
 | `ECHKIN_STEP_INFO` | per-appointment **eCheck-in** steps (Allergies, Insurance, Questionnaires…) × status | 144 | PK `(CSN, LINE)`; covers 13 distinct appts. `LINE` stored as **text** (sorts lexically). |
 | `PAT_ENC_4` | supplement: `ECHKIN_STATUS_C_NAME` (rollup of the eCheck-in flow), `VISIT_NUMBER` | 169 | 1:1 on CSN. |
-| `PAT_ENC_5` | supplement: `EVISIT_STATUS_C_NAME`, `IS_ON_DEMAND_VV_YN` (on-demand video visit) | 169 | **both empty in this specimen** (columns exist, no eVisits/video visits occurred). No schema doc shipped for this table (§6). |
+| `PAT_REVIEW_DATA` | the eCheck-in review **outcome**: patient-entered review of allergies/meds/problems (Welcome kiosk / MyChart) | 169 | 1:1 companion of `PAT_ENC` on the CSN, no `LINE` — a §46 always-emit row, populated only when the patient actually reviewed: `PAT_ALG/MED/PROB_RVW_INFO_C_NAME` say what was asserted, `PAT_REVIEW_ELG/ORD/LPL_C_YN` flag eligibility. In one specimen only eCheck-in encounters carry values. |
+| `PAT_ENC_5` | supplement: `EVISIT_STATUS_C_NAME`, `IS_ON_DEMAND_VV_YN` (on-demand video visit) | 169 | **both empty in this specimen** (columns exist, no eVisits/video visits occurred). Schema-doc coverage for it varies between DB builds — trust `pragma_table_info` over the doc either way (§7, §8). |
 | `PAT_ENC_6` | supplement: `EVISIT_YN`, `EVISIT_RFV_C_NAME`, telehealth allowed-location flags, `RFV_USED_TO_SCHED_C_NAME` | 169 | eVisit fields **all empty here**. |
 | `PAT_ENC_7` | supplement: `EVISIT_SUBMITTED_DTTM`, `EVISIT_TURNAROUND_IN_MINUTES` | 169 | empty here. |
-| `PAT_ENC_2` | supplement: appointment-letter instances (`APPT_LET_C_NAME`, `APPTMT_LET_INST`, `RESCHED_LET_INST`) | 169 | 18 appt-letter instances here. |
+| `PAT_ENC_2` | supplement: appointment-letter type + last-print instants (`APPT_LET_C_NAME`, `APPTMT_LET_INST`, `RESCHED_LET_INST`) | 169 | `APPT_LET_C_NAME` is the letter-*type* category (ZC_LET; can be "No Letter" — exclude it when counting); the `*_INST` columns are most-recent-print datetime *instants* (§19), populated only if a letter actually printed. In one specimen 18 encounters carry an appt-letter type but only 1 a print instant. |
 | `KIOSK_QUESTIONNAIR` | questionnaires assigned to an appt (Welcome-kiosk/eCheck-in) | 20 | keyed `(CSN, LINE)`; carries `PAT_ID`, `KIOSK_QUEST_ID(_FORM_NAME)`. |
 | `MYC_APPT_QNR_DATA` | MyChart questionnaires attached to an upcoming appt + their status | 20 | `(CSN, LINE)`; `PAT_APPT_QNR_STAT_C_NAME` (Assigned/…), `MYC_QUESR_START_DT`. |
 | `APPT_LETTER_RECIPIENTS` | who receives the appt letter / should attend | 40 | `(CSN, LINE)`; `SHOULD_ATTEND_VISIT_YN`, `DID_ATTEND_VISIT_YN`. |
 | `PAT_ENC_LETTERS` | a letter generated on an encounter (links to a note via `LETTER_HNO_ID`) | 1 | `(CSN, LINE)`; `LTR_STATUS_C_NAME`, `LETTER_REASON_C_NAME`. |
 | `APPT_REQUEST` | appointment-request records (request workflow) | 22 | **stranded in this specimen**: only `REQUEST_ID` + a few blank flags; *no FK into the PAT_ENC family* — does not join to any encounter here. |
-| `REFERRAL_APT` | appointments arising from a referral | 3 | bridges referral → appt; see *referrals* guide. |
+| `REFERRAL_APT` | appointments arising from a referral | 3 | keyed `(REFERRAL_ID, LINE_COUNT)` — **no** `PAT_ENC_CSN_ID` column; the encounter link is `SERIAL_NUMBER = PAT_ENC.PAT_ENC_CSN_ID` (a §4 renamed CSN, populated only for internal appts; the `EXT_*` columns describe external/outside appointments and may be empty). See *referrals* guide. |
 | `ASSOCIATED_REFERRALS` | referrals linked to an appointment | 2 | peripheral. |
 
 EMPTY / sparse worth knowing: the **eVisit and video-visit columns exist but carry no data here**
@@ -45,27 +46,36 @@ mostly skeletal for this domain.
   (→ DEPARTMENT_NAME)`. Verified it **always equals** `PAT_ENC.DEPARTMENT_ID` (74/74 match). The
   rendering provider is on the encounter: `PAT_ENC.VISIT_PROV_ID → CLARITY_SER.PROV_ID (→ PROV_NAME)`
   — the documented `VISIT_PROV_ID_PROV_NAME` companion is **not materialized** here, so resolve via
-  `CLARITY_SER` (§4, §5).
+  `CLARITY_SER` (§5, §6).
 - **eCheck-in detail.** `ECHKIN_STEP_INFO.PAT_ENC_CSN_ID = PAT_ENC.PAT_ENC_CSN_ID`, then order steps
-  by `CAST(LINE AS INTEGER)`. The roll-up status is `PAT_ENC_4.ECHKIN_STATUS_C_NAME` on the same CSN.
-  Verified: the 13 eCheck-in CSNs are all real appointments (12 `Completed` + 1 `Canceled`), a strict
-  subset of the 23 status-bearing appts.
+  by `CAST(LINE AS INTEGER)`. The roll-up status is `PAT_ENC_4.ECHKIN_STATUS_C_NAME` on the same CSN,
+  and the review *outcome* (what the patient asserted about allergies/meds/problems) is
+  `PAT_REVIEW_DATA` on the same CSN (1:1, §46). Verified: the 13 eCheck-in CSNs are all real
+  appointments (12 `Completed` + 1 `Canceled`), a strict subset of the 23 status-bearing appts, and
+  every populated `PAT_REVIEW_DATA` row falls within that eCheck-in set.
 - **Questionnaires & letters.** `KIOSK_QUESTIONNAIR`, `MYC_APPT_QNR_DATA`, `APPT_LETTER_RECIPIENTS`,
-  `PAT_ENC_LETTERS` all key on `PAT_ENC_CSN_ID` (+ `LINE`) (§7). `PAT_ENC_LETTERS.LETTER_HNO_ID`
+  `PAT_ENC_LETTERS` all key on `PAT_ENC_CSN_ID` (+ `LINE`) (§9). `PAT_ENC_LETTERS.LETTER_HNO_ID`
   joins to the note master (HNO) — see *notes-documents* guide.
 - **Supplement stack** for video/eVisit flags: left-join `PAT_ENC_4/5/6/7` on `PAT_ENC_CSN_ID`
-  (strict 1:1, §6). Note `PAT_ENC_3` keys on `PAT_ENC_CSN` (no `_ID`) — not needed for this domain but
+  (strict 1:1, §8). Note `PAT_ENC_3` keys on `PAT_ENC_CSN` (no `_ID`) — not needed for this domain but
   a known join trap.
 
 ## Unstructured tie-back
 
 Scheduling rows anchor several unstructured artifacts by **CSN**:
 - **Appointment letters** → `PAT_ENC_LETTERS.LETTER_HNO_ID` points at an HNO note; the RTF body is in
-  `raw/Rich Text/<HNO_ID>.RTF` (and/or `HNO_PLAIN_TEXT`). Example here: CSN 724619887 has a "Sent"
+  `raw/Rich Text/HNO_<NOTE_ID>_<inverted-date>_<seq>.RTF` (and/or `HNO_PLAIN_TEXT`) — match on the
+  first number after the `HNO_` prefix (the filename is the FK, §14); the middle number is the §22
+  date complement, and a literal `<id>.RTF` glob finds nothing. Example here: CSN 724619887 has a "Sent"
   MyChart-account letter authored by DHILLON, PUNEET S, `LETTER_HNO_ID=1473625808`.
 - **Questionnaire content** → `KIOSK_QUESTIONNAIR`/`MYC_APPT_QNR_DATA` name the form
-  (`*_FORM_NAME`, e.g. "UPH AMB PHQ2", "UPH MUP TRAVEL SCREENING"); the actual answers live in the
-  questionnaire-answer tables (`PAT_ENC_QNRS_ANS` and the questionnaire family), keyed by CSN.
+  (`*_FORM_NAME`, e.g. "UPH AMB PHQ2", "UPH MUP TRAVEL SCREENING"); the actual answer text lives in
+  `V_EHI_HQA_QUEST_ANSWER.QUEST_ANSWER_EXTERNAL` (a §47 externalized-value view, keyed
+  `(ANSWER_ID, LINE)`), bridged from messaging via `MYC_MESG_QUESR_ANS.QUESR_ANS_ID = ANSWER_ID`.
+  `QUESR_LST_ANS_INFO` indexes which forms were answered per patient — but its `QUESR_ANS_CSN_ID` is
+  the HQA answer record's **own** serial (the §2 generic-CSN trap), *not* an encounter CSN.
+  `PAT_ENC_QNRS_ANS` ships as a no-content stub (only CSN, LINE, CONTACT_DATE) — don't expect
+  answers there.
 - **After-Visit Summary** is signaled in-row on `PAT_ENC` by `AVS_PRINT_TM` + `AVS_FIRST_USER_ID`
   (5 encounters here); the printed AVS PDF lives among the top-level/Media artifacts.
 - The appointment's clinical notes attach to the same encounter CSN via the note tables — see the
@@ -85,32 +95,40 @@ Scheduling rows anchor several unstructured artifacts by **CSN**:
 - **Appointment status ↔ derived encounter status are coupled, but not to closure.** Verified crosstab:
   `Completed`→`CALCULATED_ENC_STAT_C_NAME='Complete'`; `Canceled`→`'Invalid'`; `Scheduled`→`'Possible'`.
   *Why:* `APPT_STATUS_C_NAME` is the scheduler's state; `CALCULATED_ENC_STAT_C_NAME` is Epic's derived
-  rollup of chart completeness (§16). A **canceled appointment is `Invalid` and is NOT chart-closed**
-  (`ENC_CLOSED_YN` blank) — the encounter shell persists (§18) but holds no real visit. Don't count
+  rollup of chart completeness (§30). A **canceled appointment is `Invalid` and is NOT chart-closed**
+  (`ENC_CLOSED_YN` blank) — the encounter shell persists (§32) but holds no real visit. Don't count
   Canceled/Invalid contacts as visits.
 - **`PROV_START_TIME` is a full datetime, not a clock time.** It renders as a date *and* time
   (`DATETIME (Local)` per the doc). The companion `CONTACT_DATE`/`PAT_ENC_DATE_REAL` render the day at
-  midnight (§11). So `PROV_START_TIME` is the only place the actual **appointment time of day** lives —
+  midnight (§19). So `PROV_START_TIME` is the only place the actual **appointment time of day** lives —
   use it, not `CONTACT_DATE`, for "what time was the appointment."
 - **eCheck-in can be *offered* without producing steps.** `PAT_ENC_4.ECHKIN_STATUS_C_NAME` can be
   "Not Started" / "Not Yet Available" with **zero** `ECHKIN_STEP_INFO` rows (verified: 4 "Not Started" +
   2 "Not Yet Available" have no step rows). *Why:* the rollup status is set when eCheck-in is *enabled*
-  for the appt; the per-step rows are only written once the patient actually engages. Use the rollup to
-  know eligibility, the step table to know what the patient *did*. Step state is a value-pair: a coarse
-  `ECHKIN_STEP_STAT_C_NAME` (Completed / Not Needed / Not Offered / Filtered / Not Started) plus a finer
-  `STEP_ACTION_C_NAME` (Completed / Verified / Updated / Skipped) and a `STEP_COMPLETED_UTC_DTTM` instant.
+  for the appt; the per-step rows are written when the system *evaluates* the step list (which steps
+  apply / are offered) — **not** strictly on patient engagement. A "Not Started" rollup can still carry
+  step rows whose statuses are all Not Started / Not Needed / Not Offered / Filtered, with zero actions.
+  So row *existence* is not evidence the patient did anything: engagement is signaled by
+  `STEP_ACTION_C_NAME` non-NULL and `STEP_COMPLETED_UTC_DTTM`. Step state is a value-pair: a coarse
+  `ECHKIN_STEP_STAT_C_NAME` (Completed / In Progress / Not Needed / Not Offered / Filtered / Not Started)
+  plus a finer `STEP_ACTION_C_NAME` (Completed / Verified / Updated / Skipped) — both lists are values
+  *observed in one specimen*, not the full category tables; the rollup likewise shows
+  Completed / In Progress / Not Started / Not Yet Available.
 - **`ECHKIN_STEP_INFO.LINE` is stored as text** (`typeof(LINE)='text'`), so a plain `ORDER BY LINE`
-  yields 1, 10, 11, …, 2, 3 — reassemble steps with `ORDER BY CAST(LINE AS INTEGER)` (§7).
-- **No appointment *type*, no cancel *reason*, no no-show field.** The PAT_ENC family carries **no**
-  `APPT_TYPE`/`ENC_TYPE` column (appointment/visit type must be *inferred* — see the *encounters* guide)
-  and, for cancellations, ships only the **actor** (`APPT_CANC_USER_ID` / `APPT_CANC_USER_ID_NAME`,
+  yields 1, 10, 11, …, 2, 3 — reassemble steps with `ORDER BY CAST(LINE AS INTEGER)` (§17).
+- **No appointment *type*, no cancel *reason*, no no-show field.** The PAT_ENC family carries no
+  **usable** appointment/visit-type column — the only type-named columns in the family
+  (`PAT_ENC_6.HUS_VISIT_TYPE_C_NAME`, an org-specific reporting axis, and
+  `PAT_ENC_BILLING_ENC.BILLING_ENC_TYPE_C_NAME`, a billing axis) ship empty here, so a naive
+  `pragma` scan for `%TYPE%` finds only decoys; visit type must be *inferred* — see the *encounters*
+  guide. For cancellations, the family ships only the **actor** (`APPT_CANC_USER_ID` / `APPT_CANC_USER_ID_NAME`,
   e.g. "MANIX, PATRICIA A") with **no** cancel-reason or no-show category column anywhere in the family.
   Don't expect to know *why* an appt was canceled from these tables.
-- **`PAT_ENC_APPT` is thinner than its schema doc (§5).** The doc lists ordinal 4 as
+- **`PAT_ENC_APPT` is thinner than its schema doc (§7).** The doc lists ordinal 4 as
   `DEPARTMENT_ID_EXTERNAL_NAME`, but the TSV ships bare `DEPARTMENT_ID`. Actual columns:
   `PAT_ENC_CSN_ID, LINE, CONTACT_DATE, DEPARTMENT_ID, PROV_START_TIME`. Confirm with
   `pragma_table_info` before querying.
-- **`APPT_REQUEST` is stranded here (§24).** It has 22 rows of bare `REQUEST_ID` + blank flags and **no
+- **`APPT_REQUEST` is stranded here (§41).** It has 22 rows of bare `REQUEST_ID` + blank flags and **no
   column that joins to `PAT_ENC`** in this specimen. Appointment-request → encounter linkage, if any,
   would need a bridge table this export doesn't populate. Treat it as a separate, unjoinable view.
 
@@ -125,7 +143,7 @@ JOIN PAT_ENC_APPT a USING (PAT_ENC_CSN_ID)
 LEFT JOIN CLARITY_DEP dep ON a.DEPARTMENT_ID = dep.DEPARTMENT_ID
 LEFT JOIN CLARITY_SER ser ON e.VISIT_PROV_ID = ser.PROV_ID
 WHERE e.APPT_STATUS_C_NAME IS NOT NULL          -- = has a real PROV_START_TIME
-ORDER BY CAST(e.PAT_ENC_DATE_REAL AS REAL);     -- never ORDER BY the text date (§10)
+ORDER BY CAST(e.PAT_ENC_DATE_REAL AS REAL);     -- never ORDER BY the text date (§18)
 
 -- 2) Scheduled (future / not-yet-completed) vs completed vs canceled
 SELECT APPT_STATUS_C_NAME, COUNT(*) n
@@ -161,6 +179,15 @@ SELECT q.PAT_ENC_CSN_ID, q.CONTACT_DATE, q.MYC_APPT_QUESR_ID_FORM_NAME,
        q.PAT_APPT_QNR_STAT_C_NAME, q.MYC_QUESR_START_DT
 FROM MYC_APPT_QNR_DATA q
 ORDER BY CAST(q.PAT_ENC_DATE_REAL AS REAL), CAST(q.LINE AS INTEGER);
+
+-- 7) What did the patient actually DO at check-in? Actions taken (not mere step
+--    evaluation) + the allergy/med/problem review outcome
+SELECT s.PAT_ENC_CSN_ID, s.INCLUDED_STEP_C_NAME, s.STEP_ACTION_C_NAME,
+       r.PAT_ALG_RVW_INFO_C_NAME, r.PAT_MED_RVW_INFO_C_NAME, r.PAT_PROB_RVW_INFO_C_NAME
+FROM ECHKIN_STEP_INFO s
+LEFT JOIN PAT_REVIEW_DATA r USING (PAT_ENC_CSN_ID)
+WHERE s.STEP_ACTION_C_NAME IS NOT NULL          -- row existence ≠ engagement (see gotchas)
+ORDER BY s.PAT_ENC_CSN_ID, CAST(s.LINE AS INTEGER);
 ```
 
 ## Open questions / specimen notes
@@ -174,5 +201,5 @@ ORDER BY CAST(q.PAT_ENC_DATE_REAL AS REAL), CAST(q.LINE AS INTEGER);
 - **`APPT_REQUEST` linkage** to encounters could not be established in this specimen (no FK present).
   Whether another export ships a `REQUEST_ID`→CSN bridge is unconfirmed.
 - **Specimen scale:** 23 real appointments (19 Completed, 3 Canceled, 1 future Scheduled on 6/16/2027
-  — the §26 "data dated after export" case), 51 appt-skeleton rows without a slot, eCheck-in exercised
+  — the §43 "data dated after export" case), 51 appt-skeleton rows without a slot, eCheck-in exercised
   on 13 appointments, no joint (multi-provider) appointments (all `PAT_ENC_APPT.LINE=1`).

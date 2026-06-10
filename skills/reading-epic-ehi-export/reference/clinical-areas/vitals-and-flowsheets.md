@@ -4,7 +4,9 @@
 when present), Epic's auto-calculated derived rows (BSA, IBW, tidal volumes), and structured screening
 questionnaires charted as flowsheet rows (PHQ-2 depression screen, COVID symptom/travel screens, adult
 wellness screens). This is the "vitals" half of the labs/vitals split — *not* lab analytes (those are
-`ORDER_RESULTS`; see the labs-and-results guide).
+`ORDER_RESULTS`; see the lab-results guide). It is also one half of the screening-instrument split:
+instruments *charted in the encounter* file here as flowsheet rows, while patient-submitted questionnaire
+*forms* (the HQA answer records behind eCheck-in/MyChart) live in `questionnaires-and-assessments.md`.
 
 **Where it sits.** A measurement carries no CSN of its own. It hangs off a flowsheet-data record
 (`FSD_ID`) → a stay record (`INPATIENT_DATA_ID`) → `PAT_ENC.INPATIENT_DATA_ID` → the encounter's
@@ -15,13 +17,25 @@ wellness screens). This is the "vitals" half of the labs/vitals split — *not* 
 | table | role | rows in specimen | notes |
 |---|---|---|---|
 | `IP_FLWSHT_MEAS` | **Spine.** One row per measurement (the WHO/WHEN/metadata side). Key `(FSD_ID, LINE)`. | 305 | Carries `FLO_MEAS_ID`(+`_DISP_NAME`), `RECORDED_TIME`, `ENTRY_TIME`, `TAKEN_USER_ID_NAME`, `ABNORMAL_C_NAME`, `FLT_ID`, `MEAS_COMMENT`. **The value column itself is excluded** — get it from the view. |
-| `V_EHI_FLO_MEAS_VALUE` | **Spine.** The export view that re-exposes the value (§27). Key `(FSD_ID, LINE)`, 1:1 with MEAS. | 305 | `MEAS_VALUE_EXTERNAL` (the actual reading), `UNITS`, `VALUE_TYPE_C_NAME`. **This is where you read a vital's value.** |
+| `V_EHI_FLO_MEAS_VALUE` | **Spine.** The export view that re-exposes the value (§47). Key `(FSD_ID, LINE)`, 1:1 with MEAS. | 305 | `MEAS_VALUE_EXTERNAL` (the actual reading), `UNITS`, `VALUE_TYPE_C_NAME`. **This is where you read a vital's value.** |
 | `IP_FLWSHT_REC` | **Spine.** Links a flowsheet-data record to its stay + patient + date. Key `FSD_ID`. | 26 | `FSD_ID → INPATIENT_DATA_ID`, `RECORD_DATE`, `PAT_ID`, `DAILY_NET` (empty here). The hop from a measurement up to its encounter goes through this. |
-| `IP_FLOWSHEET_ROWS` | Catalog of which flowsheet ROWS (layout) exist for a stay. Key `(INPATIENT_DATA_ID, LINE)`. | 372 | `FLO_MEAS_ID`(+`_DISP_NAME`), `FLOWSHT_ROW_NAME`, `ROW_VARIANCE_C_NAME` ('Add'). Defines the *row layout per stay*, not values — includes rows that were never filled. |
+| `IP_FLOWSHEET_ROWS` | Catalog of which flowsheet ROWS (layout) exist for a stay. Key `(INPATIENT_DATA_ID, LINE)`. | 372 | `FLO_MEAS_ID`(+`_DISP_NAME`), `FLOWSHT_ROW_NAME`, `ROW_VARIANCE_C_NAME` ('Add'), `IP_LDA_ID` (bridge to an LDA record — see below). Defines the *row layout per stay*, not values — includes rows that were never filled. |
 | `IP_FLO_GP_DATA` | Global `FLO_MEAS_ID → DISP_NAME` dictionary (patient-agnostic master file). | 103 | e.g. `5`=BP, `8`=Pulse, `10`=SpO2, `11`=Height, `14`=Weight, `5445`=BMI. |
 | `IP_FLT_DATA` | Flowsheet TEMPLATE dictionary `TEMPLATE_ID → DISPLAY_NAME`. | 12 | e.g. `20`/`171`=Encounter Vitals, `30`=Patient-Reported Data, `281`=ADULT WELLNESS SCREENINGS. Joins from `IP_FLWSHT_MEAS.FLT_ID`. |
-| `IP_FLOW_DATERNG` | Which flowsheet date-templates were active for a stay. Key `(INPATIENT_DATA_ID, LINE)`. | 51 | `FLOWSHEET_DATE_ID`(+display): 'Travel', 'Disease Screening', 'Custom Formula Data'. Peripheral. |
-| `IP_FS_ORD_IX_ID` | Index tying flowsheet rows to a flowsheet-row-*order* id. Key `(INPATIENT_DATA_ID, GROUP_LINE, VALUE_LINE)`. | 8 | `IX_FLOW_RW_ORD_ID` is a **separate id space** — does NOT join to `ORDER_PROC.ORDER_PROC_ID` (verified 0 matches). Rarely needed. |
+| `IP_FLOW_DATERNG` | Which flowsheet date-templates were active for a stay. Key `(INPATIENT_DATA_ID, LINE)`. | 51 | `FLOWSHEET_DATE_ID`(+display), e.g. 'Travel', 'Disease Screening', 'Encounter Vitals' — one row per (stay, date-template) the stay activated. Peripheral. |
+| `IP_FS_ORD_IX_ID` | Index tying flowsheet rows to *medication orders* charted against them. Key `(INPATIENT_DATA_ID, GROUP_LINE, VALUE_LINE)`. | 8 | `IX_FLOW_RW_ORD_ID` is a **med-order id** (§41 two ID spaces): it joins `ORDER_MED.ORDER_MED_ID` (8/8 here), NOT `ORDER_PROC.ORDER_PROC_ID` (0 matches — the classic ORD/MED id-space split). `(INPATIENT_DATA_ID, GROUP_LINE)` is the documented FK to `IP_FLOWSHEET_ROWS.(INPATIENT_DATA_ID, LINE)` — med orders attached to a flowsheet row. |
+| `FLWSHT_SINGL_COL` | Last-filed instant per row on single-column flowsheet templates. Key `(FSD_ID, LINE)`. | 3 | `FSD_ID → IP_FLWSHT_REC`, `SINGLE_FLO_ID → IP_FLO_GP_DATA.FLO_MEAS_ID`. `SINGLE_RCRD_IN_DTTM` is a **UTC instant** (§19) — unlike the local-time `RECORDED_TIME` on MEAS. |
+| `PEF_NTFY_INSTR` | Care Companion *patient-entered-flowsheet* alert config. Key `EPISODE_ID` (joins `EPISODE`). | 1 | `PEF_PAT_SPEC_INSTR` (free-text instructions; empty here), `PEF_SNOOZE_ALRT_YN`. Config, not measurements — related to the domain via the patient-entered mechanism (gotcha 10), not via FSD keys. |
+
+**LDA mini-family.** `IP_LDA_NOADDSINGLE` (1 row here) is the LDA — lines/drains/airways — master
+record, unusually rich for this domain: it carries `PAT_ID`, `PAT_ENC_CSN_ID` (resolves to `PAT_ENC`),
+`FSD_ID`, and `FLO_MEAS_ID` directly. `LINES_DRAINS_LIST.(PAT_ID, IP_LDA_ID)` lists a patient's LDAs;
+`IP_LDA_INPS_USED.(IP_LDA_ID, INP_ID)` names the stays it was charted on (`INP_ID` =
+`INPATIENT_DATA_ID`, joining `IP_FLWSHT_REC`/`PAT_ENC`); `IP_FLOWSHEET_ROWS.IP_LDA_ID` bridges a
+row-layout row back to its LDA. Genre twist: the LDA master is not only invasive lines — in an
+outpatient export it can hold a travel "Trip" record (`TRIP_REGION_ID`/`TRIP_BEGIN_DATE`/`TRIP_END_DATE`
+populated, `PLACEMENT_INSTANT`/`REMOVAL_INSTANT` null) tied to the 'Trips'/'Travel' templates; inpatient
+exports use the same shape for placement/removal-instant line, drain, and wound records.
 
 No `IP_FLWSHT_MEAS` supplement tables (`_2`, `_3`) are populated here, and no flowsheet-related table is
 fully empty in this specimen.
@@ -33,7 +47,7 @@ All verified against rows in this specimen.
 - **Measurement value (the mandatory pairing):** `IP_FLWSHT_MEAS.(FSD_ID, LINE) = V_EHI_FLO_MEAS_VALUE.(FSD_ID, LINE)`.
   Exactly 1:1 (both 305 rows, 0 orphans either direction, 0 `FLO_MEAS_ID` mismatches). MEAS gives
   who/when, the view gives the reading. The view's own schema doc says it "should be used in tandem with
-  IP_FLWSHT_MEAS." (see §27 `V_EHI_*` export views.)
+  IP_FLWSHT_MEAS." (see §47 `V_EHI_*` export views.)
 - **Measurement → stay/date/patient:** `IP_FLWSHT_MEAS.FSD_ID = IP_FLWSHT_REC.FSD_ID` → gives
   `INPATIENT_DATA_ID`, `RECORD_DATE`, `PAT_ID`. One `INPATIENT_DATA_ID` can own **multiple** `FSD_ID`s
   (a stay straddling two calendar days — see gotchas).
@@ -42,7 +56,7 @@ All verified against rows in this specimen.
   `PAT_ENC` (100% tie-back). This is how a BP gets back to "the 9/28/2023 office visit." (see §2 CSN.)
 - **Measure code → name:** `IP_FLWSHT_MEAS.FLO_MEAS_ID = IP_FLO_GP_DATA.FLO_MEAS_ID` (display name).
   Every measured `FLO_MEAS_ID` (71 distinct) is present in the dictionary. The `_DISP_NAME` companion is
-  also denormalized inline on MEAS and the view (§4), so you usually don't need the join.
+  also denormalized inline on MEAS and the view (§6), so you usually don't need the join.
 - **Measure → template:** `IP_FLWSHT_MEAS.FLT_ID = IP_FLT_DATA.TEMPLATE_ID` (template display name).
   Also denormalized as `FLT_ID_DISPLAY_NAME` on MEAS.
 - **Row layout for a stay:** `IP_FLOWSHEET_ROWS.INPATIENT_DATA_ID = IP_FLWSHT_REC.INPATIENT_DATA_ID`.
@@ -65,7 +79,7 @@ Largely **n/a** for this domain — flowsheet values are themselves structured.
 
 1. **The value isn't in the spine table — it's in a view.** `IP_FLWSHT_MEAS` deliberately ships *without*
    its raw `MEAS_VALUE` column (Epic stores it internally packed/encoded). **Mechanism:** the exporter
-   adds `V_EHI_FLO_MEAS_VALUE` to externalize it into display form (§27). **Handle:** never read a vital
+   adds `V_EHI_FLO_MEAS_VALUE` to externalize it into display form (§47). **Handle:** never read a vital
    from MEAS alone — always join the view on `(FSD_ID, LINE)`. A query that selects only from MEAS gets
    metadata and no reading.
 
@@ -74,35 +88,37 @@ Largely **n/a** for this domain — flowsheet values are themselves structured.
    the value type tells you the shape. Seen here: `Numeric Type` (Pulse, BMI, SpO2 — a bare number),
    `Blood Pressure` (a pre-rendered `'132/64'` string, **not** two columns), `Patient Weight` /
    `Patient Height` (numbers in special units — see #3), `Custom List` (human-readable answer text stored
-   directly), `String Type`, `Category Type`, `Date`. **Handle:** branch on `VALUE_TYPE_C_NAME`; to parse
-   BP, split `MEAS_VALUE_EXTERNAL` on `/`.
+   directly), `String Type`, `Category Type`, `Date`, and `Networked` (a reading fed from a device —
+   `FLO_NETWORKED_INI` / `CAPTURE_DEVICE_ID` on MEAS name the source; not every value is human-entered or
+   calculated). **Handle:** branch on `VALUE_TYPE_C_NAME`; to parse BP, split `MEAS_VALUE_EXTERNAL` on `/`.
 
 3. **Weight is in OUNCES (with decimals); height in inches.** A weight reads `2880` or `2931.2`.
    **Mechanism:** Epic stores Patient Weight in its base smallest unit (ounces), and the export carries
-   that bare number with the unit in a *separate* `UNITS` column (`'ounces'`) — the §22 "unit in a column"
+   that bare number with the unit in a *separate* `UNITS` column (`'ounces'`) — the §29 "unit in a column"
    pattern. `2880 oz / 16 = 180 lb`; `2931.2 oz = 183.2 lb`. The fractional ounces are real precision, not
    noise. Height is in `inches` as expected (`71.25`). **Handle:** always read `UNITS`; divide weight by 16
    for pounds. Never assume a vital's unit from its name.
 
 4. **One vitals capture explodes into dozens of auto-calculated rows.** A single FSD here has 39 measure
-   lines, but only ~5 (Weight/Height/BP/Pulse, plus the BP location/position/cuff context) were entered by
+   lines (the specimen max is ~47), but only ~5 (Weight/Height/BP/Pulse, plus the BP location/position/cuff context) were entered by
    a human. **Mechanism:** Epic formula templates instantiate derived rows on capture — BSA (Haycock),
    IBW male/female, tidal volumes at 6/8/10 cc/kg, multiple BMI variants, "Adenosine total mg." These are
    computed, not measured, and are real `IP_FLWSHT_MEAS` rows. **Handle:** a raw `COUNT(*)` of measurements
-   wildly overstates "vitals taken" (§9). Filter to the `FLO_MEAS_ID`s you care about (`5,8,10,11,14`,
+   wildly overstates "vitals taken" (§12). Filter to the `FLO_MEAS_ID`s you care about (`5,8,10,11,14`,
    etc.); don't treat calc rows as observations. There is no clean boolean separating "entered" from
    "calculated" here — you identify them by `FLO_MEAS_ID` / display name.
 
 5. **`FLO_CNCT_DATE_REAL` on the MEAS table is NOT a contact date — do not sort by it.** It looks like a
-   `*_DATE_REAL` (§10) but converting it gives nonsense (66376 → 2022-09-24 on a row actually recorded
-   9/28/2023), and it is **constant per `FLO_MEAS_ID`** across every FSD (Height always `62349.00`, Weight
-   always `58666.00`). **Mechanism:** it is an internal flowsheet-measure attribute (the measure
-   definition's own connection date_real), not the time this reading was taken. **Handle:** for the
+   `*_DATE_REAL` (§18) but converting it gives nonsense (66376 → 2022-09-24 on a row actually recorded
+   9/28/2023), and it is **(near-)constant per `FLO_MEAS_ID`** across FSDs — in one specimen 63 of 71
+   measures carry a single value and 8 carry two, the value stepping between charting eras.
+   **Mechanism:** it is the FLO measure *definition's* own contact date_real, refreshed when the measure
+   record is edited — never the time this reading was taken. **Handle:** for the
    *measurement* time use `RECORDED_TIME` (when taken) or `ENTRY_TIME` (when charted — these can differ by
    hours: a weight recorded 9:41 AM but entered 11:27 AM). For *chronological sorting* across encounters,
    join up to `PAT_ENC` and order by `CAST(PAT_ENC.PAT_ENC_DATE_REAL AS REAL)` (verified correct order).
 
-6. **Every text date here sorts lexically and lies (§10/§11).** `RECORDED_TIME`, `ENTRY_TIME`, and
+6. **Every text date here sorts lexically and lies (§17/§18).** `RECORDED_TIME`, `ENTRY_TIME`, and
    `IP_FLWSHT_REC.RECORD_DATE` are text. `MIN(RECORD_DATE)`/`MAX(RECORD_DATE)` reports 1/9/2020–9/28/2023
    when the true span is 8/9/2018–12/4/2025 ("8/..." > "12/..." lexically). `ORDER BY RECORDED_TIME` puts
    "9/28/2023" before "8/9/2018." **Handle:** never `ORDER BY`/`MIN`/`MAX` on these text columns; route
@@ -120,14 +136,25 @@ Largely **n/a** for this domain — flowsheet values are themselves structured.
    straddle land in separate daily FSDs under one stay/encounter. **Handle:** group by `INPATIENT_DATA_ID`
    (or the resulting CSN), not by `FSD_ID` or `RECORD_DATE`, when you want "one visit."
 
-9. **PHQ-2 (and other screens) reassemble as `LINE`-numbered child rows (§7).** Within one FSD, the PHQ-2
+9. **PHQ-2 (and other screens) reassemble as `LINE`-numbered child rows (§9).** Within one FSD, the PHQ-2
    appears as: the two items ("1. Little interest…" = `FLO_MEAS_ID` 2100100050, "2. Feeling down…" =
    2100100051, each a `Custom List` 0–3 answer), then the total score **twice** — once as
    `FLO_MEAS_ID=16752` (`Numeric Type`) and once as `28282` (`String Type`), same value. **Mechanism:**
    Epic publishes the same scored item under multiple flowsheet rows for different downstream consumers;
    the catalog (`IP_FLOWSHEET_ROWS`) even lists a third `5856` "PHQ-2 Total Score (RETIRED)." **Handle:**
    to get one score per screening, pick a single `FLO_MEAS_ID` (16752, the live numeric) and don't sum the
-   duplicates. Reassemble the whole instrument by ordering on `CAST(LINE AS INT)` within the FSD.
+   duplicates — the numeric and string totals are not always co-published (some FSDs carry only the
+   numeric), another reason to standardize on 16752. Reassemble the whole instrument by ordering on
+   `CAST(LINE AS INT)` within the FSD.
+
+10. **Not every flowsheet row was charted by staff.** Rows on `IP_FLWSHT_MEAS` with `MYPT_ID` set and
+   `PAT_REPORTED_STATUS_C_NAME` = 'Patient reported, not clinician validated' (27 of 305 in one specimen,
+   across several questionnaire templates) are MyChart **patient-entered** data; rows with
+   `ISACCEPTED_YN='N'` (with `USER_PENDED_BY_ID`/`INSTANT_PENDED_DTTM` populated) were **pended and never
+   accepted**. **Mechanism:** MyChart questionnaires and Care Companion tasks file into the same flowsheet
+   store as staff charting; a clinician may accept, pend, or never validate them. **Handle:** filter or
+   label on `MYPT_ID` / `PAT_REPORTED_STATUS_C_NAME` / `ISACCEPTED_YN` before treating flowsheet rows as
+   clinician-verified vitals.
 
 ## Recipes
 
@@ -197,15 +224,16 @@ WHERE r.INPATIENT_DATA_ID = :inpatient_data_id;
 
 ## Open questions / specimen notes
 
-- **Sparse vital coverage (specimen).** Only BP/Pulse/Weight/Height are captured at most of the 24 flowsheet
-  encounters; SpO2 appears at just 2; Temp/Resp do not appear at all. This is a per-visit charting choice,
-  not a schema limitation — other exports will carry the full vital set.
-- **`FLO_CNCT_DATE_REAL` exact semantics (genre).** Verified it is per-`FLO_MEAS_ID`-constant and not the
-  reading time; its precise internal meaning (measure-definition contact date_real) is inferred, not
-  confirmed from a schema doc. Treat it as "do not use as a timestamp."
+- **Sparse vital coverage (specimen).** Core vitals (BP/Pulse/Weight/Height) appear at only 9 of the 24
+  flowsheet stays — the majority of flowsheet stays are screening-only (Travel / Disease Screening /
+  patient-reported questionnaires) with no vital at all; SpO2 appears at just 2; Temp/Resp never. A
+  flowsheet encounter is NOT presumptively a vitals encounter. This is a per-visit charting choice, not a
+  schema limitation — other exports will carry the full vital set.
+- **`FLO_CNCT_DATE_REAL` exact semantics (genre).** Verified it is near-constant per `FLO_MEAS_ID` (it
+  steps only when the measure definition is re-contacted) and never the reading time; its precise internal
+  meaning (measure-definition contact date_real) is inferred, not confirmed from a schema doc. Treat it as
+  "do not use as a timestamp."
 - **`DAILY_NET` empty (specimen).** `IP_FLWSHT_REC.DAILY_NET` is null for every row — it is populated only
   for intake/output flowsheets, which this outpatient-heavy record never had.
-- **`IP_FS_ORD_IX_ID` id space (genre).** `IX_FLOW_RW_ORD_ID` (e.g. 1034471688) joins to nothing in this
-  export (0 matches against `ORDER_PROC`); its target order table appears absent. Rarely needed for vitals.
 - **`MEAS_COMMENT` empty (specimen).** No per-measurement free text present; the column exists and would
   hold short inline comments if used.

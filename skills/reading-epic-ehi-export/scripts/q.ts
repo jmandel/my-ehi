@@ -15,6 +15,16 @@ const sql = (asTable ? args.slice(1) : args).join(" ");
 if (!sql.trim()) { console.error('usage: bun lib/q.ts "<SQL>"'); process.exit(1); }
 const db = new Database(process.env.EHI_DB ?? "./db/ehi.sqlite", { readonly: true });
 db.run("PRAGMA busy_timeout = 8000"); // ride out transient WAL locks instead of throwing SQLITE_BUSY
+// Half-build guard: a data-only load (load-ehi-sqlite.ts without load-schema-docs.ts) leaves the
+// schema catalog absent, so any JOIN _schema_table/_schema_column fails. Warn once, don't block.
+if (!db.query("SELECT 1 FROM sqlite_master WHERE type='table' AND name='_schema_table'").get()) {
+  console.error("warning: _schema_table missing — DB built without schema docs. Run: bun .../scripts/load.ts <raw> <db>");
+}
+// PHI guard: shout if this DB was loaded from an unredacted source (provenance stamp from load-ehi-sqlite).
+if (db.query("SELECT 1 FROM sqlite_master WHERE type='table' AND name='_provenance'").get() &&
+    db.query("SELECT 1 FROM _provenance WHERE looks_unredacted=1").get()) {
+  console.error("*** PHI WARNING: this DB was loaded from an UNREDACTED source — full PHI. Do not publish or build viewmodels from it. ***");
+}
 const rows = db.query(sql).all() as Record<string, unknown>[];
 if (!asTable) { console.log(JSON.stringify(rows, null, 2)); process.exit(0); }
 if (rows.length === 0) { console.log("(0 rows)"); process.exit(0); }

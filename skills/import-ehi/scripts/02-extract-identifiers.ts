@@ -7,12 +7,13 @@
 // ACCOUNT/ACCT_*, V_EHI_COVERAGE_SUBS). It does NOT touch org/payor/provider phones (those are public
 // business numbers, not PHI). Output → redact/identifiers.json (gitignored). Prints COUNTS ONLY, never values.
 //
-//   bun skills/import-ehi/scripts/02-extract-identifiers.ts            # DB at ./db/ehi.sqlite
+//   bun skills/import-ehi/scripts/02-extract-identifiers.ts            # DB at ./db/ehi.unredacted.sqlite
 //
 import { Database } from "bun:sqlite";
 import { mkdirSync, writeFileSync } from "node:fs";
 
-const db = new Database(process.env.EHI_DB ?? "./db/ehi.sqlite", { readonly: true });
+// Reads the FULL-PHI import DB that 01-extract built (default path matches 01's default).
+const db = new Database(process.env.EHI_DB ?? "./db/ehi.unredacted.sqlite", { readonly: true });
 db.run("PRAGMA busy_timeout=8000");
 
 // table.column → identifier type + whose it is. Patient NAME is extracted but defaults to KEEP (public).

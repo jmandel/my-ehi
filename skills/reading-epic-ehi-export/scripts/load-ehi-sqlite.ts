@@ -49,6 +49,18 @@ db.run("PRAGMA synchronous = OFF");
 
 const q = (id: string) => '"' + id.replace(/"/g, '""') + '"';
 
+// Provenance stamp: record the source folder and whether it looks like the full-PHI unredacted
+// export, so a PHI-bearing DB self-announces wherever it is opened (q.ts warns; build-site refuses to
+// publish one). A redacted analysis DB and an unredacted import DB are otherwise indistinguishable by
+// filename — this is the guard against a viewmodel/publish being populated from unredacted data.
+const looksUnredacted = /unredacted/i.test(rawDir) ? 1 : 0;
+db.run(`CREATE TABLE _provenance (source_dir TEXT, looks_unredacted INTEGER, loaded_at TEXT)`);
+db.run(`INSERT INTO _provenance VALUES (?, ?, ?)`, [rawDir, looksUnredacted, new Date().toISOString()]);
+if (looksUnredacted) {
+  console.warn(`\n*** PHI WARNING: source "${rawDir}" looks UNREDACTED — ${outDb} will contain full PHI.`);
+  console.warn(`*** Do NOT build deep-dives/viewmodels or publish from this DB. Rebuild from redacted raw/ first.\n`);
+}
+
 // Catalog of what we loaded, queryable as a normal table.
 db.run(`CREATE TABLE _tables (
   table_name TEXT PRIMARY KEY,

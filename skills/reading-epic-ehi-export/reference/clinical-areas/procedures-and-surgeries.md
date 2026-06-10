@@ -11,46 +11,48 @@ on, §2) and `PAT_ID` (§1). Surgical history rows tie to the encounter where th
 | table | role | rows in specimen | notes |
 |---|---|---|---|
 | `ORDER_PROC` | **Spine.** One row per ordered procedure (header). | 42 | Covers ALL order types: `ORDER_TYPE_C_NAME` ∈ Lab, Microbiology, Imaging, Outpatient Referral, Immunization/Injection. **No surgical/OR procedure orders in this specimen.** PK `ORDER_PROC_ID`, FK `PROC_ID`→`CLARITY_EAP`. |
-| `ORDER_PROC_2` … `ORDER_PROC_6` | Numbered supplements (1:1 on `ORDER_PROC_ID`, §6). | 42 each | More columns of the same order: specimen handling, charge timestamps, `REMARKS_HNO_ID` (note tie-back), referral routing. Left-join the stack. |
-| `CLARITY_EAP` (+`_3`,`_5`) | Procedure master file (EAP). `PROC_ID`→`PROC_NAME`. | 64 | The Rosetta for every `PROC_ID` — orderable AND charge procedures both live here. `_3.PT_FRIENDLY_NAME` is a layperson name: **blank for order-side `PROC_ID`s, populated for most charge-side ones** (29/64 rows) — see Gotcha 5. CPT is absent. |
-| `ORDER_DX_PROC` | Diagnoses attached to an order (`LINE` child rows, §7). | 41 | `(ORDER_PROC_ID, LINE)` → `DX_ID`→`CLARITY_EDG`. Why a procedure was ordered. |
-| `ORDER_NARRATIVE` | Line-exploded procedure result/report text (§8). | 465 | `(ORDER_PROC_ID, LINE)`, one physical line per row. Imaging reads + a couple lab interp blocks. 6 distinct orders here. |
+| `ORDER_PROC_2` … `ORDER_PROC_6` | Numbered supplements (1:1 on the order id, §8). | 42 each | More columns of the same order: specimen handling, charge timestamps, `REMARKS_HNO_ID` (note tie-back), referral routing. Left-join the stack. **Key-name drift:** only `_2` calls the key `ORDER_PROC_ID`; `_3`…`_6` name it `ORDER_ID` (same values) — join `ORDER_PROC.ORDER_PROC_ID = ORDER_PROC_3.ORDER_ID`, etc. |
+| `CLARITY_EAP` (+`_3`,`_5`) | Procedure master file (EAP). `PROC_ID`→`PROC_NAME`. | 64 | The Rosetta for every `PROC_ID` — orderable AND charge procedures both live here. `_3.PT_FRIENDLY_NAME` is a layperson name: **blank for order-side `PROC_ID`s, populated for most charge-side ones** (29/64 rows) — see Gotcha 5. No CPT column here — but CPT is recoverable from the remittance side (Gotcha 5, Recipe 6). |
+| `ORDER_DX_PROC` | Diagnoses attached to an order (`LINE` child rows, §9). | 41 | `(ORDER_PROC_ID, LINE)` → `DX_ID`→`CLARITY_EDG`. Why a procedure was ordered. |
+| `ORDER_NARRATIVE` | Line-exploded procedure result/report text (§11). | 465 | `(ORDER_PROC_ID, LINE)`, one physical line per row. Imaging reads + a couple lab interp blocks. 6 distinct orders here. |
 | `ORDER_IMPRESSION` | Radiologist **impression** lines for imaging. | 11 | `(ORDER_PROC_ID, LINE)` → `IMPRESSION` text. The "bottom line" of a read. |
 | `ORDER_RAD_READING` | Reading physician for an imaging study. | 4 | `(ORDER_PROC_ID, LINE)` → `PROV_ID`→`CLARITY_SER`. External reads show "GENERIC EXTERNAL DATA PROVIDER". |
 | `ORDER_PARENT_INFO` | Panel/parent linkage for an order. | 42 | `ORDER_ID`/`PARENT_ORDER_ID`; 31/42 self-referential, but **11 rows encode a real parent→child link** (the parent is a distinct, present `ORDER_PROC_ID`). |
 | `ORD_PROC_INSTR` | Free-text process instructions on an order. | 9 | `(ORDER_ID, LINE)` → `ORDER_PROC_INSTR`. |
 | `ORDER_SIGNED_PROC` | Verbal/cosign provenance for an order. | 4 | Who gave/cosigned the verbal order, with timestamps. |
 | `ORDER_RESULTS` | Discrete lab result components. | 47 | See the **labs** guide. Imaging has *no* `ORDER_RESULTS` rows — its result is the narrative. |
-| `SURGICAL_HX` | **Patient-reported surgical history** (clinical-history `_HX`, §17). | 8 | All 8 rows = the *same* surgery re-snapshotted once per encounter (§19). `PROC_ID`→`CLARITY_EAP`. |
+| `SURGICAL_HX` | **Patient-reported surgical history** (clinical-history `_HX`, §31). | 8 | All 8 rows = the *same* surgery re-snapshotted once per encounter (§34). `PROC_ID`→`CLARITY_EAP`. |
 | `HV_ORDER_PROC` | Hospital-visit (inpatient) procedure-order extension. | 42 | 1:1 on `ORDER_PROC_ID`; admit/transfer/discharge order fields. Mostly empty for an ambulatory patient. |
 | `ARPB_TRANSACTIONS` | Pro-fee billing transactions (charges/payments). | 151 | Charges carry `PROC_ID` (a **charge-side** EAP record) + `MODIFIER_ONE`..`_FOUR`. The billing face of a procedure. See **billing** guide. |
-| `ARPB_DISCOUNT_PROC` | Discount procedures on a charge. | 5 | `(TX_ID, LINE)` → `DISCOUNT_PROC_ID`. |
-| `TIMEOUT` | Pre-procedure safety time-out / Procedure Pass. | 2 | Keyed `PAT_CSN`. Skeletal here (type/attest fields blank). |
+| `ARPB_DISCOUNT_PROC` | Discount procedures on a charge. | 5 | `(TX_ID, LINE)` → `DISCOUNT_PROC_ID` — but that id does **not** resolve in the exported `CLARITY_EAP` slice (0/5 here): a pointer-survives gap (§15). The export materializes EAP rows only for procedures that were ordered or charged. |
+| `TIMEOUT` | Pre-procedure safety time-out / Procedure Pass. | 2 | PK `TIMEOUT_ID` (what `TIMEOUT_ANSWERS.RECORD_ID` joins); `PAT_CSN` links the contact (joins `PAT_ENC`). Skeletal here (type/attest fields blank). |
+| `TIMEOUT_ANSWERS` (+`_2`) | Per-question surgical-safety-checklist answers (correct patient/site/side, counts, …), contact-versioned. | 2 each | `RECORD_ID` → `TIMEOUT.TIMEOUT_ID`. In this specimen only the contact-date skeleton survived — every answer `_C_NAME` is blank, same export-stripping as the `TIMEOUT` header. |
 | `REFERRAL_PX` | Procedures associated with a referral. | 10 | `(REFERRAL_ID, LINE)` → `PX_ID` (an EAP procedure) with requested/approved units. |
 | `HSP_ADMIT_PROC` *(peripheral)* | Hospital admission procedure. | 1 | Inpatient admit-order shape; near-empty here. |
 | `PAT_CANCEL_PROC` *(peripheral)* | Cancelled procedure record. | 1 | |
-| `CATARACT_PLANNING_GOALS` / `_INFO` *(EMPTY-ish)* | Cataract-surgery planning. | 1 / 1 | Specialty surgical-planning tables; present but skeletal. Describe from schema only. |
+| `CATARACT_PLANNING_GOALS` / `_INFO` *(EMPTY-ish)* | Cataract-surgery planning. | 1 / 1 | Keyed `SUMMARY_BLOCK_ID` = `EPISODE.EPISODE_ID` (the HSB episode master). A companion-row placeholder (§46): the row ships because an episode exists, with every cataract payload column NULL. Describe from schema only. |
 | `NSQIP_OPIOIDS_DISCHARGE` *(peripheral)* | Surgical-registry (NSQIP) discharge opioids. | 1 | A surgical-quality-registry table — appears even without a coded OR procedure. |
 
 > **There is no dedicated "surgery performed" table in a typical ambulatory EHI export.** Epic's OR/surgical
 > case tables (`OR_LOG`, `OR_CASE`, `OR_PROC`, anesthesia tables) only ship when the org runs Epic OpTime
-> and the patient had a surgery there. Here their schema docs ship (≈892 `OR_*` table docs exist in
-> `_schema_table`) but **not one is populated** — the only trace of a surgery is the patient-reported
+> and the patient had a surgery there. Here their schema docs ship (≈619 `OR_`-prefixed table docs in
+> `_schema_table` — measure with `LIKE 'OR\_%' ESCAPE '\'`; the unescaped pattern also matches `ORDER_*`/`ORD_*`
+> and inflates the count, this skill's own ESCAPE gotcha biting its own guide) but **not one is populated** — the only trace of a surgery is the patient-reported
 > `SURGICAL_HX` row. If your export has OR cases, expect `OR_LOG`/`LOG_*` keyed by a surgical-log id, joined
 > to `ORDER_PROC` via the case's procedure order.
 
 ## How they join
 - **`ORDER_PROC.PROC_ID = CLARITY_EAP.PROC_ID`** — resolve an order's procedure to its name. *Verified:*
-  all 19 distinct order-side `PROC_ID`s resolve (0 unmatched). (§3 master-file IDs)
+  all 19 distinct order-side `PROC_ID`s resolve (0 unmatched). (§5 master-file IDs)
 - **`ORDER_PROC.PAT_ENC_CSN_ID = PAT_ENC.PAT_ENC_CSN_ID`** — order → its contact. *Verified:* 42/42 match.
   Note this is the **resulting/placing contact**, often a different CSN than the office visit (§2; for labs,
   the order-placed CSN and the result CSN differ — see labs guide).
 - **`ORDER_DX_PROC.ORDER_PROC_ID = ORDER_PROC.ORDER_PROC_ID`**, then **`ORDER_DX_PROC.DX_ID = CLARITY_EDG.DX_ID`** —
   the indication(s) for a procedure. *Verified:* e.g. XR CERVICAL SPINE → DX "Cervicalgia"; AMB REFERRAL TO
-  ALLERGY → "Past history of nut allergy". `LINE` 1..N = multiple diagnoses (§7).
+  ALLERGY → "Past history of nut allergy". `LINE` 1..N = multiple diagnoses (§9).
 - **`ORDER_NARRATIVE.ORDER_PROC_ID = ORDER_PROC.ORDER_PROC_ID`**, reassemble `ORDER BY CAST(LINE AS INT)` —
   the imaging report / result text. *Verified:* `439060613` MRI BRAIN reassembles to the radiologist read.
-  **`LINE` is text — cast to INT or it sorts 1,10,11,2** (§8).
+  **`LINE` is text — cast to INT or it sorts 1,10,11,2** (§17).
 - **`ORDER_IMPRESSION.ORDER_PROC_ID` / `ORDER_RAD_READING.ORDER_PROC_ID = ORDER_PROC.ORDER_PROC_ID`** —
   impression text and reading physician for imaging. *Verified:* `1025926289` (XR C-spine) impression =
   "Normal cervical spine radiographs", read by SHORE, MATTHEW W (`ORDER_RAD_READING.PROV_ID`→`CLARITY_SER`).
@@ -67,7 +69,7 @@ on, §2) and `PAT_ID` (§1). Surgical history rows tie to the encounter where th
 ## Unstructured tie-back
 Procedures are unusually note-heavy because **imaging results are stored only as free text**, not as
 discrete `ORDER_RESULTS` components:
-- **Imaging report body** → `ORDER_NARRATIVE(ORDER_PROC_ID, LINE)`, line-exploded (§8). Reassemble in
+- **Imaging report body** → `ORDER_NARRATIVE(ORDER_PROC_ID, LINE)`, line-exploded (§11). Reassemble in
   `CAST(LINE AS INT)` order. This is the *entire* result for a radiology study.
 - **Imaging impression** → `ORDER_IMPRESSION(ORDER_PROC_ID, LINE)` — the short "IMPRESSION:" conclusion,
   separate from (and usually echoing the tail of) the narrative.
@@ -88,10 +90,10 @@ discrete `ORDER_RESULTS` components:
    (Lab/Microbiology/Imaging/Outpatient Referral/Immunization-Injection), refined by **`ORDER_CLASS_C_NAME`**
    (Lab Collect / Clinic Performed / Ancillary Performed / Historical / Internal vs External Referral).
    *Handle:* to separate "real procedures vs labs" you filter `ORDER_TYPE_C_NAME`, not a `PROC_CLASS` column.
-   The schema doc's hoped-for `PROC_CAT_C_NAME` does **not** exist in the data (§5) — use `ORDER_TYPE_C_NAME`.
+   The schema doc's hoped-for `PROC_CAT_C_NAME` does **not** exist in the data (§7) — use `ORDER_TYPE_C_NAME`.
 2. **A surgery shows up *only* in `SURGICAL_HX`, as patient-reported history, repeated once per encounter.**
    *Observe:* 8 `SURGICAL_HX` rows, all `PROC_ID = 42500` = "WISDOM TOOTH EXTRACTION", all `LINE = 1`.
-   *Mechanism:* this is the per-encounter re-snapshot of a history section (§19) — each time the surgical-Hx
+   *Mechanism:* this is the per-encounter re-snapshot of a history section (§34) — each time the surgical-Hx
    section is reviewed at a visit, Epic re-files the full list tagged with that contact's CSN. It is *not* 8
    surgeries and it is *not* a performed-procedure record; it is one self-reported past surgery, asserted 8
    times. `SURGICAL_HX_SRC_C_NAME = "Provider"` marks who entered it. *Handle:* `COUNT(DISTINCT PROC_ID)` (or
@@ -107,14 +109,18 @@ discrete `ORDER_RESULTS` components:
    and **billing/charge** procedure records as distinct EAP entries (the charge record is what's transmitted
    on the claim; names are prefixed `PR`/`CHG`). They share the `CLARITY_EAP` table but not the same key.
    *Handle:* don't try to join orders to charges on `PROC_ID`. Bridge order↔charge via the encounter CSN
-   (`ORDER_PROC.PAT_ENC_CSN_ID = ARPB_TRANSACTIONS.PAT_ENC_CSN_ID`) and date, not via `PROC_ID`. (§15, §24)
-5. **No CPT/HCPCS code is exported — only Epic's internal `PROC_ID` and the display name.** *Observe:*
-   `CLARITY_EAP` has just `PROC_ID, PROC_NAME`; there is no
-   `PROC_CODE`/`CPT`/`PROC_IDENTIFIER` column anywhere populated for these rows. *Mechanism:* this org's
-   export ships the resolved procedure *name* but not the external code crosswalk (the same shape labs hit
-   with LOINC, §13/§14 friction). The transmitted procedure code that *would* read like "HC:99213:95" is not
-   present in this specimen's `ARPB_TRANSACTIONS`. *Handle:* identify procedures by `PROC_NAME` + `MODIFIER_*`;
-   treat CPT as **not recoverable** here unless a claim-detail table (`*_CLAIM_*`) carries it.
+   (`ORDER_PROC.PAT_ENC_CSN_ID = ARPB_TRANSACTIONS.PAT_ENC_CSN_ID`) and date, not via `PROC_ID`. (§27, §41)
+5. **CPT/HCPCS is absent from `CLARITY_EAP` and `ARPB_TRANSACTIONS` — but it IS recoverable from the
+   remittance side.** *Observe:* `CLARITY_EAP` has just `PROC_ID, PROC_NAME`, and the charge rows carry no
+   `PROC_CODE`/`CPT` column. But the 835-remittance service-line table `CL_RMT_SVCE_LN_INF` carries
+   `PROC_IDENTIFIER` in the qualifier-prefixed `"HC:<code>[:modifier]"` shape (§27), and its
+   `SVC_LINE_CHG_PB_ID` joins back to `ARPB_TRANSACTIONS.TX_ID`. In one specimen every PB charge resolved
+   this way (29/29 charges had ≥1 remittance line with a code). Hospital-billing lines additionally carry
+   line-level CPT in `HSP_TX_LINE_INFO.LL_CPT_CODE` and `HSP_CLP_CMS_LINE.HCPCS_CODES`. *Mechanism:* Epic
+   strips the transmitted code from the charge/master rows (the same crosswalk friction labs hit with LOINC,
+   §27), but the **payer's remittance echo** (the `CL_RMT_*` family = ANSI-835 tables, keyed `IMAGE_ID`)
+   retains exactly what was billed. *Handle:* identify procedures by `PROC_NAME` + `MODIFIER_*`, and recover
+   the billed CPT for adjudicated charges via Recipe 6; unadjudicated charges (no remittance yet) stay name-only.
    *Patient-friendly names:* `CLARITY_EAP_3.PT_FRIENDLY_NAME` carries layperson descriptions (e.g.
    "Hemoglobin A1C level") for **most charge-side `PROC_ID`s but is blank for every order-side one** — so to
    show a patient-friendly procedure name, resolve charge `PROC_ID`s with
@@ -128,11 +134,13 @@ discrete `ORDER_RESULTS` components:
    that nonetheless have zero structured results.)
 7. **`ORDER_CLASS_C_NAME = "Historical"` and `"Ancillary/Clinic Performed"` change provenance, not status.**
    *Observe:* some imaging/labs are class "Historical" (outside results scanned in); their imaging reads in
-   `ORDER_RAD_READING.PROV_ID` resolve to "GENERIC EXTERNAL DATA PROVIDER" (`RESULT_LAB_ID_LLB_NAME` is blank
-   here, so provenance comes from the reading-physician row, not that column). *Mechanism:* Epic
+   `ORDER_RAD_READING.PROV_ID` resolve to "GENERIC EXTERNAL DATA PROVIDER". `RESULT_LAB_ID_LLB_NAME`
+   (resulting-agency name) is populated on in-house orders but blank on these Historical/externally-imported
+   imaging rows — for *those*, provenance comes from the reading-physician sentinel, not that column (don't
+   write the column off as empty; it's a working provenance column for in-house work). *Mechanism:* Epic
    marks externally-sourced results as Historical so they don't re-bill/re-collect. *Handle:* class tells you
    whether the result was generated in-house vs imported; `ORDER_STATUS_C_NAME` (Completed/Canceled/Sent) is
-   the lifecycle (§16).
+   the lifecycle (§30).
 
 ## Recipes
 ```sql
@@ -160,11 +168,13 @@ LEFT JOIN CLARITY_EAP e ON s.PROC_ID = e.PROC_ID
 GROUP BY s.PROC_ID, e.PROC_NAME;
 
 -- 3. Reassemble an imaging report (narrative) + its impression for one study.
+--    NB: not every study has ORDER_IMPRESSION rows — some return narrative only, with the
+--    impression living solely in the narrative tail. (e.g. 439060613 here is narrative-only.)
 SELECT 'NARRATIVE' AS part, CAST(LINE AS INT) ln, NARRATIVE AS txt
-FROM ORDER_NARRATIVE WHERE ORDER_PROC_ID = '439060613'
+FROM ORDER_NARRATIVE WHERE ORDER_PROC_ID = '1025926289'
 UNION ALL
 SELECT 'IMPRESSION', CAST(LINE AS INT), IMPRESSION
-FROM ORDER_IMPRESSION WHERE ORDER_PROC_ID = '439060613'
+FROM ORDER_IMPRESSION WHERE ORDER_PROC_ID = '1025926289'
 ORDER BY part, ln;
 
 -- 4. Procedures as they hit pro-fee billing (charge name + modifiers + amount).
@@ -183,19 +193,29 @@ LEFT JOIN CLARITY_EAP eo       ON op.PROC_ID = eo.PROC_ID
 JOIN ARPB_TRANSACTIONS a       ON a.PAT_ENC_CSN_ID = op.PAT_ENC_CSN_ID AND a.TX_TYPE_C_NAME='Charge'
 LEFT JOIN CLARITY_EAP ec       ON a.PROC_ID = ec.PROC_ID
 ORDER BY a.SERVICE_DATE;
+
+-- 6. Recover the transmitted CPT/HCPCS for a charge from the 835-remittance echo (Gotcha 5).
+--    PROC_IDENTIFIER is qualifier-prefixed: 'HC:<code>' or 'HC:<code>:<modifier>' (§27).
+SELECT a.TX_ID, a.SERVICE_DATE, e.PROC_NAME, r.PROC_IDENTIFIER
+FROM ARPB_TRANSACTIONS a
+LEFT JOIN CLARITY_EAP e        ON a.PROC_ID = e.PROC_ID
+JOIN CL_RMT_SVCE_LN_INF r      ON r.SVC_LINE_CHG_PB_ID = a.TX_ID
+WHERE a.TX_TYPE_C_NAME = 'Charge'
+GROUP BY a.TX_ID, r.PROC_IDENTIFIER;   -- one charge can have several remittance lines (resubmissions)
 ```
 
 ## Open questions / specimen notes
 - **No operative procedure exists in this specimen at all** — no OpTime/`OR_LOG` tables, and the only surgery
   (wisdom tooth extraction) is self-reported history with empty date/comment fields. The OR-case join path is
   therefore described from the genre, not verified here.
-- **CPT/HCPCS is absent** from `CLARITY_EAP` and `ARPB_TRANSACTIONS` in this export. Whether another org's
-  export ships a transmitted `PROC_IDENTIFIER`/claim-detail code (the "HC:99213:95" shape referenced in §15)
-  is unverified against this specimen.
+- **CPT/HCPCS is absent from `CLARITY_EAP` and `ARPB_TRANSACTIONS`** but recoverable from the remittance
+  echo (`CL_RMT_SVCE_LN_INF.PROC_IDENTIFIER`, the "HC:" shape of §27) — see Gotcha 5 / Recipe 6. What remains
+  open is coverage in *other* exports: charges never adjudicated by a payer have no remittance line to echo
+  the code, so name-only identification is still the floor.
 - `ORDER_PARENT_INFO` is mixed: 31/42 rows are self-referential (`ORDER_ID = PARENT_ORDER_ID`), but **11
   rows do encode a genuine parent→child link** (the `PARENT_ORDER_ID` is a distinct, present `ORDER_PROC_ID`).
   `PANEL_PROC_ID` on `ORDER_PROC` is unpopulated, so the panel-membership variant is still unobserved here.
 - `TIMEOUT` (procedure safety time-out) exists with 2 rows but the type/attestation payload is blank — only
   the `PAT_CSN` + creation date survived the export, so it documents *that* a time-out occurred, not its content.
-- `REFERRAL_PX.PX_ID` (procedures on a referral) is a third place a `PROC_ID` appears; not chased to whether it
-  matches order- or charge-side EAP entries.
+- `REFERRAL_PX.PX_ID` (procedures on a referral) is **order-side** EAP (in one specimen 10/10 match order-side
+  `PROC_ID`s, 0 match charge-side) — it names the orderable being authorized, not the charge code.

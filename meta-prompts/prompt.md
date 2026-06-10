@@ -1,121 +1,155 @@
-# Understanding an Epic EHI Export — and building the skills to do it again
+# Understanding an Epic EHI export — and building the skills to do it again
 
-You're working in this folder. A subfolder contains the raw result of an Epic "EHI Export" of my health
-records — structured data (thousands of tab-separated tables, each with an HTML schema file) alongside
-unstructured material: full-text clinical notes and patient/provider secure messages. Treat that subfolder
-as a **read-only specimen**: you study it, you don't rewrite it.
+You're working in this folder. It starts with two things:
 
-**The core idea that should shape everything.** My export is one specimen of a genre — Epic EHI exports in
-general. Learn the species from this individual, then write a field guide to the species. Durable knowledge
-lives in the **skills** (how encounters are modeled, how time and snapshots work, which tables appear, how
-identifiers link things), useful to anyone holding *their own* Epic export who has never seen mine.
-Anything true only of *my* specimen — my name, my dates, my providers — lives in the **artifacts** you
-generate, never in the skills. Carry one habit relentlessly: every time you learn something, ask *"genre,
-or only this specimen?"* That question keeps the skills clean and portable. (The deep dives at the end are
-the exception: they're tied to my real record. The skill that explains how to build them stays generic.)
+- **`raw/`** — a **redacted, same-shape copy** of an Epic "EHI Export" of my health records: thousands of
+  tab-separated tables, one HTML schema doc per table, RTF clinical notes, secure messages. It is the
+  verified output of the import skill below. Treat it as a **read-only specimen**: you study it, you never
+  rewrite it.
+- **`skills/import-ehi/`** — an existing, finished skill that turns the original "Requested Record.zip"
+  into that redacted `raw/` (unzip → discover identifiers from structured columns + agentic free-text
+  sweep → human-reviewed term list → fuzzy-redact → *prove* zero residual). If you are ever handed a zip
+  instead of a `raw/`, run it first. Its full-PHI byproducts (`raw.unredacted/`, the term list, its DB)
+  are gitignored and stay that way.
+
+Your mission: develop **two further skills** on top of it — *reading* the export, and *building deep
+dives* from it — and then the deep dives themselves.
+
+**The core idea that should shape everything.** My export is one specimen of a genre — Epic EHI exports
+in general. Learn the species from this individual, then write a field guide to the species. Durable
+knowledge lives in the **skills**; anything true only of *my* specimen lives in **generated artifacts**,
+never in the skills. Carry one habit relentlessly: every time you learn something, ask *"genre, or only
+this specimen?"* A specimen number may appear in a skill only as a labeled illustration ("in one
+specimen, 169 encounters"), never as an asserted fact. (The deep dives at the end are the exception:
+they're tied to my real record. The skills that explain how to build them stay generic.)
+
+Because `raw/` is already redacted, you don't carry PHI anxiety through this project — what you carry is
+**portability discipline**, which looks similar but has a different reason: a skill stuffed with this
+specimen's worked values helps nobody else's export and bloats fast. Specimen values stay out of skills;
+describe the mechanism, not the cell. And when you audit your own documents, **value-grep** for
+transcribed specimen data — an instruction alone will not stop an agent from pasting a worked example.
 
 ## How to begin
 
-Start by exploring — but **lean on workflows and sub-agents from the start**, so you have real reach across
-a large export and synthesize rather than spot-check. Workflows are the default unit of work for this whole
-project: discovery, deriving the guides, drafting and stress-testing the skills, and building the deep dives
-all run through orchestrated sub-agents. **This is the part that breaks under pressure: the lead agent
-starts doing the work itself — skimming a few tables, writing from memory, building a view by hand — and
-the fan-out and the learning quietly vanish. Don't let that happen.** Your job as lead is to orchestrate and
-synthesize: pose the question, fan sub-agents across the data, reconcile what they bring back. Once you've
-got an initial handle, come back to me with any questions worth asking — I'd rather you ask than guess on
-something load-bearing. Then run the rest autonomously, checking in only when something genuinely needs my
-call.
+Start by exploring — but **lean on workflows and sub-agents from the start**. Workflows are the default
+unit of work for the whole project: discovery, deriving the guides, stress-testing the skills, building
+the dives. **This is the part that breaks under pressure: the lead starts doing the work itself —
+skimming a few tables, writing from memory, building a view by hand — and the coverage and the learning
+quietly vanish.** Your job as lead is to orchestrate and synthesize: pose the question, fan agents across
+the data, reconcile what they bring back. Once you have an initial handle, come back to me with the
+questions worth asking; then run autonomously, checking in only when something genuinely needs my call.
 
-## The first thing you write: your way of working
+Hard-won workflow craft — bake these into how you run every fan-out:
 
-Before the real digging, write down how you intend to operate — as the **opening of the Reading skill**, not
-a separate manifesto. This is the engine of that skill and the foundation of everything: the
-**top-down × bottom-up** method (what *should* an export contain? vs. what does this file actually show?),
-moving between hypothesis and test, between specimen and genre. Capture the reusable **workflow patterns**
-you settle into — fan-out reading, adversarial verification, loop-until-dry discovery, judge panels,
-file-output-with-a-receipt — as orchestration *shapes* described independently of any workflow syntax.
-
-Two principles deserve their own headlines because they decay first under pressure. **Go deep enough to
-explain *why*, not just *what*** — when a value or join looks quirky, form a hypothesis about how
-Epic/Chronicles produces that shape and test it against more rows until the mechanism is clear; a pattern
-you can explain mechanistically is one the next analyst can trust. **Use the skills while you write them** —
-the skills are the instructions your sub-agents operate under *right now*: hand each workflow the current
-draft, have its agents follow it, and require them to report exactly where it failed (missing, wrong,
-ambiguous, silently assumed). Those friction reports — not your impressions — drive each revision.
-Develop / use / refine is one loop, not three phases. Write all of this in plain, concrete language: a
-crisp principle, a plain explanation, a real example from actual fields.
+- **A standing preamble for every sub-agent.** Compose once and reuse: the DB access incantation, the
+  data traps (below), and the house rules (*genre not specimen · method not data · explain why*). Agents
+  without the preamble rediscover the traps one ruined query at a time.
+- **Artifacts to disk; returns are receipts.** Agents write their real output (a drafted guide, a
+  dataset) to files and return a receipt (path, counts, verdict) — schema-bound responses for judgments.
+  Then an interruption (a crash, a usage limit) loses only in-flight agents: finished work is already on
+  disk, and a journaled workflow resumes from where it stopped instead of re-spending.
+- **One writer per file per phase.** Parallel agents editing one file silently clobber each other.
+  Partition edits (one agent per guide); shared files get a single dedicated pass.
+- **Adversarial verification before anything load-bearing ships.** A claim a reader produced ("payments
+  match charges via TX_ID") gets an independent skeptic prompted to *refute* it against real rows. A
+  drafted document gets a verifier who did not write it: re-run every SQL recipe verbatim, check every
+  named table/column, value-grep for transcribed specimen data.
+- The other reusable shapes — fan-out reading, loop-until-dry discovery, judge panels — match the shape
+  to the question and compose them.
 
 ## One stack
 
-Everything runs on **bun + TypeScript**, with **SQLite** as the query substrate. First move: load the
-export's tables into a SQLite database; from then on every helper and analysis is a small bun `.ts` file
-querying it, and the deep dives are static bun/TypeScript/React pages built from JSON the abstraction step
-produces. No Python, no shell-pipeline analysis — one language end to end. Keep it portable: the loader and
-queries must work against anyone's export (the *how* lives in the skills; the loaded database is a
-per-specimen artifact).
+Everything runs on **bun + TypeScript**, with **SQLite** as the query substrate. No Python, no
+shell-pipeline analysis — one language end to end, portable to anyone's export.
+
+The first deliverable of the reading skill is the loader, and it must be **one command** that builds the
+*complete* database: every TSV as a table, **plus the schema HTML parsed into catalog tables**
+(`_tables` — what's populated; `_schema_table` — Epic's description of every table; `_schema_column` —
+tens of thousands of per-column docs, greppable in SQL). The catalog is the single biggest
+force-multiplier you will build: it makes the schema itself queryable. Do not ship the loader as two
+separate steps — a data-only build looks perfectly healthy until a catalog join fails, the worst kind of
+silent half-state. Add a tiny read-only query helper (`q.ts`) and give every sub-agent its incantation.
+
+Three data traps go in every agent preamble, because each one produces wrong results *silently*:
+**everything is TEXT** (CAST before ordering, aggregating, or range-comparing — text dates sort lexically
+and lie); **a blank column is rarely "no data"** (the value usually lives behind a dropped `_NAME`
+companion, an export view, or a sibling table — confirm the code column before asserting absence);
+**the schema doc's columns are aspirational** (PRAGMA the real ones before writing a query).
 
 ## The skills, as a tower
 
-There are **two skills**, a stack where the second builds on the first. Build them the way you investigate
-the data — through workflows that propose, challenge, and refine — and treat them as **living documents**:
-draft early, put to work immediately, and fix every time *using* one exposes a gap. Write a **README** at
-the top of the project as the front door: what each skill is, how they relate, how to move through them.
+Two skills, the second building on the first. Build them the way you investigate the data — workflows
+that propose, challenge, and refine — and treat them as **living documents**: draft early, put to work
+immediately, and fix every time *using* one exposes a gap. **Use the skills while you write them**: hand
+each workflow the current draft, require agents to follow it and report exactly where it failed. Those
+friction reports — not your impressions — drive each revision. Develop/use/refine is one loop. Write a
+top-level **README** as the front door.
 
-1. **Reading an Epic EHI export** — the foundational, larger skill: everything needed to walk into an
-   unfamiliar export and understand it. Three parts.
-   - *The method* — your way of working, above. The engine; the next two parts are it running.
-   - *Mapping the schema* — how to inventory the structured tables (and load them into SQLite as the working
-     substrate) and locate the unstructured material, using fan-out workflows to cover a large export at
-     scale rather than sampling a few files by hand.
-   - *Modeling patterns* — the genre's grammar, in two layers. **General-purpose patterns** catalogued
-     exhaustively with mechanistic depth (CSN/contacts, effective-vs-instant time, `*_DATE_REAL`,
-     master-file IDs and line-item assembly, base+supplement tables, `ZC_`/`_C_NAME` enumerations,
-     status/lifecycle, snapshots, soft-deletes, the everything-is-TEXT trap, …) — the test of done is
-     breadth, but for each pattern explain *why* the data is shaped that way and back it with a traced
-     example, including where it frays. **Clinical-area guides**, one per major domain (encounters,
-     problems, meds, labs, vitals, notes, messaging, billing, immunizations, allergies, care teams, …),
-     each naming the tables, the joins, the gotchas chased to *why*, and how the notes/messages tie back.
-     Derive each guide through sub-agents reading real rows and reconciling what they find, not a single
-     pass from memory.
+1. **Reading an Epic EHI export** — the foundational skill: walk into an unfamiliar export cold and come
+   out understanding it. Three parts.
+   - *The method* — your way of working: **top-down × bottom-up** (what *should* an export contain?
+     vs. what does this file actually show?), with the discoveries living in the gap between them; and
+     **explain *why*, not just *what*** — when a value or join looks quirky, hypothesize how
+     Epic/Chronicles produces that shape and test it against more rows until the mechanism is clear. A
+     pattern explained mechanistically is one the next analyst can trust; a surface description is a trap.
+   - *Mapping the schema* — load everything (the one-command loader), inventory **from the catalog, not
+     `ls`**, and locate the unstructured material (notes/messages/media and their subtle join paths) with
+     fan-out.
+   - *Modeling patterns* — the genre's grammar, two layers. **General patterns** catalogued exhaustively
+     with mechanistic depth (CSN/contacts, `*_DATE_REAL` time, master-file IDs, base+supplement assembly,
+     `_C_NAME` enumerations, status matrices, soft-deletes, sentinels, …), each with a traced example.
+     One craft warning: the clinical guides will cite these patterns by section number, and **citations
+     rot when the catalog is renumbered** — cite concept-plus-number ("§41, two ID spaces") so a stale
+     number is self-healing, and sweep all citations after any renumbering. **Clinical-area guides**, one
+     per domain (encounters first — it's the hub), each naming the tables, the *verified* joins, the
+     gotchas chased to why, the decoy columns, how unstructured material ties back, and tested SQL
+     recipes. Derive each through sub-agents reading real rows; verify adversarially before it ships.
+   - Two disciplines the first draft will not have unless you force them. **Coverage accounting:**
+     classify *every populated table* — existing domain / genuinely new domain / infrastructure — and
+     keep the map current; the unclassified residue is exactly where under-documented domains hide (in
+     one specimen: record-access audit, benefits & eligibility, questionnaires, episodes & care plans,
+     order-lifecycle plumbing, decision-support alerts). **Map the negative space:** the
+     infrastructure/plumbing tables deserve a guide of their own — the question an analyst actually asks
+     is "is this clinically meaningful or safe to skip?", and answering it wrong in the dismissive
+     direction is the silent-false-negative failure mode. Say what may be ignored *and why*, and name the
+     look-like-plumbing tables that are actually load-bearing.
 
-2. **Building a deep dive** — the one skill for turning a read export into excellent *deep dives*. A deep
-   dive is the bespoke web application a domain expert (a clinician, a billing analyst) would want to *fully
-   understand* one patient's history in an area — narrative-led, interrogable, **not** an infographic, a
-   dashboard, or a slide deck. The skill describes the whole loop, worked **view-first**:
+2. **Building a deep dive** — the one skill for turning a read export into excellent deep dives. A deep
+   dive is the bespoke web application a domain expert (a clinician, a billing analyst) would want to
+   *fully understand* one patient's history in an area — narrative-led, interrogable, **not** an
+   infographic, a dashboard, or a slide deck. Worked **view-first**:
    1. **Ideate** what the view should show (the argument, the visualizations, the crunched figures).
-   2. **Explore** the record (a workflow) for what data supports the idea; **loop** ideate↔explore until
-      you've landed on what the view will show and how agents can power it.
-   3. **Abstract the data into one clean *view model*** — a single JSON the app reads, holding **structured
-      *and* rich narrative content together** (a real summary, multi-paragraph section prose, an explicit
-      assessment / what-an-expert-would-do / what-the-data-can't-answer), plus an evidence map of clean note
-      quotes. This is where "abstraction" lives — it's a *step* of building a dive, not a separate skill.
-      It uses three operations: **extract** (deterministic bun/SQLite scripts), **enrich** (agentic per-item
-      judgment at scale — read each of N notes/rows and classify/extract/score), and **synthesize**
-      (holistic reasoning, incl. computing domain scores you have autonomy to research and derive from any
-      source). Crucial discipline: the view model is a **clean projection, not a mirror of the export** —
-      formatted dates, resolved labels, clean names, ids/`src` only as side fields — so the app **never
-      dumps raw Clarity columns onto the screen** (the failure mode to avoid). Large extracts are written
-      to files via projection scripts (not transcribed through schema responses); workflow returns are
-      **receipts**; judgment is always captured and used.
-   4. **Build** the static bun/React/D3 app on the view model alone, with **custom visualizations** the data
-      deserves (the component kit is a floor — draw the real pedigree, the band plot, the risk gauge, the
-      claims flow), `bun build index.html`, and verify it renders by screenshotting the whole page (and
-      interactive states). The spine is the reasoning; charts are evidence; every claim drills to clean
-      evidence; nothing raw reaches the UI.
+   2. **Explore** the record (a workflow) for what supports it; loop ideate↔explore until settled.
+   3. **Abstract into one clean *view model*** — a single JSON the app reads, holding structured data
+      *and* rich narrative together (real summary, section prose, an explicit assessment and
+      what-the-data-can't-answer), plus an evidence map of clean quotes. Three operations: **extract**
+      (deterministic bun/SQLite scripts), **enrich** (agentic per-item judgment at scale), **synthesize**
+      (holistic reasoning, including domain scores you research and derive). The view model is a **clean
+      projection, not a mirror of the export** — formatted dates, resolved labels, ids only as side
+      fields — so the app **never dumps raw Clarity columns onto the screen**. If the view model is
+      assembled from parts, the parts are the editable source and assembly must be idempotent — a fix
+      applied to a generated file is a fix the next build erases.
+   4. **Build** the static bun/React/D3 app on the view model alone, with **custom visualizations** the
+      data deserves (a component kit is a floor, not a ceiling), `bun build index.html`, and verify by
+      screenshotting rendered pages and interactive states. Serve over HTTP (file:// blocks modules);
+      ship a `serve.ts` for local viewing and a `build-site.ts` that assembles a relative-path,
+      subpath-safe static site, rebuilding the DB from `raw/` at build time rather than committing it.
+   - Each dive documents itself with one file: **BUILD.md**, the build spec that saves the next person
+     from reverse-engineering the view model — the view-model TypeScript interface, plus per-slot
+     population method *from the raw export*: tables, derivation logic in words, and for the agentic
+     slots the judgment rubric used (the part no script records). Design rationale, if worth keeping,
+     is a short section here, not a second document. BUILD is **method, not data**: no transcribed
+     values or quotes — those live in the view model. A doc-type that *can* hold specimen data will,
+     unless the skill states the method-vs-data boundary explicitly and the audit value-greps for it.
 
 ## The payoff: five deep dives
 
-By now the skills exist in draft and have been earning their keep — the deep dives are where you push them
-hardest and do the last round of refinement. **Hold off on choosing the five until the data work is done**,
-so they're specific to what's actually in my history (the conditions I carry, the labs and vitals that
-recur, the arc the notes and messages trace), not generic charts. Then devise five diverse, concrete deep
-dives that make real sense for *my* record — things I'd actually want to understand about my own health —
-and build each view-first. Lean hard on LLM-mediated summarization and clinical reasoning over both
-structured and unstructured data; present it beautifully and completely; keep full traceability. Run the
-building through workflows, flag every point where the skill was missing/wrong/ambiguous, and feed those
-friction points straight back into the skill. Iterate until both the deep dives and the skill are genuinely
-good — steer hard away from shallow, decorative, infographic-style pages, and away from dumping raw export
+By now the skills exist in draft and have been earning their keep — the dives are where you push them
+hardest. **Hold off on choosing the five until the data work is done**, so they're specific to what's
+actually in my history, not generic charts. Then devise five diverse, concrete deep dives I'd actually
+want about my own health, and build each view-first. Lean hard on LLM-mediated summarization and clinical
+reasoning over both structured and unstructured data; keep full traceability; feed every friction point
+straight back into the skill. Steer hard away from shallow infographic pages and from dumping raw export
 data into a UI that isn't smart enough to present it.
 
 ## One reference

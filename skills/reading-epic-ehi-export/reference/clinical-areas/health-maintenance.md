@@ -26,9 +26,16 @@ by foreign key**. Think of HM as a derived dashboard computed from immunizations
 | `PAT_HM_LETTER` | reminder-letter events (topic + due) | 1 | CSN-keyed; ties a letter to a topic and encounter. |
 | `HM_ENC_DATE` | the encounter a letter was sent for | 1 | `PAT_ID` + `HM_LET_PAT_ENC_CSN_ID` (→ `PAT_ENC`). |
 
-No `ZC_HM*` tables ship; all HM categories arrive pre-resolved as `_C_NAME` labels (§13 genre
+No `ZC_HM*` tables ship; all HM categories arrive pre-resolved as `_C_NAME` labels (§23 genre
 variation). There is no separate "HM order" table here — HM ties to ordering only via the satisfying
 immunization/lab data, not a dedicated link table.
+
+**Decoy: `OUTREACH_CONTACT_INFO` is *not* the HM reminder system** (that's `PAT_HM_LETTER`/`HM_ENC_DATE`).
+It's a stub of the generic outreach-record (EOR) master — just `OUTREACH_ID` + `CONTACT_DATE_REAL` (§18) —
+and the tables documented to resolve `OUTREACH_ID` (`MC_NOTIFICATIONS`/`MC_NOTIF_INFO`,
+`OUTREACH_AUDIT_ACTIONS`, `BILLING_NOTIF_GUARANTOR`) don't ship, so the outreach's type, target, and
+content are unrecoverable (§15 unresolvable pointers). In one specimen its contact days don't line up with
+any HM letter event; outreach records serve MyChart and billing notifications as much as preventive care.
 
 ## How they join
 
@@ -40,21 +47,28 @@ All joins below were run against the specimen and confirmed.
   patient-level tables.
 - **Current state → plan masterfile.** `PATIENT_HMT_STATUS.ACTIVE_HM_PLAN_ID` →
   `HM_PLAN_INFO.HM_PLAN_ID`. Verified: 23/23 rows match, and the inline companion
-  `ACTIVE_HM_PLAN_ID_HM_PLAN_NAME` (§4) equals `HM_PLAN_INFO.HM_PLAN_NAME` on every row. The column
-  `ACTIVE_SUBTOPIC_ID` (which the schema doc treats as the topic pointer) is **entirely NULL** here — the
-  active plan lives in `ACTIVE_HM_PLAN_ID`, not the subtopic column.
+  `ACTIVE_HM_PLAN_ID_HM_PLAN_NAME` (§6) equals `HM_PLAN_INFO.HM_PLAN_NAME` on every row. The column
+  `ACTIVE_SUBTOPIC_ID` (which the schema doc treats as the topic pointer) is **entirely NULL** here — and
+  so is its `_NAME` companion `ACTIVE_SUBTOPIC_ID_NAME`, so this is one of the rare cases where blank
+  really is blank, not a dropped §6 companion. The active plan lives in `ACTIVE_HM_PLAN_ID`, not the
+  subtopic column.
 - **Enrolled plans → plan masterfile.** `PAT_HM_CUR_GUIDE.HM_CURRENT_GUIDE_ID` →
   `HM_PLAN_INFO.HM_PLAN_ID`. Verified all 24 resolve; 23 of these 24 plan ids also appear as an
   `ACTIVE_HM_PLAN_ID` in `PATIENT_HMT_STATUS` (the 24th, "COVID-19: Recipient of 1+ Dose", is an eligible
   alternate plan not the currently-active one).
 - **Historical status → topic masterfile.** `HM_HISTORICAL_STATUS.HM_TOPIC_ID` →
-  `CLARITY_HM_TOPIC.HM_TOPIC_ID`. Verified; the inline `HM_TOPIC_ID_NAME` (§4) matches the masterfile.
+  `CLARITY_HM_TOPIC.HM_TOPIC_ID`. Verified; the inline `HM_TOPIC_ID_NAME` (§6) matches the masterfile.
 - **Forecast → topic masterfile.** `HM_FORECAST_INFO.HM_FORECAST_TOPIC_ID` →
-  `CLARITY_HM_TOPIC.HM_TOPIC_ID`. Verified 7/7 (e.g. 80→Influenza, 66→COVID-19, 94→RSV Adult).
+  `CLARITY_HM_TOPIC.HM_TOPIC_ID`. Verified 7/7 (e.g. 80→Influenza, 66→COVID-19, 94→RSV Adult). Topic ids
+  span two ranges — small org-numbered ids and 2.1-billion-range Epic-released record ids (e.g.
+  `21000001xx`); both live in `CLARITY_HM_TOPIC` and join identically, so a huge id is not a different
+  masterfile.
 - **Letter → topic + encounter.** `PAT_HM_LETTER.HM_LET_TOPIC_LST_ID` → `CLARITY_HM_TOPIC.HM_TOPIC_ID`
   (verified, 50→Annual Wellness Visit); `HM_ENC_DATE.HM_LET_PAT_ENC_CSN_ID` →
-  `PAT_ENC.PAT_ENC_CSN_ID` (verified, CSN `1018439080`, 8/3/2023). The two letter tables share the same
-  `LINE`/event.
+  `PAT_ENC.PAT_ENC_CSN_ID` (verified 1/1). `PAT_HM_LETTER.PAT_ENC_CSN_ID` *itself* also joins `PAT_ENC`
+  directly (and equaled `HM_ENC_DATE`'s CSN in one specimen), so the letter reaches its encounter even
+  without `HM_ENC_DATE` — what `HM_ENC_DATE` adds is the `PAT_ID` anchor. The two letter tables share the
+  same `LINE`/event.
 - **Completion → real clinical data (no FK — date only).** `HM_HISTORY` rows of type `Immunization`
   carry a UTC instant that, converted to local, matches an `IMMUNE.IMMUNE_DATE` exactly; `Result
   Component` instants match `ORDER_RESULTS` result instants. There is **no id linking HM_HISTORY to
@@ -71,33 +85,33 @@ domains (immunizations, labs); HM itself stores only the status/date rollup.
 
 ## Gotchas & quirks (chased to *why*)
 
-1. **Topic ids and plan ids are two different id spaces that collide numerically (§24).** `HM_TOPIC_ID`
+1. **Topic ids and plan ids are two different id spaces that collide numerically (§41).** `HM_TOPIC_ID`
    (in `HM_HISTORICAL_STATUS`/`HM_FORECAST_INFO`/`PAT_HM_LETTER`) indexes `CLARITY_HM_TOPIC` (abstract
    topics). `ACTIVE_HM_PLAN_ID`/`HM_CURRENT_GUIDE_ID` index `HM_PLAN_INFO` (concrete plans). **The same
    integer means different things in each:** id `66` is *"COVID-19 Vaccine"* as a **topic** but *"HPV
    Vaccine (9-26YO)"* as a **plan** (both verified). Mechanism: a topic is the abstract preventive goal;
    a plan is the specific protocol chosen to satisfy it, and Chronicles numbers them independently. Join
-   each id to *its own* masterfile; never cross them. The denormalized `_NAME` companions (§4) on every id
+   each id to *its own* masterfile; never cross them. The denormalized `_NAME` companions (§6) on every id
    are your safety check — if the joined name disagrees with the inline name, you joined the wrong table.
 
-2. **`HM_HISTORICAL_STATUS` has no snapshot-date column — `LINE` *is* the timeline (§7, §10 inverted).**
+2. **`HM_HISTORICAL_STATUS` has no snapshot-date column — `LINE` *is* the timeline (§9, §22 inverted).**
    The table records "status of topic X at moment T" but ships no T column. Mechanism: it's an append-only
    event log; each status transition for *any* topic appends the next global `LINE`, so `LINE` ascending =
    chronological order across all topics interleaved. Verified: ordering by `CAST(LINE AS INT)`,
    `LAST_COMPLETED_DATE` increases monotonically and the Influenza Due-On→Overdue→Completed→Not-Due cycle
-   repeats cleanly year over year. **To reconstruct one topic's history, filter `HM_TOPIC_ID` and order by
+   repeats year over year — though seasons can *skip* states (a missed season has no Completed; an on-time
+   shot skips Overdue), so don't pattern-match a rigid 4-state loop. **To reconstruct one topic's history, filter `HM_TOPIC_ID` and order by
    `CAST(LINE AS INT)`.** The earliest LINEs (1–15 here) are a one-time baseline snapshot of all known
    topics; later LINEs are individual transitions. Do not expect `LINE` to align across tables.
 
 3. **"Next due" / "earliest valid" dates can be birthday-anchored age boundaries, not real future dates.**
-   `NEXT_DUE_DATE` and `EARLIEST_VALID_DATE` sometimes show dates decades in the past or future
-   (`10/26/1987`, `10/26/2032`, `10/26/2057`). Mechanism: the forecast engine computes age-window
-   boundaries as **DOB + N years**. This patient's DOB is **10/26/1982**, and *every* anomalous date is a
-   `10/26` birthday: `10/26/1987`=age 5, `10/26/1998`=age 16, `10/26/2032`=age 50 (Zoster window),
-   `10/26/2057`=age 75. For an aged-out or never-started series the "next due" is just the age boundary,
-   landing in the deep past. **Don't read these as scheduled appointments** — read them as "the age at
-   which this series' window opens/closes." Real near-term due dates (e.g. Influenza `9/1/2025`) look
-   normal; the birthday-anchored ones are the tell.
+   `NEXT_DUE_DATE` and `EARLIEST_VALID_DATE` sometimes show dates decades in the past or future.
+   Mechanism: the forecast engine computes age-window boundaries as **DOB + N years** — every anomalous
+   date shares the patient's birth **month/day** (confirm by comparing against `PATIENT.BIRTH_DATE`;
+   the year offsets decode as ages, e.g. age-5/16/50/75 window edges). For an aged-out or never-started
+   series the "next due" is just the age boundary, landing in the deep past. **Don't read these as
+   scheduled appointments** — read them as "the age at which this series' window opens/closes." Real
+   near-term due dates (e.g. the upcoming flu season) look normal; the birthday-anchored ones are the tell.
 
 4. **`HM_HISTORY` completions have no topic id and link to clinical data only by datetime.** The table is
    just `(PAT_ID, LINE, HM_COMP_TYPE_C_NAME, HM_COMP_UTC_DTTM)`. The schema doc claims `LINE` "identifies
@@ -109,10 +123,11 @@ domains (immunizations, labs); HM itself stores only the status/date rollup.
    `IMMUNE.IMMUNE_DATE` (for `Immunization`) or `ORDER_RESULTS` (for `Result Component`). Verified: each
    Immunization instant matches an IMMUNE administration exactly.
 
-5. **UTC vs local on completion instants (§11).** `HM_HISTORY.HM_COMP_UTC_DTTM` is in **UTC**, while the
+5. **UTC vs local on completion instants (§19).** `HM_HISTORY.HM_COMP_UTC_DTTM` is in **UTC**, while the
    matching `IMMUNE.IMMUNE_DATE` and the HM status `LAST_COMPLETED_DATE` are **local effective dates**
-   (rendered at 12:00 AM). E.g. a shot on local `2/5/2019 12:00 AM` shows as `2/5/2019 6:00:00 AM` UTC
-   (CST, −6) and a summer event as `…5:00:00 AM` UTC (CDT, −5). When date-matching completions to shots,
+   (rendered at 12:00 AM). So a local-midnight effective date shows as `…6:00:00 AM` UTC in winter
+   (CST, −6) and `…5:00:00 AM` UTC in summer (CDT, −5) — the clock parts of the completion instants are
+   *only* those two values. When date-matching completions to shots,
    compare the **calendar date after offset**, not the raw string, and watch the DST boundary.
 
 6. **`HM_COMP_TYPE_C_NAME` splits into instant-bearing and instant-less completions.** `Immunization` (22)
@@ -122,13 +137,14 @@ domains (immunizations, labs); HM itself stores only the status/date rollup.
    and those carry no measurement instant. Don't treat NULL `HM_COMP_UTC_DTTM` as missing data — it's a
    code-based completion with no associated moment.
 
-7. **Soft-delete / lifecycle statuses (§16, §18).** `HM_STATUS_C_NAME` includes `Hidden`, `Aged Out`, and
+7. **Soft-delete / lifecycle statuses (§30, §32).** `HM_STATUS_C_NAME` includes `Hidden`, `Aged Out`, and
    blank in addition to the live cycle (`Not Due`→`Due Soon`→`Due On`→`Overdue`→`Completed`). `Hidden` /
    `Aged Out` topics (travel vaccines never indicated, pediatric series the adult patient aged past)
    persist in the export with their status, and `PATIENT_HMT_STATUS` still lists them. Treat presence as
    "this topic is tracked," not "this topic is relevant/active." Filter on status for the live list.
 
-8. **External-completion satisfaction is its own small subsystem.** `HAS_OUTSIDE_COMPLETION_YN='Y'` plus a
+8. **External-completion satisfaction is its own small subsystem.** On `HM_HISTORICAL_STATUS` (not
+   `PATIENT_HMT_STATUS` — the obvious first query errors out), `HAS_OUTSIDE_COMPLETION_YN='Y'` plus a
    populated `EXTERNAL_CLINICAL_DATE` (vs the unused `EXTERNAL_CLAIM_DATE`/`PAT_REPORTED_DATE`/
    `EXTERNAL_HEALTH_PLAN_DATE`) means the topic was satisfied by **Care Everywhere / outside data**, not an
    in-house event. Here that's 2 rows (a COVID dose reconciled from external clinical data). The four
@@ -170,12 +186,13 @@ ORDER BY h.HM_STATUS_C_NAME;
 ```
 
 ```sql
--- 4. What's forecast next, with the human topic name (forecast topic id -> topic masterfile).
-SELECT f.HM_FORECAST_TOPIC_ID_NAME AS topic, f.EARLIEST_VALID_DATE
+-- 4. What's forecast next, with the human topic name (inline _NAME companion, masterfile as fallback).
+SELECT COALESCE(f.HM_FORECAST_TOPIC_ID_NAME, t.NAME) AS topic, f.EARLIEST_VALID_DATE
 FROM HM_FORECAST_INFO f
 LEFT JOIN CLARITY_HM_TOPIC t ON f.HM_FORECAST_TOPIC_ID = t.HM_TOPIC_ID
-ORDER BY CAST(LINE AS INT);
--- NOTE: a birthday-anchored EARLIEST_VALID_DATE (DOB + N yrs) means an age-window boundary, not a real next dose.
+ORDER BY CAST(f.LINE AS INT);
+-- NOTE: a birthday-anchored EARLIEST_VALID_DATE (DOB + N yrs) means an age-window boundary, not a real
+-- next dose; it can also be NULL for topics the engine tracks but hasn't forecast (2/7 rows in one specimen).
 ```
 
 ```sql
@@ -190,7 +207,7 @@ WHERE hh.HM_COMP_TYPE_C_NAME = 'Immunization'
 ORDER BY CAST(hh.LINE AS INT);
 -- Date-string match works here because UTC and local fall on the same calendar day for these morning shots;
 -- for late-evening events apply the -5/-6h offset before comparing.
--- CAVEAT: a date with multiple shots (e.g. 2/5/2019 had 3) fans out one HM_HISTORY row to several IMMUNE
+-- CAVEAT: a date with multiple shots (one specimen day carried 3) fans out one HM_HISTORY row to several IMMUNE
 -- rows. Date alone is not unique; disambiguate by vaccine group/topic if you need an exact 1:1 tie.
 ```
 
@@ -205,8 +222,8 @@ ORDER BY CAST(hh.LINE AS INT);
 - **Postpone/tentative fields are all empty** in this specimen (`HMT_PPN_UNTL_DT`, `HMT_PPN_RSN_C_NAME`,
   `HM_TENTATIVE_YN`, `HM_ORDER_STATUS_YN`). They're documented to hold "snooze until / reason" and
   order-status flags; described from schema only here.
-- **Birthday-anchored dates are derived from this patient's DOB (10/26/1982).** The *mechanism* (DOB + age
+- **Birthday-anchored dates are derived from the patient's own DOB.** The *mechanism* (DOB + age
   window) is genre; the specific dates are specimen. On another export, anomalous HM due-dates will anchor
-  to *that* patient's birthday.
+  to *that* patient's birthday — compare against `PATIENT.BIRTH_DATE` to confirm.
 - This specimen is unusually rich for HM (84 status rows spanning 2018→2025). Many exports will have these
   tables sparse or empty for patients with little preventive-care tracking; the structure above still holds.

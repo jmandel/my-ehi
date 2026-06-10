@@ -16,6 +16,7 @@
 import { existsSync, rmSync, mkdirSync, readdirSync, statSync, cpSync, readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { zipSync } from "fflate";
+import { Database } from "bun:sqlite";
 
 const divesDir = (process.argv[2] ?? "deep-dives").replace(/\/+$/, "");
 const outDir = (process.argv[3] ?? "site").replace(/\/+$/, "");
@@ -32,20 +33,22 @@ let builtDb: string | null = null;
 // it is intentionally not checked into the repository.
 if (existsSync("raw/EHITables")) {
   builtDb = join(dataDir, "ehi.sqlite");
-  const loadTables = Bun.spawnSync({
-    cmd: ["bun", "skills/reading-epic-ehi-export/scripts/load-ehi-sqlite.ts", "raw", builtDb],
+  // Single entrypoint = both loaders (data + schema docs). One definition of "a complete build",
+  // shared with the local/CLI path, so the published DB can never be a silent half-build.
+  const load = Bun.spawnSync({
+    cmd: ["bun", "skills/reading-epic-ehi-export/scripts/load.ts", "raw", builtDb],
     stdout: "pipe", stderr: "pipe",
   });
-  if (loadTables.exitCode !== 0) {
-    console.error(`SQLite table load failed:\n${loadTables.stderr.toString()}`);
+  if (load.exitCode !== 0) {
+    console.error(`SQLite build failed:\n${load.stdout.toString()}\n${load.stderr.toString()}`);
     process.exit(1);
   }
-  const loadSchema = Bun.spawnSync({
-    cmd: ["bun", "skills/reading-epic-ehi-export/scripts/load-schema-docs.ts", "raw", builtDb],
-    stdout: "pipe", stderr: "pipe",
-  });
-  if (loadSchema.exitCode !== 0) {
-    console.error(`SQLite schema-doc load failed:\n${loadSchema.stderr.toString()}`);
+  // PHI gate: never publish a DB stamped as loaded from an unredacted source.
+  const check = new Database(builtDb, { readonly: true });
+  const phi = check.query("SELECT 1 FROM _provenance WHERE looks_unredacted=1").get();
+  check.close();
+  if (phi) {
+    console.error(`REFUSING TO PUBLISH: ${builtDb} was loaded from an UNREDACTED source. Build from redacted raw/.`);
     process.exit(1);
   }
   console.log(`built browser SQLite DB for bundle -> ${outDir}/data/my-ehi-skills.zip`);

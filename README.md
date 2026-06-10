@@ -40,7 +40,7 @@ Everything you need to walk into an unfamiliar Epic export and actually understa
   (48 recurring conventions — CSN contacts, `*_DATE_REAL` time, base+supplement tables, `_C_NAME`
   categories, the everything-is-TEXT trap, soft-deletes, audit ledgers, …, each with its *mechanism* and a
   traced example) and
-  [`reference/clinical-areas/`](skills/reading-epic-ehi-export/reference/clinical-areas/) (18 module-by-
+  [`reference/clinical-areas/`](skills/reading-epic-ehi-export/reference/clinical-areas/) (27 module-by-
   module field guides: encounters, problems, meds, labs, vitals, notes, messaging, immunizations,
   allergies, billing, …).
 
@@ -77,10 +77,13 @@ queryable SQLite is rebuilt from the redacted `raw/` at publish time, never comm
 **On your own Epic export** (portable — nothing below is specific to this specimen):
 
 ```bash
-bun skills/reading-epic-ehi-export/scripts/load-ehi-sqlite.ts  ./raw  ./db/ehi.sqlite
-bun skills/reading-epic-ehi-export/scripts/load-schema-docs.ts ./raw  ./db/ehi.sqlite
+bun skills/reading-epic-ehi-export/scripts/load.ts ./raw ./db/ehi.sqlite   # data + schema docs, one command
 bun lib/q.ts "SELECT n_rows, table_name FROM _tables ORDER BY n_rows DESC LIMIT 40"
 ```
+
+`load.ts` runs both halves — the TSV data tables and the schema-doc catalog (`_schema_table`/
+`_schema_column`). Running only the data loader yields a DB that queries fine but silently lacks the
+schema docs; the single entrypoint exists so that can't happen.
 
 1. **Read** — open the Reading skill. Internalize the general patterns, then the clinical-area guide for
    whatever you're after. Use fan-out workflows to map at scale, not by hand.
@@ -147,7 +150,7 @@ SQLite and answers questions about the record with an LLM.
 
 ```
 skills/                         the three portable skills (genre knowledge — no PHI)
-  reading-epic-ehi-export/      method + schema-mapping + general patterns + 18 clinical-area guides + loaders
+  reading-epic-ehi-export/      method + schema-mapping + general patterns + 27 clinical-area guides + loaders
   ehi-deep-dives/               the view-first deep-dive loop (incl. abstracting to a view model),
                                 build mechanics, viz craft, the component kit (components/), and
                                 scripts/ — screenshot.ts (verify), serve.ts (view), build-site.ts (ship)
@@ -158,10 +161,11 @@ raw.unredacted/                 the full-PHI export — gitignored, never commit
 raw/                            the REDACTED, same-shape, verified-clean export (committable)
 db/ehi.sqlite                   the loaded database — gitignored; rebuilt from redacted raw/ at publish time
 deep-dives/<topic>/             one self-contained folder per dive (per-specimen):
-                                  STORYBOARD.md    the design, written first (the argument + section beats)
+                                  BUILD.md         the build spec — view-model schema + per-slot recipe from
+                                                   raw (saves reverse-engineering; design rationale optional
+                                                   opening section; older dives may also carry STORYBOARD.md)
                                   viewmodel.json   the clean data the app renders (assembled; the deliverable)
                                   parts/ scripts/  the editable slots + the bun/SQLite pipeline that builds them
-                                  BUILD.md         the build record (per-slot recipe, workflow, receipts)
                                   app.tsx index.html page.css   the static app (imports ./viewmodel.json)
 artifacts/                      discovery map, friction reports, decisions — gitignored (raw PHI exhaust)
 ```

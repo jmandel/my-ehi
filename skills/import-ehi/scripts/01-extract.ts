@@ -11,7 +11,9 @@ import { existsSync } from "node:fs";
 
 const zip = process.argv[2];
 const out = process.argv[3] ?? "raw.unredacted";
-const dbp = process.argv[4] ?? "db/ehi.sqlite";
+// Distinct, self-labeling path: the import DB holds FULL PHI (loaded from raw.unredacted/). Keeping it
+// off the analysis path db/ehi.sqlite means a deep-dive/publish can never silently read unredacted data.
+const dbp = process.argv[4] ?? "db/ehi.unredacted.sqlite";
 if (!zip) { console.error('usage: 01-extract.ts "<Requested Record.zip>" [raw.unredacted] [db/ehi.sqlite]'); process.exit(1); }
 if (!existsSync(zip)) { console.error(`no such zip: ${zip}`); process.exit(1); }
 

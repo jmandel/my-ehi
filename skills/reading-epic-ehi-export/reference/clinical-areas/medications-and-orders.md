@@ -14,29 +14,41 @@ reconciliation rows hang off the CSN. The drug catalog (`CLARITY_MEDICATION`) is
 | table | role | rows in specimen | notes |
 |---|---|---|---|
 | `ORDER_MED` | **spine** — one row per medication order/prescription instance, keyed by `ORDER_MED_ID` | 20 | 116 cols. Drug, dose, qty, refills, status, class, mode, dates, provider ids, pharmacy, discon reason, reorder pointer. |
-| `ORDER_MED_2 … ORDER_MED_7` | horizontal supplements (§6), 1:1 on the order | 20 each | **Key column drifts:** `_2/_3/_4/_5/_7` use `ORDER_ID`; base and `_6` use `ORDER_MED_ID`. |
+| `ORDER_MED_2 … ORDER_MED_7` | horizontal supplements (§8), 1:1 on the order | 20 each | **Key column drifts:** `_2/_3/_4/_5/_7` use `ORDER_ID`; base and `_6` use `ORDER_MED_ID`. |
 | `ORDER_MEDINFO` | addendum: IV rate/volume/duration, dose calc, dispensable-med id, prior-auth, order source | 20 | Keyed `ORDER_MED_ID`; carries a *second* `MEDICATION_ID` copy. |
-| `ORDER_MED_SIG` | free-text patient sig (instructions), one `SIG_TEXT` per order | 20 | Keyed `ORDER_ID` (= `ORDER_MED_ID`). |
+| `ORDER_MED_SIG` | free-text patient sig (instructions), one *row* per order (§46 placeholders) | 20 | Keyed `ORDER_ID` (= `ORDER_MED_ID`). `SIG_TEXT` is NULL on the inpatient/imported orders — populated only for outpatient Rx and historical meds. |
 | `ORDER_DX_MED` | order → indication diagnosis, `(ORDER_MED_ID, LINE)` with `DX_ID` | 6 | Only 6 of 20 orders carry an explicit dx. |
-| `PAT_ENC_CURR_MEDS` | **per-encounter current-med-list snapshot**, `(PAT_ENC_CSN_ID, LINE)` → `CURRENT_MED_ID` | 241 | The "what meds were on the list at contact X" view. See §24 gotcha below. |
+| `PAT_ENC_CURR_MEDS` | **per-encounter current-med-list snapshot**, `(PAT_ENC_CSN_ID, LINE)` → `CURRENT_MED_ID` | 241 | The "what meds were on the list at contact X" view. See §41 gotcha below. |
 | `DISCONTINUED_MEDS` | per-contact list of orders discontinued there, `(PAT_ENC_CSN_ID, LINE)` → `MEDS_DISCONTINUED` | 17 | `MEDS_DISCONTINUED` = `ORDER_MED_ID`. |
 | `PAT_ENC_IP_MEDS` | inpatient-mode meds on a contact's list, → `MEDS_INP_ENC_ORD_ID` | 8 | How the 8 imported NaCl IV orders attach to their inpatient CSNs (they are absent from `PAT_ENC_CURR_MEDS`). |
+| `PAT_MEDS_HX` | **patient-level index of every med order ever**, `(PAT_ID, LINE)` → `MEDS_HX_ID` | 20 | `MEDS_HX_ID` = `ORDER_MED_ID` (resolves 20/20 here) — the quickest full enumeration without touching encounters. |
+| `EXTERNAL_ORDER_INFO` | external-encounter order metadata; one placeholder row per order across the shared ORD space (§46) | 62 | `DISPLAY_NAME` / `LINK_GROUP_IDENTIFIER` / `LINK_TYPE_C_NAME` populated only on orders imported from external encounters — the link-group id is the mechanism by which the imported NaCl rows declare themselves one event (gotcha 4). |
+| `EXT_ORD_SIGNED_SUMMARY` | free-text signed-summary lines for the same external-encounter orders | 8 | `(ORDER_ID, LINE)`; all rows join the inpatient-mode `ORDER_MED` rows here. |
 | `ORDER_RPTD_SIG_HX` | reconciliation **event log**: Initial Prescription / Taking As Prescribed / Taking Differently / Not Taking / Historical Med Edited | 17 | `(ORDER_ID, LINE)` with `ENTRY_DTTM`, `SOURCE_C_NAME`, dose/freq. |
 | `ORDER_RPTD_SIG_DIFFS` | which fields differ from the prescription on a "Taking Differently" | 3 | Companion to `_HX`. |
+| `ORDER_RPTD_SIG_TEXT` | the as-reported sig **string** per reconciliation event — `_HX` itself ships no sig-text column | 17 | `(ORDER_ID, GROUP_LINE, VALUE_LINE)` (§10), where `GROUP_LINE` = `ORDER_RPTD_SIG_HX.LINE` (joins 17/17 here). Siblings `ORDER_RPTD_SIG_INSTR` (free-text instructions) and `ORDER_RPTD_SIG_PRNRSN` (PRN reason) use the same key shape. |
 | `MEDS_REV_HX` | med-rec audit: one row per "user reviewed meds" action (user, instant, CSN, count) | 16 | Keyed by `PAT_ID`/CSN; reviewer in `MEDS_HX_REV_USER_ID_NAME`. |
 | `MEDS_REV_HX_LIST` | the med-list snapshot for each review, `MEDICATION_ORDER_ID` + `TAKING_YN` | 35 | `MEDICATION_ORDER_ID` = `ORDER_MED_ID`. |
+| `MEDS_REV_LAST_LIST` | med-list snapshot at the **most recent** review: `MEDICATION_ORDER_ID` + `TAKING_YN` | 6 | `(PAT_ID, LINE_COUNT)` — the "current" counterpart to the per-review `MEDS_REV_HX_LIST`. |
 | `CLARITY_MEDICATION` | **drug master**: `MEDICATION_ID` → `GENERIC_NAME` | 9 | Join target of `MEDICATION_ID`. `ORDER_MED_ID` does NOT join here (schema says so explicitly). |
 | `ERX_EVENT` | e-prescribe transmission events (here: Discontinue Prescription) | 3 | `(ORDER_ID, LINE)`. |
 | `PRESC_ID` | external e-Rx transmission ids | 2 | `(ORDER_ID, LINE)`; composite external id string. |
 | `ORDER_RXVER_NOADSN` | pharmacist verify / discontinue-verify instant per order | 20 | Keyed `ORDER_MED_ID`. |
 | `ORDER_SIGNED_MED` | cosign / verbal-order signing info | 1 | `(ORDER_MED_ID, LINE)`. |
 | `ORDER_STATUS` | **shared** "overtime single-response" order-contact table across ALL order types | 101 | NOT the med status field. See gotcha. Med rows: 20; rest are lab/imaging. |
-| `ORDER_DISP_INFO / _2 / _3` | dispense/fill detail (fill pharmacy, supply days, dispensed qty, DAW) | 20 each | **All fill fields NULL in this specimen** — only `CONTACT_DATE_REAL` populated; no fills exported. |
+| `ORDER_DISP_INFO / _2 / _3` | dispense/fill detail (fill pharmacy, supply days, dispensed qty, DAW) | 20 each | **All fill fields NULL in this specimen** — only `CONTACT_DATE_REAL` populated; no fills exported. Key drifts here too: base and `_3` use `ORDER_MED_ID`, `_2` uses `ORDER_ID`. |
 | `ORDER_MED_MORPHINE_EQUIV` | opioid morphine-equivalent conversion factor | 20 | **Stub**: `PCA_MORPHINE_EQUIV_CONV_FACTOR` NULL for every row (no opioids here). |
 | `ORDER_MED_VITALS` | vitals captured at order time | 20 | Peripheral. |
-| `ORD_INDICATIONS` | order → indication free text | 4 | **None of its `ORDER_ID`s are med orders here** (all are non-med decision-support orders) — confirms the shared `ORDER_ID` space. |
-| `MEDICATION_COST_ESTIMATES` | benefit/cost estimate per order | 5 | `ORDER_ID`. |
+| `ORD_INDICATIONS` | order → indication, `(ORDER_ID, LINE)` | 4 | `INDICATIONS_ID` → `MEDICAL_COND_INFO`, the indication condition master (all rows resolve here; it sits in `histories-family-social-medical.md`'s table list by name only — this domain is its real consumer), with an inline `_MEDICAL_COND_NAME` companion (§6). **None of its `ORDER_ID`s are med orders here** (all are non-med decision-support orders) — confirms the shared `ORDER_ID` space. Likewise `ORDER_COMMENT`: generic name, but all its rows are non-med (procedure) orders here — med comments live on `ORDER_MED.MED_COMMENTS`. |
+| `MEDICATION_COST_ESTIMATES` | bridge only: `(ORDER_ID, LINE)` → `MEDICATION_ESTIMATE_ID` — **no cost fields here** (3 columns total) | 5 | The actual RTPB estimate record is `MED_CVG_INFO` (next row). |
+| `MED_CVG_INFO`, `MED_CVG_DETAILS` | **real-time prescription benefit (RTPB) estimates**: `MED_CVG_INFO` is the estimate record (keyed `MED_ESTIMATE_ID`; also carries `ORDER_ID` straight to `ORDER_MED`, the coverage member, e-prescribing network, viewed-before-sign flag); `MED_CVG_DETAILS` `(MED_ESTIMATE_ID, LINE)` holds the payload — plan-pay/patient-pay/OOP/deductible amounts, days supply, formulary status, PA-required, pharmacy | 6 / 6 | Wider family in the same key space: `MED_CVG_ESTIMATE_VALS`, `MED_CVG_RESPONSE_RSLT`, `MED_CVG_STATUS_DETAILS`, `MED_CVG_DX_VALUE`, `MED_CVG_ALTERNATIVES`, `MED_CVG_USERACTION`. |
 | `ORDER_DOCUMENTS` | scanned order docs (hardcopy Rx, etc.) | 4 | None are for these meds in this specimen. |
+| `ORD_MED_ADMININSTR` | admin-instruction free text per med order | 7 | `(ORDER_MED_ID, LINE)` + `MED_ADMIN_INSTR`. |
+| `ORD_MED_PRNREASONS` | PRN reason *category* for PRN orders | 1 | `(ORDER_MED_ID, LINE)`, `MED_PRN_REASON_C_NAME`. |
+| `MED_PEND_APRV_STAT` | approval/refusal status of meds **pended** in (telephone) encounters | 7 | `(PAT_ENC_CSN_ID, LINE)` with `MED_PEND_APRV_FLG_C_NAME` / `MED_REFUSE_RSN_C_NAME` — hangs off the encounter, not the order. |
+| `ORD_DOSING_PARAMS / _2` | dosing weight/height/BSA captured at ordering | 62 each | One placeholder row per order across the shared ORD space (§46); populated only where dose-checking ran (the outpatient meds here). |
+| `PAT_ENC_SEL_PHARMACIES`, `PAT_RCNT_USD_PHRMS`, `PAT_PREF_PHARMACY` | pharmacy-routing context: per-encounter selected, recently-used, and preferred pharmacies | 6 / 3 / 1 | First keyed `(PAT_ENC_CSN_ID, LINE)`, the others `(PAT_ID, LINE)`; all carry inline `_PHARMACY_NAME` companions (§6). Context for where an Rx was sent vs. the order's own `PHARMACY_ID`. |
+| `MED_DISPENSE_SIG` | sig text lines for an **external** dispense document | 9 | `(DOCUMENT_ID, GROUP_LINE, VALUE_LINE)` (§10); the parent `DOCUMENT_ID` is not exported — a §15 pointer-without-body. |
 | `MDL_MD_PRBLM_LIST`, `MDL_HISTORY` | problem-oriented medication list (the "med-problem" parallel view) | 9 / 12 | `ORDER_MED.MDL_ID` → `MDL_MD_PRBLM_LIST.MED_PRBLM_LIST_ID` (verified). |
 
 ## How they join
@@ -45,27 +57,30 @@ All joins below were run against rows in this specimen and confirmed.
 
 - **Spine:** `ORDER_MED.ORDER_MED_ID` is the master key. `ORDER_MEDINFO`, `ORDER_MED_6`,
   `ORDER_RXVER_NOADSN`, `ORDER_SIGNED_MED`, `ORDER_DX_MED`, `ORDER_MED_MORPHINE_EQUIV`(via `ORDER_ID`)
-  all carry one row per order. **Supplement key names drift (§6):** `ORDER_MED_2/_3/_4/_5/_7` name their
+  all carry one row per order. **Supplement key names drift (§8):** `ORDER_MED_2/_3/_4/_5/_7` name their
   key `ORDER_ID`, while base + `_6` use `ORDER_MED_ID`. Both hold the same id values; you must use the
-  right column name per table — `PRAGMA table_info` first, always (§5).
+  right column name per table — `PRAGMA table_info` first, always (§7).
 - **Drug catalog:** `ORDER_MED.MEDICATION_ID → CLARITY_MEDICATION.MEDICATION_ID → GENERIC_NAME`. All 20
   orders resolve to 9 distinct drugs. The schema doc explicitly warns `ORDER_MED_ID` **cannot** link to
-  `CLARITY_MEDICATION` — only `MEDICATION_ID` can. Both sit side by side in `ORDER_MED` (§24 two-ID-spaces
+  `CLARITY_MEDICATION` — only `MEDICATION_ID` can. Both sit side by side in `ORDER_MED` (§41 two-ID-spaces
   in miniature: drug record ≠ order record).
 - **Shared-`ORDER_ID` tables:** `ORDER_MED_SIG`, `ORDER_STATUS`, `ERX_EVENT`, `PRESC_ID`, `ORD_INDICATIONS`,
-  `MEDICATION_COST_ESTIMATES` name their key `ORDER_ID` because the ORD id space is shared with lab/imaging
-  orders. Join `ORDER_ID = ORDER_MED_ID`, but expect **non-med rows mixed in** — filter with
-  `ORDER_ID IN (SELECT ORDER_MED_ID FROM ORDER_MED)`.
+  `MEDICATION_COST_ESTIMATES`, `EXTERNAL_ORDER_INFO`, `ORD_DOSING_PARAMS` name their key `ORDER_ID` because
+  the ORD id space is shared with lab/imaging orders. Join `ORDER_ID = ORDER_MED_ID`, but expect **non-med
+  rows mixed in** — filter with `ORDER_ID IN (SELECT ORDER_MED_ID FROM ORDER_MED)`.
+- **RTPB estimates:** `MED_CVG_INFO.ORDER_ID → ORDER_MED.ORDER_MED_ID` directly (and via the
+  `MEDICATION_COST_ESTIMATES` bridge `MEDICATION_ESTIMATE_ID = MED_CVG_INFO.MED_ESTIMATE_ID`); the
+  dollar/formulary detail joins down on `MED_CVG_DETAILS.MED_ESTIMATE_ID` `(+ LINE)`.
 - **Encounter:** `ORDER_MED.PAT_ENC_CSN_ID → PAT_ENC.PAT_ENC_CSN_ID`; then
   `PAT_ENC.DEPARTMENT_ID → CLARITY_DEP.DEPARTMENT_NAME` ("MAC APL INTERNAL MEDICINE" for ambulatory Rx,
   "GENERIC EXTERNAL DATA DEPARTMENT" for the imported inpatient NaCl orders). (See §2 CSN.)
 - **Indication dx:** `ORDER_DX_MED.DX_ID → CLARITY_EDG.DX_ID → DX_NAME` (e.g. 108212 Primary hypertension
-  for lisinopril, 260690 Post concussion syndrome for nortriptyline, COVID-19 for Paxlovid). `(ORDER_MED_ID, LINE)` (§7).
+  for lisinopril, 260690 Post concussion syndrome for nortriptyline, COVID-19 for Paxlovid). `(ORDER_MED_ID, LINE)` (§9).
 - **Reorder chain (self-link):** `ORDER_MED.CHNG_ORDER_MED_ID → ORDER_MED.ORDER_MED_ID` — the order this
   one *replaced*. All non-null `CHNG_ORDER_MED_ID` values resolve to a predecessor row. `OLD_ORDER_ID`
   (the documented refill-parent pointer) is **NULL throughout** this specimen — use `CHNG_ORDER_MED_ID`.
 - **Current-med snapshot:** `PAT_ENC_CURR_MEDS.CURRENT_MED_ID → ORDER_MED.ORDER_MED_ID`. **All 12 distinct
-  `CURRENT_MED_ID`s resolve** (see the §24 friction note — the pattern says they shouldn't). Discontinue:
+  `CURRENT_MED_ID`s resolve** (see the §41 friction note — the pattern says they shouldn't). Discontinue:
   `DISCONTINUED_MEDS.MEDS_DISCONTINUED → ORDER_MED_ID`; inpatient list:
   `PAT_ENC_IP_MEDS.MEDS_INP_ENC_ORD_ID → ORDER_MED_ID`; reconciliation:
   `MEDS_REV_HX_LIST.MEDICATION_ORDER_ID → ORDER_MED_ID` — all verified to resolve 100%.
@@ -77,9 +92,13 @@ All joins below were run against rows in this specimen and confirmed.
 - **Patient instructions (sig):** the only substantial free text *inside* the med tables lives in
   `ORDER_MED_SIG.SIG_TEXT` (one string per order, e.g. "Take 1 (one) capsule by mouth nightly. Start
   with 10 mg…"), mirrored/varied per reconciliation event in `ORDER_RPTD_SIG_HX` (dose/freq/route columns
-  plus `REASON_COMMENT`, `PRN_COMMENT`, `INDICATIONS_COMMENT`).
+  plus `REASON_COMMENT`, `PRN_COMMENT`, `INDICATIONS_COMMENT`). The full **as-reported sig string** per
+  reconciliation event lives in `ORDER_RPTD_SIG_TEXT` (`GROUP_LINE` = the `_HX` row's `LINE`, §10) —
+  `_HX` itself has no sig-text column. Siblings `ORDER_RPTD_SIG_INSTR` / `_PRNRSN` carry instructions
+  and PRN reason the same way.
 - **Order-entry comments:** `ORDER_MED.MED_COMMENTS`, `PRN_COMMENT`, `INDICATION_COMMENTS` exist for short
-  order-entry text — **empty in this specimen**.
+  order-entry text. `PRN_COMMENT` and `INDICATION_COMMENTS` are empty in this specimen, but `MED_COMMENTS`
+  is populated on one order — check it before declaring order-entry comments absent.
 - **No note→order foreign key.** There is no clinical-narrative note body in the med tables. The note that
   *prescribed* a med (HNO / `Rich Text/*.RTF`) ties back only **indirectly through the shared
   `PAT_ENC_CSN_ID`** — match the order's CSN to the encounter's notes; there is no direct order→note id.
@@ -87,13 +106,13 @@ All joins below were run against rows in this specimen and confirmed.
 
 ## Gotchas & quirks (chased to *why*)
 
-1. **`CURRENT_MED_ID` resolves perfectly to `ORDER_MED_ID` here — contradicting general-patterns §24.**
-   §24 claims `PAT_ENC_CURR_MEDS.CURRENT_MED_ID` is a *different id space* from `ORDER_MED_ID` and "most
+1. **`CURRENT_MED_ID` resolves perfectly to `ORDER_MED_ID` here — contradicting general-patterns §41.**
+   §41 claims `PAT_ENC_CURR_MEDS.CURRENT_MED_ID` is a *different id space* from `ORDER_MED_ID` and "most
    don't match." In this UnityPoint export, **all 12 distinct `CURRENT_MED_ID`s join 1:1 to
    `ORDER_MED_ID`**, and the schema doc literally defines `CURRENT_MED_ID` as "the current medication
    order ID for the encounter." *Mechanism:* in this Epic build the current-med list points straight at
    the originating ORD record; there is no separate "current med" master to bridge. *Handle:* try the
-   direct join first and check the resolve rate — if it's ~100% (as here), §24's bridge worry doesn't
+   direct join first and check the resolve rate — if it's ~100% (as here), §41's bridge worry doesn't
    apply; treat `CURRENT_MED_ID` as an `ORDER_MED_ID`. (Reported as friction.)
 
 2. **The 8 inpatient orders never appear in `PAT_ENC_CURR_MEDS` — `count(curr_meds)` ≠ `count(orders)`.**
@@ -106,14 +125,20 @@ All joins below were run against rows in this specimen and confirmed.
 3. **`ORDER_STATUS` is NOT the medication status field.** Despite the name, `ORDER_STATUS` is a shared
    "overtime single-response" order-contact table spanning lab/imaging/med orders (82 cols of mostly
    resulting metadata). The real med status is **`ORDER_MED.ORDER_STATUS_C_NAME`** ("Sent" /
-   "Discontinued" / blank for Historical Med). Worse, `ORDER_STATUS.CONTACT_DATE` for a med order
+   "Discontinued" / blank for Historical Med) — but even that is a *transmit* status: it does **not**
+   flip when an outpatient Rx is discontinued. Discontinued e-Rx rows still read "Sent"; in one specimen
+   "Discontinued" appeared only on imported inpatient orders. Discontinuation lives in
+   `RSN_FOR_DISCON_C_NAME`, `DISCONTINUED_MEDS`, and the `ERX_EVENT` "Discontinue Prescription" row
+   (gotcha 8). Worse, `ORDER_STATUS.CONTACT_DATE` for a med order
    **predates** its `ORDERING_DATE` (e.g. order 1034471696 ordered 1/27/2025 shows contact 7/28/2024).
    *Mechanism:* the status row inherits an earlier workflow/contact bucket, not the prescribe date.
    *Handle:* never read med status or dates from `ORDER_STATUS`; use `ORDER_MED`.
 
-4. **One drug therapy spans several order rows (reorder chain) — naive `COUNT(*)` overstates meds (§9).**
+4. **One drug therapy spans several order rows (reorder chain) — naive `COUNT(*)` overstates meds (§12).**
    Each renewal mints a *new* `ORDER_MED` row whose `CHNG_ORDER_MED_ID` points at its predecessor; the
-   old row gets `RSN_FOR_DISCON_C_NAME = '*Reorder (sends cancel message to pharmacy)'`. Nortriptyline is
+   old row *often* — not always — gets `RSN_FOR_DISCON_C_NAME = '*Reorder (sends cancel message to
+   pharmacy)'` (in one specimen only 2 of 4 superseded predecessors carry it). Detect chain membership
+   by the `CHNG_ORDER_MED_ID` pointer, never by the discon reason. Nortriptyline is
    4 rows for one continuous therapy (qty escalating 90→180→270 capsules). *Handle:* collapse to the
    *head* of each chain — the rows **not** pointed at by any `CHNG_ORDER_MED_ID` — to get distinct active
    therapies (recipe below). Similarly, the **8 NaCl rows on 7/30/2024 are one external inpatient event**
@@ -157,6 +182,15 @@ All joins below were run against rows in this specimen and confirmed.
     *Handle:* a blank here means "not a dispensed prescription," **not** missing data — interpret it the
     same way you split `Historical Med`/inpatient from prescribed (gotchas 4, 6).
 
+11. **Prior-auth/ePA decoys: med-flavored names that ship as pure stubs (§46).** `ORDER_AUTH_INFO` emits
+    one row per order across the shared ORD space, but every payload column (`MED_AUTH_RESULT_C_NAME`,
+    `MED_AUTH_NUM`, `AUTH_*`) is NULL here. `EPA_INFO`/`_2` is keyed **`REFERRAL_ID`** — ePA is modeled
+    as a *referral*, one NULL stub per referral — and joins no `ORDER_MED`/`ORDER_PROC` row.
+    `IP_ORDER_REC` (inpatient med-rec) ships NULL stubs keyed by an `EVENT_ID` that joins nothing
+    reachable, and `ANTICOAG_SELF_REGULATING` is a single NULL-flag row. *Handle:* the discrete
+    prior-auth status that *does* ship is `ORDER_MEDINFO.PRIOR_AUTH_STATUS_C_NAME`; don't burn time
+    dereferencing these stubs.
+
 ## Recipes
 
 ```sql
@@ -192,6 +226,8 @@ WHERE om.ORDER_MED_ID NOT IN
 ORDER BY CAST(om.PAT_ENC_DATE_REAL AS REAL);
 
 -- 3. The current med list AS OF the most recent encounter that carries a snapshot.
+--    Caveat §43: the most recent snapshot may sit on an automated/system contact (NULL dept),
+--    not the last real visit; join PAT_ENC.DEPARTMENT_ID if you need the last *clinical* snapshot.
 WITH latest AS (
   SELECT PAT_ENC_CSN_ID
   FROM PAT_ENC_CURR_MEDS
@@ -243,13 +279,17 @@ ORDER BY CAST(om.PAT_ENC_DATE_REAL AS REAL);
   APL INTERNAL MEDICINE plus 8 imported inpatient NaCl IV orders from a single 7/30/2024 external stay
   (creator/verifier placeholder "EPIC, USER", dept "GENERIC EXTERNAL DATA DEPARTMENT"). The current-med
   snapshot spans 88 encounters / 241 rows but only 12 distinct meds.
-- **No dispense/fill data anywhere** (`ORDER_DISP_INFO*` fill fields all NULL). Open: is pharmacy-fill
-  capture simply out of scope for an ambulatory EpicCare EHI export (no Willow/MAR tables present), or
-  were there genuinely no fills? In this specimen the latter cannot be distinguished from the former —
-  flag fill data as **not exported**, not as "patient never filled."
-- **`ORDER_STATUS.CONTACT_DATE` predates `ORDERING_DATE`** for several med orders by months. Likely the
-  order's earlier workflow/contact bucket rather than the prescribe date; resolve with a `*_DATE_REAL`
-  integer compare across `PAT_ENC` if it matters. Treat `ORDER_MED.ORDERING_DATE` as authoritative.
+- **No dispense/fill events anywhere** (`ORDER_DISP_INFO*` fill fields all NULL). The only
+  dispense-shaped data is `MED_DISPENSE_SIG` — sig text lines for an external (payer/Surescripts-style)
+  dispense document whose parent record is not exported (§15); still no quantities or fill events. Open:
+  is pharmacy-fill capture simply out of scope for an ambulatory EpicCare EHI export (no Willow/MAR
+  tables present), or were there genuinely no fills? In this specimen the latter cannot be distinguished
+  from the former — flag fill data as **not exported**, not as "patient never filled."
+- **`ORDER_STATUS.CONTACT_DATE` predates `ORDERING_DATE`** on *every* med order in one specimen, by
+  months. Likely the order's earlier workflow/contact bucket rather than the prescribe date. Compare via
+  `*_DATE_REAL` (`ORDER_STATUS` has `ORD_DATE_REAL`) — the string dates are variable-width `M/D/YYYY`,
+  so any positional or lexical compare silently lies (§17). Treat `ORDER_MED.ORDERING_DATE` as
+  authoritative.
 - **`ORDER_MED_MORPHINE_EQUIV`** ships one stub row per order with NULL conv factor (no opioids here) —
   expect it populated only for opioid PCA orders in other specimens.
 - The `MDL_*` problem-oriented med list parallels the order-based view (`ORDER_MED.MDL_ID` resolves) but

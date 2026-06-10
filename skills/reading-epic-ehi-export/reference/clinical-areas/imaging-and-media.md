@@ -18,30 +18,33 @@ DOC_INFORMATION.SCAN_FILE → {patient, CSN, order}` for the scan.
 | table | role | rows in specimen | notes |
 |---|---|---|---|
 | `ORDER_PROC` | **Spine.** One row per ordered procedure; imaging orders are `ORDER_TYPE_C_NAME='Imaging'`. Carries `DESCRIPTION`, `PROC_ID`, `RADIOLOGY_STATUS_C_NAME`, `ORDER_STATUS_C_NAME`, dates, `PAT_ENC_CSN_ID`. | 42 (9 Imaging) | 82 cols. Shared with labs/referrals — always filter on `ORDER_TYPE_C_NAME`. |
-| `ORDER_NARRATIVE` | **The radiologist's read.** Line-numbered free text keyed `(ORDER_PROC_ID, LINE)`. The *only* home for imaging report text — imaging has **no `ORDER_RESULTS` rows**. | 465 | Reassemble `ORDER BY CAST(LINE AS INT)`; many blank padding lines. |
+| `ORDER_NARRATIVE` | **The radiologist's read.** Line-numbered free text keyed `(ORDER_PROC_ID, LINE)`. The *only* home for imaging report text — imaging has **no `ORDER_RESULTS` rows**. | 465 | Reassemble `ORDER BY CAST(LINE AS INT)`; many blank padding lines (in one specimen ~90% of lines are blank — recipe 2's `TRIM` filter is load-bearing, not cosmetic). |
 | `DOC_INFORMATION` | **Media spine.** One row per scanned/imported/e-signed document (DCS master). `SCAN_FILE` = the on-disk `raw/Media/` filename — *the* file→chart join key. Also `DOC_INFO_TYPE_C_NAME`, `DOC_DESCR`, `DOC_CSN`, `DOC_HNO_ID`, `DOC_RFL_ID`. | 22 | 79 cols. Not every referenced doc has a row here (see Gotchas). `DOC_DESCR` is blank for 9/22 rows — fall back to `DOC_INFO_TYPE_C_NAME` (populated for every row) for a usable label: `COALESCE(NULLIF(DOC_DESCR,''),DOC_INFO_TYPE_C_NAME)`. |
-| `DOC_INFORMATION_2` | 1:1 supplement (§6) on `DOC_INFO_ID`: overflow document attributes. | 22 | Left-join on `DOC_INFO_ID`. |
-| `DOC_INFO_DICOM` | DICOM study/series companion, keyed `DOCUMENT_ID (= DOC_INFO_ID)`. 37 DICOM tag columns. | 22 | **Mostly empty** here — only `STUDY_INST_UID`/`SERIES_INSTANCE_UID` populate (2 rows); all other tags blank (see Gotchas). |
+| `DOC_INFORMATION_2` | 1:1 supplement (§8) keyed `DOCUMENT_ID`: overflow document attributes. | 22 | **Key-name drift** (§8): the supplement's key is `DOCUMENT_ID`, not the base's `DOC_INFO_ID` — left-join `DOC_INFORMATION_2.DOCUMENT_ID = DOC_INFORMATION.DOC_INFO_ID`. |
+| `DOC_INFO_DICOM` | DICOM study/series companion, keyed `DOCUMENT_ID (= DOC_INFO_ID)`. 36 DICOM tag columns beside the key. | 22 | **Mostly empty** here — only `STUDY_INST_UID`/`SERIES_INSTANCE_UID` populate (2 rows); all other tags blank (see Gotchas). |
 | `DOC_LINKED_PATS` | Doc → patient crosswalk for EHI export. `DOCUMENT_ID`, `LINE`, `LINKED_PAT_ID`. | 22 | All rows = the one `PAT_ID`. |
 | `DOC_LINKED_PAT_CSNS` | Doc → encounter-CSN crosswalk. `DOCUMENT_ID`, `LINE`, `LINKED_PAT_ENC_CSN_ID`. | 5 | Only docs filed under a contact get a row. |
 | `DOC_CSN_REFS` | Doc → contact references "by contact serial number" (per schema). Same shape/content as `DOC_LINKED_PAT_CSNS` here. | 5 | `DOCUMENT_ID`, `LINE`, `CSN_REFERENCE`. Redundant with the above in this specimen. |
 | `DOC_LINKED_ORDERS` | **Image → placer order.** Ties an imaging document to its `ORDER_PROC`. `DOC_INFO_ID`, `LINE`, `ORDER_ID`. | 2 | `ORDER_ID = ORDER_PROC.ORDER_PROC_ID`. Only the two External Radiology images. |
-| `PAT_ENC_DOCS` | Encounter → document index. `PAT_ENC_CSN_ID`, `LINE`, `DOC_INFO_ID`, `PAT_ID`, `PAT_ENC_DATE_REAL`. | 12 | References 12 docs; only 3 resolve to `DOC_INFORMATION` (see Gotchas). |
+| `PAT_ENC_DOCS` | Encounter → document index. `PAT_ENC_CSN_ID`, `LINE`, `DOC_INFO_ID`, `PAT_ID`, `PAT_ENC_DATE_REAL`, plus an `ADT_CONTACT_YN` flag. | 12 | References 12 docs; only 3 resolve to `DOC_INFORMATION` (see Gotchas). |
 | `PATIENT_DOCS` | Patient-level document index. `PAT_ID`, `LINE`, `DOC_INFO_ID`. | 41 | Only 14 of 41 resolve to `DOC_INFORMATION`. |
 | `HSP_ACCT_LETTERS` | **The *other* media engine.** Hospital-billing correspondence letters, keyed `NOTE_ID`. Ties `LTR_*.PDF` files to a guarantor `ACCOUNT_ID`. | 2 | Joins via `NOTE_ID` to `HNO_INFO`/`NOTE_ENC_INFO`, **not** `DOC_INFORMATION`. |
 | `ORDER_RAD_READING` | Reading radiologist per order: `ORDER_PROC_ID`, `LINE`, `PROV_ID`, `READING_DT`, `READ_UTC_DTTM`. | 4 | `PROV_ID → CLARITY_SER.PROV_NAME`. |
 | `RIS_SGND_INFO` | RIS report sign-off: `ORDER_PROC_ID`, `SIGNED_PROV_ID`, `SIGNED_DATE/TM`, `SIGNED_UTC_DTTM`. | 4 | Who/when the read was signed. |
-| `ORDER_RAD_ACC_NUM` | **Accession number** per order: `ORDER_PROC_ID`, `LINE`, `ACC_NUM` (e.g. `H237948`). | 12 | Keyed on a per-instance/specimen order id — **10 of 12 rows are Labs, 1 Microbiology, only 1 Imaging** (and that row's `ACC_NUM` is just the order id repeated). Accession here is largely a lab/specimen construct; the flagship imaging orders get **none** on a naive `ORDER_PROC_ID` join (see Gotchas). |
+| `FINALIZE_PHYSICIAN` | Who marked the study **Final** and when: `FINALIZE_PROV_ID`, `FINALIZING_INS_DTTM`, `FINALIZING_INST_UTC_DTTM`. Bare `ORDER_ID` = the parent `ORDER_PROC_ID` (joins directly, unlike the per-instance satellites). | 4 | Third voice of the read→sign→finalize triplet — in one specimen it mirrors `RIS_SGND_INFO` exactly (same orders, same provider). Schema doc names a `FINALIZE_PROV_ID_PROV_NAME` companion but only the bare id ships (§6/§7) — resolve via `CLARITY_SER`. |
+| `ORDER_MODALITY_TYPE` | Modality category per imaging order: `ORDER_ID`, `LINE`, `MODALITY_TYPE_C_NAME`; bare `ORDER_ID` = the parent `ORDER_PROC_ID` (joins directly). | 4 | The **only structured modality in the export** — pre-resolved `_C_NAME`, no `ZC_` lookup (§23), and `DOC_INFO_DICOM.MODALITY` is blank (gotcha 4). Beware: the schema-table *description* says "anatomical regions," but the payload is the modality type — §24 label-lies at table-description level. |
+| `ORDER_RAD_ACC_NUM` | **Accession number** per order: `ORDER_PROC_ID`, `LINE`, `ACC_NUM` (e.g. `H237948`). | 12 | Keyed on a per-instance/specimen order id — **10 of 12 rows are Labs, 1 Microbiology, only 1 Imaging** (and that row's `ACC_NUM` is just the order id repeated). Accession here is largely a lab/specimen construct; the flagship imaging orders get **none** on a naive `ORDER_PROC_ID` join — bridge to the parent via `ORDER_INSTANTIATED` (see joins/Gotchas). |
 | `ORDER_IMAGE_AVAIL_INFO` | PACS image-availability flag/time: `ORDER_ID`, `IMG_AVAIL_YN`, `IMG_AVAIL_DTTM`, `IMAGE_LOCATION_C_NAME`. | 11 | "Images are available in PACS as of …". Its `ORDER_ID` is the **per-instance/child** order id — 10 of 11 do **not** resolve to a parent `ORDER_PROC.ORDER_PROC_ID` (they sit a few ids off the imaging order, e.g. `1034471696/97` near `1034471692`); only `1025926289` matches directly. |
+| `ORDER_INSTANTIATED` | **Parent → per-instance bridge.** `ORDER_ID` = the standing/parent order, `INSTNTD_ORDER_ID` = the instantiated per-instance child; *both* sides are real `ORDER_PROC` rows. | 11 | The missing link for the per-instance order-id spine: `ORDER_RAD_ACC_NUM.ORDER_PROC_ID = INSTNTD_ORDER_ID` walks an instance accession up to its parent order (see joins/Gotchas). Does **not** rescue `ORDER_IMAGE_AVAIL_INFO`'s unresolved ids. |
 | `ORDER_RAD_STUDY` | RIS study-activity audit: `ORDER_PROC_ID`, `STUDY_MODE_C_NAME`, `USER_ID(_NAME)`, `STUDY_CHAR_CNT`. | 2 | Dictation/transcription activity, not clinical content. |
 | `ORDER_DOCUMENTS` | Thin order↔contact-date index over orders that produced a document. `ORDER_ID`, `CONTACT_DATE(_REAL)`, `LINE`. | 4 | Bridges an order to the contact(s) on which its docs were filed. |
-| `READING_ACTIVITIES` | RIS reading-workflow activity id per order (`READING_ADV_ACT_ID(_NAME)`). | 1 | Workflow metadata (e.g. "UPH RIS … DICTATION_PALETTE"). |
+| `READING_ACTIVITIES` | RIS reading-workflow activity id per order: `READING_ADV_ACT_ID` + companion `READING_ADV_ACT_ID_ADV_ACTIVITY_NAME` (long-form §6 suffix — a literal `_NAME` lookup misses it). | 1 | Workflow metadata (e.g. "UPH RIS … DICTATION_PALETTE"). |
 
 **Tables to expect but empty/placeholder here** (name them so an analyst knows to look):
 - **`DOC_INFO_DICOM`** is present with 22 rows but is a near-empty *placeholder* — see Gotchas.
 - **`RAD_THERAPY_*`** (`RAD_THERAPY_ASSOC_COURSE` 62 rows, `RAD_THERAPY_EPISODE_INFO` 1) concern
   **radiation-oncology therapy courses**, a different domain from diagnostic imaging; not covered here.
-- No `ZC_DOC_INFO_TYPE` / `ZC_RADIOLOGY_STATUS` lookups — categories ship pre-resolved as `*_C_NAME` (§13).
+- No `ZC_DOC_INFO_TYPE` / `ZC_RADIOLOGY_STATUS` lookups — categories ship pre-resolved as `*_C_NAME` (§23).
 
 ## How they join
 
@@ -49,8 +52,8 @@ All verified against rows in this specimen.
 
 - **`DOC_INFORMATION.SCAN_FILE` = the literal filename in `raw/Media/`** — the canonical Media→chart join.
   *Verified: `SCAN_FILE='IX-prd-3342771002.JPG'` → `DOC_INFO_ID 419619806` "X-RAY CHEST 2 VIEWS".* This is
-  the §3-equivalent for media: the on-disk name IS the foreign key (cf. notes' `Rich Text/<HNO>.RTF`).
-- **`DOC_INFORMATION.DOC_INFO_ID` = `DOC_INFORMATION_2.DOC_INFO_ID` = `DOC_INFO_DICOM.DOCUMENT_ID` =
+  the §14-equivalent for media: the on-disk name IS the foreign key (cf. notes' `Rich Text/<HNO>.RTF`).
+- **`DOC_INFORMATION.DOC_INFO_ID` = `DOC_INFORMATION_2.DOCUMENT_ID` = `DOC_INFO_DICOM.DOCUMENT_ID` =
   `DOC_LINKED_PATS.DOCUMENT_ID` = `DOC_LINKED_ORDERS.DOC_INFO_ID` = `DOC_CSN_REFS.DOCUMENT_ID` =
   `PAT_ENC_DOCS.DOC_INFO_ID` = `PATIENT_DOCS.DOC_INFO_ID`** — the DCS document id ties every satellite
   together. *Verified all 22 `DOC_INFORMATION` ids appear in `DOC_LINKED_PATS`.*
@@ -72,7 +75,8 @@ All verified against rows in this specimen.
 - **`ORDER_RAD_READING.ORDER_PROC_ID` / `RIS_SGND_INFO.ORDER_PROC_ID` = `ORDER_PROC.ORDER_PROC_ID`** — these
   two read/sign-off satellites *do* key to the parent imaging order. *Verified: order 1034471692 → reading &
   sign-off prov `8800099` ("GENERIC EXTERNAL DATA PROVIDER") at `7/30/2024 8:04 PM`; all 4 reading rows and
-  all 4 sign-off rows are Imaging orders.*
+  all 4 sign-off rows are Imaging orders.* `FINALIZE_PHYSICIAN.ORDER_ID` (bare name, same §5/§6 drift) and
+  `ORDER_MODALITY_TYPE.ORDER_ID` also equal the parent `ORDER_PROC_ID` and join directly.
 - **`ORDER_RAD_ACC_NUM.ORDER_PROC_ID` and `ORDER_IMAGE_AVAIL_INFO.ORDER_ID` do NOT key to the parent imaging
   order** — they live on a **per-instance/specimen order-id spine**. *Verified: of `ORDER_RAD_ACC_NUM`'s 12
   rows, 10 join to Labs and 1 to Microbiology; the only Imaging join (`1025926289`) has `ACC_NUM` = the order
@@ -84,13 +88,21 @@ All verified against rows in this specimen.
   `ORDER_IMAGE_AVAIL_INFO`/`ORDER_DOCUMENTS`/`DOC_LINKED_ORDERS`/`READING_ACTIVITIES` (§5/§6 family drift);
   for `DOC_LINKED_ORDERS`/`ORDER_DOCUMENTS` the value equals `ORDER_PROC_ID`, but for `ORDER_IMAGE_AVAIL_INFO`
   it is the per-instance id.
-- **`ORDER_RAD_READING.PROV_ID = CLARITY_SER.PROV_ID` → `PROV_NAME`** — the reading radiologist (§3).
+- **`ORDER_INSTANTIATED` is the bridge from the per-instance spine back to the parent**: `ORDER_ID` = the
+  standing/parent order, `INSTNTD_ORDER_ID` = the instantiated per-instance child, and both resolve in
+  `ORDER_PROC`. Join `ORDER_RAD_ACC_NUM.ORDER_PROC_ID = ORDER_INSTANTIATED.INSTNTD_ORDER_ID` to walk an
+  instance accession up to a *different* parent order — *verified: 10 of 12 accession rows bridge this way,
+  including the lone imaging accession child (`1025926289`) up to its imaging parent.* It does **not** explain
+  `ORDER_IMAGE_AVAIL_INFO`'s unresolved ids: those appear in *neither* `ORDER_INSTANTIATED` column nor
+  `ORDER_PARENT_INFO` — those child orders were simply never exported as rows anywhere, so no exported bridge
+  exists for them.
+- **`ORDER_RAD_READING.PROV_ID = CLARITY_SER.PROV_ID` → `PROV_NAME`** — the reading radiologist (§5).
 
 ## Unstructured tie-back
 
 This domain **is** largely the unstructured material; here is how each piece reassembles and reattaches:
 
-- **Radiology report text** → `ORDER_NARRATIVE` lines, `ORDER BY CAST(LINE AS INT)` (§7/§8), concatenated.
+- **Radiology report text** → `ORDER_NARRATIVE` lines, `ORDER BY CAST(LINE AS INT)` (§9/§11), concatenated.
   Attaches to the order by `ORDER_PROC_ID`; the order attaches to its encounter by `PAT_ENC_CSN_ID`.
 - **Scanned images/PDFs** → the byte stream is the file in `raw/Media/<SCAN_FILE>`; the *metadata* is the
   `DOC_INFORMATION` row. Reattach via `SCAN_FILE`, then to patient/CSN/order through the satellites above.
@@ -133,8 +145,9 @@ This domain **is** largely the unstructured material; here is how each piece rea
    sniff the magic bytes / use `file(1)`; never trust the media extension. (Same caution applies to any
    `.PDF` that might actually be an image, etc.)
 
-4. **`DOC_INFO_DICOM` is a structural placeholder, but not *entirely* empty.** All 22 rows exist; 35 of 37
-   DICOM tag columns (MODALITY, STUDY_DATE, ACCESSION, pixel geometry…) are blank. But the **two External
+4. **`DOC_INFO_DICOM` is a structural placeholder, but not *entirely* empty.** All 22 rows exist; of the 36
+   DICOM tag columns beside the `DOCUMENT_ID` key, 34 (MODALITY, STUDY_DATE, ACCESSION, pixel geometry…) are
+   blank on every row. But the **two External
    Radiology images** (X-ray chest, CT angio neck) *do* carry a `STUDY_INST_UID` and `SERIES_INSTANCE_UID`.
    *Mechanism:* Epic always emits the DICOM companion row per document; it populates the study/series UIDs
    when the image arrived with PACS identity, but the rich tag set stays empty because the images were
@@ -152,7 +165,7 @@ This domain **is** largely the unstructured material; here is how each piece rea
    `DOC_INFORMATION.SCAN_FILE` (prefixes `IX-`, `D-`, `R_DOC_`). (b) **Hospital-billing letters** →
    `HSP_ACCT_LETTERS.NOTE_ID` → HNO engine (prefix `LTR_`). The `LTR_` files are **absent from
    `DOC_INFORMATION` entirely**. *Mechanism:* correspondence letters are generated by the notes/letter
-   engine against a guarantor account, a different subsystem than document imaging/scanning (§24, two id
+   engine against a guarantor account, a different subsystem than document imaging/scanning (§41, two id
    spaces). *Handle:* to resolve a Media file, branch on prefix — `LTR_*` → `HSP_ACCT_LETTERS`; everything
    else → `DOC_INFORMATION.SCAN_FILE`. (And note: `LTR_` letters may be addressed to a *guarantor* about a
    *dependent* — the named addressee is not necessarily the export's patient.)
@@ -192,7 +205,8 @@ FROM (SELECT NARRATIVE FROM ORDER_NARRATIVE
 --    parent ORDER_PROC_ID.) NOTE: accession (ORDER_RAD_ACC_NUM) and PACS-availability
 --    (ORDER_IMAGE_AVAIL_INFO) live on a per-instance/specimen order-id spine, so a naive
 --    join on op.ORDER_PROC_ID returns NULL for the flagship images — see Gotchas, don't
---    add them here expecting an accession.
+--    add them here expecting an accession. To reach an accession, bridge through
+--    ORDER_INSTANTIATED: oran.ORDER_PROC_ID = oi.INSTNTD_ORDER_ID AND oi.ORDER_ID = op.ORDER_PROC_ID.
 SELECT op.ORDER_PROC_ID, op.DESCRIPTION,
        rr.PROV_ID, ser.PROV_NAME AS reading_prov, rr.READ_UTC_DTTM,
        sg.SIGNED_UTC_DTTM

@@ -17,7 +17,7 @@ by `PAT_ID`. If you only learn one join in the whole export, learn `child.PAT_EN
 | `PAT_ENC_2` | Supplement: in-row vitals (`PHYS_BP`/`PHYS_SPO2`/`PHYS_PEAK_FLOW`; temperature is only a *source code* `PHYS_TEMP_SRC_C_NAME`, no value column), smoking, cosigner/supervising prov, tel-message fields, `PARENT_ENC_CSN_ID`, visit payor. | 169 | 1:1 on `PAT_ENC_CSN_ID`. These `PHYS_*` fields are populated on only a handful of contacts (`PHYS_BP` 9, `PHYS_SPO2` 2, `PHYS_PEAK_FLOW` 0) — see Gotcha #9 for the real vitals spine. |
 | `PAT_ENC_3` | Supplement: billing area, checkout user, copay calc, referral type, self-pay. | 169 | **Join trap:** key column is `PAT_ENC_CSN` (no `_ID`). |
 | `PAT_ENC_4` | Supplement: `VISIT_NUMBER`, eCheck-in status, copay collection, `ORIG_ENC_CSN`, BCRA inputs. | 169 | 1:1. |
-| `PAT_ENC_5` | Supplement: prepay/discount, `EVISIT_STATUS_C_NAME`, `ATTR_DEPARTMENT_ID`, video-visit flag. | 169 | 1:1. (Discovery report said its schema doc was missing; in this DB build it documents 34 cols — see Gotchas.) |
+| `PAT_ENC_5` | Supplement: prepay/discount, `EVISIT_STATUS_C_NAME`, `ATTR_DEPARTMENT_ID`, an on-demand video-visit flag (`IS_ON_DEMAND_VV_YN` — **100% NULL here**; the real video-visit signal is `PATIENT_ENC_VIDEO_VISIT`, below). | 169 | 1:1. (Discovery report said its schema doc was missing; in this DB build it documents 34 cols — see Gotchas.) |
 | `PAT_ENC_6` | Supplement: `LINKED_ENC_CSN`, eVisit fields (`EVISIT_YN`, `EVISIT_RFV_C_NAME`), telehealth loc flags. | 169 | 1:1. |
 | `PAT_ENC_7` | Supplement: notification flags, `CONTACT_NUM`, ABN, eVisit submit/turnaround, contraception counseling. | 169 | 1:1. |
 | `PAT_ENC_8` | Tiny supplement (7 cols): re-carries `PAT_ID`+`CONTACT_DATE`, case-mgmt owner, payment-plan agreement ID. | 169 | 1:1. |
@@ -26,30 +26,39 @@ by `PAT_ID`. If you only learn one join in the whole export, learn `child.PAT_EN
 | `PAT_ENC_RSN_VISIT` | Reason-for-visit; PK CSN+`LINE`. `ENC_REASON_ID`, `RFV_ONSET_DT`, body location. | 31 | `ENC_REASON_ID`→`CL_RSN_FOR_VISIT`. |
 | `PAT_ENC_DISP` | Disposition / E&M level-of-service: `LOS_NEW_OR_EST_C_NAME`, hx/exam/MDM levels, `LOS_AUTH_PROV_ID`. | 14 | One row per encounter that got an E&M code. |
 | `PAT_ENC_LOS_DX` | The dx lines attached to the E&M level-of-service charge (CSN+`LINE`, just `DX_UNIQUE`). | 28 | Sub-list of LOS; not the same as `PAT_ENC_DX`. |
-| `PAT_ENC_THREADS` | One row per encounter; `THREAD_ID` non-null only for in-basket-threaded **telephone** encounters. | 169 | 27 have a `THREAD_ID` → telephone-encounter marker. |
+| `PAT_ENC_THREADS` | One row per encounter; `THREAD_ID` non-null marks an **in-basket-threaded** contact — usually a telephone encounter, but the thread link can also attach to other contact types. | 169 | 27 threaded here, of which 26 are pure telephone encounters (the 27th is a threaded `PAT_ENC_HSP` appointment) — so as a type test it over-claims slightly; see Gotcha #1. |
+| `PATIENT_ENC_VIDEO_VISIT` | 1:1 companion row per contact (a §46 always-emit placeholder); `PAT_ENC_LVL_VIDEO_VISIT_ID` non-null marks an **actual video visit**. | 169 | 1 real video visit here. Needed because `PAT_ENC_5.IS_ON_DEMAND_VV_YN` is empty. |
 | `PAT_ENC_HSP` / `PAT_ENC_HSP_2` | Hospital/ADT supplement for facility-style contacts. `ADT_PAT_CLASS_C_NAME`, `HOSP_ADMSN_TIME`, `HOSP_DISCH_TIME`, disch disp. | 2 / 2 | **Not real admissions here** — both `ADT_PAT_CLASS_C_NAME='Therapies Series'` (outpatient OT). |
-| `PAT_ENC_CURR_MEDS` | Per-encounter active-med snapshot (CSN+`LINE`); a *different id space* from `ORDER_MED` (§24). | 241 | Even automated contacts carry one. |
+| `CLARITY_ADT` | Event-level ADT history behind `PAT_ENC_HSP`: one admission-class event + one discharge event per facility contact; `EVENT_TYPE_C_NAME`/`PAT_CLASS_C_NAME` give the event semantics. Joins on `PAT_ENC_CSN_ID`. | 4 | All 4 land on the 2 `PAT_ENC_HSP` CSNs (one event pair each). See Gotcha #6. |
+| `PAT_ENC_CURR_MEDS` | Per-encounter active-med snapshot (CSN+`LINE`); a *different id space* from `ORDER_MED` (§41). | 241 | Even automated contacts carry one. |
 | `PAT_ENC_BILLING_ENC` | Billing-linkage row per encounter; `BILLING_ENC_TYPE_C_NAME`. | 169 | **`BILLING_ENC_TYPE_C_NAME` is 100% NULL here** — the one promisingly-named type column is empty. |
 | `PAT_ENC_PAS` / `_CALL_DATA` / `_CC_AUTO_CHG` / `_ELIG_HISTORY` / `_SEL_PHARMACIES` / `_DOCS` / `_LETTERS` | Peripheral per-encounter sidecars (patient-access status, call data, auto-charges, eligibility checks, selected pharmacies, attached docs, generated letters). | 169 / 169 / 169 / 33 / 6 / 12 / 1 | Hang off CSN; mostly registration/billing plumbing. |
 | `ECHKIN_STEP_INFO` | eCheck-in steps per appointment (CSN+`LINE`): `INCLUDED_STEP_C_NAME` × `ECHKIN_STEP_STAT_C_NAME`. | 144 | Covers 13 appointments. |
+| `ED_PAT_STATUS` | **Despite the ED name**, in an ambulatory export this is the per-appointment visit-workflow status history (Scheduled→Arrived→Waiting→Rooming in Progress→Visit in Progress→Visit Complete→Checked Out→Signed): one row per status change, `ED_PAT_STATUS_C_NAME` + `PAT_STATUS_TIME` + user. Keyed (`INPATIENT_DATA_ID`, `LINE`) with `PAT_ENC_CSN_ID` carried alongside — ambulatory rooming reuses the ED patient-status machinery, hanging off the same `INPATIENT_DATA_ID` hub as the flowsheets (Gotcha #9). | 134 | Covers 54 CSNs here, every one a `PAT_ENC_APPT` appointment. The **only** place with arrival/rooming timestamps. Order by `CAST(LINE AS INTEGER)`. |
+| `PAT_ADDENDUM_INFO` | One `LINE` row per post-closure **addendum** on an encounter: added date/user, started instant, `SOURCE_WORKFLOW_C_NAME`, `ADDENDUM_OPEN_YN` — a §37-style who/when ledger. Keyed CSN+`LINE`. | 4 | Tells you a closed encounter was later amended. |
 | `PAT_ENC_ADMIT_DX_AUDIT` / `_COMM_MGT` / `_QNRS_ANS` / `_IP_MEDS` | Sparse/edge sidecars. | 1 / 1 / 1 / 8 | Mostly empty for an outpatient record; flagged so you know they exist. |
 
 Master/lookup tables this domain joins to: `CLARITY_SER` (providers), `CLARITY_DEP` (departments),
 `CLARITY_EDG` (diagnoses), `CL_RSN_FOR_VISIT` (reasons). Each is a slim 3-col id→name file here.
 
+**Decoy:** `ED_IEV_EVENT_INFO` ships orphaned IEV (event-master) shards — timestamp + user only, no
+patient/CSN column, and none of its link ids (`ADT_EVENT_ID`, `EVENT_NOTE_ID`, `EVENT_LOG_ID`) resolve
+in this export — unreachable from the chart (§15 pointer-without-body, inverted). Skip it.
+
 ## How they join
 
-- **Base ↔ supplements (1:1 stack, §6).** `PAT_ENC` ⋈ `PAT_ENC_2/4/5/6/7/8` on `PAT_ENC_CSN_ID`; all are
+- **Base ↔ supplements (1:1 stack, §8).** `PAT_ENC` ⋈ `PAT_ENC_2/4/5/6/7/8` on `PAT_ENC_CSN_ID`; all are
   exactly 169 rows. **`PAT_ENC_3` is the exception:** its key is `PAT_ENC_CSN` (no `_ID`).
   Verified: `SELECT COUNT(*) FROM PAT_ENC_3 a JOIN PAT_ENC b ON a.PAT_ENC_CSN=b.PAT_ENC_CSN_ID` = 169.
   Left-join the whole stack to reconstruct the full wide encounter record.
 - **Child fact tables ↔ encounter (CSN, §2).** `PAT_ENC_DX`, `PAT_ENC_RSN_VISIT`, `PAT_ENC_DISP`,
   `PAT_ENC_APPT`, `ECHKIN_STEP_INFO`, `PAT_ENC_CURR_MEDS` all carry `PAT_ENC_CSN_ID` (+`LINE` for the
-  list ones). Verified each LINE-keyed child reassembles in `LINE` order (e.g. CSN 1031703883:
-  LINE 1 = RIB INJURY, LINE 2 = RIB PAIN).
+  list ones). Verified each LINE-keyed child reassembles in `LINE` order (e.g. one CSN's two
+  `PAT_ENC_RSN_VISIT` lines reassemble LINE 1, LINE 2 via `CL_RSN_FOR_VISIT` — don't hunt for that
+  pair in `PAT_ENC_DX`; reasons and dx are separate lists).
 - **Visit provider → name.** `PAT_ENC.VISIT_PROV_ID` → `CLARITY_SER.PROV_ID` → `PROV_NAME`. Verified:
   144590 = "RAMMELKAMP, ZOE L" (PCP, 27 enc), 802011 = "DHILLON, PUNEET S", 3724611 = "MAC LAB APL".
-  The documented denormalized companion `VISIT_PROV_ID_PROV_NAME` is **not materialized** (§4/§5); only
+  The documented denormalized companion `VISIT_PROV_ID_PROV_NAME` is **not materialized** (§6/§7); only
   `VISIT_PROV_ID` + `VISIT_PROV_TITLE_NAME` ("MD") ship. `PCP_PROV_ID` resolves the same way.
 - **Department → name.** `PAT_ENC.DEPARTMENT_ID` → `CLARITY_DEP.DEPARTMENT_ID` → `DEPARTMENT_NAME`.
   Verified: 1700801002 = "MAC APL INTERNAL MEDICINE" (57 enc), 1700801005 = "MAC APL LABORATORY",
@@ -60,8 +69,9 @@ Master/lookup tables this domain joins to: `CLARITY_SER` (providers), `CLARITY_D
   `REASON_VISIT_NAME`. Verified (160383 = "MEDICATION REFILL", 83 = "ANNUAL EXAM"). The companion
   `ENC_REASON_ID_REASON_VISIT_NAME` is **not** materialized — join the master.
 - **Encounter chaining (CSN→CSN).** `PAT_ENC_2.PARENT_ENC_CSN_ID`, `PAT_ENC_4.ORIG_ENC_CSN`,
-  `PAT_ENC_6.LINKED_ENC_CSN` each point at *another* CSN, letting you chain related contacts (e.g. a
-  telephone follow-up linked to its source visit).
+  `PAT_ENC_6.LINKED_ENC_CSN` each point at *another* CSN, letting you chain related contacts — **where
+  populated**. All three may be (and in one specimen are) 100% NULL; when they are, same-day grouping
+  on `FLOOR(CAST(PAT_ENC_DATE_REAL AS REAL))` is the only handle (see Gotcha #2).
 
 ## Unstructured tie-back
 
@@ -73,35 +83,42 @@ Encounters anchor nearly all unstructured content **by CSN**:
   rich-text body lives only at `Rich Text/<NOTE_ID>...RTF` (there is no DB body column). So:
   `PAT_ENC` → `HNO_INFO` (on `PAT_ENC_CSN_ID`) → `NOTE_ID` → the RTF file. See the
   `clinical-notes-and-documents` guide for the filename's inverted-date component.
-- **Messages.** MyChart messages tie back through `MSG_ROUTING_PAT_ENC` / `PAT_MYC_MESG` to a CSN; for
-  **telephone encounters**, `PAT_ENC_THREADS.THREAD_ID` links the contact to its in-basket message thread.
+- **Messages.** MyChart messages tie back through `MSG_ROUTING_PAT_ENC` (CSN+`LINE`; 177 rows here, every
+  CSN resolving to `PAT_ENC`) / `PAT_MYC_MESG` to a CSN; for **telephone encounters**,
+  `PAT_ENC_THREADS.THREAD_ID` links the contact to its in-basket message thread.
 - **After-Visit Summary.** Signaled in-row on `PAT_ENC` by `AVS_PRINT_TM` + `AVS_FIRST_USER_ID` (5
-  encounters here) — not a separate table; the rendered AVS PDF lives at the repo top level.
+  encounters here) — not a separate table; the rendered AVS/visit-summary PDF ships at the **export's**
+  top level, alongside the `EHITables`/`Rich Text`/`Media` folders (a redacted mirror may strip these
+  top-level PDFs).
 - **eCheck-in questionnaires / letters.** `ECHKIN_STEP_INFO`, plus `PAT_ENC_LETTERS` hang off the appt CSN.
 
 ## Gotchas & quirks (chased to *why*)
 
-1. **Encounter TYPE is not a coded column — it must be inferred.** *Observed:* there is no
-   `ENC_TYPE_C`/`VISIT_TYPE_C`/`APPT_TYPE` anywhere in the `PAT_ENC` family; a DB-wide sweep finds
-   `ENC_TYPE_C_NAME` only in unrelated tables (`PYR_FEEDBACK`), and `PAT_ENC_BILLING_ENC.BILLING_ENC_TYPE_C_NAME`
-   is 100% NULL. *Why:* Epic's `PAT_ENC.ENC_TYPE_C` exists in Chronicles but this export's table set simply
-   does not surface it (the Epic doc even notes `PAT_ENC` excludes registration/PCP-change types). *Handle:*
-   infer type from **companion-table presence + status columns**:
-   - `PAT_ENC_APPT` row present (and/or `APPT_STATUS_C_NAME` non-null) ⇒ scheduled appointment / office visit;
-   - `PAT_ENC_THREADS.THREAD_ID` non-null ⇒ **telephone encounter** (27 here);
-   - `PAT_ENC_HSP` row / `HOSP_ADMSN_TIME` non-null ⇒ facility/ADT contact (but read `ADT_PAT_CLASS_C_NAME` — here it's outpatient therapy, not admission);
+1. **Encounter TYPE is not a coded column — it must be inferred.** *Observed:* no general
+   encounter-type column exists anywhere in the `PAT_ENC` family — the only type-ish column,
+   `PAT_ENC_6.HUS_VISIT_TYPE_C_NAME`, is a special-purpose HUS-reporting field (100% NULL here); a
+   DB-wide sweep finds `ENC_TYPE_C_NAME` only in unrelated tables (`PYR_FEEDBACK`), and
+   `PAT_ENC_BILLING_ENC.BILLING_ENC_TYPE_C_NAME` is 100% NULL. *Why:* Epic's `PAT_ENC.ENC_TYPE_C` exists
+   in Chronicles but this export's table set simply does not surface it (the Epic doc even notes `PAT_ENC`
+   excludes registration/PCP-change types). *Handle:* infer type from **companion-table presence + status
+   columns**, testing in this precedence order:
+   - `PAT_ENC_HSP` row / `HOSP_ADMSN_TIME` non-null ⇒ facility/ADT contact (but read `ADT_PAT_CLASS_C_NAME` — here it's outpatient therapy, not admission). Test this **before** the thread test: a facility contact can carry a `THREAD_ID` too;
+   - `PAT_ENC_THREADS.THREAD_ID` non-null ⇒ **telephone encounter** — usually. `THREAD_ID` is an in-basket-thread link, not a type code, and can attach to a non-telephone contact (in one specimen: 27 threaded contacts, of which 26 are pure telephone; the 27th is a threaded `PAT_ENC_HSP` appointment);
+   - `PATIENT_ENC_VIDEO_VISIT.PAT_ENC_LVL_VIDEO_VISIT_ID` non-null ⇒ **video visit** (1 here; don't rely on `PAT_ENC_5.IS_ON_DEMAND_VV_YN`, which is 100% NULL);
    - `PAT_ENC_6.EVISIT_YN='Y'` ⇒ eVisit (0 here);
+   - `PAT_ENC_APPT` row present (and/or `APPT_STATUS_C_NAME` non-null) ⇒ scheduled appointment / office visit;
    - neither department nor visit provider, no appt/dx/orders ⇒ an **automated/system contact** (see #4).
 
-2. **One logical visit = many CSN contacts on the same day (§2, §10).** *Observed:* day 64869 (8/9/2018)
+2. **One logical visit = many CSN contacts on the same day (§2, §18).** *Observed:* day 64869 (8/9/2018)
    has four `PAT_ENC` rows: `64869.00` (Completed office visit, Internal Med, Dr. Dhillon), `.01` (Business
    Services), `.02` (a second IM contact), `.03` (Laboratory, provider "MAC LAB APL"). *Why:* the CSN is a
    **contact** serial, not a visit; the office visit, its lab draw, and the billing contact each mint their
    own CSN, and the **two-digit fraction of `PAT_ENC_DATE_REAL` sequences them within the day**. *Handle:*
-   to recover "the visit," group contacts by calendar day (`FLOOR(PAT_ENC_DATE_REAL)`) — or follow the
-   `PARENT_ENC_CSN_ID`/`LINKED_ENC_CSN`/`ORIG_ENC_CSN` chains — rather than counting `PAT_ENC` rows.
+   to recover "the visit," group contacts by calendar day (`FLOOR(PAT_ENC_DATE_REAL)`) — or, **where
+   populated**, follow the `PARENT_ENC_CSN_ID`/`LINKED_ENC_CSN`/`ORIG_ENC_CSN` chains (all three are
+   100% NULL in one specimen) — rather than counting `PAT_ENC` rows.
 
-3. **`CONTACT_DATE` sorts lexically and lies; `PAT_ENC_DATE_REAL` is the only real sort key (§10).**
+3. **`CONTACT_DATE` sorts lexically and lies; `PAT_ENC_DATE_REAL` is the only real sort key (§18).**
    *Observed:* `MIN(CONTACT_DATE)`='1/2/2026', `MAX(CONTACT_DATE)`='9/8/2020' — nonsense, because the date
    is rendered text ("M/D/YYYY 12:00:00 AM"). The true range is `DATE_REAL` 64869 (8/9/2018) → 68102. *Why:*
    `CONTACT_DATE` is an effective calendar string (always midnight); `PAT_ENC_DATE_REAL` is the float
@@ -111,12 +128,14 @@ Encounters anchor nearly all unstructured content **by CSN**:
    consecutive months** (10/25/2018, 11/25/2018, …) with NULL department, NULL provider, NULL appt status,
    no dx/reason/orders, `ENC_CLOSED_YN='Y'`. 95 encounters here have neither department nor provider.
    *Why:* these are **automated/recurring system contacts** (refill-protocol / administrative), not visits;
-   they populate only the universal skeleton supplements and a `PAT_ENC_CURR_MEDS` snapshot (§26). *Handle:*
+   they populate only the universal skeleton supplements and a `PAT_ENC_CURR_MEDS` snapshot (§34). *Handle:*
    exclude `DEPARTMENT_ID IS NULL AND VISIT_PROV_ID IS NULL AND APPT_STATUS_C_NAME IS NULL` (and check for
    absence of dx/orders) before treating a row as a clinical visit; don't read `MAX(date)` as "last care."
 
-5. **Closure ≠ calculated completeness (two independent status axes, §16).** *Observed cross-tab:*
-   135 closed+Complete, 25 blank-closed+Complete, 3 blank-closed+Invalid, 2 `N`+Invalid, 1 +Possible.
+5. **Closure ≠ calculated completeness (two independent status axes, §30).** *Observed cross-tab:*
+   135 closed+Complete, 25 blank-closed+Complete, 3 explicitly-`N`+Complete, 3 blank-closed+Invalid,
+   2 `N`+Invalid, 1 +Possible. (The `N`+Complete cell is the strongest evidence of divergence:
+   explicitly *not* closed, yet calc-Complete.)
    *Why:* `ENC_CLOSED_YN`/`ENC_CLOSE_DATE`/`ENC_CLOSED_USER_ID` record **manual chart closure**, while
    `CALCULATED_ENC_STAT_C_NAME` is Epic's **derived rollup** (Complete/Invalid/Possible). They diverge — an
    encounter can be calc-Complete yet never formally closed, and the `Invalid` ones are the canceled/error
@@ -126,11 +145,14 @@ Encounters anchor nearly all unstructured content **by CSN**:
    `ADT_PAT_CLASS_C_NAME='Therapies Series'` (outpatient OT-Neuro). *Why:* outpatient therapy *series* reuse
    the ADT/HSP machinery to track arrival/discharge, so an `HOSP_ADMSN_TIME` doesn't imply an inpatient
    stay. *Handle:* always read `ADT_PAT_CLASS_C_NAME` before calling a `PAT_ENC_HSP` row an admission.
+   The event-level detail behind these rows is `CLARITY_ADT` (joins on `PAT_ENC_CSN_ID`): one
+   admission-class event + one discharge event per facility contact, with `EVENT_TYPE_C_NAME`/
+   `PAT_CLASS_C_NAME` giving the semantics.
 
 7. **Supplement schema docs can be incomplete *or back-filled* between builds.** *Observed:* the prior
    discovery report flagged `PAT_ENC_5` as having **no** `_schema_column` doc; in the current DB it documents
    all 34 columns (doc cols == actual cols for every `PAT_ENC_N`). *Why:* the schema-doc loader is a separate
-   pass and its coverage can change between loads; §6 warns a supplement may ship data with no doc. *Handle:*
+   pass and its coverage can change between loads; §8 warns a supplement may ship data with no doc. *Handle:*
    never assume doc presence; always `PRAGMA table_info` for the real columns, and treat any per-supplement
    doc count in another analyst's notes as a snapshot, not a constant.
 
@@ -153,6 +175,9 @@ Encounters anchor nearly all unstructured content **by CSN**:
    JOIN IP_FLWSHT_MEAS m ON r.FSD_ID = m.FSD_ID
    JOIN V_EHI_FLO_MEAS_VALUE v ON m.FSD_ID = v.FSD_ID AND m.LINE = v.LINE;
    ```
+   The same `INPATIENT_DATA_ID` hub also anchors `ED_PAT_STATUS` (the per-appointment arrival/rooming
+   status history — see Tables): ambulatory rooming and flowsheet vitals both ride the "inpatient data"
+   record even for pure office visits.
 
 ## Recipes
 
@@ -176,20 +201,25 @@ WHERE NOT (e.DEPARTMENT_ID IS NULL AND e.VISIT_PROV_ID IS NULL AND e.APPT_STATUS
 ORDER BY CAST(e.PAT_ENC_DATE_REAL AS REAL);
 
 -- 3. Reconstruct ONE logical visit: reasons, diagnoses, disposition for a CSN.
-SELECT 'reason' kind, r.LINE, c.REASON_VISIT_NAME AS label
+--    LINE is TEXT (§17): CAST in the select list, because a compound (UNION ALL) SELECT
+--    can only ORDER BY output columns, not expressions — lexical LINE breaks at line 10.
+SELECT 'reason' kind, CAST(r.LINE AS INTEGER) AS line_no, c.REASON_VISIT_NAME AS label
 FROM PAT_ENC_RSN_VISIT r LEFT JOIN CL_RSN_FOR_VISIT c ON r.ENC_REASON_ID=c.REASON_VISIT_ID
 WHERE r.PAT_ENC_CSN_ID = :csn
 UNION ALL
-SELECT 'dx', dx.LINE, g.DX_NAME || CASE WHEN dx.PRIMARY_DX_YN='Y' THEN ' (primary)' ELSE '' END
+SELECT 'dx', CAST(dx.LINE AS INTEGER), g.DX_NAME || CASE WHEN dx.PRIMARY_DX_YN='Y' THEN ' (primary)' ELSE '' END
 FROM PAT_ENC_DX dx LEFT JOIN CLARITY_EDG g ON dx.DX_ID=g.DX_ID
 WHERE dx.PAT_ENC_CSN_ID = :csn
 ORDER BY 1,2;
 
 -- 4. Infer encounter type from companion-table signals.
+--    Precedence matters: test facility/ADT before the THREAD_ID telephone test
+--    (a facility contact can carry an in-basket THREAD_ID too).
 SELECT e.PAT_ENC_CSN_ID, e.CONTACT_DATE,
   CASE
-    WHEN t.THREAD_ID IS NOT NULL                         THEN 'telephone'
     WHEN h.PAT_ENC_CSN_ID IS NOT NULL                    THEN 'facility/ADT'
+    WHEN t.THREAD_ID IS NOT NULL                         THEN 'telephone'
+    WHEN vv.PAT_ENC_LVL_VIDEO_VISIT_ID IS NOT NULL       THEN 'video visit'
     WHEN e6.EVISIT_YN='Y'                                THEN 'eVisit'
     WHEN a.PAT_ENC_CSN_ID IS NOT NULL
       OR e.APPT_STATUS_C_NAME IS NOT NULL                THEN 'scheduled appt/office visit'
@@ -201,6 +231,7 @@ LEFT JOIN PAT_ENC_THREADS t ON e.PAT_ENC_CSN_ID=t.PAT_ENC_CSN_ID
 LEFT JOIN (SELECT DISTINCT PAT_ENC_CSN_ID FROM PAT_ENC_HSP) h ON e.PAT_ENC_CSN_ID=h.PAT_ENC_CSN_ID
 LEFT JOIN (SELECT DISTINCT PAT_ENC_CSN_ID FROM PAT_ENC_APPT) a ON e.PAT_ENC_CSN_ID=a.PAT_ENC_CSN_ID
 LEFT JOIN PAT_ENC_6 e6 ON e.PAT_ENC_CSN_ID=e6.PAT_ENC_CSN_ID
+LEFT JOIN PATIENT_ENC_VIDEO_VISIT vv ON e.PAT_ENC_CSN_ID=vv.PAT_ENC_CSN_ID
 ORDER BY CAST(e.PAT_ENC_DATE_REAL AS REAL);
 
 -- 5. Full wide encounter record (left-join the supplement stack; note PAT_ENC_3's odd key).
@@ -223,10 +254,12 @@ WHERE e.PAT_ENC_CSN_ID = :csn;
   snapshot but no dx/orders/department.
 - **Appt-skeleton mismatch (specimen):** 74 encounters have a `PAT_ENC_APPT` row but only 23 carry
   `APPT_STATUS_C_NAME`; the extra rows look like appt skeletons back-filled for past contacts. Cross-check
-  against scheduling/slot tables if you need exact appointment provenance.
+  against scheduling/slot tables if you need exact appointment provenance. (In one specimen the Recipe-2
+  survivor set coincides exactly with `PAT_ENC_APPT` membership — 74=74 — so appt-row presence is an
+  equivalent, simpler "real visit" filter; verify the equivalence on your export before relying on it.)
 - **Specimen counts** (illustrative, this patient): 169 contacts spanning 8/9/2018 → future scheduled
   contacts; 57 at MAC APL Internal Medicine; PCP Zoe L Rammelkamp (27 enc); 19 Completed / 3 Canceled /
-  1 Scheduled appointments; 27 telephone-threaded; 48 encounter dx; 31 reasons; 14 dispositions (1 New —
+  1 Scheduled appointments; 27 in-basket-threaded (26 pure telephone); 48 encounter dx; 31 reasons; 14 dispositions (1 New —
   the 8/9/2018 establishing visit — the rest Established); 2 outpatient-therapy `PAT_ENC_HSP` rows.
 - **No true inpatient/ED encounter** exists in this specimen, so admission/discharge mechanics
   (`PAT_ENC_HSP_2`, disch disposition) are present but exercised only by outpatient therapy series.

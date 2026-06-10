@@ -100,7 +100,8 @@ suffixes (`_PROV_NAME`, `_DX_NAME`, `_PHARMACY_NAME`, `_MODIFIER_NAME`, `_PLAN_N
 plain `_ID_NAME` for users…). **Materialization is systematic, not random for providers:** `SER`
 (`_PROV_NAME`) companions are *always dropped* (the SER master ships only as a hidden view, so you must
 join `CLARITY_SER`), while `EMP` user `_NAME` companions *always ship populated* (trust `*_USER_ID_NAME`
-inline). Long companion names are **truncated to 32 chars** (`REFERRING_PROV_ID_REFERRING_PROV_NAM`).
+inline). Long companion names are **truncated** (`REFERRING_PROV_ID_REFERRING_PROV_NAM` — the trailing "E"
+of `_NAME` cut; there is no universal 32-char cap, other exported names run longer).
 **A missing companion never means the name is unavailable — it means you pick the right master by the id's
 namespace (§41):** `SER` provider ids (`PROV_ID`, `VISIT_PROV_ID`, `EXT_SVC_PROV_ID`) → `CLARITY_SER.PROV_NAME`;
 `EMP`/MyChart user ids (`FROM_USER_ID`/`TO_USER_ID` and other alphanumeric `*_USER_ID`s) → `CLARITY_EMP.USER_ID`;
@@ -446,13 +447,15 @@ records that both resolve through `CLARITY_EAP`); **`MEDICATION_ID` (drug, ERX) 
 order id) — measure the resolve rate before assuming a bridge is needed.
 **Example.** `ORDER_NARRATIVE.ORDER_PROC_ID` joins `ORDER_PROC` 465/465 but `ORDER_MED` 0/465.
 
-### 42. Symmetric / bidirectional rows — and partners outside the export window
+### 42. Symmetric / bidirectional rows — and partners outside the export scope
 **Mechanism.** Some relationship tables store each link in both directions (~2× the logical count). But
-**don't assume a clean 2×**: the partner record is often **outside the exported window** (the ETR ledger is
-a narrower extract than the claim-history tables), so dedup-by-id under-counts. Anchor counts on the side
-that's fully present (e.g. the Charge side), not on a symmetric dedup.
+**don't assume a clean 2×**: the partner record is often **outside the export scope** (e.g. account-scoped
+billing tables reference another family member's transactions that the per-patient ledger extract omits),
+so dedup-by-id under-counts. Anchor counts on the side that's fully present (e.g. the Charge side), not on
+a symmetric dedup.
 **Example.** `ARPB_TX_MATCH_HX` has 247 rows; ~111 reference a `MTCH_TX_HX_ID` not in the exported
-`ARPB_TRANSACTIONS`, so a `TX_ID < MTCH_TX_HX_ID` dedup yields 68, not the naive ~123.
+`ARPB_TRANSACTIONS` (they belong to the guarantor account's other member — `ACCT_TX` lists them all), so a
+`TX_ID < MTCH_TX_HX_ID` dedup yields 68, not the naive ~123.
 
 ### 43. Data dated *after* the export
 **Mechanism.** A snapshot includes future-dated rows: scheduled future appointments, and automated/

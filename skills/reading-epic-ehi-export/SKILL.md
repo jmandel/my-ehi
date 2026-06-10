@@ -8,7 +8,7 @@ description: >-
   CSN/PAT_ID identifiers), or when a task involves loading one into SQLite, mapping its schema, finding
   the clinical notes/messages, or interpreting Epic's data-modeling conventions (CSN contacts,
   *_DATE_REAL dates, _C_NAME categories, base+supplement tables, denormalized _NAME companions). The
-  foundational skill of a two-skill tower; the ehi-deep-dives skill builds on it.
+  foundational skill of the tower: ehi-deep-dives builds on it, and import-ehi feeds it a redacted raw/.
 ---
 
 # Reading an Epic EHI export
@@ -29,7 +29,7 @@ demand:
   status/soft-delete/sentinel encodings). Read this first; it pays for itself in every table you touch.
 - **`reference/clinical-areas/`** — one field guide per clinical domain. Each names the tables, the joins,
   the gotchas, and how the notes/messages tie back. Read the one for the domain you're working in — the
-  full annotated index of all 18 guides is in [Modeling patterns and clinical-area guides](#modeling-patterns-and-clinical-area-guides)
+  full annotated index of all 27 guides is in [Modeling patterns and clinical-area guides](#modeling-patterns-and-clinical-area-guides)
   below (one line each: filename + what it covers).
 
 > **One specimen ≠ the genre.** Everything here is written for *anyone's* Epic export, not one person's.
@@ -151,9 +151,15 @@ SQLite is the query substrate for the whole project. The loader is portable (no 
 assumptions) and lives in `scripts/`:
 
 ```bash
-bun scripts/load-ehi-sqlite.ts  <rawDir> [db/ehi.sqlite]   # TSVs → one SQLite table each
-bun scripts/load-schema-docs.ts <rawDir> [db/ehi.sqlite]   # schema HTML → queryable metadata
+bun scripts/load.ts <rawDir> [db/ehi.sqlite]   # THE command: data + schema docs in one step
 ```
+
+`load.ts` runs both halves — `load-ehi-sqlite.ts` (TSVs → one SQLite table each) and
+`load-schema-docs.ts` (schema HTML → queryable metadata). They exist as separate scripts too, but run
+the wrapper: a data-only load looks healthy (every table queries) yet silently lacks the schema-doc
+catalog, so a later `JOIN _schema_table` fails with "no such table". The wrapper makes that half-build
+impossible, and `build-site.ts` calls it too — one definition of a complete build. (`q.ts` also warns
+if it opens a DB whose `_schema_table` is missing.)
 
 This gives you the data plus three **catalog tables** that make the schema itself queryable — the single
 biggest force-multiplier for understanding an export:
@@ -270,12 +276,16 @@ how the unstructured material ties back, and ready-to-run SQL — all under `ref
 - `appointments-and-scheduling.md` — `PAT_ENC_APPT`, eCheck-in, appointment status vs the encounter rollup, video/eVisit flags.
 - `problems-and-diagnoses.md` — `PROBLEM_LIST`(+`_ALL`/`_HX`), `PAT_ENC_DX`, `DX_ID`→`CLARITY_EDG`, clinician- vs patient-review channels, soft-delete.
 - `histories-family-social-medical.md` — `FAMILY_HX`(+pedigree), `SOCIAL_HX`, `SURGICAL_HX`, `MEDICAL_HX`; the per-encounter re-snapshot design, the two-CSN split.
+- `social-determinants-and-smartdata.md` — the `SDD_*` Social Drivers store (value only in `V_EHI_SDD_ENTRY_INTERPRETATION`), the derived-vs-source split with `SOCIAL_HX`/flowsheets, the unshipped `SMRTDTA_*` family.
 - `medications-and-orders.md` — the `ORDER_MED` family, prescription lifecycle, `PAT_ENC_CURR_MEDS`, the med-vs-order id spaces, a true current-med list.
 - `lab-results.md` — `ORDER_PROC`→`ORDER_RESULTS` (value cluster + `9999999` sentinel, ranges, flags), `ORDER_NARRATIVE`, the status matrix.
+- `order-lifecycle-details.md` — how an order *moved*, not what it ordered: pend-and-release, future-order instantiation (parent vs child CSNs), order questions, result review/read-ack, the unified `ORDER_ID` space.
 - `vitals-and-flowsheets.md` — `IP_FLOWSHEET_ROWS`/`IP_FLWSHT_MEAS` + `V_EHI_FLO_MEAS_VALUE` (value lives only in the view), packed BP, PHQ-2.
+- `questionnaires-and-assessments.md` — the LQF/LQL/HQA id spaces (`CL_QFORM1`/`CL_QQUEST`/`CL_QANSWER` + `V_EHI_HQA_QUEST_ANSWER`); answers carry no patient/form/CSN — the channel tables (`MYC_MESG_QUESR_ANS`, `MYC_APPT_QNR_DATA`) supply the links.
 - `allergies.md` — `ALLERGY`(+`_REACTIONS`), LPL master sharing, label-lies on `SEVERITY_C_NAME`, inline free-text, the dangling-pointer delete.
 - `immunizations.md` — the administered record (`IMMUNE`/`IMM_ADMIN`), components, due/forecast, the DXR document-masterfile origin.
 - `health-maintenance.md` — the `HM_*` tables, status-over-time, forecasting, links to immunizations/screening (sparse in many ambulatory exports).
+- `episodes-care-plans-and-goals.md` — the HSB episode layer above encounters (the CSN bridge is unshipped), care-plan records + their §46 satellites, discrete goals (IGO) fanned across three tables.
 - `procedures-and-surgeries.md` — procedures as `ORDER_PROC` orderables (`ORDER_TYPE_C_NAME`, not a "proc class"), `SURGICAL_HX`, why OpTime is absent.
 - `imaging-and-media.md` — imaging orders + the `Media/` pipeline (`DOC_INFORMATION.SCAN_FILE` is the file-to-chart key), DICOM placeholders, extension-lies.
 
@@ -285,8 +295,15 @@ how the unstructured material ties back, and ready-to-run SQL — all under `ref
 
 *People, places & money:*
 - `demographics.md` — `PATIENT`(+ supplements), identity (`PAT_ID` vs MRN), the alive-status trap, the PHI to avoid emitting.
+- `communication-preferences.md` — the OYO per-concept channel-consent matrix (`COMMUNICATION_PREFERENCES` + `COMM_PREFERENCES_APRV`), reached only via `PATIENT_4.PREFERENCES_ID` (no `PAT_ID` in the domain), current-state only.
 - `providers-and-care-teams.md` — `CLARITY_SER`/`CLARITY_EMP`/`CLARITY_DEP` as the universal id-resolution layer (~51 tables depend on it), the SER-vs-EMP split.
 - `referrals.md` — the ~20 `REFERRAL*` tables, status over time, the order↔referral bridge (`ORDER_PROC_2.REFERRAL_ID`), internal vs external.
 - `coverage-and-billing.md` — PB (`ARPB_*`/ETR) vs HB (`HSP_*`/HAR), the charge/payment/adjustment triad + matching, claims/EOB/remittance, the universal invoice key, the void→reverse→rebill saga, gross-vs-net by reason.
+- `benefits-and-eligibility.md` — what insurance *will* cover: BEN benefit snapshots (`BENEFITS`/`COVERAGE_BENEFITS`/`SERVICE_BENEFITS`), per-encounter pharmacy-eligibility verification, the RTPB `MED_CVG_*` conversation with the PBM.
+
+*Operational & audit:*
+- `alerts-and-decision-support.md` — BPA/OPA firings as ALT contacts (`ALERT_CRITERIA`/`ALERT_ACTION`, the `ALT_CSN_ID` key), the med-order bridge `ORDER_MED_ALTCSN`; ships as a key *skeleton* — no payload, no `PAT_ID`, no encounter CSN.
+- `record-access-audit.md` — the `V_EHI_REG_ITEM_AUDIT_EPT`/`_HAR` field-level change ledger (typically the biggest table by rows): event → changed-item → mapped-column fan-out, external before/after values; a *change* audit, not a who-viewed log.
+- `infrastructure-and-plumbing.md` — the negative-space map: the long tail of populated tables no other guide claims, triaged into seven families; what's safe to skip *by mechanism*, and the plumbing that's secretly load-bearing (LOINC codes live only in `LNC_DB_MAIN`). Read when a table appears in no other guide.
 
 When a guide steers you wrong, that's a friction report — fix the guide. These are living documents.

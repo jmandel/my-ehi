@@ -35,14 +35,21 @@ soft-delete/revoke sentinel "Soft deleted") is **NULL on all 116 rows** — no r
 questionnaire messages) are **empty on every row** — the questionnaire link is via `MYC_MESG_QUESR_ANS`,
 not these columns.
 
-Master/lookup joins — **two distinct id spaces**: the message **parties** `FROM_USER_ID`/`TO_USER_ID`
+Master/lookup joins — **three distinct party id spaces**: the message **parties** `FROM_USER_ID`/`TO_USER_ID`
 are alphanumeric MyChart/EMP **user** ids (e.g. `TJC322`, `MYCHARTG`) → `CLARITY_EMP.USER_ID`
 (display `CLARITY_EMP.NAME`) — they are **not** in `CLARITY_SER` (18/18 and 4/4 resolve in EMP, 0 in SER).
 The **provider** `PROV_ID` is a numeric SER id → `CLARITY_SER.PROV_ID`/`PROV_NAME` (all 12 resolve);
 `DEPARTMENT_ID` → `CLARITY_DEP.DEPARTMENT_ID`/`DEPARTMENT_NAME` (all 5); `RQSTD_PHARMACY_ID` → pharmacy.
-The two **party** ids carry denormalized `_NAME` companions (`FROM_USER_ID_NAME`/`TO_USER_ID_NAME`, §4),
+The third space is the **MyChart account (WPR) id**: `MYC_MESG.WPR_OWNER_WPR_ID` → `MYC_PATIENT.MYPT_ID`
+(which bridges to `PAT_ID`) — "the web-based chart system patient who owns this message" per the schema
+doc. One patient = one WPR account here (71/71 resolve), but in **proxy** situations (a parent messaging
+for a child) the WPR owner is the *account holder*, not necessarily the patient — this is the only column
+that distinguishes proxy-sent messages.
+The two **party** ids carry denormalized `_NAME` companions (`FROM_USER_ID_NAME`/`TO_USER_ID_NAME`, §6),
 so you rarely need the master for display; **`PROV_ID` and `DEPARTMENT_ID` have no inline `_NAME` companion** —
-resolve those through the master file. (Cross-ref general-patterns §6/§41 on namespace-dependent id resolution.)
+resolve those through the master file. (Beware §7 drift here: the schema doc lists these columns as
+`PROV_ID_PROV_NAME`/`DEPARTMENT_ID_EXTERNAL_NAME`, but the shipped table carries the bare `_ID` forms —
+trust `pragma_table_info`, not the doc.) (Cross-ref general-patterns §6/§41 on namespace-dependent id resolution.)
 
 ## How they join
 
@@ -51,7 +58,7 @@ All joins below were run against the specimen and the row math stated is what ca
 - **Message → its body.** `MYC_MESG.MESSAGE_ID = MYC_MESG_RTF_TEXT.MESSAGE_ID` (newer) **or**
   `= MSG_TXT.MESSAGE_ID` (older), 1:many over `LINE`. The two stores **partition the 116 messages with
   zero overlap and zero gaps** (26 plain + 90 RTF = 116). You must check **both** tables to retrieve
-  every body. Reassemble with `group_concat(... ORDER BY CAST(LINE AS INT))` (§8 line-chunked text).
+  every body. Reassemble with `group_concat(... ORDER BY CAST(LINE AS INT))` (§11 line-chunked text).
 - **Reply threading (two equivalent edges).** `MYC_MESG.PARENT_MESSAGE_ID = MYC_MESG.MESSAGE_ID`
   (self-join; root has empty parent) **and** `MYC_MESG_CHILD.MESSAGE_ID → parent`,
   `MYC_MESG_CHILD.CHILD_MSG_ID → MYC_MESG.MESSAGE_ID` (the forward inverse). All 44 child rows match a
@@ -64,7 +71,9 @@ All joins below were run against the specimen and the row math stated is what ca
   MYC_MESG.PAT_ENC_CSN_ID` are 86/86 consistent — `PAT_MYC_MESG` is the same bridge from the patient/
   encounter side.
 - **Message → routing/in-basket.** `MSG_ROUTING_PAT_ENC.PAT_ENC_CSN_ID = MYC_MESG.PAT_ENC_CSN_ID`
-  (30 of its 52 CSNs are message CSNs; the rest route non-MyChart in-basket items). `MYC_MESG.INBASKET_MSG_ID
+  (30 of its 52 CSNs are message CSNs; the rest route non-MyChart in-basket items — those non-message
+  CSNs all resolve in `PAT_ENC` and overlap the `THREAD_ID`-bearing `PAT_ENC_THREADS` rows, i.e. the
+  in-basket-threaded telephone encounters). `MYC_MESG.INBASKET_MSG_ID
   = IB_MESSAGES_5.MSG_ID` ties a message to the provider's in-basket entry (**partial: 31/85**).
 - **Subtype joins.** Questionnaire: `MYC_MESG.MESSAGE_ID = MYC_MESG_QUESR_ANS.MESSAGE_ID` (21/21).
   Renewal: `MYC_MESG.MESSAGE_ID = MYC_MESG_ORD_ITEMS.MESSAGE_ID` + `MYC_MESG.RQSTD_PHARMACY_ID(_PHARMACY_NAME)`.
@@ -87,10 +96,15 @@ it is reassembled from the line-chunked body stores:
   history), so each body is just that one note.
 - **Older messages → `MSG_TXT.MSG_TXT`** (plain text). Same reassembly, but this variant **appends the
   prior replies** as `----- Message -----` quote blocks, so one row's body may contain the whole chain.
-- **Two RTF dialects signal author.** Patient-typed bodies use a minimal Arial header
-  `{\rtf1\ansi\deflang1033\ftnbj…}` (53 of the 90 RTF messages); provider/system/letter-template bodies
-  use Epic headers `{\rtf1\epic…}` / `{\rtf1\sstecf…}`. Some template bodies begin with a literal
-  `\*Unknown;` sentinel (4 messages here — a letter-template artifact, not patient text).
+- **RTF dialects signal the composer, not strictly the author.** Patient-typed bodies use a minimal
+  Arial header `{\rtf1\ansi\deflang1033\ftnbj…}` (54 of the 90 RTF messages here, 51 of them
+  From-Patient); provider/system/letter-template bodies use Epic headers `{\rtf1\epic…}` /
+  `{\rtf1\sstecf…}`. The minimal header marks the **MyChart web composer** — a few staff replies typed
+  through the same composer share it — so treat the dialect as a composer signal *corroborating*
+  `TOFROM_PAT_C_NAME`, not as proof of authorship. The `{\rtf1\sstecf…}` letter-template bodies embed
+  an RTF revision-table group `{\*\revtbl{Unknown;}}` (a placeholder author name) inside the header —
+  a letter-template artifact, not patient text. Naive RTF-stripping leaks the literal `Unknown;` into
+  extracted prose; grep for `revtbl` to detect it (the group sits mid-header, not at body start).
 - **Workflow-specific free text is split out further:** `MYC_MESG_CNCL_RSN.CANCEL_REASON` (cancellation
   comments) and `MYC_MESG_QUESR_ANS.QUESR_ANS_ID` (questionnaire answers — content lives outside this
   area). Renewal order links are in `MYC_MESG_ORD_ITEMS`.
@@ -103,10 +117,12 @@ it is reassembled from the line-chunked body stores:
 
 1. **`CREATED_TIME` sorts lexically and lies; `PAT_ENC_DATE_REAL` is missing on 30 rows.**
    *Observe:* `MIN/MAX(CREATED_TIME)` returns `1/2/2020 … 9/7/2020`, absurd for a 2018–2026 corpus.
-   *Why:* `CREATED_TIME` is TEXT in `M/D/YYYY` form (§10) so it sorts as strings; and `PAT_ENC_DATE_REAL`
+   *Why:* `CREATED_TIME` is TEXT in `M/D/YYYY` form (§17) so it sorts as strings; and `PAT_ENC_DATE_REAL`
    is only populated on the **86 CSN-bearing** messages (the 30 admin/appointment messages have none).
    *Handle:* sort by **`CAST(MESSAGE_ID AS INTEGER)`** — it is minted monotonically per send and is the
-   only key present on all 116 rows. (`MESSAGE_ID` is ~99% time-monotone; see #2 for the exception.)
+   only key present on all 116 rows. (`MESSAGE_ID` order never contradicts `CREATED_TIME` — 0 day-level
+   inversions here; the handful of apparent "inversions" show up only against `PAT_ENC_DATE_REAL`, which
+   is the linked encounter's clock, not the send clock — see #2.)
 
 2. **`CREATED_TIME` (send instant) and `PAT_ENC_DATE_REAL` (linked-encounter date) are different clocks.**
    *Observe:* an "Appointment Reminder" has `CREATED_TIME = 1/2/2020` but `PAT_ENC_DATE_REAL = 65387`
@@ -139,7 +155,9 @@ it is reassembled from the line-chunked body stores:
    body (Chronicles item 100) with the RTF store that holds only the current message. The older store
    appended `----- Message -----` quote chains; the newer one does not. *Handle:* always query **both**
    stores; when summarizing an old plain-text body, strip the quoted tail or you'll double-count prior
-   replies.
+   replies. Only the plain-store **replies** carry the chain (7 of 26 here — exactly the messages with a
+   `PARENT_MESSAGE_ID`); root messages are chain-free, so the `----- Message -----` marker itself is a
+   reliable detector of appended history.
 
 6. **`MYC_MESG` is one table for many MyChart workflows; the subtype is signaled by `SUBJECT` + which
    optional FK/child table is populated, not by a type code.** *Observe:* `SUBJECT` buckets include
@@ -174,6 +192,7 @@ FROM MYC_MESG m
 ORDER BY CAST(m.MESSAGE_ID AS INTEGER);
 
 -- 2. Reassemble a message body (checks BOTH stores; works for any MESSAGE_ID).
+--    (:mid / :csn in recipes 2–3 are placeholders — inline a literal id if your runner lacks binding.)
 SELECT (SELECT group_concat(RTF_TXT, char(10)) FROM
           (SELECT RTF_TXT FROM MYC_MESG_RTF_TEXT WHERE MESSAGE_ID = :mid ORDER BY CAST(LINE AS INT)))
        AS rtf_body,
@@ -220,7 +239,9 @@ WHERE m.SUBJECT LIKE '%Questionnaire%' OR m.SUBJECT LIKE '%Renewal%' OR m.SUBJEC
 - **`MYC_MESG_QUESR_ANS.QUESR_ANS_ID` does not resolve inside this export.** It points to an HQA
   questionnaire-answer record; the questionnaire-answer tables present here (`QUESR_LST_ANS_INFO`,
   `PAT_ENC_QNRS_ANS`, `MYC_APPT_QNR_DATA`) are keyed by `(PAT_ID, LINE)` / form id, not by `QUESR_ANS_ID`,
-  so the 2024+ submission *content* the message body omits is not recoverable here.
+  so the 2024+ submission *content* the message body omits is not recoverable here. The only other
+  `QUESR_ANS`-keyed tables in the schema doc (`SRS_RESP_OVER_TM`, `ENROLL_INFO`) did **not** ship
+  (doc-only, §7) — there is no remaining escape hatch.
 - **`IB_MESSAGES_5` is a one-column (`MSG_ID`) stub** and only 31/85 `INBASKET_MSG_ID`s match it; the base
   `IB_MESSAGES` and other supplements are absent, so the provider-side in-basket body/status can't be
   reconstructed.

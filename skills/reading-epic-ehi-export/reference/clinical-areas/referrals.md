@@ -14,27 +14,27 @@ carry `PAT_ID`. The referred-*to* visit, when in-system, is a separate `PAT_ENC`
 | table | role | rows in specimen | notes |
 |---|---|---|---|
 | `REFERRAL` | spine: one row per referral | 10 | base of a 6-table supplement stack; 99 cols. Status, referring/referred-to, dates, auth, $ |
-| `REFERRAL_2`…`REFERRAL_6` | numbered supplements (§6) | 10 each | 1:1 on `REFERRAL_ID`. `_5` holds the referred-to **encounter CSNs**; `_6` is a single column |
-| `REFERRAL_HIST` | lifecycle audit trail (§17) | 175 | `(REFERRAL_ID, LINE)` per change. `CHANGE_TYPE_C_NAME`, `NEW_RFL_STATUS_C_NAME`, who/when |
-| `REFERRAL_DX` | diagnoses on the referral (§7) | 11 | `(REFERRAL_ID, LINE)`; `DX_ID` → `CLARITY_EDG` |
-| `REFERRAL_REASONS` | reason-for-referral list (§7) | 7 | `REFERRAL_REASON_C_NAME` (e.g. "Specialty Services Required") |
-| `REFERRAL_PX` | procedures/visit-units requested (§7) | 10 | `PX_ID` (no `_NAME` companion) → `CLARITY_EAP.PROC_ID` → `PROC_NAME` (order-side namespace; resolves 10/10, e.g. "AMB REFERRAL TO GASTROENTEROLOGY"); `UNITS_REQUESTED`/`UNITS_APPROVED` |
+| `REFERRAL_2`…`REFERRAL_6` | numbered supplements (§8) | 10 each | 1:1 on `REFERRAL_ID`. `_3` is mostly org-configurable generic slots (`GEN_RFL_STR_*`/`GEN_RFL_CAT_*_C_NAME` — §46-style: always emitted, rarely applicable); `_4` carries the direction/leak axis (`RFL_DIRECTION_C_NAME`, `IS_LEAKED_YN` — see gotchas); `_5` holds the referred-to **encounter CSNs**; `_6` is a single column |
+| `REFERRAL_HIST` | lifecycle audit trail (§31) | 175 | `(REFERRAL_ID, LINE)` per change. `CHANGE_TYPE_C_NAME`, `NEW_RFL_STATUS_C_NAME`, who/when |
+| `REFERRAL_DX` | diagnoses on the referral (§9) | 11 | `(REFERRAL_ID, LINE)`; `DX_ID` → `CLARITY_EDG` |
+| `REFERRAL_REASONS` | reason-for-referral list (§9) | 7 | `REFERRAL_REASON_C_NAME` (e.g. "Specialty Services Required") |
+| `REFERRAL_PX` | procedures/visit-units requested (§9) | 10 | `PX_ID` (no `_NAME` companion) → `CLARITY_EAP.PROC_ID` → `PROC_NAME` (order-side namespace; resolves 10/10, e.g. "AMB REFERRAL TO GASTROENTEROLOGY"); `UNITS_REQUESTED`/`UNITS_APPROVED` |
 | `REFERRAL_NOTES` | bridge to note text | 9 | `(REFERRAL_ID, LINE, NOTE_ID)` → HNO note / `Rich Text/HNO_<id>_*.RTF` |
-| `REFERRAL_CVG` | coverage(s) attached | 10 | `(REFERRAL_ID, LINE, CVG_ID)`, `AUTH_REQUIRED_YN`, `CVG_AUTH_STATUS_C_NAME` |
+| `REFERRAL_CVG` | coverage(s) attached | 10 | `(REFERRAL_ID, LINE, CVG_ID)`, `AUTH_REQUIRED_YN`, `CVG_AUTH_STATUS_C_NAME`; also auth-number/comment slots (`EFF_CVG_PRECERT_NUM`, `CARRIER_AUTH_CMT`, `EFF_CVG_AUTH_CMT`) |
 | `REFERRAL_CVG_AUTH` | per-coverage auth/cert detail | 4 | 78 cols; precert **status/agency/dates** (`PRE_CERT_STATUS_C_NAME`, `PRE_CERT_AGENCY_*`, `AUTH_FROM_DT`/`AUTH_TO_DT`) — **no auth-number column** |
 | `REFERRAL_APT` | appointments fulfilling the referral | 3 | **internal** visit via `SERIAL_NUMBER`=CSN, **external** via `EXT_SVC_*` |
 | `ASSOCIATED_REFERRALS` | encounter→referral link | 2 | keyed by `PAT_ENC_CSN_ID`; `ASSOCIATED_REFERRAL_ID` |
-| `REFERRAL_CROSS_ORG` | cross-organization (Care Everywhere) referral | 2 | external org name + OID; the "leaked"/community-connect dimension |
+| `REFERRAL_CROSS_ORG` | cross-organization (Care Everywhere) referral | 2 | external org name + OID, plus its own acceptance axis (`CROSS_ORG_RFL_STATUS_C_NAME`, `CROSS_ORG_RFL_INACTIVE_YN`, decline/cancel-reason cols); narrower than the `REFERRAL_4` leak flag — see gotchas |
 | `REFERRAL_SOURCE` | referring-provider lookup | 6 | `REFERRING_PROV_ID` → `REFERRING_PROV_NAM` (REF master; here = SER ids) |
-| `REFERRAL_NOTIF_HIS` | transfer-of-care notification log | 1 | letter/notification events (`SEND TRANSFER OF CARE IMMEDIATELY`) |
+| `REFERRAL_NOTIF_HIS` | transfer-of-care notification log | 1 | `(REFERRAL_ID, LINE)`; `EVENT_ID` + `_EVENT_NAME` companion (`SEND TRANSFER OF CARE IMMEDIATELY`), `NOTIF_HX_ROUTE_C_NAME`, `LTR_HX_*` letter cols — the letter/notification audit, joinable nowhere else |
 | `REFERRAL_ORG_FILTER_SA` | authorized service-area filter | 10 | routing metadata, not clinical |
 | `RFL_REF_TO_REGIONS` | referred-to geographic regions | 9 | steering metadata |
 | `ORDER_PROC` (+`_2`) | the referral **order** | 42 (11 are referral/imaging orders) | `ORDER_PROC_2.REFERRAL_ID` is the order↔referral bridge |
-| `ORDERS_ONLY_CSN` | (schema-doc'd order↔referral link) | **EMPTY** here | doc says it carries `REFERRAL_ID`; not shipped in this specimen — use `ORDER_PROC_2` instead |
+| `ORDERS_ONLY_CSN` | (schema-doc'd order↔referral link) | **absent** here | schema-doc only (§7): doc says it carries `REFERRAL_ID`, but the table isn't shipped — querying it errors "no such table" (unshipped means absent, not 0 rows) — use `ORDER_PROC_2` instead |
 
 ## How they join
 
-- **Order → referral (the bridge that actually keys, §24).** `REFERRAL_ID` (e.g. `9463136`) and
+- **Order → referral (the bridge that actually keys, §41).** `REFERRAL_ID` (e.g. `9463136`) and
   `ORDER_PROC_ID` (e.g. `439060608`) are **different ID spaces** — they share no value. The bridge is
   **`ORDER_PROC.ORDER_PROC_ID = ORDER_PROC_2.ORDER_PROC_ID` and `ORDER_PROC_2.REFERRAL_ID =
   REFERRAL.REFERRAL_ID`.** Verified: all 11 referral/imaging orders map cleanly to the 10 `REFERRAL`
@@ -58,9 +58,12 @@ carry `PAT_ID`. The referred-*to* visit, when in-system, is a separate `PAT_ENC`
   syndrome"). Note `REFERRAL_DX.DX_TEXT` ships empty here; the name comes only from the `CLARITY_EDG` join.
 - **Coverage.** `REFERRAL_CVG.CVG_ID` → `COVERAGE.COVERAGE_ID` (note the column-name mismatch; joins all
   10 rows). `REFERRAL_CVG_AUTH` carries precert **status/agency/dates** per coverage, **not** an auth
-  number — there is no `AUTH_NUM`/`PRE_CERT_NUM` column on it. Those literal number columns live only on
-  base `REFERRAL` (`AUTH_NUM`, `PRE_CERT_NUM`) and are blank for all 10 here, so no auth number is
-  retrievable in this specimen.
+  number — there is no `AUTH_NUM`/`PRE_CERT_NUM` column on it. The literal number columns
+  (`REFERRAL.AUTH_NUM`, `REFERRAL.PRE_CERT_NUM`, `REFERRAL_CVG.EFF_CVG_PRECERT_NUM`) are all blank here —
+  but the audit trail preserves it: a `REFERRAL_HIST` line with `CHANGE_TYPE_C_NAME = 'Change Coverage
+  Authorization Number'` carries the old/new number text in `PREVIOUS_VALUE` (§38-style: the change ledger
+  keeps what the current-state table dropped). `REFERRAL_CVG` also has auth comment/status slots beyond the
+  two named above (`CARRIER_AUTH_CMT`, `EFF_CVG_AUTH_CMT`).
 - **User attribution.** `REFERRAL_HIST.CHANGE_USER_ID`, `REFERRAL_NOTES.NOTE_USER_ID` →
   `CLARITY_EMP.USER_ID` → `NAME` (alphanumeric logins like `RAMMELZL`, `KEH405`).
 
@@ -81,14 +84,16 @@ Referral text lives in HNO notes, reached two ways that point at the **same** no
 ## Gotchas & quirks (chased to *why*)
 
 - **`REFERRAL_ID` and `ORDER_PROC_ID` never join directly.** They're separate Chronicles masters (REF vs
-  ORD), minted independently (§24). Naively `JOIN ... ON REFERRAL_ID = ORDER_PROC_ID` returns nothing.
+  ORD), minted independently (§41). Naively `JOIN ... ON REFERRAL_ID = ORDER_PROC_ID` returns nothing.
   *Why:* the order is the *request artifact*; the referral is the *managed authorization/lifecycle object*
   Epic spins off from it. *Handle:* go through `ORDER_PROC_2.REFERRAL_ID`. (The schema doc advertises an
-  `ORDERS_ONLY_CSN.REFERRAL_ID` link too, but that table is **empty** in this export — don't rely on it.)
-- **One referral can own several orders; matching by date is a trap.** Referral `10358290` has two imaging
-  `ORDER_PROC` rows (`439060612` MRI 7/21, `439060613` MRI 7/31); a fourth MRI order (`439060613`) shares
-  the referral with `439060612`. Two same-day Neurology orders (`772179267`/`772179268`) cross-match by
-  date into 4 spurious pairs. *Why:* `ENTRY_DATE`/`ORDERING_DATE` are not keys, and an imaging referral can
+  `ORDERS_ONLY_CSN.REFERRAL_ID` link too, but that table is **absent** — not shipped, schema-doc only (§7);
+  expect a "no such table" error, not an empty result.)
+- **One referral can own several orders; matching by date is a trap.** Of the four imaging orders here
+  (`439060609`/`10`/`12`/`13`), the last two — the same MRI study repeated about ten days apart — share one
+  referral (`10358290`); the other two each have their own. Two same-day Neurology orders
+  (`772179267`/`772179268`) map to two **distinct** referrals, so date-matching cross-pairs them into 4
+  spurious matches. *Why:* `ENTRY_DATE`/`ORDERING_DATE` are not keys, and an imaging referral can
   spawn repeat studies. *Handle:* use `ORDER_PROC_2.REFERRAL_ID`, never `date = date`.
 - **"MRI/CAT Scan" referrals are a different `RFL_TYPE_C_NAME` than specialty "Referral".** Imaging
   referrals (`RFL_TYPE_C_NAME = 'MRI/CAT Scan'`, `REFD_TO_SPEC_C_NAME = 'Radiology'`, blank
@@ -105,19 +110,28 @@ Referral text lives in HNO notes, reached two ways that point at the **same** no
 - **SER name-companions are dropped; you must join `CLARITY_SER` yourself.** `REFERRAL.REFERRAL_PROV_ID`,
   `PCP_PROV_ID` ship as bare ids with **no** `_PROV_NAME` sibling (querying the documented `..._PROV_NAME`
   errors "no such column"). *Why:* `CLARITY_SER` "may be hidden in a public view," so the export omits SER
-  name-companions (§4/§5). The **referring** side is the exception — `REFERRING_PROV_ID_REFERRING_PROV_NAM`
-  *is* materialized (truncated to 32 chars, final "E" cut). *Handle:* join `CLARITY_SER` /
+  name-companions (§6/§7). The **referring** side is the exception — `REFERRING_PROV_ID_REFERRING_PROV_NAM`
+  *is* materialized (a truncated column *name*: the trailing "E" of `_NAME` is cut). *Handle:* join `CLARITY_SER` /
   `REFERRAL_SOURCE` for names.
-- **`REFERRAL_HIST` is a change-audit, not a clinical history (§17).** 175 rows for 10 referrals (9–30
+- **`REFERRAL_HIST` is a change-audit, not a clinical history (§31).** 175 rows for 10 referrals (9–30
   each); `NEW_RFL_STATUS_C_NAME` is populated **only** on status-change lines, so most lines have it null.
   *Why:* it logs every edit (coverage refresh, scheduling auto-assign, pend-reason change), one `LINE` per
   edit. *Handle:* for the *current* status read `REFERRAL.RFL_STATUS_C_NAME`; for the *story* read
   `REFERRAL_HIST` ordered by `LINE` and watch `CHANGE_TYPE_C_NAME` / `NEW_RFL_STATUS_C_NAME`. `Create
   Referral` is always `LINE 1`; `Auto Expired by Nightly Processing` shows the batch lifecycle.
 - **Everything stays "Closed", but closure is not denial.** 9/10 referrals are `Closed` and only the
-  newest (Allergy, `23182184`) is `Authorized`/open. *Why:* §18 soft-delete — referrals persist after
+  newest (Allergy, `23182184`) is `Authorized`/open. *Why:* §32 soft-delete — referrals persist after
   fulfillment/expiry; a `Closed` referral with `CLOSE_RSN_C_NAME` was completed or expired, not rejected.
   *Handle:* status alone isn't outcome; read `CLOSE_RSN_C_NAME` and the `REFERRAL_HIST` tail.
+- **"Left this organization" is `REFERRAL_4`, not `REFERRAL_CROSS_ORG`.** `REFERRAL_4.RFL_DIRECTION_C_NAME`
+  (`Internal` / `Outgoing` / `Incoming`) and `IS_LEAKED_YN` are populated on **every** row here, with
+  leaked = `Y` landing exactly on the Outgoing ones. The scopes differ: in one specimen 4 referrals are
+  flagged leaked but only 2 have a `REFERRAL_CROSS_ORG` row — a Care Everywhere pointer is a **subset** of,
+  not a synonym for, "left this org." Inbound referrals show as `RFL_DIRECTION_C_NAME = 'Incoming'`. *Why:*
+  the leak flag is Epic's referral-management classifier (any out-of-network send), while `REFERRAL_CROSS_ORG`
+  only materializes when a Care Everywhere exchange exists. *Handle:* classify direction/leakage from
+  `REFERRAL_4`; use `REFERRAL_CROSS_ORG` for the external org's identity and its own acceptance axis
+  (`CROSS_ORG_RFL_STATUS_C_NAME`, `CROSS_ORG_RFL_INACTIVE_YN`, decline/cancel-reason columns).
 
 ## Internal vs external referred-to encounters (the headline question)
 
@@ -143,6 +157,8 @@ the same Epic instance:
 
 ```sql
 -- 1) All referrals: who referred, to what, status, dates, source encounter.
+--    NB: one row per (referral, order) — a multi-order referral repeats its referral-level
+--    columns; GROUP BY r.REFERRAL_ID (e.g. MIN(op.PAT_ENC_CSN_ID)) for one row per referral.
 SELECT r.REFERRAL_ID, r.ENTRY_DATE,
        r.REFERRING_PROV_ID_REFERRING_PROV_NAM AS referred_by,
        COALESCE(NULLIF(r.PROV_SPEC_C_NAME,''), r.REFD_TO_SPEC_C_NAME) AS referred_to,
@@ -197,13 +213,13 @@ FROM REFERRAL_NOTES rn ORDER BY CAST(rn.REFERRAL_ID AS REAL), CAST(rn.LINE AS RE
 - **`REFERRAL_PROV_ID` (named referred-to provider) is unobserved** — null for all 10 because every
   referral targeted a specialty/dept. Its population pattern (when a specific provider is chosen) can't be
   confirmed from this specimen.
-- **`ORDERS_ONLY_CSN` is empty** in this export though its schema doc defines a `REFERRAL_ID` order link.
+- **`ORDERS_ONLY_CSN` is absent (not shipped)** in this export though its schema doc defines a `REFERRAL_ID` order link.
   Genre tables to expect but not present here: it, and a richer `REFERRAL_CVG_AUTH` population.
 - **Cross-org / "leaked" referrals** appear via `REFERRAL_CROSS_ORG` — 2 rows for **two distinct
   referrals** (Allergy `23182184` *and* Neuro `15963353`, not just the Allergy one), both pointing to UW
-  Health. The
-  `REFERRAL_4.IS_LEAKED_YN` / `RFL_DIRECTION_C_NAME` fields that would characterize in/outbound direction
-  exist but are sparsely populated here — a specimen with inbound referrals would exercise them.
+  Health. Direction/leak classification itself lives on `REFERRAL_4` (`RFL_DIRECTION_C_NAME` /
+  `IS_LEAKED_YN`, fully populated — see gotchas): more referrals carry the leaked flag than have a
+  cross-org row.
 - Specimen shape: 10 referrals Jan 2020–Nov 2024 — Gastroenterology, Neurology (×3), OT, PT, Allergy, plus
   3 imaging (MRI/CT) authorizations; one open (Allergy, exp 5/31/2026), rest Closed. Only the OT referral
   was fulfilled by in-system visits; the Allergy referral points to an external UW Health appointment.

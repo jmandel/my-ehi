@@ -3,6 +3,7 @@ raw.unredacted/
 .redaction-terms.json
 redact/
 db/
+*.unredacted.sqlite
 # NOTE: raw/ is the REDACTED, verified-clean output of import-ehi (05-verify: 0 residual) — it IS committable.
 # The unredacted source + secrets above stay ignored.
 *.sqlite

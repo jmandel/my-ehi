@@ -16,7 +16,7 @@ and the free-text notes — not just a few curated deep dives. The job is to tur
 
 ```
 "Requested Record.zip"
-  → 01  unzip → raw.unredacted/   (FULL PHI — gitignored, never committed; the source of truth)
+  → 01  unzip → raw.unredacted/ + load → db/ehi.unredacted.sqlite  (FULL PHI — gitignored, never committed)
   → 02  discover identifier VALUES from the structured columns        → redact/identifiers.json
   → (agents) find the free-text-only secrets the columns miss          → redact/agentic-findings.json
   → 03  assemble + hygiene + variant-expand → .redaction-terms.json    ← HUMAN REVIEW CHECKPOINT
@@ -26,6 +26,11 @@ and the free-text notes — not just a few curated deep dives. The job is to tur
 
 `raw/` stays **gitignored until 05 passes**; only then is it un-ignored and committable. `raw.unredacted/`,
 `.redaction-terms.json`, and the `redact/` working dir are **always** gitignored.
+
+> **PHI path discipline.** The import DB is `db/ehi.unredacted.sqlite` — a deliberately distinct path from
+> the redacted analysis DB `db/ehi.sqlite`, so a deep-dive or publish can never silently read unredacted
+> data. Every loaded DB carries a `_provenance` stamp; `q.ts` shouts when it opens an unredacted-sourced DB,
+> and `build-site.ts` refuses to publish one. Both paths are gitignored (`db/`, `*.unredacted.sqlite`).
 
 ## The core idea: the structured data is an inventory of this record's secrets
 

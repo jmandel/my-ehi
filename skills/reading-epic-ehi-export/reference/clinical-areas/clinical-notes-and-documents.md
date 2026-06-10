@@ -14,22 +14,24 @@ note's *own* per-version serial (`CONTACT_SERIAL_NUM`) is a **separate** id spac
 
 | table | role | rows in specimen | notes |
 |---|---|---|---|
-| `HNO_INFO` | **Spine.** One row per logical note (PK `NOTE_ID`, the HNO master-file key). Type, author, encounter link, create/service/last-filed instants, soft-delete, addend/cosign pointers. | 188 | Time-insensitive "once per record" data (§6 base table). |
-| `NOTE_ENC_INFO` | One row **per contact (version)** of a note: `NOTE_ID` + `CONTACT_SERIAL_NUM` + `CONTACT_DATE_REAL`. Per-version status, author, role, format, sign instants. | 194 | 194 contacts over 188 notes → 6 notes have >1 contact (addenda). |
-| `NOTE_ENC_INFO_2` | Numbered supplement (§6) of `NOTE_ENC_INFO`, same key. Holds external/auto-reconciled-author fields. | 194 | All `EXT_*` columns empty here (no externally reconciled notes). |
-| `HNO_PLAIN_TEXT` | Line-chunked **plain-text body** (§8). Key `NOTE_CSN_ID`(=`CONTACT_SERIAL_NUM`) + `LINE`; col `NOTE_TEXT`. | 82 | Body for notes with a plain rendering; doc says it explicitly **excludes** rich text. 24 distinct notes. |
+| `HNO_INFO` | **Spine.** One row per logical note (PK `NOTE_ID`, the HNO master-file key). Type, author, encounter link, create/service/last-filed instants, soft-delete, addend/cosign pointers. | 188 | Time-insensitive "once per record" data (§8 base table). |
+| `NOTE_ENC_INFO` | One row **per contact (version)** of a note: `NOTE_ID` + `CONTACT_SERIAL_NUM` + `CONTACT_DATE_REAL`. Per-version status, author, role, format, sign instants. | 194 | 194 contacts over 188 notes → 5 notes have >1 contact (4 Signed+Addendum pairs plus one statusless 3-contact placeholder). |
+| `NOTE_ENC_INFO_2` | Numbered supplement (§8) of `NOTE_ENC_INFO`, same key. Holds external/auto-reconciled-author fields. | 194 | All `EXT_*` columns empty here (no externally reconciled notes). |
+| `HNO_PLAIN_TEXT` | Line-chunked **plain-text body** (§11). Key `NOTE_CSN_ID`(=`CONTACT_SERIAL_NUM`) + `LINE`; col `NOTE_TEXT`. | 82 | Body for notes with a plain rendering; doc says it explicitly **excludes** rich text. 24 distinct notes. |
 | `NOTE_CONTENT_INFO` | Marker/index of contacts that carry discrete note content. **No text column.** | 80 | 79/80 join to a `Rich Text` contact — essentially enumerates the RTF contacts. |
-| `ORDER_NARRATIVE` | Line-chunked **procedure-result report text** (§8). Key `ORDER_PROC_ID` + `LINE`; col `NARRATIVE`. | 465 | Keyed to the *order*, not the note. Radiology/diagnostic reports. Heavily blank-padded. |
-| `HNO_ORDERS` | Bridge: a result-note → the order(s) it documents. `NOTE_ID` + `LINE` → `ORDER_ID`. | 7 | The only join from a note to `ORDER_NARRATIVE` text. |
-| `V_EHI_HNO_LINKED_PATS` | Export view: which `PAT_ID` each note belongs to (`NOTE_ID` + `LINE` → `LINKED_PAT_ID`). | 188 | §27 export view; all 188 → the one patient here. |
+| `ORDER_NARRATIVE` | Line-chunked **procedure-result report text** (§11). Key `ORDER_PROC_ID` + `LINE`; col `NARRATIVE`. | 465 | Keyed to the *order*, not the note. Radiology/diagnostic reports. Heavily blank-padded. |
+| `HNO_ORDERS` | Bridge: a result-note → the order(s) it documents. `NOTE_ID` + `LINE` → `ORDER_ID`. | 7 | The only bridge that reaches a *narrated* order in this specimen. Also carries `ORDER_DAT`, a complement-encoded date (§22) — not a joinable id. |
+| `NOTES_LINK_ORD_TXN` | Second note↔order bridge: orders linked to a note by order-based transcription. `NOTE_ID` + `LINE` → `LINKED_ORD_ID`. | 1 | `LINKED_ORD_ID` joins `ORDER_PROC.ORDER_PROC_ID`, not `ORDER_MED` (§41 two ID spaces). Its (note, order) pairs are disjoint from `HNO_ORDERS` here — check both bridges. |
+| `NOTES_TRANS_AUTH` | Per-contact transcription-authorization log: `NOTE_CSN_ID` (= `CONTACT_SERIAL_NUM`) + `LINE`. Auth/dictation/transcription/edit instants, `DICT_PRIORITY_C_NAME`. | 1 | The schema doc lists an `AUTH_PROV_ID_PROV_NAME` companion, but the export ships only bare `AUTH_PROV_ID` (§7 doc-vs-actual; §6 — SER companions get dropped). |
+| `V_EHI_HNO_LINKED_PATS` | Export view: which `PAT_ID` each note belongs to (`NOTE_ID` + `LINE` → `LINKED_PAT_ID`). | 188 | §47 export view; all 188 → the one patient here. |
 | `raw/Rich Text/*.RTF` | **The only copy of a Rich-Text note body** in the whole export. Filename encodes `NOTE_ID` + an inverted date. | 100 files | + `_INDEX.HTML` manifest. See "Unstructured tie-back". |
-| `raw/Rich Text/_INDEX.HTML` | Human-readable manifest: filename → "`<type>` by `<author>`, `<role>` at `<date time>` (`<status>`)". | 1 | Mirrors the `IP_NOTE_TYPE`/`AUTHOR`/`AUTHOR_PRVD_TYPE`/`NOTE_STATUS` columns. |
+| `raw/Rich Text/_INDEX.HTML` | Human-readable manifest: filename → "`<type>` by `<author>`, `<role>` at `<date time>` (`<status>`)" for signed notes; statusless letter/admin rows (~a quarter here) show a shorter description without author/status. | 1 | Mirrors the `IP_NOTE_TYPE`/`AUTHOR`/`AUTHOR_PRVD_TYPE`/`NOTE_STATUS` columns. |
 
 **Standard tables to expect that are EMPTY/absent here (described from the schema doc):**
 - `HNO_NOTE_TEXT` — **absent.** The schema doc for `HNO_PLAIN_TEXT` literally redirects rich-text reporting
   to `HNO_NOTE_TEXT`, but it is **not exported**. This is *why* a Rich-Text note body exists only as the RTF
   file (see Gotchas). Expect to look for it and not find it.
-- `DOC_INFORMATION` / `PATIENT_DOCS` — present (22 rows here) but belong to the **DCS scanned-document**
+- `DOC_INFORMATION` (22 rows here) / `PATIENT_DOCS` (41) — present but belong to the **DCS scanned-document**
   master file, not HNO. Different domain; out of scope for narrative notes.
 
 ## How they join
@@ -38,29 +40,34 @@ All verified against rows in this specimen.
 
 - **Note → its versions:** `HNO_INFO.NOTE_ID = NOTE_ENC_INFO.NOTE_ID` (1→N). 188 notes, 194 contact rows;
   e.g. `NOTE_ID 2302006711` has two contacts: `CONTACT_DATE_REAL` 65575 (`Signed`) and 65575.01
-  (`Addendum`). Reassemble the audit trail by ordering contacts on `CAST(CONTACT_DATE_REAL AS REAL)` (§10).
+  (`Addendum`). Reassemble the audit trail by ordering contacts on `CAST(CONTACT_DATE_REAL AS REAL)` (§18 `*_DATE_REAL`).
 - **Version supplement:** `NOTE_ENC_INFO.CONTACT_SERIAL_NUM = NOTE_ENC_INFO_2.NOTE_CSN_ID` (1:1, both 194
-  rows) (§6). The `_2` adds external-author fields, all empty here.
+  rows) (§8 base+supplement). The `_2` adds external-author fields, all empty here.
 - **Note → encounter:** `HNO_INFO.PAT_ENC_CSN_ID = PAT_ENC.PAT_ENC_CSN_ID` (§2). Only **77 of 188** notes
   carry this — telephone/letter/MyChart/system notes often have none. This is the encounter the note
-  *documents*, NOT the note's own `CONTACT_SERIAL_NUM`.
+  *documents*, NOT the note's own `CONTACT_SERIAL_NUM`. **Decoy:** `NOTE_ENC_INFO.PAT_ENC_CSN_ID` exists but
+  is NULL on **every** row (its `CONTACT_SERIAL_NUM` is the note's *own* serial — §2 names this exact table) —
+  the encounter link lives only on `HNO_INFO`; joining the per-version table by its own CSN column silently
+  returns zero rows.
 - **Plain-text body:** `HNO_PLAIN_TEXT.NOTE_CSN_ID = NOTE_ENC_INFO.CONTACT_SERIAL_NUM` (all 24 plain CSNs
   match a contact). **Keying `HNO_PLAIN_TEXT` by `NOTE_ID` works too** (the col is present) but the join
-  axis is the contact serial, not `NOTE_ID`. Reassemble body with `ORDER BY CAST(LINE AS INT)` (§8).
+  axis is the contact serial, not `NOTE_ID`. Reassemble body with `ORDER BY CAST(LINE AS INT)` (§11).
 - **Content marker:** `NOTE_CONTENT_INFO.NOTE_CSN_ID = NOTE_ENC_INFO.CONTACT_SERIAL_NUM`; 79/80 land on a
   `NOTE_FORMAT_C_NAME = 'Rich Text'` contact.
 - **Author / entry user:** `HNO_INFO.ENTRY_USER_ID = CLARITY_EMP.USER_ID` (alphanumeric Epic login, e.g.
   `BURKEBD1`; 69 join). `NOTE_ENC_INFO.AUTH_LNKED_PROV_ID = CLARITY_SER.PROV_ID` (80 join). Most `*_ID`
-  cols ship beside a denormalized `*_ID_NAME` companion (§4), so you usually don't need the join for display
+  cols ship beside a denormalized `*_ID_NAME` companion (§6 `_NAME` companions), so you usually don't need the join for display
   — but `AUTH_LNKED_PROV_ID` is a counterexample (no `_NAME` sibling), so resolve it through
   `CLARITY_SER.PROV_NAME` (or just use the populated `AUTHOR_USER_ID_NAME` for author display).
 - **Note → order → report text:** `HNO_ORDERS.NOTE_ID = HNO_INFO.NOTE_ID`; `HNO_ORDERS.ORDER_ID =
   ORDER_PROC.ORDER_PROC_ID = ORDER_NARRATIVE.ORDER_PROC_ID`. Verified: `NOTE_ID 5231916898 → ORDER_ID
-  1025926289` (XR cervical spine, 96 narrative lines).
+  1025926289` (XR cervical spine, 96 narrative lines). The transcription bridge
+  `NOTES_LINK_ORD_TXN.LINKED_ORD_ID` also lands in `ORDER_PROC.ORDER_PROC_ID` (its one pair here reaches a
+  *resulted* order — `ORDER_RESULTS`, not `ORDER_NARRATIVE`), disjoint from the `HNO_ORDERS` pairs.
 - **Problem → overview note:** `PROBLEM_LIST.OVERVIEW_NOTE_ID = HNO_INFO.NOTE_ID` (a `Problem Overview`
   note). Verified: `OVERVIEW_NOTE_ID 6400440669` is a Rich-Text "Problem Overview" note whose body is the
   RTF file `HNO_6400440669_53988_41.RTF`; the same opening text is cached in `PROBLEM_LIST.PROBLEM_CMT`
-  (§23 preview cache).
+  (§40 preview cache).
 - **Note → patient:** `V_EHI_HNO_LINKED_PATS.NOTE_ID → LINKED_PAT_ID` (= `PAT_ID`). 188 rows, all one
   patient here.
 
@@ -75,14 +82,15 @@ storage path is driven by `NOTE_ENC_INFO.NOTE_FORMAT_C_NAME`:
    - `NOTE_ID` = `HNO_INFO.NOTE_ID` (the **note**, not the contact serial).
    - `MIDDLE` = **`121531 − CONTACT_DATE_REAL`** of the note's **latest** contact. Verified exactly for
      **all 100** files (zero exceptions; e.g. `64869 + 56662 = 121531`). The complement makes a filename
-     sort list newest-notes-first. Addendum contacts (`CONTACT_DATE_REAL` ending `.01`) yield a `.99`
-     fractional MIDDLE (`121531 − 65575.01 = 55955.99`) — not corruption.
+     sort list newest-notes-first. Same-day addendum contacts (`CONTACT_DATE_REAL` ending `.01`) yield a `.99`
+     fractional MIDDLE (`121531 − 65575.01 = 55955.99`) — not corruption. (A later-day addendum gets a
+     whole-number MIDDLE like any other contact; see Gotchas.)
    - trailing `_41` = the HNO master-file INI context (constant), not part of any id.
    - **Join recipe:** parse `(NOTE_ID, MIDDLE)` from the filename, compute `date_real = 121531 − MIDDLE`,
      and match `NOTE_ENC_INFO(NOTE_ID, ROUND(CONTACT_DATE_REAL,2))`. Each file maps to **exactly one**
      contact — the note's MAX `CONTACT_DATE_REAL` (verified: 0 files map to a non-max contact; 0 notes have
      >1 file).
-2. **Plain-text bodies → `HNO_PLAIN_TEXT`** (line-chunked, §8). Keyed by the contact serial.
+2. **Plain-text bodies → `HNO_PLAIN_TEXT`** (line-chunked, §11). Keyed by the contact serial.
 
 `raw/Rich Text/_INDEX.HTML` is a ready-made manifest mapping every RTF to a one-line description; use it as
 a fast index instead of opening files.
@@ -93,8 +101,9 @@ showing to a human.
 ## Gotchas & quirks (chased to *why*)
 
 - **The two body paths are NOT mutually exclusive.** *Observed:* 9 notes appear in **both**
-  `HNO_PLAIN_TEXT` **and** have an RTF file (e.g. the `Letter` `NOTE_ID 1473625808`, the two `Problem
-  Overview` notes). *Why:* for some note types Epic stores both a de-formatted plain rendering (in the
+  `HNO_PLAIN_TEXT` **and** have an RTF file (e.g. the `Letter` `NOTE_ID 1473625808` and two `Problem
+  Overview`-typed notes — note these are **not** the pair linked from `PROBLEM_LIST.OVERVIEW_NOTE_ID`,
+  which are RTF-only; the specimen has four `Problem Overview` notes in total). *Why:* for some note types Epic stores both a de-formatted plain rendering (in the
   table) and the formatted letterhead/SmartText rendering (the RTF) of the **same** content. *Handle:* don't
   assume "format tells you where the body is." Prefer the RTF when both exist (it's the faithful copy); fall
   back to `HNO_PLAIN_TEXT` for notes with no RTF.
@@ -104,12 +113,15 @@ showing to a human.
   letter contacts leave it NULL even when they have a body. *Handle:* establish body presence by the join
   (file exists? rows in `HNO_PLAIN_TEXT`?), not by reading `NOTE_FORMAT_C_NAME`.
 - **An addendum supersedes the file; only the latest contact gets an RTF.** *Observed:* the 4 Signed+Addendum
-  notes each have ONE RTF, named for the addendum (`.01`/`.99`) contact, and the signed `.00` contact has no
+  notes each have ONE RTF, named for the addendum contact, and the earlier signed contact has no
   file. *Why:* each note re-renders its **whole** current body at the latest contact (the RTF is cumulative,
   not a delta), so the export ships one file = the current state. *Handle:* to read a note end-to-end, take
   the file at `MAX(CONTACT_DATE_REAL)`; for the per-version audit trail (who signed/addended when) read the
-  `NOTE_ENC_INFO` rows, not separate files. Note: addenda show up **three** ways for one event — filename
-  `.99`, `CONTACT_DATE_REAL .01`, and `NOTE_STATUS_C_NAME='Addendum'` — so naive note counting double-counts.
+  `NOTE_ENC_INFO` rows, not separate files. Note: a **same-day** addendum shows up three ways for one event —
+  filename MIDDLE `.99`, `CONTACT_DATE_REAL .01`, and `NOTE_STATUS_C_NAME='Addendum'` — so naive note counting
+  double-counts. But an addendum filed on a **later day** gets a whole-number `CONTACT_DATE_REAL` and MIDDLE
+  (one of the four here): the `.01`/`.99` fractions are a same-day collision artifact (§18), not the definition.
+  The reliable addendum marker is `NOTE_STATUS_C_NAME='Addendum'`.
 - **Note type lives in parallel columns and is often blank.** *Observed:* `NOTE_TYPE_NOADD_C_NAME` is blank
   for **107/188** notes; `IP_NOTE_TYPE_C_NAME` for 111. They disagree (NOADD has `Progress Note`, IP has
   `Progress Notes` / also `Consults`, `Miscellaneous`). *Why:* `NOTE_TYPE_NOADD` is a virtual item derived
@@ -117,11 +129,16 @@ showing to a human.
   Many HNO rows are stubs with no signed contact and thus no type. *Handle:* `COALESCE(IP_NOTE_TYPE_C_NAME,
   NOTE_TYPE_NOADD_C_NAME)` for best coverage — but even then **104 notes have no type at all** (84 have a
   type from either column). For per-contact granularity also see `NOTE_ENC_INFO.NOTE_TYPE_C_NAME`.
-- **~107 HNO rows are stubs.** *Observed:* 107 notes have blank `NOTE_TYPE_NOADD`, NULL status, and no body;
-  some entered by system users (`HB BACKGROUND`, `MYCHART GENERIC`). *Why:* an HNO record is minted for many
-  encounter/admin events that never become signed prose (problem-overview placeholders, encounter context,
-  background tasks). *Handle:* filter on a populated `NOTE_ENC_INFO.NOTE_STATUS_C_NAME` (`Signed`/`Addendum`)
-  to get real clinical narrative; 82 of 194 contacts have a status.
+- **Many HNO rows are stubs — but statusless ≠ bodyless.** *Observed:* ~72 notes are full stubs (no type, no
+  status, no body); some entered by system users (`HB BACKGROUND`, `MYCHART GENERIC`). *Why:* an HNO record is
+  minted for many encounter/admin events that never become signed prose (problem-overview placeholders,
+  encounter context, background tasks; billing-account notes also live in HNO — see `NOTES_ACCT` in the
+  billing guide, whose `NOTE_ID`s all join `HNO_INFO`). **Beware:** another ~30 typeless, statusless notes
+  still carry a body (letters, patient instructions, MyChart-originated RTFs). *Handle:* filter on
+  `NOTE_ENC_INFO.NOTE_STATUS_C_NAME IN ('Signed','Addendum')` for signed clinical prose (82 of 194 contacts
+  here) — but know that hides bodied admin/letter notes; "status-filter for clinical narrative" and
+  "enumerate all bodies" are **different queries**. Establish body presence by the join (file exists? rows in
+  `HNO_PLAIN_TEXT`?), per the format gotcha above.
 - **RTF carries hidden Epic SmartTool markup.** *Observed:* note bodies contain SmartLink tokens embedded as
   RTF bookmarks — `{\*\bkmkstart LINKBEGIN|80|86|NAME||||1}…{\*\bkmkend LINKBEGIN|…}` — plus
   `LISTBEGIN/LISTEND` (SmartList picklist resolutions), `BLOCKBEGIN/BLOCKEND` (SmartBlocks), and a hidden
@@ -153,6 +170,9 @@ JOIN NOTE_ENC_INFO e ON e.NOTE_ID = h.NOTE_ID
 ORDER BY CAST(e.CONTACT_DATE_REAL AS REAL) DESC;
 
 -- 2. Signed clinical narrative only (drop stubs/admin contacts), with body location.
+-- In one specimen plain_lines is 0 for EVERY signed contact (signed prose is all RTF;
+-- plain text lives on statusless letter/admin contacts) — pair with the RTF filename
+-- glob (recipe 4) for body location. This also hides bodied statusless notes; see Gotchas.
 SELECT h.NOTE_ID, e.CONTACT_SERIAL_NUM, e.NOTE_STATUS_C_NAME, e.NOTE_FORMAT_C_NAME,
        (SELECT COUNT(*) FROM HNO_PLAIN_TEXT p WHERE p.NOTE_CSN_ID = e.CONTACT_SERIAL_NUM) AS plain_lines
 FROM HNO_INFO h
@@ -177,7 +197,7 @@ FROM NOTE_ENC_INFO WHERE NOTE_ID = :note_id;
 
 -- 5. A problem's overview note text (cached preview + full body location).
 SELECT pl.PROBLEM_LIST_ID, pl.OVERVIEW_NOTE_ID,
-       substr(pl.PROBLEM_CMT,1,80) AS cached_preview,   -- §23
+       substr(pl.PROBLEM_CMT,1,80) AS cached_preview,   -- §40 preview cache
        COALESCE(NULLIF(h.IP_NOTE_TYPE_C_NAME,''),
                 NULLIF(h.NOTE_TYPE_NOADD_C_NAME,'')) AS overview_note_type  -- IP_NOTE_TYPE is blank for these
 FROM PROBLEM_LIST pl
@@ -198,13 +218,13 @@ ORDER BY ho.NOTE_ID, CAST(n.LINE AS INT);
 - **`HNO_INFO.CONVERSATION_MSG_ID`** (1 populated row here, on a Progress Note) is meant to tie a note to its
   originating MyChart conversation, but the value (`358825337`) does **not** match `MYC_MESG.MESSAGE_ID`,
   `PARENT_MESSAGE_ID`, or `INBASKET_MSG_ID` in this specimen — it appears to be a distinct conversation/
-  thread id space (§24 two ID spaces). Treat the cross-link as unconfirmed until a matching key is found.
+  thread id space (§41 two ID spaces). Treat the cross-link as unconfirmed until a matching key is found.
 - **The `121531` constant** is the per-day complement that reproduces every filename here exactly. The
   prior scout also derived an equivalent `793576 − day_ordinal` form; both work, but `121531 −
   CONTACT_DATE_REAL` is simpler and joins directly to a column. Whether `121531` is genre-stable or
   export-run-specific needs a second specimen to confirm.
 - **`NOTE_ID 1997508480`** has 3 contacts (dates 65387/66350/66745), all with NULL status/format and
-  different authors, and **no** RTF or plain-text body — likely a longitudinal/shared placeholder note
+  two distinct authors across the three contacts, and **no** RTF or plain-text body — likely a longitudinal/shared placeholder note
   re-contacted per encounter. Unresolved which (if any) body it should have.
 - **MyChart-originated notes:** a patient MyChart message can surface as an HNO note authored by the system
   user `MYCHART, GENERIC`, with the message text exported as RTF. The handshake from note → message is via
