@@ -1,0 +1,62 @@
+{
+  "sections": [
+    {
+      "id": "verdict",
+      "title": "The verdict",
+      "prose": [
+        "This patient is a 43-year-old man, a lifelong never-smoker, whose body-mass index sits right at the overweight line. His problem list carries only minor, non-cardiometabolic conditions — reflux, seasonal allergies, a resolved concussion — so an average-risk default applies to his screening. He is, by the numbers, healthier and more current than a red-and-green dashboard would suggest: a December 2025 primary-care visit refreshed his lipids, his A1c, and his wellness visit, and his core adult vaccines are up to date.",
+        "So why audit him at all? Because the chart already runs a Health-Maintenance engine for this patient, and that engine cannot be trusted at a glance. It is at once **noisy** — its worklist carries travel and childhood items that don't apply to him, and its forecast math emits impossible due-dates like a COVID-19 dose “overdue” since 1987 and a hepatitis-C screen “due” at birth in 1982 — and **incomplete**, silent on a one-time HIV screen he has never had, on the colorectal screening he becomes eligible for at 45, and on the screening it logs as questionnaires rather than tracked measures.",
+        "This audit recomputes every applicable measure from the recommending authority and this patient's own facts, independent of the engine. The result both **denoises** the worklist — discarding the forecast artifacts and reclassifying the travel vaccines — and **fills** it, adding the measures the engine never tracked. What remains is a worklist a physician can act on, where every line cites both a patient fact and a published recommendation."
+      ],
+      "cites": ["e_problems", "e_smoking", "e_bmi"]
+    },
+    {
+      "id": "act-now",
+      "title": "Act now",
+      "prose": [
+        "Two measures are genuinely missing and worth ordering at the next visit. The first is a **one-time HIV screen**: the U.S. Preventive Services Task Force gives this its strongest (Grade A) recommendation for every adult 15 to 65, regardless of risk, and there is no HIV result anywhere in this record. The second is the **adult hepatitis-B series**: since 2022 the CDC's Advisory Committee on Immunization Practices recommends hepatitis-B vaccination for all adults 19 to 59, and this patient has no adult series on file — the engine flags it too, but buries the signal under a birthdate-anchored “due since 1982.”",
+        "Everything else on the act-now list is deliberately short. The screens that were due have been done; the vaccines that are routine for his age are current. Restraint here is the point: a worklist that cries wolf on two dozen items trains a clinician to ignore it."
+      ],
+      "cites": ["e_g_hiv", "e_g_hepB"]
+    },
+    {
+      "id": "lanes",
+      "title": "Coverage over time",
+      "prose": [
+        "Preventive care is not a snapshot; it is a set of clocks, each ticking on its own interval. The lanes below recompute each recurring measure's coverage from this patient's real completions and the recommended interval — a green band while covered, a gap when the clock runs out, a marker at each completion, and a forward projection to the next due date.",
+        "Read down the lanes and the story is drift and recovery: influenza and COVID lapsed and were caught back up most autumns; the diabetes and cholesterol clocks ran past due in 2023 before a December 2025 visit reset them. This is the ordinary rhythm of a healthy adult's preventive care — not neglect, but not autopilot either — and it is exactly what a single current-status column hides."
+      ],
+      "cites": ["e_lipid_2025-12-04", "e_gluc_2025-12-04"]
+    },
+    {
+      "id": "reconciliation",
+      "title": "Where the audit departs from the chart",
+      "prose": [
+        "The audit disagrees with the Health-Maintenance engine in three distinct ways, and the kind of disagreement matters.",
+        "**Forecast artifacts.** The engine anchors some next-due dates to the patient's birthday and age rules, producing dates that are not real: a hepatitis-C screen “due” the day he was born, COVID-19 doses “overdue” in 1987 and 1998 before the vaccine existed. The clinical conclusion may still be right, but the dates are noise; the audit recomputes them from the actual record.",
+        "**Suppressed topics.** The engine has “aged out” or hidden items it decided no longer apply — hepatitis A, typhoid, the pneumococcal series. The audit doesn't drop them silently: it reclassifies hepatitis A and typhoid as the risk- and travel-based vaccines they are (he received both before documented travel), and defers pneumococcal to its age-50 eligibility rather than pretending it is gone.",
+        "**Divergent eligibility.** On diabetes screening the two authorities genuinely disagree. USPSTF screens adults 35–70 only if overweight (BMI ≥ 25); the ADA screens all adults from 35 regardless of weight. This patient's BMI hovers right at 25, so his USPSTF eligibility flickers visit to visit while the ADA would have screened him years earlier. The audit shows both verdicts rather than inventing a single answer. (In practice he was screened, and his A1c is normal.)"
+      ],
+      "cites": ["e_g_diabetes-uspstf", "e_g2_diabetes-uspstf", "e_bmi"]
+    },
+    {
+      "id": "immunizations",
+      "title": "The immunization record, audited",
+      "prose": [
+        "Checked against the ACIP adult schedule for a 43-year-old, his vaccines are in good shape: influenza and COVID-19 are current as of autumn 2025, and a Tdap in February 2019 covers him until a tetanus-diphtheria booster comes due in 2029. The age-gated vaccines — zoster, pneumococcal, RSV — are correctly not yet due; he reaches them at 50 and 75.",
+        "The cluster of “exotic” vaccines that clutters the engine's worklist resolves cleanly once read in context. On a single day in February 2019 he received Tdap, hepatitis A, and typhoid together — the signature of a pre-travel visit, consistent with the travel-screening history in his chart. These are risk-based, not routine; counting them as failures, as an age-only worklist does, is a category error."
+      ],
+      "cites": ["e_imm_tdap_2019-02-05", "e_imm_typhoid_2019-02-05", "e_imm_hepA_2019-02-05"]
+    },
+    {
+      "id": "limits",
+      "title": "What the audit can't settle",
+      "prose": [
+        "Several verdicts are honestly conditional. Unhealthy-alcohol-use screening is *partial*: his drinking is recorded in the social history, but no validated instrument (such as AUDIT-C) is clearly documented. HPV vaccination at 43 is a shared clinical decision, not a failure. And the travel vaccines remain conditional on travel exposure the structured record doesn't capture.",
+        "Two findings are hand-offs rather than gaps. Blood pressure is measured at every office visit — the readings span 122/70 to 142/74 over 2018–2025, with a pair of mildly elevated office readings in 2022 that never progressed to a hypertension diagnosis; interpreting those belongs to a cardiovascular-risk review, not this coverage audit.",
+        "The other is the lipid trend: his most recent panel is trending the wrong way — triglycerides rose from 88 to 282 mg/dL and HDL fell to 40 across 2018–2025. The screen did its job; interpreting that result and deciding on cardiovascular risk reduction belongs to the clinician, and to a cardiac-risk analysis, not to this coverage audit."
+      ],
+      "cites": ["e_bp_2025-12-04", "e_lipid_2025-12-04", "e_alcohol", "e_phq2"]
+    }
+  ]
+}

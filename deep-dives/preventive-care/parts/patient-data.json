@@ -1,0 +1,1333 @@
+{
+  "asOf": "2026-06-09",
+  "patient": {
+    "sex": "Male",
+    "dob": {
+      "iso": "1982-10-26",
+      "display": "Oct 26, 1982"
+    },
+    "ageYears": 43,
+    "bmi": {
+      "iso": "2025-12-04",
+      "display": "Dec 4, 2025",
+      "bmi": 25.8
+    },
+    "bmiTrend": [
+      {
+        "iso": "2018-08-09",
+        "display": "Aug 9, 2018",
+        "bmi": 24.3
+      },
+      {
+        "iso": "2020-01-09",
+        "display": "Jan 9, 2020",
+        "bmi": 25.6
+      },
+      {
+        "iso": "2022-08-29",
+        "display": "Aug 29, 2022",
+        "bmi": 25
+      },
+      {
+        "iso": "2022-12-01",
+        "display": "Dec 1, 2022",
+        "bmi": 25.4
+      },
+      {
+        "iso": "2023-03-02",
+        "display": "Mar 2, 2023",
+        "bmi": 25.5
+      },
+      {
+        "iso": "2023-09-28",
+        "display": "Sep 28, 2023",
+        "bmi": 24.9
+      },
+      {
+        "iso": "2024-07-02",
+        "display": "Jul 2, 2024",
+        "bmi": 24.6
+      },
+      {
+        "iso": "2024-11-07",
+        "display": "Nov 7, 2024",
+        "bmi": 25.3
+      },
+      {
+        "iso": "2025-12-04",
+        "display": "Dec 4, 2025",
+        "bmi": 25.8
+      }
+    ],
+    "riskFacts": [
+      {
+        "key": "age",
+        "label": "Age",
+        "value": "43 years (DOB Oct 26, 1982)",
+        "evidenceId": "e_age"
+      },
+      {
+        "key": "sex",
+        "label": "Sex",
+        "value": "Male",
+        "evidenceId": "e_sex"
+      },
+      {
+        "key": "smoking",
+        "label": "Tobacco use",
+        "value": "Never (smoking: Never)",
+        "decisive": true,
+        "evidenceId": "e_smoking"
+      },
+      {
+        "key": "bmi",
+        "label": "Body-mass index",
+        "value": "25.8 (Dec 4, 2025)",
+        "decisive": true,
+        "trend": [
+          {
+            "iso": "2018-08-09",
+            "display": "Aug 9, 2018",
+            "bmi": 24.3
+          },
+          {
+            "iso": "2020-01-09",
+            "display": "Jan 9, 2020",
+            "bmi": 25.6
+          },
+          {
+            "iso": "2022-08-29",
+            "display": "Aug 29, 2022",
+            "bmi": 25
+          },
+          {
+            "iso": "2022-12-01",
+            "display": "Dec 1, 2022",
+            "bmi": 25.4
+          },
+          {
+            "iso": "2023-03-02",
+            "display": "Mar 2, 2023",
+            "bmi": 25.5
+          },
+          {
+            "iso": "2023-09-28",
+            "display": "Sep 28, 2023",
+            "bmi": 24.9
+          },
+          {
+            "iso": "2024-07-02",
+            "display": "Jul 2, 2024",
+            "bmi": 24.6
+          },
+          {
+            "iso": "2024-11-07",
+            "display": "Nov 7, 2024",
+            "bmi": 25.3
+          },
+          {
+            "iso": "2025-12-04",
+            "display": "Dec 4, 2025",
+            "bmi": 25.8
+          }
+        ],
+        "evidenceId": "e_bmi"
+      },
+      {
+        "key": "alcohol",
+        "label": "Alcohol use",
+        "value": "Yes",
+        "evidenceId": "e_alcohol"
+      },
+      {
+        "key": "drugs",
+        "label": "Injection-drug use",
+        "value": "No (IV: N)",
+        "evidenceId": "e_drugs"
+      },
+      {
+        "key": "problems",
+        "label": "Active problems",
+        "value": "4 active — none cardiometabolic",
+        "evidenceId": "e_problems"
+      }
+    ],
+    "bp": {
+      "readings": [
+        {
+          "iso": "2018-08-09",
+          "display": "Aug 9, 2018",
+          "sys": 122,
+          "dia": 70,
+          "elevated": false,
+          "evidenceId": "e_bp_2018-08-09"
+        },
+        {
+          "iso": "2020-01-09",
+          "display": "Jan 9, 2020",
+          "sys": 136,
+          "dia": 83,
+          "elevated": false,
+          "evidenceId": "e_bp_2020-01-09"
+        },
+        {
+          "iso": "2022-08-29",
+          "display": "Aug 29, 2022",
+          "sys": 138,
+          "dia": 76,
+          "elevated": false,
+          "evidenceId": "e_bp_2022-08-29"
+        },
+        {
+          "iso": "2022-12-01",
+          "display": "Dec 1, 2022",
+          "sys": 142,
+          "dia": 74,
+          "elevated": true,
+          "evidenceId": "e_bp_2022-12-01"
+        },
+        {
+          "iso": "2023-03-02",
+          "display": "Mar 2, 2023",
+          "sys": 134,
+          "dia": 80,
+          "elevated": false,
+          "evidenceId": "e_bp_2023-03-02"
+        },
+        {
+          "iso": "2023-09-28",
+          "display": "Sep 28, 2023",
+          "sys": 132,
+          "dia": 64,
+          "elevated": false,
+          "evidenceId": "e_bp_2023-09-28"
+        },
+        {
+          "iso": "2024-07-02",
+          "display": "Jul 2, 2024",
+          "sys": 127,
+          "dia": 81,
+          "elevated": false,
+          "evidenceId": "e_bp_2024-07-02"
+        },
+        {
+          "iso": "2024-11-07",
+          "display": "Nov 7, 2024",
+          "sys": 128,
+          "dia": 70,
+          "elevated": false,
+          "evidenceId": "e_bp_2024-11-07"
+        },
+        {
+          "iso": "2025-12-04",
+          "display": "Dec 4, 2025",
+          "sys": 132,
+          "dia": 62,
+          "elevated": false,
+          "evidenceId": "e_bp_2025-12-04"
+        }
+      ],
+      "latest": {
+        "iso": "2025-12-04",
+        "display": "Dec 4, 2025",
+        "sys": 132,
+        "dia": 62,
+        "elevated": false,
+        "evidenceId": "e_bp_2025-12-04"
+      },
+      "elevatedCount": 1
+    }
+  },
+  "immunizations": [
+    {
+      "family": "influenza",
+      "label": "Influenza",
+      "date": {
+        "iso": "2017-10-25",
+        "display": "Oct 25, 2017"
+      },
+      "manufacturer": null,
+      "evidenceId": "e_imm_influenza_2017-10-25"
+    },
+    {
+      "family": "influenza",
+      "label": "Influenza",
+      "date": {
+        "iso": "2018-10-08",
+        "display": "Oct 8, 2018"
+      },
+      "manufacturer": null,
+      "evidenceId": "e_imm_influenza_2018-10-08"
+    },
+    {
+      "family": "tdap",
+      "label": "Tdap (tetanus/diphtheria/pertussis)",
+      "date": {
+        "iso": "2019-02-05",
+        "display": "Feb 5, 2019"
+      },
+      "manufacturer": null,
+      "evidenceId": "e_imm_tdap_2019-02-05"
+    },
+    {
+      "family": "hepA",
+      "label": "Hepatitis A",
+      "date": {
+        "iso": "2019-02-05",
+        "display": "Feb 5, 2019"
+      },
+      "manufacturer": null,
+      "evidenceId": "e_imm_hepA_2019-02-05"
+    },
+    {
+      "family": "typhoid",
+      "label": "Typhoid (travel)",
+      "date": {
+        "iso": "2019-02-05",
+        "display": "Feb 5, 2019"
+      },
+      "manufacturer": null,
+      "evidenceId": "e_imm_typhoid_2019-02-05"
+    },
+    {
+      "family": "influenza",
+      "label": "Influenza",
+      "date": {
+        "iso": "2019-11-13",
+        "display": "Nov 13, 2019"
+      },
+      "manufacturer": null,
+      "evidenceId": "e_imm_influenza_2019-11-13"
+    },
+    {
+      "family": "covid",
+      "label": "COVID-19",
+      "date": {
+        "iso": "2021-04-18",
+        "display": "Apr 18, 2021"
+      },
+      "manufacturer": "Moderna",
+      "evidenceId": "e_imm_covid_2021-04-18"
+    },
+    {
+      "family": "covid",
+      "label": "COVID-19",
+      "date": {
+        "iso": "2021-05-16",
+        "display": "May 16, 2021"
+      },
+      "manufacturer": "Moderna",
+      "evidenceId": "e_imm_covid_2021-05-16"
+    },
+    {
+      "family": "influenza",
+      "label": "Influenza",
+      "date": {
+        "iso": "2021-10-24",
+        "display": "Oct 24, 2021"
+      },
+      "manufacturer": null,
+      "evidenceId": "e_imm_influenza_2021-10-24"
+    },
+    {
+      "family": "covid",
+      "label": "COVID-19",
+      "date": {
+        "iso": "2021-12-03",
+        "display": "Dec 3, 2021"
+      },
+      "manufacturer": null,
+      "evidenceId": "e_imm_covid_2021-12-03"
+    },
+    {
+      "family": "covid",
+      "label": "COVID-19",
+      "date": {
+        "iso": "2022-09-25",
+        "display": "Sep 25, 2022"
+      },
+      "manufacturer": null,
+      "evidenceId": "e_imm_covid_2022-09-25"
+    },
+    {
+      "family": "influenza",
+      "label": "Influenza",
+      "date": {
+        "iso": "2022-10-26",
+        "display": "Oct 26, 2022"
+      },
+      "manufacturer": null,
+      "evidenceId": "e_imm_influenza_2022-10-26"
+    },
+    {
+      "family": "influenza",
+      "label": "Influenza",
+      "date": {
+        "iso": "2023-09-28",
+        "display": "Sep 28, 2023"
+      },
+      "manufacturer": "GLAXO SMITH KLINE",
+      "evidenceId": "e_imm_influenza_2023-09-28"
+    },
+    {
+      "family": "covid",
+      "label": "COVID-19",
+      "date": {
+        "iso": "2023-10-11",
+        "display": "Oct 11, 2023"
+      },
+      "manufacturer": null,
+      "evidenceId": "e_imm_covid_2023-10-11"
+    },
+    {
+      "family": "influenza",
+      "label": "Influenza",
+      "date": {
+        "iso": "2024-09-07",
+        "display": "Sep 7, 2024"
+      },
+      "manufacturer": null,
+      "evidenceId": "e_imm_influenza_2024-09-07"
+    },
+    {
+      "family": "covid",
+      "label": "COVID-19",
+      "date": {
+        "iso": "2024-09-07",
+        "display": "Sep 7, 2024"
+      },
+      "manufacturer": null,
+      "evidenceId": "e_imm_covid_2024-09-07"
+    },
+    {
+      "family": "covid",
+      "label": "COVID-19",
+      "date": {
+        "iso": "2025-10-29",
+        "display": "Oct 29, 2025"
+      },
+      "manufacturer": null,
+      "evidenceId": "e_imm_covid_2025-10-29"
+    },
+    {
+      "family": "influenza",
+      "label": "Influenza",
+      "date": {
+        "iso": "2025-10-29",
+        "display": "Oct 29, 2025"
+      },
+      "manufacturer": null,
+      "evidenceId": "e_imm_influenza_2025-10-29"
+    }
+  ],
+  "screenings": {
+    "lipids": [
+      {
+        "iso": "2025-12-04",
+        "display": "Dec 4, 2025",
+        "comps": [
+          {
+            "comp": "CHOLESTEROL",
+            "val": "188",
+            "flag": null,
+            "lo": "0",
+            "hi": "200",
+            "unit": "mg/dL",
+            "date": {
+              "iso": "2025-12-04",
+              "display": "Dec 4, 2025"
+            }
+          },
+          {
+            "comp": "TRIGLYCERIDES",
+            "val": "282",
+            "flag": "High",
+            "lo": "0",
+            "hi": "149",
+            "unit": "mg/dL",
+            "date": {
+              "iso": "2025-12-04",
+              "display": "Dec 4, 2025"
+            }
+          },
+          {
+            "comp": "HDL",
+            "val": "40",
+            "flag": "Low",
+            "lo": null,
+            "hi": null,
+            "unit": "mg/dL",
+            "date": {
+              "iso": "2025-12-04",
+              "display": "Dec 4, 2025"
+            }
+          },
+          {
+            "comp": "LDL, CALCULATED",
+            "val": "92",
+            "flag": null,
+            "lo": null,
+            "hi": null,
+            "unit": "mg/dL",
+            "date": {
+              "iso": "2025-12-04",
+              "display": "Dec 4, 2025"
+            }
+          },
+          {
+            "comp": "CHOLESTEROL/HDL RATIO",
+            "val": "4.7",
+            "flag": null,
+            "lo": "0.0",
+            "hi": "5.0",
+            "unit": null,
+            "date": {
+              "iso": "2025-12-04",
+              "display": "Dec 4, 2025"
+            }
+          }
+        ],
+        "evidenceId": "e_lipid_2025-12-04",
+        "flags": [
+          "TRIGLYCERIDES 282 High",
+          "HDL 40 Low"
+        ]
+      },
+      {
+        "iso": "2018-08-09",
+        "display": "Aug 9, 2018",
+        "comps": [
+          {
+            "comp": "CHOLESTEROL",
+            "val": "159",
+            "flag": null,
+            "lo": "0",
+            "hi": "199",
+            "unit": "mg/dL",
+            "date": {
+              "iso": "2018-08-09",
+              "display": "Aug 9, 2018"
+            }
+          },
+          {
+            "comp": "TRIGLYCERIDES",
+            "val": "88",
+            "flag": null,
+            "lo": "0",
+            "hi": "149",
+            "unit": "mg/dL",
+            "date": {
+              "iso": "2018-08-09",
+              "display": "Aug 9, 2018"
+            }
+          },
+          {
+            "comp": "HIGH DENSITY CHOLESTEROL",
+            "val": "52",
+            "flag": null,
+            "lo": "40",
+            "hi": "125",
+            "unit": "mg/dL",
+            "date": {
+              "iso": "2018-08-09",
+              "display": "Aug 9, 2018"
+            }
+          },
+          {
+            "comp": "LDL, CALCULATED",
+            "val": "89",
+            "flag": null,
+            "lo": "60",
+            "hi": "129",
+            "unit": "mg/dL",
+            "date": {
+              "iso": "2018-08-09",
+              "display": "Aug 9, 2018"
+            }
+          },
+          {
+            "comp": "CHOLESTEROL/HDL RATIO",
+            "val": "3.1",
+            "flag": null,
+            "lo": "0.0",
+            "hi": "5.0",
+            "unit": null,
+            "date": {
+              "iso": "2018-08-09",
+              "display": "Aug 9, 2018"
+            }
+          }
+        ],
+        "evidenceId": "e_lipid_2018-08-09",
+        "flags": []
+      },
+      {
+        "iso": "2023-09-28",
+        "display": "Sep 28, 2023",
+        "comps": [
+          {
+            "comp": "CHOLESTEROL",
+            "val": "156",
+            "flag": null,
+            "lo": "0",
+            "hi": "199",
+            "unit": "mg/dL",
+            "date": {
+              "iso": "2023-09-28",
+              "display": "Sep 28, 2023"
+            }
+          },
+          {
+            "comp": "TRIGLYCERIDES",
+            "val": "92",
+            "flag": null,
+            "lo": "0",
+            "hi": "149",
+            "unit": "mg/dL",
+            "date": {
+              "iso": "2023-09-28",
+              "display": "Sep 28, 2023"
+            }
+          },
+          {
+            "comp": "HDL",
+            "val": "44",
+            "flag": null,
+            "lo": "40",
+            "hi": "125",
+            "unit": "mg/dL",
+            "date": {
+              "iso": "2023-09-28",
+              "display": "Sep 28, 2023"
+            }
+          },
+          {
+            "comp": "LDL, CALCULATED",
+            "val": "94",
+            "flag": null,
+            "lo": "60",
+            "hi": "129",
+            "unit": "mg/dL",
+            "date": {
+              "iso": "2023-09-28",
+              "display": "Sep 28, 2023"
+            }
+          },
+          {
+            "comp": "CHOLESTEROL/HDL RATIO",
+            "val": "3.5",
+            "flag": null,
+            "lo": "0.0",
+            "hi": "5.0",
+            "unit": null,
+            "date": {
+              "iso": "2023-09-28",
+              "display": "Sep 28, 2023"
+            }
+          }
+        ],
+        "evidenceId": "e_lipid_2023-09-28",
+        "flags": []
+      }
+    ],
+    "glucose": [
+      {
+        "iso": "2025-12-04",
+        "display": "Dec 4, 2025",
+        "comps": [
+          {
+            "comp": "GLUCOSE",
+            "val": "90",
+            "flag": null,
+            "lo": "74",
+            "hi": "100",
+            "unit": "mg/dL",
+            "date": {
+              "iso": "2025-12-04",
+              "display": "Dec 4, 2025"
+            }
+          },
+          {
+            "comp": "HEMOGLOBIN A1C",
+            "val": "5.5",
+            "flag": null,
+            "lo": "4.0",
+            "hi": "6.0",
+            "unit": "%",
+            "date": {
+              "iso": "2025-12-04",
+              "display": "Dec 4, 2025"
+            }
+          }
+        ],
+        "evidenceId": "e_gluc_2025-12-04"
+      },
+      {
+        "iso": "2022-08-29",
+        "display": "Aug 29, 2022",
+        "comps": [
+          {
+            "comp": "GLUCOSE",
+            "val": "97",
+            "flag": null,
+            "lo": "74",
+            "hi": "100",
+            "unit": "mg/dL",
+            "date": {
+              "iso": "2022-08-29",
+              "display": "Aug 29, 2022"
+            }
+          }
+        ],
+        "evidenceId": "e_gluc_2022-08-29"
+      },
+      {
+        "iso": "2023-09-28",
+        "display": "Sep 28, 2023",
+        "comps": [
+          {
+            "comp": "HEMOGLOBIN A1C",
+            "val": "5.4",
+            "flag": null,
+            "lo": "4.0",
+            "hi": "6.0",
+            "unit": "%",
+            "date": {
+              "iso": "2023-09-28",
+              "display": "Sep 28, 2023"
+            }
+          }
+        ],
+        "evidenceId": "e_gluc_2023-09-28"
+      }
+    ],
+    "hepC": [
+      {
+        "date": {
+          "iso": "2023-09-28",
+          "display": "Sep 28, 2023"
+        },
+        "value": "NONREACTIVE",
+        "evidenceId": "e_hcv_2023-09-28"
+      }
+    ]
+  },
+  "depression": {
+    "instrumentPresent": true,
+    "evidenceId": "e_phq2"
+  },
+  "epicStatus": [
+    {
+      "topic": "Annual Wellness Visit",
+      "currentStatus": "Not Due",
+      "nextDue": {
+        "iso": "2026-12-04",
+        "display": "Dec 4, 2026"
+      },
+      "lastCompleted": {
+        "iso": "2025-12-04",
+        "display": "Dec 4, 2025"
+      },
+      "everCompleted": [
+        "2018-08-09",
+        "2022-08-29",
+        "2023-09-28",
+        "2024-11-07",
+        "2025-12-04"
+      ],
+      "statusesSeen": [
+        "Overdue",
+        "Not Due",
+        "Due Soon",
+        "Due On"
+      ]
+    },
+    {
+      "topic": "COVID-19 Vaccine",
+      "currentStatus": "Completed",
+      "nextDue": null,
+      "lastCompleted": {
+        "iso": "2025-10-29",
+        "display": "Oct 29, 2025"
+      },
+      "everCompleted": [
+        "2021-05-16",
+        "2021-12-03",
+        "2022-09-25",
+        "2023-10-11",
+        "2024-09-07",
+        "2025-10-29"
+      ],
+      "statusesSeen": [
+        "Overdue",
+        "Completed"
+      ]
+    },
+    {
+      "topic": "Cholera Vaccine",
+      "currentStatus": "Hidden",
+      "nextDue": null,
+      "lastCompleted": null,
+      "everCompleted": [],
+      "statusesSeen": [
+        "Hidden"
+      ]
+    },
+    {
+      "topic": "HIB Vaccine",
+      "currentStatus": "Aged Out",
+      "nextDue": null,
+      "lastCompleted": null,
+      "everCompleted": [],
+      "statusesSeen": [
+        "Aged Out"
+      ]
+    },
+    {
+      "topic": "HPV Vaccine (9-26yo & Shared Decision 27-45yo)",
+      "currentStatus": "Overdue",
+      "nextDue": {
+        "iso": "2009-10-26",
+        "display": "Oct 26, 2009"
+      },
+      "lastCompleted": null,
+      "everCompleted": [],
+      "statusesSeen": [
+        "Aged Out",
+        "Overdue",
+        "Completed"
+      ]
+    },
+    {
+      "topic": "Hepatitis A Vaccine",
+      "currentStatus": "Aged Out",
+      "nextDue": null,
+      "lastCompleted": {
+        "iso": "2019-02-05",
+        "display": "Feb 5, 2019"
+      },
+      "everCompleted": [
+        "2019-02-05"
+      ],
+      "statusesSeen": [
+        "Aged Out"
+      ]
+    },
+    {
+      "topic": "Hepatitis B Vaccine",
+      "currentStatus": "Overdue",
+      "nextDue": {
+        "iso": "2001-10-26",
+        "display": "Oct 26, 2001"
+      },
+      "lastCompleted": null,
+      "everCompleted": [],
+      "statusesSeen": [
+        "Aged Out",
+        "Overdue"
+      ]
+    },
+    {
+      "topic": "IPV Vaccine",
+      "currentStatus": "Aged Out",
+      "nextDue": null,
+      "lastCompleted": null,
+      "everCompleted": [],
+      "statusesSeen": [
+        "Aged Out"
+      ]
+    },
+    {
+      "topic": "Influenza Vaccine",
+      "currentStatus": "Completed",
+      "nextDue": null,
+      "lastCompleted": {
+        "iso": "2025-10-29",
+        "display": "Oct 29, 2025"
+      },
+      "everCompleted": [
+        "2019-11-13",
+        "2021-10-24",
+        "2022-10-26",
+        "2023-09-28",
+        "2024-09-07",
+        "2025-10-29"
+      ],
+      "statusesSeen": [
+        "Due On",
+        "Overdue",
+        "Not Due",
+        "Completed"
+      ]
+    },
+    {
+      "topic": "Japanese Encephalitis Vaccine",
+      "currentStatus": "Hidden",
+      "nextDue": null,
+      "lastCompleted": null,
+      "everCompleted": [],
+      "statusesSeen": [
+        "Hidden"
+      ]
+    },
+    {
+      "topic": "Lab-Cholesterol Screening",
+      "currentStatus": "Not Due",
+      "nextDue": {
+        "iso": "2030-12-04",
+        "display": "Dec 4, 2030"
+      },
+      "lastCompleted": {
+        "iso": "2025-12-04",
+        "display": "Dec 4, 2025"
+      },
+      "everCompleted": [
+        "2018-08-09",
+        "2023-09-28",
+        "2025-12-04"
+      ],
+      "statusesSeen": [
+        "Not Due",
+        "Due On",
+        "Overdue"
+      ]
+    },
+    {
+      "topic": "Lab-Diabetes Screening",
+      "currentStatus": "Not Due",
+      "nextDue": {
+        "iso": "2026-12-04",
+        "display": "Dec 4, 2026"
+      },
+      "lastCompleted": {
+        "iso": "2025-12-04",
+        "display": "Dec 4, 2025"
+      },
+      "everCompleted": [
+        "2022-08-29",
+        "2023-09-28",
+        "2025-12-04"
+      ],
+      "statusesSeen": [
+        "Not Due",
+        "Overdue"
+      ]
+    },
+    {
+      "topic": "Lab-Hepatitis C Screening",
+      "currentStatus": "Completed",
+      "nextDue": null,
+      "lastCompleted": {
+        "iso": "2023-09-28",
+        "display": "Sep 28, 2023"
+      },
+      "everCompleted": [
+        "2023-09-28"
+      ],
+      "statusesSeen": [
+        "Overdue",
+        "Completed"
+      ]
+    },
+    {
+      "topic": "Meningococcal B Vaccine",
+      "currentStatus": "Hidden",
+      "nextDue": null,
+      "lastCompleted": null,
+      "everCompleted": [],
+      "statusesSeen": [
+        "Hidden"
+      ]
+    },
+    {
+      "topic": "Meningococcal Conjugate Vaccine",
+      "currentStatus": "Aged Out",
+      "nextDue": null,
+      "lastCompleted": null,
+      "everCompleted": [],
+      "statusesSeen": [
+        "Aged Out"
+      ]
+    },
+    {
+      "topic": "Orthopoxvirus Immunization",
+      "currentStatus": "Hidden",
+      "nextDue": null,
+      "lastCompleted": null,
+      "everCompleted": [],
+      "statusesSeen": [
+        "Hidden"
+      ]
+    },
+    {
+      "topic": "Pneumococcal Vaccines 0-49 yo",
+      "currentStatus": "Aged Out",
+      "nextDue": null,
+      "lastCompleted": null,
+      "everCompleted": [],
+      "statusesSeen": [
+        "Aged Out"
+      ]
+    },
+    {
+      "topic": "RSV < 20 Months",
+      "currentStatus": "Aged Out",
+      "nextDue": null,
+      "lastCompleted": null,
+      "everCompleted": [],
+      "statusesSeen": [
+        "Aged Out"
+      ]
+    },
+    {
+      "topic": "RSV Adult",
+      "currentStatus": "Not Due",
+      "nextDue": {
+        "iso": "2057-10-26",
+        "display": "Oct 26, 2057"
+      },
+      "lastCompleted": null,
+      "everCompleted": [],
+      "statusesSeen": [
+        "Not Due"
+      ]
+    },
+    {
+      "topic": "Rabies Vaccine",
+      "currentStatus": "Hidden",
+      "nextDue": null,
+      "lastCompleted": null,
+      "everCompleted": [],
+      "statusesSeen": [
+        "Hidden"
+      ]
+    },
+    {
+      "topic": "Tetanus/Pertussis Vaccine Teen/Adult",
+      "currentStatus": "Not Due",
+      "nextDue": {
+        "iso": "2029-02-05",
+        "display": "Feb 5, 2029"
+      },
+      "lastCompleted": {
+        "iso": "2019-02-05",
+        "display": "Feb 5, 2019"
+      },
+      "everCompleted": [
+        "2019-02-05"
+      ],
+      "statusesSeen": [
+        "Not Due"
+      ]
+    },
+    {
+      "topic": "Typhoid Vaccine",
+      "currentStatus": "Hidden",
+      "nextDue": null,
+      "lastCompleted": {
+        "iso": "2019-02-05",
+        "display": "Feb 5, 2019"
+      },
+      "everCompleted": [
+        "2019-02-05"
+      ],
+      "statusesSeen": [
+        "Hidden"
+      ]
+    },
+    {
+      "topic": "Yellow Fever Vaccine",
+      "currentStatus": "Hidden",
+      "nextDue": null,
+      "lastCompleted": null,
+      "everCompleted": [],
+      "statusesSeen": [
+        "Hidden"
+      ]
+    },
+    {
+      "topic": "Zoster (Shingles) Vaccine 50+",
+      "currentStatus": "Not Due",
+      "nextDue": {
+        "iso": "2032-10-26",
+        "display": "Oct 26, 2032"
+      },
+      "lastCompleted": null,
+      "everCompleted": [],
+      "statusesSeen": [
+        "Not Due"
+      ]
+    }
+  ],
+  "forecastArtifacts": [
+    {
+      "topic": "Hepatitis B Vaccine",
+      "status": "Overdue",
+      "nextDue": {
+        "iso": "1982-10-26",
+        "display": "Oct 26, 1982"
+      },
+      "ageAtDue": 0,
+      "note": "Engine set \"next due\" to Oct 26, 1982 — age 0 (at birth), a birthdate-anchored artifact."
+    },
+    {
+      "topic": "Lab-Hepatitis C Screening",
+      "status": "Overdue",
+      "nextDue": {
+        "iso": "1982-10-26",
+        "display": "Oct 26, 1982"
+      },
+      "ageAtDue": 0,
+      "note": "Engine set \"next due\" to Oct 26, 1982 — age 0 (at birth), a birthdate-anchored artifact."
+    },
+    {
+      "topic": "COVID-19 Vaccine",
+      "status": "Overdue",
+      "nextDue": {
+        "iso": "1987-10-26",
+        "display": "Oct 26, 1987"
+      },
+      "ageAtDue": 5,
+      "note": "Engine set \"next due\" to Oct 26, 1987 — age 5, a birthdate-anchored artifact."
+    },
+    {
+      "topic": "HPV Vaccine (9-26yo & Shared Decision 27-45yo)",
+      "status": "Overdue",
+      "nextDue": {
+        "iso": "1997-10-26",
+        "display": "Oct 26, 1997"
+      },
+      "ageAtDue": 15,
+      "note": "Engine set \"next due\" to Oct 26, 1997 — age 15, a birthdate-anchored artifact."
+    },
+    {
+      "topic": "COVID-19 Vaccine",
+      "status": "Overdue",
+      "nextDue": {
+        "iso": "1998-10-26",
+        "display": "Oct 26, 1998"
+      },
+      "ageAtDue": 16,
+      "note": "Engine set \"next due\" to Oct 26, 1998 — age 16, a birthdate-anchored artifact."
+    }
+  ],
+  "evidence": {
+    "e_age": {
+      "kind": "fact",
+      "text": "Date of birth Oct 26, 1982; age 43 as of 2026-06-09."
+    },
+    "e_sex": {
+      "kind": "fact",
+      "text": "Sex recorded as Male."
+    },
+    "e_smoking": {
+      "kind": "fact",
+      "who": "Social history",
+      "text": "Tobacco user: Never; smoking tobacco use: Never. A lifelong never-smoker."
+    },
+    "e_bmi": {
+      "kind": "fact",
+      "who": "Vitals",
+      "text": "BMI 25.8 on Dec 4, 2025. Trend: 24.3 (2018) → 25.6 (2020) → 25 (2022) → 25.4 (2022) → 25.5 (2023) → 24.9 (2023) → 24.6 (2024) → 25.3 (2024) → 25.8 (2025). Crossed the 25 overweight threshold only recently."
+    },
+    "e_alcohol": {
+      "kind": "fact",
+      "who": "Social history",
+      "text": "Alcohol use: Yes."
+    },
+    "e_drugs": {
+      "kind": "fact",
+      "who": "Social history",
+      "text": "Illicit drug user: No; IV drug use: N."
+    },
+    "e_problems": {
+      "kind": "fact",
+      "who": "Problem list",
+      "text": "Active problems: Gastroesophageal reflux disease; Pollen-food allergy; Allergic rhinoconjunctivitis, seasonal and perennial; Post concussion syndrome. None are cardiometabolic risk factors, so an average-risk default applies for screening eligibility."
+    },
+    "e_imm_covid_2022-09-25": {
+      "kind": "immunization",
+      "date": "Sep 25, 2022",
+      "text": "COVID-19 administered Sep 25, 2022."
+    },
+    "e_imm_influenza_2019-11-13": {
+      "kind": "immunization",
+      "date": "Nov 13, 2019",
+      "text": "Influenza administered Nov 13, 2019."
+    },
+    "e_imm_tdap_2019-02-05": {
+      "kind": "immunization",
+      "date": "Feb 5, 2019",
+      "text": "Tdap (tetanus/diphtheria/pertussis) administered Feb 5, 2019."
+    },
+    "e_imm_hepA_2019-02-05": {
+      "kind": "immunization",
+      "date": "Feb 5, 2019",
+      "text": "Hepatitis A administered Feb 5, 2019."
+    },
+    "e_imm_typhoid_2019-02-05": {
+      "kind": "immunization",
+      "date": "Feb 5, 2019",
+      "text": "Typhoid (travel) administered Feb 5, 2019."
+    },
+    "e_imm_influenza_2017-10-25": {
+      "kind": "immunization",
+      "date": "Oct 25, 2017",
+      "text": "Influenza administered Oct 25, 2017."
+    },
+    "e_imm_covid_2021-04-18": {
+      "kind": "immunization",
+      "date": "Apr 18, 2021",
+      "text": "COVID-19 administered Apr 18, 2021 (Moderna)."
+    },
+    "e_imm_covid_2021-05-16": {
+      "kind": "immunization",
+      "date": "May 16, 2021",
+      "text": "COVID-19 administered May 16, 2021 (Moderna)."
+    },
+    "e_imm_influenza_2018-10-08": {
+      "kind": "immunization",
+      "date": "Oct 8, 2018",
+      "text": "Influenza administered Oct 8, 2018."
+    },
+    "e_imm_influenza_2021-10-24": {
+      "kind": "immunization",
+      "date": "Oct 24, 2021",
+      "text": "Influenza administered Oct 24, 2021."
+    },
+    "e_imm_covid_2021-12-03": {
+      "kind": "immunization",
+      "date": "Dec 3, 2021",
+      "text": "COVID-19 administered Dec 3, 2021."
+    },
+    "e_imm_influenza_2022-10-26": {
+      "kind": "immunization",
+      "date": "Oct 26, 2022",
+      "text": "Influenza administered Oct 26, 2022."
+    },
+    "e_imm_influenza_2023-09-28": {
+      "kind": "immunization",
+      "date": "Sep 28, 2023",
+      "text": "Influenza administered Sep 28, 2023 (GLAXO SMITH KLINE)."
+    },
+    "e_imm_covid_2023-10-11": {
+      "kind": "immunization",
+      "date": "Oct 11, 2023",
+      "text": "COVID-19 administered Oct 11, 2023."
+    },
+    "e_imm_influenza_2024-09-07": {
+      "kind": "immunization",
+      "date": "Sep 7, 2024",
+      "text": "Influenza administered Sep 7, 2024."
+    },
+    "e_imm_covid_2024-09-07": {
+      "kind": "immunization",
+      "date": "Sep 7, 2024",
+      "text": "COVID-19 administered Sep 7, 2024."
+    },
+    "e_imm_covid_2025-10-29": {
+      "kind": "immunization",
+      "date": "Oct 29, 2025",
+      "text": "COVID-19 administered Oct 29, 2025."
+    },
+    "e_imm_influenza_2025-10-29": {
+      "kind": "immunization",
+      "date": "Oct 29, 2025",
+      "text": "Influenza administered Oct 29, 2025."
+    },
+    "e_lipid_2025-12-04": {
+      "kind": "lab",
+      "date": "Dec 4, 2025",
+      "text": "Lipid panel Dec 4, 2025: CHOLESTEROL 188 mg/dL; TRIGLYCERIDES 282 mg/dL (High); HDL 40 mg/dL (Low); LDL 92 mg/dL; CHOLESTEROL/HDL RATIO 4.7."
+    },
+    "e_lipid_2018-08-09": {
+      "kind": "lab",
+      "date": "Aug 9, 2018",
+      "text": "Lipid panel Aug 9, 2018: CHOLESTEROL 159 mg/dL; TRIGLYCERIDES 88 mg/dL; HIGH DENSITY CHOLESTEROL 52 mg/dL; LDL 89 mg/dL; CHOLESTEROL/HDL RATIO 3.1."
+    },
+    "e_lipid_2023-09-28": {
+      "kind": "lab",
+      "date": "Sep 28, 2023",
+      "text": "Lipid panel Sep 28, 2023: CHOLESTEROL 156 mg/dL; TRIGLYCERIDES 92 mg/dL; HDL 44 mg/dL; LDL 94 mg/dL; CHOLESTEROL/HDL RATIO 3.5."
+    },
+    "e_gluc_2025-12-04": {
+      "kind": "lab",
+      "date": "Dec 4, 2025",
+      "text": "GLUCOSE 90 mg/dL; HEMOGLOBIN A1C 5.5 % (Dec 4, 2025)."
+    },
+    "e_gluc_2022-08-29": {
+      "kind": "lab",
+      "date": "Aug 29, 2022",
+      "text": "GLUCOSE 97 mg/dL (Aug 29, 2022)."
+    },
+    "e_gluc_2023-09-28": {
+      "kind": "lab",
+      "date": "Sep 28, 2023",
+      "text": "HEMOGLOBIN A1C 5.4 % (Sep 28, 2023)."
+    },
+    "e_hcv_2023-09-28": {
+      "kind": "lab",
+      "date": "Sep 28, 2023",
+      "text": "Hepatitis C antibody: NONREACTIVE (Sep 28, 2023)."
+    },
+    "e_bp_2024-11-07": {
+      "kind": "lab",
+      "who": "Office vitals",
+      "date": "Nov 7, 2024",
+      "text": "Blood pressure 128/70 mmHg (Nov 7, 2024)."
+    },
+    "e_bp_2020-01-09": {
+      "kind": "lab",
+      "who": "Office vitals",
+      "date": "Jan 9, 2020",
+      "text": "Blood pressure 136/83 mmHg (Jan 9, 2020)."
+    },
+    "e_bp_2018-08-09": {
+      "kind": "lab",
+      "who": "Office vitals",
+      "date": "Aug 9, 2018",
+      "text": "Blood pressure 122/70 mmHg (Aug 9, 2018)."
+    },
+    "e_bp_2024-07-02": {
+      "kind": "lab",
+      "who": "Office vitals",
+      "date": "Jul 2, 2024",
+      "text": "Blood pressure 127/81 mmHg (Jul 2, 2024)."
+    },
+    "e_bp_2022-12-01": {
+      "kind": "lab",
+      "who": "Office vitals",
+      "date": "Dec 1, 2022",
+      "text": "Blood pressure 142/74 mmHg (Dec 1, 2022). Elevated office reading — would need out-of-office confirmation per USPSTF."
+    },
+    "e_bp_2022-08-29": {
+      "kind": "lab",
+      "who": "Office vitals",
+      "date": "Aug 29, 2022",
+      "text": "Blood pressure 138/76 mmHg (Aug 29, 2022)."
+    },
+    "e_bp_2025-12-04": {
+      "kind": "lab",
+      "who": "Office vitals",
+      "date": "Dec 4, 2025",
+      "text": "Blood pressure 132/62 mmHg (Dec 4, 2025)."
+    },
+    "e_bp_2023-03-02": {
+      "kind": "lab",
+      "who": "Office vitals",
+      "date": "Mar 2, 2023",
+      "text": "Blood pressure 134/80 mmHg (Mar 2, 2023)."
+    },
+    "e_bp_2023-09-28": {
+      "kind": "lab",
+      "who": "Office vitals",
+      "date": "Sep 28, 2023",
+      "text": "Blood pressure 132/64 mmHg (Sep 28, 2023)."
+    },
+    "e_phq2": {
+      "kind": "fact",
+      "who": "Flowsheet",
+      "text": "PHQ-2 depression-screening items (\"Little interest or pleasure...\", \"Feeling down, depressed...\") are present in the record (form \"UPH AMB PHQ2\")."
+    }
+  }
+}
