@@ -9,7 +9,7 @@
   * { box-sizing: border-box; }
   body { margin:0; background:#f6f7f9; color:var(--ink);
     font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
-  .wrap { max-width:820px; margin:0 auto; background:#fff; padding:56px 40px 80px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+  .wrap { width:100%; max-width:820px; margin:0 auto; background:#fff; padding:56px 40px 80px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
   h1 { font-size:32px; letter-spacing:-.02em; margin:0 0 6px; }
   .sub { color:var(--muted); margin:0 0 8px; }
   .intro { color:var(--muted); font-size:15px; margin:18px 0 24px; max-width:720px; }
@@ -19,15 +19,32 @@
   .card h2 { margin:0 0 4px; font-size:20px; color:var(--accent); }
   .card .kicker { text-transform:uppercase; letter-spacing:.07em; font-size:11px; font-weight:700; color:var(--muted); }
   .card p { margin:6px 0 0; color:var(--ink); font-size:15px; }
-  .files { border:1px solid var(--rule); border-radius:12px; padding:16px 18px; margin:22px 0 28px; background:#fbfcfd; }
-  .files h2 { margin:0 0 6px; font-size:18px; }
+  .tools-panel { min-width:0; border:1px solid var(--rule); border-radius:12px; padding:16px 18px; margin:24px 0 34px 18px;
+    max-width:740px; background:#fbfcfd; box-shadow:0 1px 2px rgba(0,0,0,.03); }
+  .tool-row + .tool-row { border-top:1px solid var(--rule); margin-top:16px; padding-top:16px; }
+  .files h2, .tool-link h2 { margin:0 0 6px; font-size:18px; }
   .files p { margin:4px 0 10px; color:var(--muted); font-size:14px; }
   .files ul { margin:0; padding-left:20px; }
-  .files li { margin:6px 0; font-size:14px; }
-  .files a { color:var(--accent); font-weight:700; text-decoration:none; }
+  .files li { margin:6px 0; font-size:14px; overflow-wrap:anywhere; }
+  .files a { color:var(--accent); font-weight:700; text-decoration:none; overflow-wrap:anywhere; }
   .files a:hover { text-decoration:underline; }
+  .tool-link { display:block; color:inherit; text-decoration:none; }
+  .tool-link:hover h2 { text-decoration:underline; }
+  .tool-link .kicker, .section-kicker { text-transform:uppercase; letter-spacing:.07em; font-size:11px;
+    font-weight:700; color:var(--muted); }
+  .tool-link h2 { color:var(--accent); }
+  .tool-link p { margin:6px 0 0; color:var(--ink); font-size:15px; }
+  .section-kicker { margin:0 0 8px; }
   footer { color:var(--muted); font-size:13px; margin-top:36px; border-top:1px solid var(--rule); padding-top:14px; }
-  code { background:#f1f3f5; padding:1px 5px; border-radius:4px; font-size:13px; }
+  code { background:#f1f3f5; padding:1px 5px; border-radius:4px; font-size:13px; white-space:normal;
+    overflow-wrap:break-word; }
+  .path-code { overflow-wrap:anywhere; }
+  .api-code { white-space:nowrap; overflow-wrap:normal; }
+  @media (max-width: 640px) {
+    .wrap { padding:40px 24px 64px; }
+    .tools-panel { margin-left:0; }
+    .files .path-code { word-break:break-all; }
+  }
 </style>
 </head>
 <body>
@@ -37,21 +54,28 @@
   <p class="intro">Explore static deep dives, or use the browser agent harness to query the redacted SQLite
   export, read bundled notes and skills, and render live charts from the published files below.</p>
 
-  <section class="files" aria-labelledby="published-files">
-    <h2 id="published-files">Published data files</h2>
-    <p>The agent harness loads this published zip from <code>data/</code> at startup.</p>
-    <ul>
-      <li><a href="data/my-ehi-skills.zip"><code>data/my-ehi-skills.zip</code></a> — normal zip archive containing <code>db/ehi.sqlite</code>, <code>raw/Rich Text/**</code>, and <code>skills/reading-epic-ehi-export/**</code> for SQL queries plus <code>listFiles()</code>, <code>readFile()</code>, and <code>grepFiles()</code>.</li>
-    </ul>
+  <section class="tools-panel" aria-labelledby="published-files">
+    <div class="tool-row files">
+      <h2 id="published-files">Published data files</h2>
+      <p>The agent harness loads this published zip from <code>data/</code> at startup.</p>
+      <ul>
+        <li><a href="data/my-ehi-skills.zip"><code class="path-code">data/my-ehi-skills.zip</code></a> — normal zip archive.</li>
+        <li><code>db/ehi.sqlite</code> for SQL queries.</li>
+        <li><code class="path-code">raw/Rich Text/**</code> and <code class="path-code">skills/reading-epic-ehi-export/**</code> for bundled notes, schema files, and reading guides.</li>
+        <li><code class="api-code">listFiles()</code>, <code class="api-code">readFile()</code>, and <code class="api-code">grepFiles()</code> helpers.</li>
+      </ul>
+    </div>
+
+    <a class="tool-row tool-link" href="agent-harness/dist/index.html">
+      <div class="kicker">Agent workspace</div>
+      <h2>Browser agent harness</h2>
+      <p>A browser-only OpenRouter agent loop with an unsandboxed JavaScript tool, SQLite WASM over the
+      redacted EHI database, a bundled filesystem view of skills and raw note/schema files, D3/Vega-Lite
+      plotting helpers, persistent agent state, and a writable DOM stage.</p>
+    </a>
   </section>
 
-  <a class="card" href="agent-harness/dist/index.html">
-    <div class="kicker">Agent workspace</div>
-    <h2>Browser agent harness</h2>
-    <p>A browser-only OpenRouter agent loop with an unsandboxed JavaScript tool, SQLite WASM over the
-    redacted EHI database, a bundled filesystem view of skills and raw note/schema files, D3/Vega-Lite
-    plotting helpers, persistent agent state, and a writable DOM stage.</p>
-  </a>
+  <div class="section-kicker">Static deep dives</div>
 
   <a class="card" href="cardiac-risk/dist/index.html">
     <div class="kicker">Cardiovascular</div>
